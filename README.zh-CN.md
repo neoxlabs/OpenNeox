@@ -1,71 +1,215 @@
-# OpenNeox
+<div align="center">
 
-OpenNeox 是 Neox 的开源命令行 AI Agent（`neox`）及其底层 TypeScript 运行时，
-同一套运行时也以 SDK 形式提供，可以嵌进你自己的 Node 应用。
+<img src="assets/brand/neox-app-icon.png" alt="" width="88">
+<br><br>
+<img src="assets/brand/wordmark-color.png" alt="OpenNeox" width="220">
 
-## 功能
+<br>
 
-- 与供应商无关的 Agent 内核：流式输出、工具调用、权限控制和有界执行。
-- BYOK（自带 API Key）模型配置，支持 OpenAI 兼容、Anthropic 兼容等协议。
-- 会话、检查点、记忆和凭据都留在运行 Agent 的那台机器上。
-- 工具沙箱、MCP、插件、技能和 SDK 扩展点。
-- `packages/cloud` 只提供可选能力契约，默认没有云端实现和服务地址。
+**开源的终端 AI 编程 Agent。**<br>
+自带模型 Key，无需账号，不走网关，不收集遥测。
 
-## 从源码运行
+<br>
 
-依赖 Node.js 20+ 和 npm。
+[English](README.md) · **简体中文**
+
+<br>
+
+[![CI](https://github.com/neoxlabs/OpenNeox/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/neoxlabs/OpenNeox/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white)](package.json)
+[![Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)](#快速开始)
+
+</div>
+
+---
+
+`neox` 会读代码、跑命令、改文件，还会自己检查改得对不对 —— 在你指定的仓库里，
+用你选的模型。一切都在你自己的机器上运行：会话、检查点、记忆和 API Key 都不会离开
+本机，除了发给模型的那次请求。
+
+- **什么模型都能用。** OpenAI、Anthropic、Gemini、DeepSeek、Kimi、GLM、通义千问、
+  MiniMax、豆包、Grok、OpenRouter、Groq、Mistral、本地模型 —— 只要兼容 OpenAI 或
+  Anthropic 协议就行。
+- **真正干活的工具。** 改文件、搜索、Shell、Git 与 worktree、代码智能、解释器、
+  浏览器自动化、联网调研、Office 文档、MCP、技能、子 Agent。
+- **默认安全。** 每一次工具调用都要过权限检查；Shell 命令可以跑在系统沙箱里
+  （macOS 用 Seatbelt，Linux 用 bubblewrap，Windows 用 AppContainer）。
+- **整轮撤销。** 检查点会给这一轮改过的文件拍快照，`/rollback` 一步回到 Agent
+  动手之前。
+- **能写进脚本。** `neox -p` 执行一条指令并打印结果 —— 纯文本、JSON，或者符合你给的
+  JSON Schema 的结构化输出 —— 适合 CI 和 Shell 管道。
+- **能嵌进你的应用。** 同一套运行时以 SDK 形式提供，给你自己的 Node 应用用。
+
+## 快速开始
+
+需要 Node.js 20 及以上。包还没发布到 npm，先从源码构建：
 
 ```bash
+git clone https://github.com/neoxlabs/OpenNeox.git
+cd OpenNeox
 npm ci
-npm run type-check
-npm test
 npm run build
-node apps/cli/dist/cli/main.js --version
+npm link            # 把 `neox` 放进 PATH
 ```
 
-用 `neox provider` 配置你自己的模型 API Key。CLI 可执行文件名为 `neox`。
+添加模型 Key，交互式向导会把它存在本地：
 
-## 仓库结构
+```bash
+neox provider add
+```
 
-| 路径 | 作用 |
+或者直接导出环境变量，`neox` 会自动识别：
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...     # 也支持 OPENAI_API_KEY、GEMINI_API_KEY、
+                                        # MOONSHOT_API_KEY、DOUBAO_API_KEY
+                                        # （兼容端点再配 *_BASE_URL）
+```
+
+然后在任意项目里启动：
+
+```bash
+cd your-project
+neox
+```
+
+## 用法
+
+```bash
+neox                              # 在当前目录开一个交互会话
+neox "登录测试为什么挂了？"          # 执行一条指令，打印结果后退出
+neox -c                           # 继续最近一次会话
+neox -r                           # 挑一个历史会话恢复
+neox -m <model> --provider <id>   # 这次用哪个模型
+neox -d ../other-repo             # 在别的目录里干活
+```
+
+给脚本和 CI 用的非交互模式：
+
+```bash
+neox -p "总结一下这个分支改了什么"
+neox -p --json "列出 src/ 里的 TODO"                   # stdout 输出一个 JSON 对象
+neox -p --output-schema schema.json "提取所有 API 路由"
+neox -p --yolo "把 lint 错误修掉"                       # 允许改文件、跑命令
+```
+
+不加 `--yolo` 时，`-p` 只读不写。
+
+会话里的命令：
+
+| 命令 | 作用 |
 | --- | --- |
-| `apps/cli` | 终端宿主和命令行界面 |
-| `packages/kernel` | 供应商无关的 Agent 循环和契约 |
-| `packages/platform` | 配置、存储、日志和宿主服务 |
-| `packages/core` | 运行时、工具、模型、会话和服务适配器 |
-| `packages/sdk` | 面向使用者的 Agent API |
-| `packages/cloud` | 默认关闭的可选能力契约 |
-| `packages/sandbox` | 操作系统沙箱策略和调用工具 |
-| `plugins` | 公开插件实现 |
-| `docs` | 架构和贡献者文档 |
+| `/session ls` · `/session new` · `/session export` | 管理会话 |
+| `/checkpoint create [name]` | 给工作区拍快照 |
+| `/rollback <id>` | 回滚到某个检查点 |
+| `/provider` · `/model` | 切换服务商或模型 |
 
-架构和数据流见 [docs/architecture.md](docs/architecture.md)。
+管理命令：
 
-## 扩展方式
+| 命令 | 作用 |
+| --- | --- |
+| `neox provider ls \| add \| test [id]` | 管理模型服务商 |
+| `neox model ls` | 列出可用模型 |
+| `neox mcp …` | 管理 MCP server |
+| `neox skill …` | 管理技能 |
+| `neox daemon …` | 后台守护进程 |
 
-**插件**通过 manifest 提供工具、hooks、MCP server、connector 映射和外部
-Agent。凭据与权限决定由宿主控制。
+完整列表见 `neox --help`。
 
-**SDK** 使用者可以通过 `@openneox/sdk` 创建 Agent、增加工具、选择供应商并
-消费流式事件。
+## 模型
 
-**MCP** server 是由用户管理的集成。OAuth client ID、token 和 endpoint 由
-用户或部署方提供，仓库不内置供应商凭据。
+一个服务商配置就是 API Key、模型和可选的 Base URL。
+`packages/kernel/src/models/providerPresets.ts` 里的预设提供 Base URL、能力标记和
+常用模型。适配层按协议统一工具 schema、思考开关、流式事件和消息配对：
 
-## 开源版与官方产品的区别
+| 协议族 | 适配器 |
+| --- | --- |
+| OpenAI | `openai`、`openai-responses` |
+| Anthropic | `anthropic`、`anthropic-openai`、`glm-claude`、`kimi-claude` |
+| Google | `gemini` |
+| 其他原生协议 | `deepseek`、`kimi`、`glm`、`qwen`、`minimax`、`doubao`、`grok` |
+| OpenAI 兼容预设 | OpenRouter、Mistral、Groq、Together AI、Dashscope、opencode Zen |
 
-开源版是完整的本地 CLI 运行时，不包含账号、订阅、云市场、官方模型网关，
-也不包含 Neox 桌面端和手机端。托管服务只在 `packages/cloud` 中保留了默认
-关闭的扩展契约。
+没有预设也没关系：任何兼容 OpenAI 或 Anthropic 协议的端点都能直接用，包括你本机跑的模型。
 
-本仓库默认不会发布数据或连接托管服务。
+## 安全模型
 
-## 许可证
+三层互相独立，谁也替代不了谁：
 
-项目代码使用 [Apache License 2.0](LICENSE)。第三方材料继续使用各自的原
-许可证，详见 [NOTICE](NOTICE) 以及资源旁的 license notice。
+- **权限** —— `PermissionManager` 对每一次工具调用做决定，读、写、破坏性操作、
+  花钱的操作分开归类。
+- **沙箱模式** —— 每次运行的粗粒度策略，整类整类地开关工具。
+- **系统沙箱** —— `packages/sandbox` 把策略编译成 Seatbelt、bubblewrap/unshare 或
+  AppContainer 的启动方式；没有可用后端时退回直接执行，并且会说明原因，不会悄悄失败。
+
+## SDK
+
+```ts
+import { Agent, tool } from '@neoxlabs/sdk';
+import { z } from 'zod';
+
+const agent = new Agent({
+  model: 'claude-sonnet-5',
+  tools: [
+    tool({
+      name: 'read_invoice',
+      description: '按 id 读取一张发票',
+      schema: z.object({ id: z.string() }),
+      handler: async ({ id }) => db.invoices.get(id),
+      readOnly: true,
+    }),
+  ],
+});
+
+const result = await agent.run('总结发票 INV-204');
+console.log(result.text);
+```
+
+`createSession` 跨调用保留对话和工具状态；`provider` / `providerFromEnv` 选择模型后端；
+权限决定由你的应用提供 `PermissionHandler`。
+
+## 架构
+
+```
+apps/cli/         `neox` 终端应用（Ink）
+packages/
+  kernel/         Agent 循环、服务商、消息与工具类型、权限
+  platform/       配置、SQLite 存储、日志、模型注册表
+  core/           运行时、工具、模型适配、会话、MCP、技能
+  sdk/            可嵌入的 Agent / 会话 API
+  sandbox/        系统沙箱策略编译与启动后端
+  cloud/          可选能力契约，默认关闭
+  …               evals、workflow、cluster、pptx、native、devtools、test-harness
+plugins/          公开插件实现
+```
+
+一轮对话：编排器选定服务商和模型并打开检查点；`StreamedRunner` 流式接收回复，
+校验每个工具调用，经过权限和沙箱后执行，把结果接回对话，如此循环，直到模型停下、
+你取消，或者预算用完。详见 [docs/architecture.md](docs/architecture.md)（英文）。
+
+## 开发
+
+```bash
+npm run type-check      # TypeScript 严格模式
+npm test                # 单元测试（需 Node 22：会话测试用到 node:sqlite）
+npm run check:arch      # 包边界、导出、模块路径
+npm run audit:comments  # 注释质量闸
+npm run check:licenses  # 许可证元数据
+```
+
+扫源码的测试需要 `ripgrep`，Shell 回归测试需要 `zsh`。`packages` 不允许 import
+`apps`，违反时 `npm run check:boundaries` 直接让构建失败。
+
+## 开源版与 Neox 应用
+
+本仓库是完整的本地 CLI 与运行时。Neox 桌面端、手机端、账号、订阅和托管模型网关是
+另外的产品，不在这里；托管服务在这里只体现为 `packages/cloud` 中默认关闭的契约。
+
+代码使用 [Apache 2.0](LICENSE) 许可证。第三方材料保留各自的许可证，见 [NOTICE](NOTICE)。
 
 ## 参与贡献
 
-提交修改前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)、[SECURITY.md](SECURITY.md)
-和 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+提交修改前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 和 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)，
+进行中的工作见 [docs/status.md](docs/status.md)。安全问题请按 [SECURITY.md](SECURITY.md)
+私下报告，不要开公开 issue。
