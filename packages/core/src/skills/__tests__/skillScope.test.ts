@@ -26,11 +26,15 @@ describe('deriveDefaultTrustLevel', () => {
     expect(deriveDefaultTrustLevel('workspace')).toBe('trusted');
   });
 
-  it('marketplace/mcp/plugin/managed → limited (外人写的)', () => {
+  it('marketplace/mcp/managed → limited (外人写的)', () => {
     expect(deriveDefaultTrustLevel('marketplace')).toBe('limited');
     expect(deriveDefaultTrustLevel('mcp')).toBe('limited');
-    expect(deriveDefaultTrustLevel('plugin')).toBe('limited');
     expect(deriveDefaultTrustLevel('managed')).toBe('limited');
+  });
+
+  it('plugin 跟 workspace 同规则: 声明了 allowedTools 才 limited, 没声明不打死 (2026-09-25)', () => {
+    expect(deriveDefaultTrustLevel('plugin')).toBe('trusted');
+    expect(deriveDefaultTrustLevel('plugin', true)).toBe('limited');
   });
 });
 

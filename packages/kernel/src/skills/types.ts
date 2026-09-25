@@ -194,9 +194,10 @@ export function deriveDefaultTrustLevel(source: SkillSource, hasAllowedTools = f
      * one, the skill keeps the normal trusted behavior. */
     case 'workspace':
       return hasAllowedTools ? 'limited' : 'trusted';
+    case 'plugin':
+      return hasAllowedTools ? 'limited' : 'trusted';
     case 'marketplace':
     case 'mcp':
-    case 'plugin':
     case 'managed':
       return 'limited';
   }

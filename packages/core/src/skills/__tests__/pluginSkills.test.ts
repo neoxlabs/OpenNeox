@@ -70,6 +70,19 @@ describe('SkillRegistry.loadPlugins', () => {
     expect(s.source).toBe('user');
   });
 
+  it('插件 skill 没声明 allowedTools → trusted (照常用工具); 声明了 → limited 且只许那几个 (2026-09-25)', async () => {
+    const dir = installPlugin('office-kit', { enabled: true, skills: ['skills'] });
+    writeSkill(path.join(dir, 'skills'), 'thesis-writing');
+    fs.mkdirSync(path.join(dir, 'skills', 'locked'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'skills', 'locked', 'SKILL.md'),
+      '---\nname: locked\ndescription: only reads\nneox:\n  allowedTools:\n    - readfile\n---\n\nbody\n');
+    const r = new SkillRegistry();
+    await r.initialize();
+    const find = (n: string): any => r.list({}).find((x: any) => nameOf(x) === n);
+    expect(find('thesis-writing').trustLevel).toBe('trusted');
+    expect(find('locked').trustLevel).toBe('limited');
+  });
+
   it('没装过插件 (没有登记表) 不报错', async () => {
     const r = new SkillRegistry();
     await expect(r.initialize()).resolves.toBeUndefined();

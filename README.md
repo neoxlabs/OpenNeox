@@ -224,14 +224,9 @@ Source-scanning tests need `ripgrep`; the shell regression tests need `zsh`.
 Packages must not import from `apps` — `npm run check:boundaries` fails the build
 if they do.
 
-## Open source and the Neox app
+## License
 
-This repository is the complete local CLI and runtime. The Neox desktop and mobile
-apps, accounts, subscriptions, and the hosted model gateway are separate products
-and are not part of it; the hosted side is represented here only by the disabled
-contract in `packages/cloud`.
-
-Licensed under [Apache 2.0](LICENSE). Third-party materials keep their own
+[Apache 2.0](LICENSE). Third-party materials keep their own
 licenses — see [NOTICE](NOTICE).
 
 ## Contributing

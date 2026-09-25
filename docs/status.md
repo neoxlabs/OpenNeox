@@ -5,11 +5,6 @@ A snapshot for whoever picks this up next.
 This is a working status file, not a specification. Anything listed as open here
 has *not* been designed unless a linked document says otherwise.
 
-## Scope
-
-This repository ships the `neox` CLI, the SDK, and the runtime packages they
-share. The Neox desktop and mobile apps are not part of it.
-
 ## Where things stand
 
 **Comment pass — done.** `npm run audit:comments` is a gate and passes at zero.

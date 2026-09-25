@@ -459,7 +459,7 @@ export class SkillLoader {
     }
 
     const declaredTools = (metadata as { neox?: { allowedTools?: unknown } })?.neox?.allowedTools;
-    const trustLevel = (args.source === 'workspace'
+    const trustLevel = ((args.source === 'workspace' || args.source === 'plugin')
       && args.trustLevel === 'trusted'
       && Array.isArray(declaredTools) && declaredTools.length > 0)
       ? 'limited' as const

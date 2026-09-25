@@ -48,6 +48,49 @@ describe('collectConnectorToolsForPrompt', () => {
   });
 });
 
+describe('没有连接器接得住时预解锁插件商店 (2026-09-25)', () => {
+  const registerStore = () => toolPackRegistry.register({
+    id: 'plugin-store',
+    label: '插件商店',
+    icon: '🧩',
+    description: 'Search installed plugins and the Neox plugin store',
+    group: 'platform',
+    tier: 'primary',
+    toolNames: ['plugin_store_search'],
+    createTools: () => [makeTool('plugin_store_search')],
+  });
+  afterEach(() => toolPackRegistry.unregisterByPrefix('plugin-store'));
+
+  it('点名一个没装的服务 → 解锁 plugin_store_search', () => {
+    registerStore();
+    expect(collectConnectorToolsForPrompt('帮我看看 Jira 上分给我的工单')).toEqual(['plugin_store_search']);
+    expect(collectConnectorToolsForPrompt('把这段发到飞书群里')).toEqual(['plugin_store_search']);
+  });
+
+  it('直接问插件 / 集成也解锁', () => {
+    registerStore();
+    expect(collectConnectorToolsForPrompt('有没有能接 Slack 的插件')).toEqual(['plugin_store_search']);
+  });
+
+  it('已装连接器接得住就只给连接器, 不多塞商店', () => {
+    registerGcal();
+    registerStore();
+    expect(collectConnectorToolsForPrompt('google calendar 明天有什么会')).toEqual(GCAL);
+  });
+
+  it('普通的话不解锁; 宿主没注册商店包也不解锁', () => {
+    registerStore();
+    expect(collectConnectorToolsForPrompt('帮我把这个函数重构一下')).toEqual([]);
+    toolPackRegistry.unregisterByPrefix('plugin-store');
+    expect(collectConnectorToolsForPrompt('帮我看看 Jira')).toEqual([]);
+  });
+
+  it('词中间的子串不算点名 (steams ≠ teams)', () => {
+    registerStore();
+    expect(collectConnectorToolsForPrompt('the steams of data')).toEqual([]);
+  });
+});
+
 describe('连接器在 Work / Code 可见', () => {
   it('filterToolsByAgentMode 两个模式都留 gcal', () => {
     registerGcal();

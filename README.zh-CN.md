@@ -201,12 +201,9 @@ npm run check:licenses  # 许可证元数据
 扫源码的测试需要 `ripgrep`，Shell 回归测试需要 `zsh`。`packages` 不允许 import
 `apps`，违反时 `npm run check:boundaries` 直接让构建失败。
 
-## 开源版与 Neox 应用
+## 许可证
 
-本仓库是完整的本地 CLI 与运行时。Neox 桌面端、手机端、账号、订阅和托管模型网关是
-另外的产品，不在这里；托管服务在这里只体现为 `packages/cloud` 中默认关闭的契约。
-
-代码使用 [Apache 2.0](LICENSE) 许可证。第三方材料保留各自的许可证，见 [NOTICE](NOTICE)。
+[Apache 2.0](LICENSE)。第三方材料保留各自的许可证，见 [NOTICE](NOTICE)。
 
 ## 参与贡献
 
