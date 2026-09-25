@@ -1,0 +1,82 @@
+<!-- Filter Bar Partial - Reusable search + filter component -->
+<% 
+var fb = (typeof filterBar !== 'undefined') ? filterBar : {};
+var filters = fb.filters || {};
+var pets = (typeof filterBarPets !== 'undefined') ? filterBarPets : [];
+var cp = (typeof path !== 'undefined') ? path : '/';
+var showSearch = fb.showSearch !== false;
+var showPetFilter = fb.showPetFilter !== false;
+var showDateRange = fb.showDateRange !== false;
+var showStatus = fb.showStatus || false;
+var showType = fb.showType || false;
+var statusOptions = fb.statusOptions || [];
+var typeOptions = fb.typeOptions || [];
+var dateFieldLabel = fb.dateFieldLabel || '日期范围';
+%>
+
+<div class="filter-bar-section">
+  <form method="GET" action="<%= cp %>" class="filter-form">
+    <% if (showSearch) { %>
+    <div class="filter-group">
+      <span class="filter-icon">🔍</span>
+      <input type="text" name="search" class="form-control filter-input" 
+             placeholder="搜索..." value="<%= filters.search %>">
+    </div>
+    <% } %>
+    
+    <% if (showPetFilter && pets.length > 0) { %>
+    <div class="filter-group">
+      <select name="pet_id" class="form-control filter-select">
+        <option value="">🐾 全部宠物</option>
+        <% pets.forEach(p => { %>
+        <option value="<%= p.id %>" <%= filters.pet_id == p.id ? 'selected' : '' %>>
+          <%= p.name %> (<%= p.species %>)
+        </option>
+        <% }) %>
+      </select>
+    </div>
+    <% } %>
+
+    <% if (showType && typeOptions.length > 0) { %>
+    <div class="filter-group">
+      <select name="type" class="form-control filter-select">
+        <option value="">全部类型</option>
+        <% typeOptions.forEach(t => { %>
+        <option value="<%= t.value %>" <%= filters.type === t.value ? 'selected' : '' %>>
+          <%= t.label %>
+        </option>
+        <% }) %>
+      </select>
+    </div>
+    <% } %>
+
+    <% if (showStatus && statusOptions.length > 0) { %>
+    <div class="filter-group">
+      <select name="status" class="form-control filter-select">
+        <option value="">全部状态</option>
+        <% statusOptions.forEach(s => { %>
+        <option value="<%= s.value %>" <%= filters.status === s.value ? 'selected' : '' %>>
+          <%= s.label %>
+        </option>
+        <% }) %>
+      </select>
+    </div>
+    <% } %>
+
+    <% if (showDateRange) { %>
+    <div class="filter-group filter-date-group">
+      <label class="filter-label"><%= dateFieldLabel %>:</label>
+      <input type="date" name="date_from" class="form-control filter-date" 
+             value="<%= filters.date_from %>" placeholder="开始">
+      <span class="filter-date-sep">至</span>
+      <input type="date" name="date_to" class="form-control filter-date" 
+             value="<%= filters.date_to %>" placeholder="结束">
+    </div>
+    <% } %>
+
+    <div class="filter-group filter-actions">
+      <button type="submit" class="btn btn-sm btn-primary">筛选</button>
+      <a href="<%= cp %>" class="btn btn-sm btn-ghost">重置</a>
+    </div>
+  </form>
+</div>

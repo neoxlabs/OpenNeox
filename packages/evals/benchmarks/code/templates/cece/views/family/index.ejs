@@ -1,0 +1,110 @@
+<%- include('../partials/head', { title: '家庭共享' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">协作照护</div>
+    <h1>👨‍👩‍👧‍👦 家庭共享</h1>
+    <p class="page-subtitle">邀请家人一起照顾毛孩子</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/family/invite" class="btn btn-primary">+ 邀请照护者</a>
+  </div>
+</div>
+
+<!-- Shared with me -->
+<div class="section">
+  <div class="section-header">
+    <h2>📥 分享给我的宠物</h2>
+    <span class="section-count"><%= sharedWithMe.length %> 只</span>
+  </div>
+  <% if (sharedWithMe.length === 0) { %>
+  <p class="text-muted" style="padding:20px 0">还没有人分享宠物给你</p>
+  <% } else { %>
+  <div class="share-table">
+    <% sharedWithMe.forEach(share => { %>
+    <div class="share-row">
+      <div class="share-pet">
+        <% if (share.photo) { %><img src="<%= share.photo %>" class="share-avatar"><% } else { %><span class="share-avatar-placeholder">🐾</span><% } %>
+        <div>
+          <strong><%= share.pet_name %></strong>
+          <span class="share-meta"><%= share.species %> · <%= share.breed %></span>
+        </div>
+      </div>
+      <div class="share-owner">来自 <%= share.owner_name %></div>
+<div class="share-perm">
+        <span class="badge <%= share.permission === 'admin' ? 'badge-primary' : (share.permission === 'edit' ? 'badge-primary' : 'badge-teal') %>">
+          <%= share.permission === 'admin' ? '可管理' : (share.permission === 'edit' ? '可编辑' : '仅查看') %>
+        </span>
+      </div>
+      <div class="share-actions">
+        <a href="/pets/<%= share.pet_id %>" class="btn btn-sm btn-outline">查看</a>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- Shared by me -->
+<div class="section">
+  <div class="section-header">
+    <h2>📤 我分享的宠物</h2>
+    <span class="section-count"><%= sharedByMe.length %> 项</span>
+  </div>
+  <% if (sharedByMe.length === 0) { %>
+  <p class="text-muted" style="padding:20px 0">你还没有分享宠物给其他人</p>
+  <% } else { %>
+  <div class="share-table">
+    <% sharedByMe.forEach(share => { %>
+    <div class="share-row">
+      <div class="share-pet">
+        <span class="share-avatar-placeholder">🐾</span>
+        <div>
+          <strong><%= share.pet_name %></strong>
+          <span class="share-meta">分享给 <%= share.shared_with_name %></span>
+        </div>
+      </div>
+<div class="share-perm">
+        <span class="badge <%= share.permission === 'admin' ? 'badge-primary' : (share.permission === 'edit' ? 'badge-primary' : 'badge-teal') %>">
+          <%= share.permission === 'admin' ? '可管理' : (share.permission === 'edit' ? '可编辑' : '仅查看') %>
+        </span>
+      </div>
+      <div class="share-actions">
+        <form action="/family/<%= share.id %>/revoke" method="POST" style="display:inline" onsubmit="return confirm('确定取消分享？')">
+          <button class="btn btn-sm btn-danger">取消分享</button>
+        </form>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<style>
+.share-table { border-top: 2px solid var(--border-strong); }
+.share-row {
+  display: flex; align-items: center; padding: 14px 0;
+  border-bottom: 1px solid var(--border); gap: 16px; transition: background 0.2s;
+}
+.share-row:hover { background: var(--bg-alt); }
+.share-pet { flex: 2; display: flex; align-items: center; gap: 10px; }
+.share-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.share-avatar-placeholder {
+  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--primary-light); font-size: 1.2rem;
+}
+.share-owner { flex: 1.5; color: var(--text-muted); }
+.share-meta { font-size: 0.8rem; color: var(--text-weak); display: block; margin-top: 2px; }
+.share-perm { flex: 1; }
+.share-actions { flex: 1; display: flex; justify-content: flex-end; gap: 6px; }
+.section-count { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .share-row { flex-wrap: wrap; }
+  .share-pet { flex: 1 1 100%; }
+  .share-owner, .share-perm { flex: auto; }
+  .share-actions { flex: 1 1 100%; justify-content: flex-start; }
+}
+</style>
+
+<%- include('../partials/foot') %>

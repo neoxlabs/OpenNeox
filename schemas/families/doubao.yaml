@@ -1,0 +1,35 @@
+# 字节豆包 / Seed 家族能力声明
+
+id: doubao
+display_name: 字节豆包
+
+aliases:
+  - doubao
+  - volces
+
+name_regex:
+  - "^seed"  # seed-* 内部代号也算 doubao
+
+capabilities:
+  thinking:
+    native: true
+    # 豆包真实字段是顶层 thinking:{type:'enabled'|'disabled'|'auto'} — 跟 Anthropic 相同形状,
+    # 只是 type 多一个 'auto' 选项。早期 yaml 误写 field: thinking_mode (字段名编错), 2026-06-28 修正。
+    field: thinking
+    # builder_hint: 跟 Anthropic 同结构, 但调用方一般直接 spread yaml effort_map 字段, 不走 builder。
+    builder_hint: anthropic
+  # 豆包另有 reasoning.effort 字段(嵌套)但本 yaml 不强制声明, 改 yaml 时用 effort_map 直接 spread。
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: true
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+
+markdown_constraint: light
+supplement_key: generic_parallel
+
+fast_patterns:
+  - /lite/i
+  - /flash/i

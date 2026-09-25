@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-labelledby="title desc">
+  <title id="title">Surface SVG 测试海报</title>
+  <desc id="desc">绿色背景上的抽象几何海报</desc>
+  <defs>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#143d32" stroke-opacity=".15"/></pattern>
+    <filter id="shadow"><feDropShadow dx="12" dy="12" stdDeviation="0" flood-color="#143d32"/></filter>
+  </defs>
+  <rect width="900" height="600" rx="30" fill="#d9ff78"/>
+  <rect width="900" height="600" rx="30" fill="url(#grid)"/>
+  <circle cx="735" cy="125" r="88" fill="#ff674d" stroke="#143d32" stroke-width="8"/>
+  <path d="M670 500 810 270 880 500Z" fill="#77c8ff" stroke="#143d32" stroke-width="8"/>
+  <rect x="70" y="78" width="560" height="400" rx="22" fill="#fff9e9" stroke="#143d32" stroke-width="8" filter="url(#shadow)"/>
+  <text x="110" y="155" fill="#143d32" font-family="Georgia,serif" font-size="34" font-style="italic">visual artifact / 04</text>
+  <text x="105" y="280" fill="#143d32" font-family="Arial Black,sans-serif" font-size="112" font-weight="900">SURFACE</text>
+  <text x="110" y="360" fill="#ff674d" font-family="Arial,sans-serif" font-size="62" font-weight="700">SVG CHECK</text>
+  <line x1="110" y1="400" x2="575" y2="400" stroke="#143d32" stroke-width="8"/>
+  <text x="110" y="444" fill="#143d32" font-family="monospace" font-size="22">SCALABLE · SHARP · READY</text>
+</svg>

@@ -1,0 +1,109 @@
+<%- include('../partials/head', { title: '文档管理' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">资料库</div>
+    <h1>📄 文档管理</h1>
+    <p class="page-subtitle">证书、账单与附件统一归档</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/documents/upload" class="btn btn-primary">+ 上传文档</a>
+  </div>
+</div>
+
+<%- include('../partials/filter-bar', {
+  filterBar: {
+    showSearch: true,
+    showPetFilter: true,
+    showDateRange: false,
+    showType: true,
+    typeOptions: [
+      { value: 'vaccine_cert', label: '疫苗证书' },
+      { value: 'deworming_cert', label: '驱虫证明' },
+      { value: 'medical_bill', label: '医疗账单' },
+      { value: 'prescription', label: '处方单' },
+      { value: 'other', label: '其他' }
+    ]
+  }
+}) %>
+
+<% if (documents.length === 0) { %>
+<div class="section">
+  <div class="empty-state">
+    <span class="empty-icon">📁</span>
+    <p>还没有上传任何文档</p>
+    <p style="font-size:0.85rem;color:var(--text-weak);margin-top:4px">上传疫苗证书、驱虫证明、医疗账单等重要文件</p>
+  </div>
+
+<% } else { %>
+<div class="doc-table">
+  <div class="doc-table-head">
+    <span class="doc-col-name">文档名称</span>
+    <span class="doc-col-type">类型</span>
+    <span class="doc-col-pet">关联宠物</span>
+    <span class="doc-col-size">大小</span>
+    <span class="doc-col-date">上传日期</span>
+    <span class="doc-col-actions">操作</span>
+  </div>
+  <% documents.forEach(doc => { %>
+  <div class="doc-table-row">
+    <div class="doc-col-name">
+      <span class="doc-icon"><%= doc.mime_type && doc.mime_type.startsWith('image/') ? '🖼️' : '📎' %></span>
+      <div>
+        <div class="doc-title"><%= doc.title || doc.original_name %></div>
+        <div class="doc-module"><%= doc.module === 'vaccine' ? '疫苗' : doc.module === 'deworming' ? '驱虫' : doc.module === 'medical' ? '医疗' : '其他' %></div>
+      </div>
+    </div>
+    <div class="doc-col-type">
+      <span class="badge badge-primary">
+        <%= doc.doc_type === 'vaccine_cert' ? '疫苗证书' : doc.doc_type === 'deworming_cert' ? '驱虫证明' : doc.doc_type === 'medical_bill' ? '医疗账单' : doc.doc_type === 'prescription' ? '处方单' : '其他' %>
+      </span>
+    </div>
+    <div class="doc-col-pet"><%= doc.pet_name || '—' %></div>
+    <div class="doc-col-size"><%= doc.file_size ? (doc.file_size / 1024).toFixed(1) + ' KB' : '—' %></div>
+    <div class="doc-col-date"><%= new Date(doc.created_at).toLocaleDateString('zh-CN') %></div>
+    <div class="doc-col-actions">
+      <a href="/documents/<%= doc.id %>/download" class="btn btn-sm btn-outline" target="_blank">查看</a>
+      <form action="/documents/<%= doc.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('确定删除该文档？')">
+        <button class="btn btn-sm btn-danger">删除</button>
+      </form>
+    </div>
+  </div>
+  <% }) %>
+</div>
+<% } %>
+
+<%- include('../partials/pagination') %>
+
+<style>
+.doc-table { border-top: 2px solid var(--border-strong); }
+.doc-table-head {
+  display: flex; align-items: center; padding: 10px 0;
+  border-bottom: 1px solid var(--border); font-size: 0.8rem;
+  font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.doc-table-row {
+  display: flex; align-items: center; padding: 14px 0;
+  border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.doc-table-row:hover { background: var(--bg-alt); }
+.doc-col-name { flex: 2; display: flex; align-items: center; gap: 10px; }
+.doc-col-type { flex: 1; }
+.doc-col-pet { flex: 1; color: var(--text-muted); }
+.doc-col-size { flex: 0.8; color: var(--text-muted); font-size: 0.85rem; }
+.doc-col-date { flex: 1; color: var(--text-muted); }
+.doc-col-actions { flex: 1.2; display: flex; gap: 6px; justify-content: flex-end; }
+.doc-icon { font-size: 1.4rem; }
+.doc-title { font-weight: 600; color: var(--text); }
+.doc-module { font-size: 0.78rem; color: var(--text-weak); margin-top: 2px; }
+
+@media (max-width: 640px) {
+  .doc-table-head { display: none; }
+  .doc-table-row { flex-wrap: wrap; gap: 6px; }
+  .doc-col-name { flex: 1 1 100%; }
+  .doc-col-type, .doc-col-pet, .doc-col-size, .doc-col-date { flex: auto; font-size: 0.8rem; }
+  .doc-col-actions { flex: 1 1 100%; justify-content: flex-start; margin-top: 4px; }
+}
+</style>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,251 @@
+<%- include('../partials/head', { title: '数据总览' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">今日关怀</div>
+    <h1>🌸 数据总览</h1>
+    <p class="page-subtitle">温柔记录每一天，让毛孩子被好好照顾</p>
+  </div>
+  <span class="dashboard-note">~ 今天也是美好的一天 ~</span>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid stagger-children">
+  <a href="/pets" class="stat-card stat-card-pink" style="text-decoration:none;color:inherit">
+    <div class="stat-icon">🐾</div>
+    <div class="stat-label">毛孩子</div>
+    <div class="stat-value"><%= petCount %></div>
+  </a>
+  <a href="/walks" class="stat-card stat-card-teal" style="text-decoration:none;color:inherit">
+    <div class="stat-icon">🦮</div>
+    <div class="stat-label">本月散步</div>
+    <div class="stat-value"><%= walksThisMonth %></div>
+    <div class="stat-sub">次</div>
+  </a>
+  <a href="/feedings" class="stat-card stat-card-amber" style="text-decoration:none;color:inherit">
+    <div class="stat-icon">🍖</div>
+    <div class="stat-label">本月喂食</div>
+    <div class="stat-value"><%= feedingsThisMonth %></div>
+    <div class="stat-sub">次</div>
+  </a>
+  <a href="/reminders" class="stat-card stat-card-lavender" style="text-decoration:none;color:inherit">
+    <div class="stat-icon">🔔</div>
+    <div class="stat-label">待办提醒</div>
+    <div class="stat-value"><%= pendingReminders %></div>
+  </a>
+</div>
+
+<!-- Streak & Quick Stats Row -->
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px;">
+  <% if (consecutiveStreak > 0) { %>
+  <div class="stat-card stat-card-teal" style="flex:1;min-width:160px;text-align:center;padding:16px 20px;">
+    <div style="font-size:2rem;">🔥</div>
+    <div style="font-size:1.5rem;font-weight:800;color:var(--teal);"><%= consecutiveStreak %></div>
+    <div style="font-size:0.8rem;color:var(--text-muted);">连续护理天数</div>
+  </div>
+  <% } %>
+  <% if (overdueReminders > 0) { %>
+  <a href="/reminders" class="stat-card" style="flex:1;min-width:160px;text-align:center;padding:16px 20px;text-decoration:none;color:inherit;background:var(--red-bg);">
+    <div style="font-size:2rem;">⚠️</div>
+    <div style="font-size:1.5rem;font-weight:800;color:var(--red);"><%= overdueReminders %></div>
+    <div style="font-size:0.8rem;color:var(--text-muted);">逾期提醒</div>
+  </a>
+  <% } %>
+  <% if (typeof lowStock !== 'undefined' && lowStock.length > 0) { %>
+  <a href="/feedings/inventory" class="stat-card stat-card-amber" style="flex:1;min-width:160px;text-align:center;padding:16px 20px;text-decoration:none;color:inherit;">
+    <div style="font-size:2rem;">📦</div>
+    <div style="font-size:1.5rem;font-weight:800;color:var(--amber);"><%= lowStock.length %></div>
+    <div style="font-size:0.8rem;color:var(--text-muted);">库存不足</div>
+  </a>
+  <% } %>
+</div>
+
+<!-- Today's Agenda -->
+<div class="section">
+  <div class="section-header">
+    <h2>📋 今日待办</h2>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary btn-sm" data-modal="quickWalkModal">🦮 快速遛狗</button>
+      <button class="btn btn-amber btn-sm" data-modal="quickFeedModal">🍖 快速喂食</button>
+    </div>
+  </div>
+  <% if (Object.keys(todayTasks).length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">🎉</span><p>今天没有待办事项！去<a href="/schedules">设置日程计划</a>让系统自动提醒你吧~</p></div>
+  <% } else { %>
+  <div class="stagger-children">
+  <% Object.values(todayTasks).forEach(group => { %>
+    <div style="margin-bottom:16px;">
+      <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:0.95rem;">
+        <%= group.pet_name !== '通用' ? '🐾 ' + group.pet_name : '📌 通用提醒' %>
+      </div>
+      <% group.items.forEach(r => { %>
+      <div class="record-card">
+        <div class="record-icon"><%= r.type === '疫苗' ? '💉' : r.type === '驱虫' ? '🪱' : r.type === '遛狗' ? '🦮' : r.type === '喂食' ? '🍖' : r.type === '用药' ? '💊' : r.type === '美容' ? '🧼' : '🔔' %></div>
+        <div class="record-info">
+          <div class="record-title"><%= r.title %></div>
+          <div class="record-meta"><%= r.reminder_time || '' %></div>
+        </div>
+        <div class="record-actions">
+          <% if (r.type === '遛狗') { %>
+          <button class="btn btn-sm btn-teal" data-modal="quickWalkModal" data-pet="<%= r.pet_id %>" data-title="<%= r.title %>">✓ 完成并记录</button>
+          <% } else if (r.type === '喂食') { %>
+          <button class="btn btn-sm btn-amber" data-modal="quickFeedModal" data-pet="<%= r.pet_id %>" data-title="<%= r.title %>">✓ 完成并记录</button>
+          <% } else { %>
+          <form action="/reminders/<%= r.id %>/complete" method="POST" class="inline-form"><button class="btn btn-sm btn-success">✓ 完成</button></form>
+          <% } %>
+          <form action="/reminders/<%= r.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- Quick Actions -->
+<div class="section">
+  <div class="section-header"><h2>✨ 快捷操作</h2></div>
+  <div class="quick-actions">
+    <a href="/pets/add" class="btn btn-outline">🐾 添加宠物</a>
+    <a href="/walks/add" class="btn btn-outline">🦮 记录遛狗</a>
+    <a href="/feedings/add" class="btn btn-outline">🍖 记录喂食</a>
+    <a href="/health/vaccines/add" class="btn btn-outline">💉 记录疫苗</a>
+    <a href="/medical/add" class="btn btn-outline">🏥 添加就诊</a>
+    <a href="/schedules" class="btn btn-outline">📅 日程计划</a>
+    <a href="/reminders" class="btn btn-outline">🔔 管理提醒</a>
+  </div>
+
+<!-- Weight Chart -->
+<% if (typeof weightData !== 'undefined' && weightData) { %>
+<div class="section">
+  <div class="section-header"><h2>⚖️ 体重变化</h2></div>
+  <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+
+<% } %>
+
+<!-- Recent Activity -->
+<div class="section">
+  <div class="section-header"><h2>📋 最近活动</h2></div>
+  <% if (recentActivity.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">📋</span><p>暂无活动记录，快去添加宠物和记录吧！</p></div>
+  <% } else { %>
+  <div class="stagger-children">
+  <% recentActivity.forEach(a => { %>
+  <div class="activity-item">
+    <div class="activity-icon"><%= a.icon %></div>
+    <div class="activity-body">
+      <strong><%= a.title %></strong>
+      <div class="meta"><%= a.detail %></div>
+    </div>
+    <div class="activity-time"><%= a.time %></div>
+  </div>
+  <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- Quick Walk Modal -->
+<div class="modal-overlay" id="quickWalkModal">
+  <div class="modal">
+    <h3>🦮 快速记录遛狗</h3>
+    <form action="/walks" method="POST">
+      <input type="hidden" name="walk_date" value="<%= today %>">
+      <div class="form-group">
+        <label>🐾 宠物 *</label>
+        <select name="pet_id" id="qwPet" class="form-control" required>
+          <% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>🕐 开始</label><input type="time" name="start_time" class="form-control" value="<%= new Date().toTimeString().slice(0,5) %>"></div>
+        <div class="form-group"><label>🕐 结束</label><input type="time" name="end_time" class="form-control"></div>
+        <div class="form-group"><label>⏱️ 时长(分钟)</label><input type="number" name="duration_minutes" class="form-control" value="30" min="1"></div>
+        <div class="form-group"><label>📏 距离(km)</label><input type="number" step="0.1" name="distance_km" class="form-control" value="0"></div>
+      </div>
+      <div class="form-group"><label>😊 心情</label>
+        <select name="mood" class="form-control">
+          <option value="开心">😄 开心</option><option value="正常" selected>🙂 正常</option><option value="一般">😐 一般</option><option value="低落">😢 低落</option>
+        </select>
+      </div>
+      <div class="form-group"><label>📝 备注</label><input type="text" name="notes" class="form-control" placeholder="路线、趣事..."></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close-modal>取消</button>
+        <button type="submit" class="btn btn-primary">💾 保存</button>
+      </div>
+    </form>
+  </div>
+
+<!-- Quick Feed Modal -->
+<div class="modal-overlay" id="quickFeedModal">
+  <div class="modal">
+    <h3>🍖 快速记录喂食</h3>
+    <form action="/feedings" method="POST">
+      <input type="hidden" name="feed_date" value="<%= today %>">
+      <div class="form-group">
+        <label>🐾 宠物 *</label>
+        <select name="pet_id" id="qfPet" class="form-control" required>
+          <% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>🕐 时间</label><input type="time" name="feed_time" class="form-control" value="<%= new Date().toTimeString().slice(0,5) %>"></div>
+        <div class="form-group"><label>🏷️ 品牌</label><input type="text" name="food_brand" class="form-control" placeholder="例如皇家"></div>
+        <div class="form-group"><label>🍽️ 类型</label><select name="food_type" class="form-control"><option value="干粮">🦴 干粮</option><option value="湿粮">🥫 湿粮</option><option value="零食">🍪 零食</option><option value="自制">🍳 自制</option></select></div>
+        <div class="form-group"><label>⚖️ 份量(g)</label><input type="number" step="0.1" name="portion_grams" class="form-control" value="0"></div>
+      </div>
+      <div class="form-group"><label>📝 备注</label><input type="text" name="notes" class="form-control" placeholder="胃口、反应..."></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close-modal>取消</button>
+        <button type="submit" class="btn btn-primary">💾 保存</button>
+      </div>
+    </form>
+  </div>
+
+<!-- Pre-select pet for quick actions from reminder buttons -->
+<script>
+(function() {
+  document.querySelectorAll('[data-modal][data-pet]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var modal = document.getElementById(this.getAttribute('data-modal'));
+      if (modal) {
+        var petSelect = modal.querySelector('select[name="pet_id"]');
+        if (petSelect) petSelect.value = this.getAttribute('data-pet');
+      }
+    });
+  });
+})();
+</script>
+</script>
+
+<% if (typeof weightData !== 'undefined' && weightData) { %>
+<script>
+(function() {
+  var ctx = document.getElementById('weightChart').getContext('2d');
+  var data = JSON.parse('<%- weightData %>');
+  data.datasets.forEach(function(ds) {
+    ds.borderColor = '#E88D95';
+    ds.backgroundColor = 'rgba(232, 141, 149, 0.08)';
+    ds.pointBackgroundColor = '#E88D95';
+    ds.pointBorderColor = '#E88D95';
+    ds.tension = 0.4;
+    ds.borderWidth = 2.5;
+  });
+  new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: true, labels: { boxWidth: 12, usePointStyle: true, font: { size: 11 }, color: '#8B7D94' } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#C4B8CC', font: { size: 11 } } },
+        y: { grid: { color: 'rgba(200,185,210,0.25)' }, ticks: { color: '#C4B8CC', font: { size: 11 } } }
+      }
+    }
+  });
+})();
+</script>
+<% } %>
+
+<%- include('../partials/foot') %>

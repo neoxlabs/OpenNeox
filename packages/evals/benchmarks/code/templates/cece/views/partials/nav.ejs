@@ -1,0 +1,158 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-brand">
+      <span class="brand-mark" aria-hidden="true">🐾</span>
+      <span class="brand-text">Cece</span>
+    </a>
+
+    <% if (typeof user !== 'undefined' && user) { %>
+    <div class="nav-links" id="navLinks">
+      <a href="/dashboard" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/dashboard') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>总览</span>
+      </a>
+      <a href="/pets" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/pets') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2s-2 2-4 2-4-2-4-2"/><path d="M12 4v4"/><path d="M8 8c-2 2-3 5-3 8s2 6 7 6 7-4 7-6-1-6-3-8"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></svg>
+        <span>宠物</span>
+      </a>
+      <a href="/walks" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/walks') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>遛狗</span>
+      </a>
+      <a href="/feedings" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/feedings') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        <span>喂食</span>
+      </a>
+      <a href="/health" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/health') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>健康</span>
+      </a>
+      <a href="/medical" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/medical') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="12" y2="14"/></svg>
+        <span>医疗</span>
+      </a>
+      <a href="/grooming" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/grooming') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8l-8 8"/><path d="M8 8l8 8"/></svg>
+        <span>美容</span>
+      </a>
+      <a href="/schedules" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/schedules') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>计划</span>
+      </a>
+      <a href="/calendar" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/calendar') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>日历</span>
+      </a>
+      <a href="/reminders" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/reminders') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>提醒</span>
+      </a>
+      <a href="/documents" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/documents') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>文档</span>
+      </a>
+      <a href="/family" class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/family') ? 'active' : '' %>">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>共享</span>
+      </a>
+    </div>
+
+    <div class="nav-user">
+      <button class="theme-toggle" id="themeToggle" aria-label="切换主题" title="切换深色/浅色模式">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <span class="nav-username"><%= user.username %></span>
+      <form action="/auth/logout" method="POST" class="nav-logout-form"><button class="btn btn-sm btn-outline" type="submit">退出</button></form>
+    </div>
+    <% } else { %>
+    <div class="nav-user">
+      <button class="theme-toggle" id="themeToggle" aria-label="切换主题" title="切换深色/浅色模式">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <a href="/auth/login" class="btn btn-sm btn-primary">登录</a>
+    </div>
+    <% } %>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<nav class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-header">
+    <span class="drawer-title"><span class="brand-mark" aria-hidden="true">🐾</span> Cece</span>
+    <button class="drawer-close" id="drawerClose" aria-label="关闭菜单">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <% if (typeof user !== 'undefined' && user) { %>
+  <div class="drawer-links">
+    <a href="/dashboard" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/dashboard') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      数据总览
+    </a>
+    <a href="/pets" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/pets') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2s-2 2-4 2-4-2-4-2"/><path d="M12 4v4"/><path d="M8 8c-2 2-3 5-3 8s2 6 7 6 7-4 7-6-1-6-3-8"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></svg>
+      宠物管理
+    </a>
+    <a href="/walks" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/walks') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
+      遛狗记录
+    </a>
+    <a href="/feedings" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/feedings') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+      喂食记录
+    </a>
+    <a href="/health" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/health') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      健康管理
+    </a>
+    <a href="/medical" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/medical') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="12" y2="14"/></svg>
+      医疗记录
+    </a>
+    <a href="/grooming" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/grooming') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8l-8 8"/><path d="M8 8l8 8"/></svg>
+      美容护理
+    </a>
+    <a href="/schedules" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/schedules') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      护理计划
+    </a>
+    <a href="/calendar" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/calendar') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      护理日历
+    </a>
+    <a href="/reminders" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/reminders') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      提醒中心
+    </a>
+    <a href="/documents" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/documents') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      文档管理
+    </a>
+    <a href="/family" class="drawer-link <%= typeof path !== 'undefined' && path.startsWith('/family') ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      家庭共享
+    </a>
+  </div>
+  <div class="drawer-footer">
+    <span><%= user.username %></span>
+    <form action="/auth/logout" method="POST" class="nav-logout-form"><button class="btn btn-sm btn-outline" type="submit">退出</button></form>
+  </div>
+  <% } else { %>
+  <div class="drawer-links">
+    <a href="/auth/login" class="drawer-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      登录
+    </a>
+    <a href="/auth/register" class="drawer-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      注册
+    </a>
+  </div>
+  <% } %>
+</nav>

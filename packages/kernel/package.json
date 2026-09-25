@@ -1,0 +1,941 @@
+{
+  "name": "@neoxlabs/kernel",
+  "version": "2.6.0",
+  "private": true,
+  "description": "Provider-agnostic agent engine: run loop, providers, tool pipeline, context compaction",
+  "type": "module",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./version.js": {
+      "types": "./dist/version.d.ts",
+      "import": "./dist/version.js",
+      "require": "./dist/version.js"
+    },
+    "./version": {
+      "types": "./dist/version.d.ts",
+      "import": "./dist/version.js",
+      "require": "./dist/version.js"
+    },
+    "./compat/memoryPressure.js": {
+      "types": "./dist/compat/memoryPressure.d.ts",
+      "import": "./dist/compat/memoryPressure.js",
+      "require": "./dist/compat/memoryPressure.js"
+    },
+    "./compat/memoryPressure": {
+      "types": "./dist/compat/memoryPressure.d.ts",
+      "import": "./dist/compat/memoryPressure.js",
+      "require": "./dist/compat/memoryPressure.js"
+    },
+    "./core/autoCompactGuard.js": {
+      "types": "./dist/core/autoCompactGuard.d.ts",
+      "import": "./dist/core/autoCompactGuard.js",
+      "require": "./dist/core/autoCompactGuard.js"
+    },
+    "./core/autoCompactGuard": {
+      "types": "./dist/core/autoCompactGuard.d.ts",
+      "import": "./dist/core/autoCompactGuard.js",
+      "require": "./dist/core/autoCompactGuard.js"
+    },
+    "./core/concurrencyLimiter.js": {
+      "types": "./dist/core/concurrencyLimiter.d.ts",
+      "import": "./dist/core/concurrencyLimiter.js",
+      "require": "./dist/core/concurrencyLimiter.js"
+    },
+    "./core/concurrencyLimiter": {
+      "types": "./dist/core/concurrencyLimiter.d.ts",
+      "import": "./dist/core/concurrencyLimiter.js",
+      "require": "./dist/core/concurrencyLimiter.js"
+    },
+    "./core/contextCollapse.js": {
+      "types": "./dist/core/contextCollapse.d.ts",
+      "import": "./dist/core/contextCollapse.js",
+      "require": "./dist/core/contextCollapse.js"
+    },
+    "./core/contextCollapse": {
+      "types": "./dist/core/contextCollapse.d.ts",
+      "import": "./dist/core/contextCollapse.js",
+      "require": "./dist/core/contextCollapse.js"
+    },
+    "./core/defaultGuardrails.js": {
+      "types": "./dist/core/defaultGuardrails.d.ts",
+      "import": "./dist/core/defaultGuardrails.js",
+      "require": "./dist/core/defaultGuardrails.js"
+    },
+    "./core/defaultGuardrails": {
+      "types": "./dist/core/defaultGuardrails.d.ts",
+      "import": "./dist/core/defaultGuardrails.js",
+      "require": "./dist/core/defaultGuardrails.js"
+    },
+    "./core/instructionsBridge.js": {
+      "types": "./dist/core/instructionsBridge.d.ts",
+      "import": "./dist/core/instructionsBridge.js",
+      "require": "./dist/core/instructionsBridge.js"
+    },
+    "./core/instructionsBridge": {
+      "types": "./dist/core/instructionsBridge.d.ts",
+      "import": "./dist/core/instructionsBridge.js",
+      "require": "./dist/core/instructionsBridge.js"
+    },
+    "./core/loopDetector.js": {
+      "types": "./dist/core/loopDetector.d.ts",
+      "import": "./dist/core/loopDetector.js",
+      "require": "./dist/core/loopDetector.js"
+    },
+    "./core/loopDetector": {
+      "types": "./dist/core/loopDetector.d.ts",
+      "import": "./dist/core/loopDetector.js",
+      "require": "./dist/core/loopDetector.js"
+    },
+    "./core/parallelSafeTools.js": {
+      "types": "./dist/core/parallelSafeTools.d.ts",
+      "import": "./dist/core/parallelSafeTools.js",
+      "require": "./dist/core/parallelSafeTools.js"
+    },
+    "./core/parallelSafeTools": {
+      "types": "./dist/core/parallelSafeTools.d.ts",
+      "import": "./dist/core/parallelSafeTools.js",
+      "require": "./dist/core/parallelSafeTools.js"
+    },
+    "./core/permissions/PermissionManager.js": {
+      "types": "./dist/core/permissions/PermissionManager.d.ts",
+      "import": "./dist/core/permissions/PermissionManager.js",
+      "require": "./dist/core/permissions/PermissionManager.js"
+    },
+    "./core/permissions/PermissionManager": {
+      "types": "./dist/core/permissions/PermissionManager.d.ts",
+      "import": "./dist/core/permissions/PermissionManager.js",
+      "require": "./dist/core/permissions/PermissionManager.js"
+    },
+    "./core/permissions/approvalCache.js": {
+      "types": "./dist/core/permissions/approvalCache.d.ts",
+      "import": "./dist/core/permissions/approvalCache.js",
+      "require": "./dist/core/permissions/approvalCache.js"
+    },
+    "./core/permissions/approvalCache": {
+      "types": "./dist/core/permissions/approvalCache.d.ts",
+      "import": "./dist/core/permissions/approvalCache.js",
+      "require": "./dist/core/permissions/approvalCache.js"
+    },
+    "./core/permissions/index.js": {
+      "types": "./dist/core/permissions/index.d.ts",
+      "import": "./dist/core/permissions/index.js",
+      "require": "./dist/core/permissions/index.js"
+    },
+    "./core/permissions/index": {
+      "types": "./dist/core/permissions/index.d.ts",
+      "import": "./dist/core/permissions/index.js",
+      "require": "./dist/core/permissions/index.js"
+    },
+    "./core/postCompactReinject.js": {
+      "types": "./dist/core/postCompactReinject.d.ts",
+      "import": "./dist/core/postCompactReinject.js",
+      "require": "./dist/core/postCompactReinject.js"
+    },
+    "./core/postCompactReinject": {
+      "types": "./dist/core/postCompactReinject.d.ts",
+      "import": "./dist/core/postCompactReinject.js",
+      "require": "./dist/core/postCompactReinject.js"
+    },
+    "./core/projectInstructions.js": {
+      "types": "./dist/core/projectInstructions.d.ts",
+      "import": "./dist/core/projectInstructions.js",
+      "require": "./dist/core/projectInstructions.js"
+    },
+    "./core/projectInstructions": {
+      "types": "./dist/core/projectInstructions.d.ts",
+      "import": "./dist/core/projectInstructions.js",
+      "require": "./dist/core/projectInstructions.js"
+    },
+    "./core/reasoning/autoVerifyPipeline.js": {
+      "types": "./dist/core/reasoning/autoVerifyPipeline.d.ts",
+      "import": "./dist/core/reasoning/autoVerifyPipeline.js",
+      "require": "./dist/core/reasoning/autoVerifyPipeline.js"
+    },
+    "./core/reasoning/autoVerifyPipeline": {
+      "types": "./dist/core/reasoning/autoVerifyPipeline.d.ts",
+      "import": "./dist/core/reasoning/autoVerifyPipeline.js",
+      "require": "./dist/core/reasoning/autoVerifyPipeline.js"
+    },
+    "./core/reasoning/errorPatternMemory.js": {
+      "types": "./dist/core/reasoning/errorPatternMemory.d.ts",
+      "import": "./dist/core/reasoning/errorPatternMemory.js",
+      "require": "./dist/core/reasoning/errorPatternMemory.js"
+    },
+    "./core/reasoning/errorPatternMemory": {
+      "types": "./dist/core/reasoning/errorPatternMemory.d.ts",
+      "import": "./dist/core/reasoning/errorPatternMemory.js",
+      "require": "./dist/core/reasoning/errorPatternMemory.js"
+    },
+    "./core/reasoning/projectContextDetector.js": {
+      "types": "./dist/core/reasoning/projectContextDetector.d.ts",
+      "import": "./dist/core/reasoning/projectContextDetector.js",
+      "require": "./dist/core/reasoning/projectContextDetector.js"
+    },
+    "./core/reasoning/projectContextDetector": {
+      "types": "./dist/core/reasoning/projectContextDetector.d.ts",
+      "import": "./dist/core/reasoning/projectContextDetector.js",
+      "require": "./dist/core/reasoning/projectContextDetector.js"
+    },
+    "./core/reasoning/toolUsageAdvisor.js": {
+      "types": "./dist/core/reasoning/toolUsageAdvisor.d.ts",
+      "import": "./dist/core/reasoning/toolUsageAdvisor.js",
+      "require": "./dist/core/reasoning/toolUsageAdvisor.js"
+    },
+    "./core/reasoning/toolUsageAdvisor": {
+      "types": "./dist/core/reasoning/toolUsageAdvisor.d.ts",
+      "import": "./dist/core/reasoning/toolUsageAdvisor.js",
+      "require": "./dist/core/reasoning/toolUsageAdvisor.js"
+    },
+    "./core/runner.js": {
+      "types": "./dist/core/runner.d.ts",
+      "import": "./dist/core/runner.js",
+      "require": "./dist/core/runner.js"
+    },
+    "./core/runner": {
+      "types": "./dist/core/runner.d.ts",
+      "import": "./dist/core/runner.js",
+      "require": "./dist/core/runner.js"
+    },
+    "./core/runnerEmptyFinalOutputUtils.js": {
+      "types": "./dist/core/runnerEmptyFinalOutputUtils.d.ts",
+      "import": "./dist/core/runnerEmptyFinalOutputUtils.js",
+      "require": "./dist/core/runnerEmptyFinalOutputUtils.js"
+    },
+    "./core/runnerEmptyFinalOutputUtils": {
+      "types": "./dist/core/runnerEmptyFinalOutputUtils.d.ts",
+      "import": "./dist/core/runnerEmptyFinalOutputUtils.js",
+      "require": "./dist/core/runnerEmptyFinalOutputUtils.js"
+    },
+    "./core/runnerModeFilterUtils.js": {
+      "types": "./dist/core/runnerModeFilterUtils.d.ts",
+      "import": "./dist/core/runnerModeFilterUtils.js",
+      "require": "./dist/core/runnerModeFilterUtils.js"
+    },
+    "./core/runnerModeFilterUtils": {
+      "types": "./dist/core/runnerModeFilterUtils.d.ts",
+      "import": "./dist/core/runnerModeFilterUtils.js",
+      "require": "./dist/core/runnerModeFilterUtils.js"
+    },
+    "./core/runnerNoToolFinalizeUtils.js": {
+      "types": "./dist/core/runnerNoToolFinalizeUtils.d.ts",
+      "import": "./dist/core/runnerNoToolFinalizeUtils.js",
+      "require": "./dist/core/runnerNoToolFinalizeUtils.js"
+    },
+    "./core/runnerNoToolFinalizeUtils": {
+      "types": "./dist/core/runnerNoToolFinalizeUtils.d.ts",
+      "import": "./dist/core/runnerNoToolFinalizeUtils.js",
+      "require": "./dist/core/runnerNoToolFinalizeUtils.js"
+    },
+    "./core/runnerToolResultPreparationUtils.js": {
+      "types": "./dist/core/runnerToolResultPreparationUtils.d.ts",
+      "import": "./dist/core/runnerToolResultPreparationUtils.js",
+      "require": "./dist/core/runnerToolResultPreparationUtils.js"
+    },
+    "./core/runnerToolResultPreparationUtils": {
+      "types": "./dist/core/runnerToolResultPreparationUtils.d.ts",
+      "import": "./dist/core/runnerToolResultPreparationUtils.js",
+      "require": "./dist/core/runnerToolResultPreparationUtils.js"
+    },
+    "./core/sessionState.js": {
+      "types": "./dist/core/sessionState.d.ts",
+      "import": "./dist/core/sessionState.js",
+      "require": "./dist/core/sessionState.js"
+    },
+    "./core/sessionState": {
+      "types": "./dist/core/sessionState.d.ts",
+      "import": "./dist/core/sessionState.js",
+      "require": "./dist/core/sessionState.js"
+    },
+    "./core/toolArgsGuard.js": {
+      "types": "./dist/core/toolArgsGuard.d.ts",
+      "import": "./dist/core/toolArgsGuard.js",
+      "require": "./dist/core/toolArgsGuard.js"
+    },
+    "./core/toolArgsGuard": {
+      "types": "./dist/core/toolArgsGuard.d.ts",
+      "import": "./dist/core/toolArgsGuard.js",
+      "require": "./dist/core/toolArgsGuard.js"
+    },
+    "./core/toolArgsParser.js": {
+      "types": "./dist/core/toolArgsParser.d.ts",
+      "import": "./dist/core/toolArgsParser.js",
+      "require": "./dist/core/toolArgsParser.js"
+    },
+    "./core/toolArgsParser": {
+      "types": "./dist/core/toolArgsParser.d.ts",
+      "import": "./dist/core/toolArgsParser.js",
+      "require": "./dist/core/toolArgsParser.js"
+    },
+    "./core/toolClassification.js": {
+      "types": "./dist/core/toolClassification.d.ts",
+      "import": "./dist/core/toolClassification.js",
+      "require": "./dist/core/toolClassification.js"
+    },
+    "./core/toolClassification": {
+      "types": "./dist/core/toolClassification.d.ts",
+      "import": "./dist/core/toolClassification.js",
+      "require": "./dist/core/toolClassification.js"
+    },
+    "./core/toolOrchestration/adapters/index.js": {
+      "types": "./dist/core/toolOrchestration/adapters/index.d.ts",
+      "import": "./dist/core/toolOrchestration/adapters/index.js",
+      "require": "./dist/core/toolOrchestration/adapters/index.js"
+    },
+    "./core/toolOrchestration/adapters/index": {
+      "types": "./dist/core/toolOrchestration/adapters/index.d.ts",
+      "import": "./dist/core/toolOrchestration/adapters/index.js",
+      "require": "./dist/core/toolOrchestration/adapters/index.js"
+    },
+    "./core/toolOrchestration/batch.js": {
+      "types": "./dist/core/toolOrchestration/batch.d.ts",
+      "import": "./dist/core/toolOrchestration/batch.js",
+      "require": "./dist/core/toolOrchestration/batch.js"
+    },
+    "./core/toolOrchestration/batch": {
+      "types": "./dist/core/toolOrchestration/batch.d.ts",
+      "import": "./dist/core/toolOrchestration/batch.js",
+      "require": "./dist/core/toolOrchestration/batch.js"
+    },
+    "./core/toolOrchestration/orchestrate.js": {
+      "types": "./dist/core/toolOrchestration/orchestrate.d.ts",
+      "import": "./dist/core/toolOrchestration/orchestrate.js",
+      "require": "./dist/core/toolOrchestration/orchestrate.js"
+    },
+    "./core/toolOrchestration/orchestrate": {
+      "types": "./dist/core/toolOrchestration/orchestrate.d.ts",
+      "import": "./dist/core/toolOrchestration/orchestrate.js",
+      "require": "./dist/core/toolOrchestration/orchestrate.js"
+    },
+    "./core/toolOrchestration/stages/execute.js": {
+      "types": "./dist/core/toolOrchestration/stages/execute.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/execute.js",
+      "require": "./dist/core/toolOrchestration/stages/execute.js"
+    },
+    "./core/toolOrchestration/stages/execute": {
+      "types": "./dist/core/toolOrchestration/stages/execute.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/execute.js",
+      "require": "./dist/core/toolOrchestration/stages/execute.js"
+    },
+    "./core/toolOrchestration/stages/gate.js": {
+      "types": "./dist/core/toolOrchestration/stages/gate.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/gate.js",
+      "require": "./dist/core/toolOrchestration/stages/gate.js"
+    },
+    "./core/toolOrchestration/stages/gate": {
+      "types": "./dist/core/toolOrchestration/stages/gate.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/gate.js",
+      "require": "./dist/core/toolOrchestration/stages/gate.js"
+    },
+    "./core/toolOrchestration/stages/postHook.js": {
+      "types": "./dist/core/toolOrchestration/stages/postHook.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/postHook.js",
+      "require": "./dist/core/toolOrchestration/stages/postHook.js"
+    },
+    "./core/toolOrchestration/stages/postHook": {
+      "types": "./dist/core/toolOrchestration/stages/postHook.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/postHook.js",
+      "require": "./dist/core/toolOrchestration/stages/postHook.js"
+    },
+    "./core/toolOrchestration/stages/preHook.js": {
+      "types": "./dist/core/toolOrchestration/stages/preHook.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/preHook.js",
+      "require": "./dist/core/toolOrchestration/stages/preHook.js"
+    },
+    "./core/toolOrchestration/stages/preHook": {
+      "types": "./dist/core/toolOrchestration/stages/preHook.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/preHook.js",
+      "require": "./dist/core/toolOrchestration/stages/preHook.js"
+    },
+    "./core/toolOrchestration/stages/telemetry.js": {
+      "types": "./dist/core/toolOrchestration/stages/telemetry.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/telemetry.js",
+      "require": "./dist/core/toolOrchestration/stages/telemetry.js"
+    },
+    "./core/toolOrchestration/stages/telemetry": {
+      "types": "./dist/core/toolOrchestration/stages/telemetry.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/telemetry.js",
+      "require": "./dist/core/toolOrchestration/stages/telemetry.js"
+    },
+    "./core/toolOrchestration/stages/validate.js": {
+      "types": "./dist/core/toolOrchestration/stages/validate.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/validate.js",
+      "require": "./dist/core/toolOrchestration/stages/validate.js"
+    },
+    "./core/toolOrchestration/stages/validate": {
+      "types": "./dist/core/toolOrchestration/stages/validate.d.ts",
+      "import": "./dist/core/toolOrchestration/stages/validate.js",
+      "require": "./dist/core/toolOrchestration/stages/validate.js"
+    },
+    "./core/toolOrchestration/types.js": {
+      "types": "./dist/core/toolOrchestration/types.d.ts",
+      "import": "./dist/core/toolOrchestration/types.js",
+      "require": "./dist/core/toolOrchestration/types.js"
+    },
+    "./core/toolOrchestration/types": {
+      "types": "./dist/core/toolOrchestration/types.d.ts",
+      "import": "./dist/core/toolOrchestration/types.js",
+      "require": "./dist/core/toolOrchestration/types.js"
+    },
+    "./core/toolPairPreserver.js": {
+      "types": "./dist/core/toolPairPreserver.d.ts",
+      "import": "./dist/core/toolPairPreserver.js",
+      "require": "./dist/core/toolPairPreserver.js"
+    },
+    "./core/toolPairPreserver": {
+      "types": "./dist/core/toolPairPreserver.d.ts",
+      "import": "./dist/core/toolPairPreserver.js",
+      "require": "./dist/core/toolPairPreserver.js"
+    },
+    "./core/toolRiskEvaluator.js": {
+      "types": "./dist/core/toolRiskEvaluator.d.ts",
+      "import": "./dist/core/toolRiskEvaluator.js",
+      "require": "./dist/core/toolRiskEvaluator.js"
+    },
+    "./core/toolRiskEvaluator": {
+      "types": "./dist/core/toolRiskEvaluator.d.ts",
+      "import": "./dist/core/toolRiskEvaluator.js",
+      "require": "./dist/core/toolRiskEvaluator.js"
+    },
+    "./core/toolSummaryGenerator.js": {
+      "types": "./dist/core/toolSummaryGenerator.d.ts",
+      "import": "./dist/core/toolSummaryGenerator.js",
+      "require": "./dist/core/toolSummaryGenerator.js"
+    },
+    "./core/toolSummaryGenerator": {
+      "types": "./dist/core/toolSummaryGenerator.d.ts",
+      "import": "./dist/core/toolSummaryGenerator.js",
+      "require": "./dist/core/toolSummaryGenerator.js"
+    },
+    "./core/types/toolResult.js": {
+      "types": "./dist/core/types/toolResult.d.ts",
+      "import": "./dist/core/types/toolResult.js",
+      "require": "./dist/core/types/toolResult.js"
+    },
+    "./core/types/toolResult": {
+      "types": "./dist/core/types/toolResult.d.ts",
+      "import": "./dist/core/types/toolResult.js",
+      "require": "./dist/core/types/toolResult.js"
+    },
+    "./core/writeLedger.js": {
+      "types": "./dist/core/writeLedger.d.ts",
+      "import": "./dist/core/writeLedger.js",
+      "require": "./dist/core/writeLedger.js"
+    },
+    "./core/writeLedger": {
+      "types": "./dist/core/writeLedger.d.ts",
+      "import": "./dist/core/writeLedger.js",
+      "require": "./dist/core/writeLedger.js"
+    },
+    "./memory/shortterm.js": {
+      "types": "./dist/memory/shortterm.d.ts",
+      "import": "./dist/memory/shortterm.js",
+      "require": "./dist/memory/shortterm.js"
+    },
+    "./memory/shortterm": {
+      "types": "./dist/memory/shortterm.d.ts",
+      "import": "./dist/memory/shortterm.js",
+      "require": "./dist/memory/shortterm.js"
+    },
+    "./models/anthropic.js": {
+      "types": "./dist/models/anthropic.d.ts",
+      "import": "./dist/models/anthropic.js",
+      "require": "./dist/models/anthropic.js"
+    },
+    "./models/anthropic": {
+      "types": "./dist/models/anthropic.d.ts",
+      "import": "./dist/models/anthropic.js",
+      "require": "./dist/models/anthropic.js"
+    },
+    "./models/anthropicClaudeCode.js": {
+      "types": "./dist/models/anthropicClaudeCode.d.ts",
+      "import": "./dist/models/anthropicClaudeCode.js",
+      "require": "./dist/models/anthropicClaudeCode.js"
+    },
+    "./models/anthropicClaudeCode": {
+      "types": "./dist/models/anthropicClaudeCode.d.ts",
+      "import": "./dist/models/anthropicClaudeCode.js",
+      "require": "./dist/models/anthropicClaudeCode.js"
+    },
+    "./models/doubao.js": {
+      "types": "./dist/models/doubao.d.ts",
+      "import": "./dist/models/doubao.js",
+      "require": "./dist/models/doubao.js"
+    },
+    "./models/doubao": {
+      "types": "./dist/models/doubao.d.ts",
+      "import": "./dist/models/doubao.js",
+      "require": "./dist/models/doubao.js"
+    },
+    "./models/gemini.js": {
+      "types": "./dist/models/gemini.d.ts",
+      "import": "./dist/models/gemini.js",
+      "require": "./dist/models/gemini.js"
+    },
+    "./models/gemini": {
+      "types": "./dist/models/gemini.d.ts",
+      "import": "./dist/models/gemini.js",
+      "require": "./dist/models/gemini.js"
+    },
+    "./models/glm.js": {
+      "types": "./dist/models/glm.d.ts",
+      "import": "./dist/models/glm.js",
+      "require": "./dist/models/glm.js"
+    },
+    "./models/glm": {
+      "types": "./dist/models/glm.d.ts",
+      "import": "./dist/models/glm.js",
+      "require": "./dist/models/glm.js"
+    },
+    "./models/kimi.js": {
+      "types": "./dist/models/kimi.d.ts",
+      "import": "./dist/models/kimi.js",
+      "require": "./dist/models/kimi.js"
+    },
+    "./models/kimi": {
+      "types": "./dist/models/kimi.d.ts",
+      "import": "./dist/models/kimi.js",
+      "require": "./dist/models/kimi.js"
+    },
+    "./models/openai.js": {
+      "types": "./dist/models/openai.d.ts",
+      "import": "./dist/models/openai.js",
+      "require": "./dist/models/openai.js"
+    },
+    "./models/openai": {
+      "types": "./dist/models/openai.d.ts",
+      "import": "./dist/models/openai.js",
+      "require": "./dist/models/openai.js"
+    },
+    "./models/providerCapabilities.js": {
+      "types": "./dist/models/providerCapabilities.d.ts",
+      "import": "./dist/models/providerCapabilities.js",
+      "require": "./dist/models/providerCapabilities.js"
+    },
+    "./models/providerCapabilities": {
+      "types": "./dist/models/providerCapabilities.d.ts",
+      "import": "./dist/models/providerCapabilities.js",
+      "require": "./dist/models/providerCapabilities.js"
+    },
+    "./models/providerPresets.js": {
+      "types": "./dist/models/providerPresets.d.ts",
+      "import": "./dist/models/providerPresets.js",
+      "require": "./dist/models/providerPresets.js"
+    },
+    "./models/providerPresets": {
+      "types": "./dist/models/providerPresets.d.ts",
+      "import": "./dist/models/providerPresets.js",
+      "require": "./dist/models/providerPresets.js"
+    },
+    "./platform/cliLogger.js": {
+      "types": "./dist/platform/cliLogger.d.ts",
+      "import": "./dist/platform/cliLogger.js",
+      "require": "./dist/platform/cliLogger.js"
+    },
+    "./platform/cliLogger": {
+      "types": "./dist/platform/cliLogger.d.ts",
+      "import": "./dist/platform/cliLogger.js",
+      "require": "./dist/platform/cliLogger.js"
+    },
+    "./platform/diagLogGate.js": {
+      "types": "./dist/platform/diagLogGate.d.ts",
+      "import": "./dist/platform/diagLogGate.js",
+      "require": "./dist/platform/diagLogGate.js"
+    },
+    "./platform/diagLogGate": {
+      "types": "./dist/platform/diagLogGate.d.ts",
+      "import": "./dist/platform/diagLogGate.js",
+      "require": "./dist/platform/diagLogGate.js"
+    },
+    "./platform/machineIdentity.js": {
+      "types": "./dist/platform/machineIdentity.d.ts",
+      "import": "./dist/platform/machineIdentity.js",
+      "require": "./dist/platform/machineIdentity.js"
+    },
+    "./platform/machineIdentity": {
+      "types": "./dist/platform/machineIdentity.d.ts",
+      "import": "./dist/platform/machineIdentity.js",
+      "require": "./dist/platform/machineIdentity.js"
+    },
+    "./platform/modelCapabilities.js": {
+      "types": "./dist/platform/modelCapabilities.d.ts",
+      "import": "./dist/platform/modelCapabilities.js",
+      "require": "./dist/platform/modelCapabilities.js"
+    },
+    "./platform/modelCapabilities": {
+      "types": "./dist/platform/modelCapabilities.d.ts",
+      "import": "./dist/platform/modelCapabilities.js",
+      "require": "./dist/platform/modelCapabilities.js"
+    },
+    "./platform/neoxHome.js": {
+      "types": "./dist/platform/neoxHome.d.ts",
+      "import": "./dist/platform/neoxHome.js",
+      "require": "./dist/platform/neoxHome.js"
+    },
+    "./platform/neoxHome": {
+      "types": "./dist/platform/neoxHome.d.ts",
+      "import": "./dist/platform/neoxHome.js",
+      "require": "./dist/platform/neoxHome.js"
+    },
+    "./platform/neoxLogger.js": {
+      "types": "./dist/platform/neoxLogger.d.ts",
+      "import": "./dist/platform/neoxLogger.js",
+      "require": "./dist/platform/neoxLogger.js"
+    },
+    "./platform/neoxLogger": {
+      "types": "./dist/platform/neoxLogger.d.ts",
+      "import": "./dist/platform/neoxLogger.js",
+      "require": "./dist/platform/neoxLogger.js"
+    },
+    "./platform/stableHostLabel.js": {
+      "types": "./dist/platform/stableHostLabel.d.ts",
+      "import": "./dist/platform/stableHostLabel.js",
+      "require": "./dist/platform/stableHostLabel.js"
+    },
+    "./platform/stableHostLabel": {
+      "types": "./dist/platform/stableHostLabel.d.ts",
+      "import": "./dist/platform/stableHostLabel.js",
+      "require": "./dist/platform/stableHostLabel.js"
+    },
+    "./platform/watchIgnoreSpec.js": {
+      "types": "./dist/platform/watchIgnoreSpec.d.ts",
+      "import": "./dist/platform/watchIgnoreSpec.js",
+      "require": "./dist/platform/watchIgnoreSpec.js"
+    },
+    "./platform/watchIgnoreSpec": {
+      "types": "./dist/platform/watchIgnoreSpec.d.ts",
+      "import": "./dist/platform/watchIgnoreSpec.js",
+      "require": "./dist/platform/watchIgnoreSpec.js"
+    },
+    "./profiles/defaults.js": {
+      "types": "./dist/profiles/defaults.d.ts",
+      "import": "./dist/profiles/defaults.js",
+      "require": "./dist/profiles/defaults.js"
+    },
+    "./profiles/defaults": {
+      "types": "./dist/profiles/defaults.d.ts",
+      "import": "./dist/profiles/defaults.js",
+      "require": "./dist/profiles/defaults.js"
+    },
+    "./profiles/index.js": {
+      "types": "./dist/profiles/index.d.ts",
+      "import": "./dist/profiles/index.js",
+      "require": "./dist/profiles/index.js"
+    },
+    "./profiles/index": {
+      "types": "./dist/profiles/index.d.ts",
+      "import": "./dist/profiles/index.js",
+      "require": "./dist/profiles/index.js"
+    },
+    "./profiles/resolver.js": {
+      "types": "./dist/profiles/resolver.d.ts",
+      "import": "./dist/profiles/resolver.js",
+      "require": "./dist/profiles/resolver.js"
+    },
+    "./profiles/resolver": {
+      "types": "./dist/profiles/resolver.d.ts",
+      "import": "./dist/profiles/resolver.js",
+      "require": "./dist/profiles/resolver.js"
+    },
+    "./profiles/types.js": {
+      "types": "./dist/profiles/types.d.ts",
+      "import": "./dist/profiles/types.js",
+      "require": "./dist/profiles/types.js"
+    },
+    "./profiles/types": {
+      "types": "./dist/profiles/types.d.ts",
+      "import": "./dist/profiles/types.js",
+      "require": "./dist/profiles/types.js"
+    },
+    "./schemas/index.js": {
+      "types": "./dist/schemas/index.d.ts",
+      "import": "./dist/schemas/index.js",
+      "require": "./dist/schemas/index.js"
+    },
+    "./schemas/index": {
+      "types": "./dist/schemas/index.d.ts",
+      "import": "./dist/schemas/index.js",
+      "require": "./dist/schemas/index.js"
+    },
+    "./skills/skillScope.js": {
+      "types": "./dist/skills/skillScope.d.ts",
+      "import": "./dist/skills/skillScope.js",
+      "require": "./dist/skills/skillScope.js"
+    },
+    "./skills/skillScope": {
+      "types": "./dist/skills/skillScope.d.ts",
+      "import": "./dist/skills/skillScope.js",
+      "require": "./dist/skills/skillScope.js"
+    },
+    "./skills/types.js": {
+      "types": "./dist/skills/types.d.ts",
+      "import": "./dist/skills/types.js",
+      "require": "./dist/skills/types.js"
+    },
+    "./skills/types": {
+      "types": "./dist/skills/types.d.ts",
+      "import": "./dist/skills/types.js",
+      "require": "./dist/skills/types.js"
+    },
+    "./tools/workspaceContext.js": {
+      "types": "./dist/tools/workspaceContext.d.ts",
+      "import": "./dist/tools/workspaceContext.js",
+      "require": "./dist/tools/workspaceContext.js"
+    },
+    "./tools/workspaceContext": {
+      "types": "./dist/tools/workspaceContext.d.ts",
+      "import": "./dist/tools/workspaceContext.js",
+      "require": "./dist/tools/workspaceContext.js"
+    },
+    "./types/agent.js": {
+      "types": "./dist/types/agent.d.ts",
+      "import": "./dist/types/agent.js",
+      "require": "./dist/types/agent.js"
+    },
+    "./types/agent": {
+      "types": "./dist/types/agent.d.ts",
+      "import": "./dist/types/agent.js",
+      "require": "./dist/types/agent.js"
+    },
+    "./types/compat.js": {
+      "types": "./dist/types/compat.d.ts",
+      "import": "./dist/types/compat.js",
+      "require": "./dist/types/compat.js"
+    },
+    "./types/compat": {
+      "types": "./dist/types/compat.d.ts",
+      "import": "./dist/types/compat.js",
+      "require": "./dist/types/compat.js"
+    },
+    "./types/configTypes.js": {
+      "types": "./dist/types/configTypes.d.ts",
+      "import": "./dist/types/configTypes.js",
+      "require": "./dist/types/configTypes.js"
+    },
+    "./types/configTypes": {
+      "types": "./dist/types/configTypes.d.ts",
+      "import": "./dist/types/configTypes.js",
+      "require": "./dist/types/configTypes.js"
+    },
+    "./types/errors.js": {
+      "types": "./dist/types/errors.d.ts",
+      "import": "./dist/types/errors.js",
+      "require": "./dist/types/errors.js"
+    },
+    "./types/errors": {
+      "types": "./dist/types/errors.d.ts",
+      "import": "./dist/types/errors.js",
+      "require": "./dist/types/errors.js"
+    },
+    "./types/guardrails.js": {
+      "types": "./dist/types/guardrails.d.ts",
+      "import": "./dist/types/guardrails.js",
+      "require": "./dist/types/guardrails.js"
+    },
+    "./types/guardrails": {
+      "types": "./dist/types/guardrails.d.ts",
+      "import": "./dist/types/guardrails.js",
+      "require": "./dist/types/guardrails.js"
+    },
+    "./types/index.js": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.js"
+    },
+    "./types/index": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.js"
+    },
+    "./types/permissions.js": {
+      "types": "./dist/types/permissions.d.ts",
+      "import": "./dist/types/permissions.js",
+      "require": "./dist/types/permissions.js"
+    },
+    "./types/permissions": {
+      "types": "./dist/types/permissions.d.ts",
+      "import": "./dist/types/permissions.js",
+      "require": "./dist/types/permissions.js"
+    },
+    "./types/retryConfig.js": {
+      "types": "./dist/types/retryConfig.d.ts",
+      "import": "./dist/types/retryConfig.js",
+      "require": "./dist/types/retryConfig.js"
+    },
+    "./types/retryConfig": {
+      "types": "./dist/types/retryConfig.d.ts",
+      "import": "./dist/types/retryConfig.js",
+      "require": "./dist/types/retryConfig.js"
+    },
+    "./types/session.js": {
+      "types": "./dist/types/session.d.ts",
+      "import": "./dist/types/session.js",
+      "require": "./dist/types/session.js"
+    },
+    "./types/session": {
+      "types": "./dist/types/session.d.ts",
+      "import": "./dist/types/session.js",
+      "require": "./dist/types/session.js"
+    },
+    "./utils/compression/llmSummarizer.js": {
+      "types": "./dist/utils/compression/llmSummarizer.d.ts",
+      "import": "./dist/utils/compression/llmSummarizer.js",
+      "require": "./dist/utils/compression/llmSummarizer.js"
+    },
+    "./utils/compression/llmSummarizer": {
+      "types": "./dist/utils/compression/llmSummarizer.d.ts",
+      "import": "./dist/utils/compression/llmSummarizer.js",
+      "require": "./dist/utils/compression/llmSummarizer.js"
+    },
+    "./utils/compression/smartPruner.js": {
+      "types": "./dist/utils/compression/smartPruner.d.ts",
+      "import": "./dist/utils/compression/smartPruner.js",
+      "require": "./dist/utils/compression/smartPruner.js"
+    },
+    "./utils/compression/smartPruner": {
+      "types": "./dist/utils/compression/smartPruner.d.ts",
+      "import": "./dist/utils/compression/smartPruner.js",
+      "require": "./dist/utils/compression/smartPruner.js"
+    },
+    "./utils/contextBreakdown.js": {
+      "types": "./dist/utils/contextBreakdown.d.ts",
+      "import": "./dist/utils/contextBreakdown.js",
+      "require": "./dist/utils/contextBreakdown.js"
+    },
+    "./utils/contextBreakdown": {
+      "types": "./dist/utils/contextBreakdown.d.ts",
+      "import": "./dist/utils/contextBreakdown.js",
+      "require": "./dist/utils/contextBreakdown.js"
+    },
+    "./utils/dsmlToolCalls.js": {
+      "types": "./dist/utils/dsmlToolCalls.d.ts",
+      "import": "./dist/utils/dsmlToolCalls.js",
+      "require": "./dist/utils/dsmlToolCalls.js"
+    },
+    "./utils/dsmlToolCalls": {
+      "types": "./dist/utils/dsmlToolCalls.d.ts",
+      "import": "./dist/utils/dsmlToolCalls.js",
+      "require": "./dist/utils/dsmlToolCalls.js"
+    },
+    "./utils/errorFormatter.js": {
+      "types": "./dist/utils/errorFormatter.d.ts",
+      "import": "./dist/utils/errorFormatter.js",
+      "require": "./dist/utils/errorFormatter.js"
+    },
+    "./utils/errorFormatter": {
+      "types": "./dist/utils/errorFormatter.d.ts",
+      "import": "./dist/utils/errorFormatter.js",
+      "require": "./dist/utils/errorFormatter.js"
+    },
+    "./utils/grokCliTransport.js": {
+      "types": "./dist/utils/grokCliTransport.d.ts",
+      "import": "./dist/utils/grokCliTransport.js",
+      "require": "./dist/utils/grokCliTransport.js"
+    },
+    "./utils/grokCliTransport": {
+      "types": "./dist/utils/grokCliTransport.d.ts",
+      "import": "./dist/utils/grokCliTransport.js",
+      "require": "./dist/utils/grokCliTransport.js"
+    },
+    "./utils/logger.js": {
+      "types": "./dist/utils/logger.d.ts",
+      "import": "./dist/utils/logger.js",
+      "require": "./dist/utils/logger.js"
+    },
+    "./utils/logger": {
+      "types": "./dist/utils/logger.d.ts",
+      "import": "./dist/utils/logger.js",
+      "require": "./dist/utils/logger.js"
+    },
+    "./utils/messageUtils.js": {
+      "types": "./dist/utils/messageUtils.d.ts",
+      "import": "./dist/utils/messageUtils.js",
+      "require": "./dist/utils/messageUtils.js"
+    },
+    "./utils/messageUtils": {
+      "types": "./dist/utils/messageUtils.d.ts",
+      "import": "./dist/utils/messageUtils.js",
+      "require": "./dist/utils/messageUtils.js"
+    },
+    "./utils/runTrace.js": {
+      "types": "./dist/utils/runTrace.d.ts",
+      "import": "./dist/utils/runTrace.js",
+      "require": "./dist/utils/runTrace.js"
+    },
+    "./utils/runTrace": {
+      "types": "./dist/utils/runTrace.d.ts",
+      "import": "./dist/utils/runTrace.js",
+      "require": "./dist/utils/runTrace.js"
+    },
+    "./utils/stallGuard.js": {
+      "types": "./dist/utils/stallGuard.d.ts",
+      "import": "./dist/utils/stallGuard.js",
+      "require": "./dist/utils/stallGuard.js"
+    },
+    "./utils/stallGuard": {
+      "types": "./dist/utils/stallGuard.d.ts",
+      "import": "./dist/utils/stallGuard.js",
+      "require": "./dist/utils/stallGuard.js"
+    },
+    "./utils/toolOutputTruncation.js": {
+      "types": "./dist/utils/toolOutputTruncation.d.ts",
+      "import": "./dist/utils/toolOutputTruncation.js",
+      "require": "./dist/utils/toolOutputTruncation.js"
+    },
+    "./utils/toolOutputTruncation": {
+      "types": "./dist/utils/toolOutputTruncation.d.ts",
+      "import": "./dist/utils/toolOutputTruncation.js",
+      "require": "./dist/utils/toolOutputTruncation.js"
+    },
+    "./utils/usageNormalize.js": {
+      "types": "./dist/utils/usageNormalize.d.ts",
+      "import": "./dist/utils/usageNormalize.js",
+      "require": "./dist/utils/usageNormalize.js"
+    },
+    "./utils/usageNormalize": {
+      "types": "./dist/utils/usageNormalize.d.ts",
+      "import": "./dist/utils/usageNormalize.js",
+      "require": "./dist/utils/usageNormalize.js"
+    },
+    "./utils/wireText.js": {
+      "types": "./dist/utils/wireText.d.ts",
+      "import": "./dist/utils/wireText.js",
+      "require": "./dist/utils/wireText.js"
+    },
+    "./utils/wireText": {
+      "types": "./dist/utils/wireText.d.ts",
+      "import": "./dist/utils/wireText.js",
+      "require": "./dist/utils/wireText.js"
+    }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node ../../scripts/bake-prompts.mjs && node ../../scripts/bake-schemas.mjs && tsc --project tsconfig.build.json",
+    "_build_obfuscate_DO_NOT_USE": "tsc --project tsconfig.build.json && node scripts/obfuscate.mjs",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/kernel"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

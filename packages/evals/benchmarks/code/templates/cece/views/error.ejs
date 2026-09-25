@@ -1,0 +1,10 @@
+<%- include('partials/head', { title: typeof code !== 'undefined' ? code + ' 错误' : '错误' }) %>
+
+<div class="error-page">
+  <div class="error-code"><%= typeof code !== 'undefined' ? code : 500 %></div>
+  <h2><%= typeof message !== 'undefined' ? message : '未知错误' %></h2>
+  <p>抱歉，毛孩子把页面叼走了。请返回首页继续操作。</p>
+  <a href="/" class="btn btn-primary">返回首页</a>
+</div>
+
+<%- include('partials/foot') %>

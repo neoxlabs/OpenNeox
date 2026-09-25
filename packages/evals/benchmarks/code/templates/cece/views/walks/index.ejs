@@ -1,0 +1,169 @@
+<%- include('../partials/head', { title: '遛狗管理' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">户外时光</div>
+    <h1>🦮 遛狗管理</h1>
+    <p class="page-subtitle">记录每一次散步，看见成长与陪伴</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/walks/goals" class="btn btn-outline">🎯 活动目标</a>
+    <a href="/walks/add" class="btn btn-primary">+ 记录遛狗</a>
+  </div>
+</div>
+
+<%
+const filterBar = { filters: typeof filters !== 'undefined' ? filters : {}, showSearch: true, showPetFilter: true, showDateRange: true };
+const currentPath = '/walks';
+%>
+<%- include('../partials/filter-bar') %>
+
+<% if (typeof goals !== 'undefined' && Object.keys(goals).length > 0) { %>
+<div class="section">
+  <div class="section-header"><h2>🎯 今日目标进度</h2></div>
+  <% for (const petId in goals) {
+    const petGoals = goals[petId];
+    if (!petGoals || petGoals.length === 0) continue;
+    const petName = petGoals[0].pet_name || '宠物 #' + petId;
+  %>
+  <div class="walk-goal-card">
+    <div class="walk-goal-pet-name">🐾 <%= petName %></div>
+    <% petGoals.forEach(function(g) {
+      const pct = g.progress || 0;
+      const barColor = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--secondary)' : 'var(--primary)';
+      const unitLabel = g.unit === 'minutes' ? '分钟' : g.unit === 'km' ? 'km' : '次';
+      const pctColor = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--secondary)' : 'var(--amber)';
+    %>
+    <div class="walk-goal-progress-item">
+      <span class="unit-label"><%= unitLabel %></span>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:<%= Math.min(pct, 100) %>%; background:<%= barColor %>;"></div>
+      </div>
+      <span class="progress-pct" style="color:<%= pctColor %>"><%= pct %>%（目标 <%= g.target_value %><%= unitLabel %>）</span>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+<% } %>
+
+<div class="section">
+  <div class="section-header"><h2>遛狗记录</h2></div>
+  <% if (typeof walks === 'undefined' || walks.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">🦮</span><p>暂无遛狗记录，点击上方按钮开始记录吧！</p></div>
+  <% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>宠物</th>
+          <th>日期</th>
+          <th>时间</th>
+          <th>时长(分钟)</th>
+          <th>距离(km)</th>
+          <th>心情</th>
+          <th>备注</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% walks.forEach(function(w) { %>
+        <tr>
+          <td><span class="badge badge-lavender">🐾 <%= w.pet_name %></span></td>
+          <td><%= w.walk_date %></td>
+          <td><%= w.start_time || '-' %> ~ <%= w.end_time || '-' %></td>
+          <td><strong><%= w.duration_minutes %></strong></td>
+          <td><%= w.distance_km %></td>
+          <td>
+            <% if (w.mood === '开心') { %><span class="mood-badge mood-happy">😄 开心</span>
+            <% } else if (w.mood === '兴奋') { %><span class="mood-badge mood-excited">🤩 兴奋</span>
+            <% } else if (w.mood === '疲惫') { %><span class="mood-badge mood-tired">😴 疲惫</span>
+            <% } else { %><span class="mood-badge mood-normal">😊 正常</span><% } %>
+          </td>
+          <td class="text-muted"><%= w.notes || '-' %></td>
+          <td>
+            <form action="/walks/<%= w.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/pagination') %>
+
+<% if (typeof trends !== 'undefined' && Object.keys(trends).length > 0) { %>
+<div class="section">
+  <div class="section-header"><h2>📈 近14日遛狗趋势</h2></div>
+  <% for (const petId in trends) {
+    const trend = trends[petId];
+    if (!trend || trend.length === 0) continue;
+    const petName = (typeof goals !== 'undefined' && goals[petId] && goals[petId][0]) ? goals[petId][0].pet_name : ('宠物 #' + petId);
+    const canvasId = 'trendChart_' + petId;
+  %>
+  <div class="chart-wrap" style="margin-bottom: 24px;">
+    <strong style="font-size: 0.85rem; display: block; margin-bottom: 10px;">🐾 <%= petName %></strong>
+    <canvas id="<%= canvasId %>"></canvas>
+  </div>
+  <% } %>
+</div>
+<% } %>
+
+<% if (typeof trends !== 'undefined' && Object.keys(trends).length > 0) { %>
+<script>
+(function() {
+  var trendsData = <%- JSON.stringify(trends) %>;
+  var goalsData = <%- JSON.stringify(typeof goals !== 'undefined' ? goals : {}) %>;
+  var colors = ['#E88D95', '#7EC8C8', '#B9A8D4', '#F5D78A', '#A8D8EA', '#AAE0C8', '#F5CFC0', '#8EB8E5'];
+  var colorIdx = 0;
+
+  for (var petId in trendsData) {
+    var trend = trendsData[petId];
+    if (!trend || trend.length === 0) continue;
+    var labels = trend.map(function(d) { return d.walk_date; });
+    var data = trend.map(function(d) { return d.total_min; });
+
+    var canvas = document.getElementById('trendChart_' + petId);
+    if (!canvas) continue;
+
+    var color = colors[colorIdx % colors.length];
+    colorIdx++;
+
+    new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '时长(分钟)',
+          data: data,
+          borderColor: color,
+          backgroundColor: color + '20',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: color,
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, title: { display: true, text: '分钟' }, grid: { color: 'rgba(200,185,210,0.2)' } },
+          x: { grid: { color: 'rgba(200,185,210,0.15)' } }
+        }
+      }
+    });
+  }
+})();
+</script>
+<% } %>
+
+<%- include('../partials/foot') %>

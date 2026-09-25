@@ -1,0 +1,41 @@
+{
+  "name": "@neoxlabs/devtools",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Out-of-process agent inspector for Neox development",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "neox-devtools": "./src/cli.ts"
+  },
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./attach.js": "./src/attach.ts",
+    "./attach": "./src/attach.ts",
+    "./serve.js": "./src/serve.ts",
+    "./serve": "./src/serve.ts"
+  },
+  "scripts": {
+    "monitor": "tsx src/cli.ts monitor",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@neoxlabs/kernel": "2.6.0",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/devtools"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

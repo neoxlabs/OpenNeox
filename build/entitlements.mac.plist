@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SEC-3 (2026-06-17): Hardened Runtime entitlements.
+
+  原则:
+    1. 只开必须的, 其他默认拒
+    2. 关键: 不带 com.apple.security.get-task-allow → kernel 自动拒绝 lldb attach
+    3. allow-dyld-environment-variables 关 → DYLD_INSERT_LIBRARIES 注入失效
+
+  Electron 必需:
+    - allow-jit: V8 JIT 编译需要
+    - allow-unsigned-executable-memory: V8 在运行时生成代码页 (rwx)
+    - disable-library-validation: Electron 加载 node modules 的 .node binding 需要
+      (不开的话 better-sqlite3 / keytar 等加载失败. 待长期方案: 把 .node 也签上,
+       打开严格 validation. 见 SEC-3 文档 TODO)
+
+  网络/文件: Electron 主进程默认能跑这些, sandbox=false 不限制. 想完全沙盒需要 app-sandbox=true,
+  但破坏太多功能 (文件读写等), 暂不开.
+-->
+<plist version="1.0">
+<dict>
+    <!-- ✅ Hardened Runtime 必开核心保护:
+         NOT including com.apple.security.get-task-allow → lldb / dtrace 等无法 attach -->
+
+    <!-- V8 引擎需要 -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+
+    <!-- Electron 加载 .node native 模块需要 (better-sqlite3-multiple-ciphers, keytar 等) -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+
+    <!-- ⚠️ DYLD_INSERT_LIBRARIES / DYLD_INTERPOSE 这些 env 已被关掉
+         (没显式 allow-dyld-environment-variables=true) → dyld 注入失效 -->
+
+    <!-- 网络 -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- 用户选择的文件 (用 "打开" 对话框) -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+
+    <!-- Electron 可能需要 Apple Events (auto-update / open with) -->
+    <key>com.apple.security.automation.apple-events</key>
+    <true/>
+
+    <!-- 🎙️ 麦克风 (2026-07-13 wake word 需要):
+         Hardened Runtime 下, AVAudioEngine / AVCaptureDevice 必须有这个 entitlement,
+         否则子进程一调 audioEngine.start() 就 SIGABRT crash. TCC 授权对话框走 Info.plist
+         NSMicrophoneUsageDescription (打包时 electron-builder.mac.extendInfo 已加). -->
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+</dict>
+</plist>

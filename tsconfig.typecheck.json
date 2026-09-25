@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "include": [
+    "packages/kernel/src/**/*",
+    "packages/platform/src/**/*",
+    "packages/sandbox/src/**/*",
+    "packages/core/src/**/*",
+    "apps/cli/src/**/*",
+    "apps/cli/vendor/**/*",
+    "packages/sdk/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/dist/**",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "apps/desktop/src/ui/renderer",
+    "apps/desktop/src/ui/state",
+    "apps/cli/vendor/ink/test",
+    "apps/cli/vendor/ink/examples"
+  ]
+}

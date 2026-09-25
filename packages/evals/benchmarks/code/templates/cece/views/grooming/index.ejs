@@ -1,0 +1,146 @@
+<%- include('../partials/head', { title: '美容护理' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">精致护理</div>
+    <h1>💇 美容护理</h1>
+    <p class="page-subtitle">洗澡、剪甲、梳毛，毛孩子更体面</p>
+  </div>
+  <div class="page-header-actions"><a href="/reminders" class="btn btn-outline">查看提醒</a></div>
+</div>
+
+<%- include('../partials/filter-bar') %>
+
+<div class="stats-grid stagger-children">
+  <div class="stat-card stat-card-pink"><div class="stat-icon">✨</div><div class="stat-label">本月护理</div><div class="stat-value"><%= stats.thisMonth %></div></div>
+  <div class="stat-card stat-card-teal"><div class="stat-icon">📋</div><div class="stat-label">待办计划</div><div class="stat-value"><%= stats.upcoming %></div></div>
+  <div class="stat-card stat-card-amber"><div class="stat-icon">📊</div><div class="stat-label">总计划</div><div class="stat-value"><%= schedules.length %></div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="tab-records">✨ 护理记录</button>
+  <button class="tab" data-tab="tab-schedules">📋 护理计划</button>
+  <button class="tab" data-tab="tab-add-record">➕ 新增记录</button>
+  <button class="tab" data-tab="tab-add-schedule">📝 新增计划</button>
+</div>
+
+<div class="tab-content active" id="tab-records">
+  <div class="section">
+    <div class="section-header"><h2>✨ 护理记录</h2></div>
+    <% if (records.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">✨</span><p>暂无美容护理记录</p></div>
+    <% } else { %>
+    <div class="record-list stagger-children">
+    <% records.forEach(r => { %>
+    <div class="record-card">
+      <div class="record-icon"><% if (r.grooming_type === '洗澡') { %>🛁<% } else if (r.grooming_type === '剪甲') { %>✂️<% } else if (r.grooming_type === '梳毛') { %>🪮<% } else if (r.grooming_type === '美容') { %>💇<% } else if (r.grooming_type === '洁牙') { %>🪥<% } else { %>✨<% } %></div>
+      <div class="record-info">
+        <div class="record-title"><%= r.pet_name %> · <%= r.grooming_type %></div>
+        <div class="record-meta">
+          <span>📅 <%= r.grooming_date %></span>
+          <span>📍 <%= r.provider || '家庭护理' %></span>
+          <% if (r.cost) { %><span>💰 ¥<%= r.cost %></span><% } %>
+        </div>
+        <% if (r.notes) { %><div class="record-note">💬 <%= r.notes %></div><% } %>
+      </div>
+      <div class="record-actions">
+        <form action="/grooming/records/<%= r.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+      </div>
+    </div>
+    <% }) %>
+    </div>
+    <% } %>
+  </div>
+
+<div class="tab-content" id="tab-schedules">
+  <div class="section">
+    <div class="section-header"><h2>📋 护理计划</h2></div>
+    <% if (schedules.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🧼</span><p>暂无美容护理计划</p></div>
+    <% } else { %>
+    <div class="record-list stagger-children">
+    <% schedules.forEach(s => { %>
+    <div class="record-card">
+      <div class="record-icon"><% if (s.grooming_type === '洗澡') { %>🛁<% } else if (s.grooming_type === '剪甲') { %>✂️<% } else if (s.grooming_type === '梳毛') { %>🪮<% } else if (s.grooming_type === '美容') { %>💇<% } else if (s.grooming_type === '洁牙') { %>🪥<% } else { %>🧼<% } %></div>
+      <div class="record-info">
+        <div class="record-title"><%= s.pet_name %> · <%= s.grooming_type %></div>
+        <div class="record-meta">
+          <span>📅 <%= s.next_date %></span>
+          <span>🕐 <%= s.reminder_time %></span>
+          <span>🔁 每 <%= s.repeat_days %> 天</span>
+        </div>
+        <% if (s.notes) { %><div class="record-note">💬 <%= s.notes %></div><% } %>
+      </div>
+      <div class="record-actions">
+        <form action="/grooming/schedules/<%= s.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+      </div>
+    </div>
+    <% }) %>
+    </div>
+    <% } %>
+  </div>
+
+<div class="tab-content" id="tab-add-record">
+  <div class="section">
+    <div class="section-header"><h2>➕ 新增护理记录</h2></div>
+    <% if (pets.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🐾</span><p>请先添加宠物，再创建美容护理记录。</p></div>
+    <% } else { %>
+    <div class="form-card">
+    <form action="/grooming/records" method="POST">
+      <div class="form-grid">
+        <div class="form-group"><label>🐾 宠物 *</label><select name="pet_id" class="form-control" required><option value="">请选择</option><% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %></select></div>
+        <div class="form-group"><label>🧴 护理类型 *</label><select name="grooming_type" class="form-control"><option>🛁 洗澡</option><option>✂️ 剪甲</option><option>🪮 梳毛</option><option>💇 美容</option><option>🪥 洁牙</option></select></div>
+        <div class="form-group"><label>📅 日期 *</label><input type="date" name="grooming_date" class="form-control" required></div>
+        <div class="form-group"><label>📍 服务商</label><input type="text" name="provider" class="form-control" placeholder="例如：社区宠物店"></div>
+        <div class="form-group"><label>💰 费用(¥)</label><input type="number" step="0.01" name="cost" class="form-control" value="0"></div>
+      </div>
+      <div class="form-group"><label>📝 备注</label><textarea name="notes" class="form-control"></textarea></div>
+      <div class="form-actions"><button class="btn btn-primary">💾 保存护理记录</button></div>
+    </form>
+    </div>
+    <% } %>
+  </div>
+
+<div class="tab-content" id="tab-add-schedule">
+  <div class="section">
+    <div class="section-header"><h2>📝 新增护理计划</h2></div>
+    <% if (pets.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🐾</span><p>请先添加宠物，再创建美容护理计划。</p></div>
+    <% } else { %>
+    <div class="form-card">
+    <form action="/grooming/schedules" method="POST">
+      <div class="form-grid">
+        <div class="form-group"><label>🐾 宠物 *</label><select name="pet_id" class="form-control" required><option value="">请选择</option><% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %></select></div>
+        <div class="form-group"><label>🧴 护理类型 *</label><select name="grooming_type" class="form-control"><option>🛁 洗澡</option><option>✂️ 剪甲</option><option>🪮 梳毛</option><option>💇 美容</option><option>🪥 洁牙</option></select></div>
+        <div class="form-group"><label>📅 下次日期 *</label><input type="date" name="next_date" class="form-control" required></div>
+        <div class="form-group"><label>🕐 提醒时间</label><input type="time" name="reminder_time" class="form-control" value="09:00"></div>
+        <div class="form-group"><label>🔁 重复间隔(天)</label><input type="number" name="repeat_days" class="form-control" value="30" min="1"></div>
+      </div>
+      <div class="form-group"><label>📝 备注</label><textarea name="notes" class="form-control"></textarea></div>
+      <div class="form-actions"><button class="btn btn-primary">💾 保存护理计划</button></div>
+    </form>
+    </div>
+    <% } %>
+  </div>
+
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab');
+  var contents = document.querySelectorAll('.tab-content');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.getAttribute('data-tab');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      contents.forEach(function(c) { c.classList.remove('active'); });
+      this.classList.add('active');
+      var el = document.getElementById(target);
+      if (el) el.classList.add('active');
+    });
+  });
+})();
+</script>
+
+<%- include('../partials/pagination') %>
+
+<%- include('../partials/foot') %>

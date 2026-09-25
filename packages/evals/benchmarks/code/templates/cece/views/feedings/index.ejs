@@ -1,0 +1,121 @@
+<%- include('../partials/head', { title: '喂食管理' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">营养日常</div>
+    <h1>🍖 喂食管理</h1>
+    <p class="page-subtitle">记录每一餐，科学喂养更安心</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/feedings/inventory" class="btn btn-outline">📦 库存管理</a>
+    <a href="/feedings/add" class="btn btn-primary">+ 记录喂食</a>
+  </div>
+</div>
+
+<%
+const filterBar = { filters: typeof filters !== 'undefined' ? filters : {}, showSearch: true, showPetFilter: true, showDateRange: true };
+const currentPath = '/feedings';
+%>
+<%- include('../partials/filter-bar') %>
+
+<% if (typeof lowStock !== 'undefined' && lowStock.length > 0) { %>
+<div class="section">
+  <div class="alert alert-warning" style="margin-bottom:0;">
+    ⚠️ <strong>库存预警：</strong>
+    <% lowStock.forEach(function(item, i) { %>
+      <%= item.brand %> <%= item.food_type %><%= item.pet_name ? '（' + item.pet_name + '）' : '' %> 仅剩 <strong><%= item.remaining_grams %>g</strong><%= i < lowStock.length - 1 ? '，' : '' %>
+    <% }) %>
+    — <a href="/feedings/inventory">查看库存</a>
+  </div>
+
+<% } %>
+
+<% if (typeof dailyIntake !== 'undefined' && dailyIntake.length > 0) { %>
+<div class="section">
+  <div class="section-header"><h2>📊 近7日摄入量</h2></div>
+  <div class="chart-wrap">
+    <canvas id="intakeChart"></canvas>
+  </div>
+
+<% } %>
+
+<div class="section">
+  <div class="section-header"><h2>喂食记录</h2></div>
+  <% if (typeof feedings === 'undefined' || feedings.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">🍖</span><p>暂无喂食记录，点击上方按钮开始记录吧！</p></div>
+  <% } else { %>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>宠物</th>
+          <th>日期</th>
+          <th>时间</th>
+          <th>品牌</th>
+          <th>类型</th>
+          <th>份量</th>
+          <th>备注</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% feedings.forEach(function(f) { %>
+        <tr>
+          <td><span class="badge"><%= f.pet_name %></span></td>
+          <td><%= f.feed_date %></td>
+          <td><%= f.feed_time || '-' %></td>
+          <td><%= f.food_brand || '-' %></td>
+          <td><%= f.food_type || '-' %></td>
+          <td><strong><%= f.portion_grams %>g</strong></td>
+          <td class="text-muted"><%= f.notes || '-' %></td>
+          <td>
+            <form action="/feedings/<%= f.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          <td style="color:var(--text-muted)"><%= f.notes || '-' %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/pagination') %>
+
+<% if (typeof dailyIntake !== 'undefined' && dailyIntake.length > 0) { %>
+<script>
+(function() {
+  var raw = <%- JSON.stringify(dailyIntake) %>;
+  var labels = raw.map(function(d) { return d.feed_date; });
+  var data = raw.map(function(d) { return d.total_grams; });
+  var ctx = document.getElementById('intakeChart');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '摄入量 (g)',
+          data: data,
+          backgroundColor: 'rgba(255,154,139,0.7)',
+          borderColor: '#FF9A8B',
+          borderWidth: 1,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, title: { display: true, text: '克 (g)' } },
+          x: { title: { display: true, text: '日期' } }
+        }
+      }
+    });
+  }
+})();
+</script>
+<% } %>
+
+<%- include('../partials/foot') %>

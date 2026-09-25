@@ -1,0 +1,25 @@
+{
+  "name": "@neoxlabs/cloud",
+  "version": "0.1.0",
+  "description": "Optional cloud capability contracts for Neox",
+  "type": "module",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/cloud"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

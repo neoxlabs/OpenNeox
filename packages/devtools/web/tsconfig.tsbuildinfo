@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/history.ts","./src/main.tsx","./src/theme.ts","./src/types.ts","./src/util.ts","./src/components/kpistrip.tsx","./src/components/rail.tsx","./src/components/sessionspanel.tsx","./src/components/sidepanels.tsx","./src/components/sparkline.tsx","./src/components/topbar.tsx"],"version":"5.9.3"}

@@ -1,0 +1,27 @@
+# 小米 MiMo 家族能力声明
+
+id: mimo
+display_name: 小米 MiMo
+
+aliases:
+  - mimo
+  - xiaomi
+
+capabilities:
+  thinking:
+    native: false
+  reasoning_effort:
+    supported: false
+  vision: true
+  parallel_tool_use: true
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+
+markdown_constraint: light
+# MiMo 暂时复用 glm 的 supplement (国内 OpenAI 兼容 风格类似), 后续可独立
+supplement_key: generic_parallel
+
+fast_patterns:
+  - /flash/i
+  - /lite/i

@@ -1,0 +1,102 @@
+<%- include('../partials/head', { title: typeof title !== 'undefined' ? title : '记录喂食' }) %>
+
+<div class="page-header">
+  <h1>🍖 <%= typeof title !== 'undefined' ? title : '记录喂食' %></h1>
+  <a href="/feedings" class="btn btn-outline">← 返回</a>
+</div>
+
+<div class="section">
+  <form action="/feedings" method="POST">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>🐾 选择宠物 *</label>
+        <select name="pet_id" class="form-control" required>
+          <option value="">请选择</option>
+          <% if (typeof pets !== 'undefined') { pets.forEach(function(p) { %>
+          <option value="<%= p.id %>" <%= prefill && prefill.pet_id == p.id ? 'selected' : '' %>><%= p.name %></option>
+          <% }) } %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>📅 日期 *</label>
+        <input type="date" name="feed_date" class="form-control" required value="<%= prefill ? prefill.feed_date : '' %>">
+      </div>
+
+      <div class="form-group">
+        <label>🕐 时间</label>
+        <input type="time" name="feed_time" class="form-control" value="<%= prefill ? prefill.feed_time : '' %>">
+      </div>
+
+      <% if (typeof inventory !== 'undefined' && inventory.length > 0) { %>
+      <div class="form-group">
+        <label>📦 从库存选择（自动填充品牌/类型）</label>
+        <select name="inventory_id" class="form-control" id="inventorySelect">
+          <option value="">手动输入</option>
+          <% inventory.forEach(function(item) { %>
+          <option value="<%= item.id %>"
+                  data-brand="<%= item.brand %>"
+                  data-type="<%= item.food_type %>">
+            <%= item.brand %> <%= item.food_type %><%= item.flavor ? ' - ' + item.flavor : '' %> (剩余<%= item.remaining_grams %>g)
+          </option>
+          <% }) %>
+        </select>
+      </div>
+      <% } %>
+
+      <div class="form-group">
+        <label>🏷️ 食物品牌</label>
+        <input type="text" name="food_brand" id="foodBrand" class="form-control" placeholder="例如：皇家">
+      </div>
+
+      <div class="form-group">
+        <label>🍽️ 食物类型</label>
+        <select name="food_type" id="foodType" class="form-control">
+          <option value="干粮">干粮</option>
+          <option value="湿粮">湿粮</option>
+          <option value="零食">零食</option>
+          <option value="自制">自制</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>⚖️ 份量(克)</label>
+        <input type="number" name="portion_grams" class="form-control" value="0" min="0">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>📝 备注</label>
+      <textarea name="notes" class="form-control" placeholder="额外记录..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">💾 保存记录</button>
+      <a href="/feedings" class="btn btn-outline">取消</a>
+    </div>
+  </form>
+</div>
+
+<% if (typeof inventory !== 'undefined' && inventory.length > 0) { %>
+<script>
+(function() {
+  var select = document.getElementById('inventorySelect');
+  var brandInput = document.getElementById('foodBrand');
+  var typeSelect = document.getElementById('foodType');
+  if (select && brandInput && typeSelect) {
+    select.addEventListener('change', function() {
+      var opt = select.selectedOptions[0];
+      if (opt && opt.dataset.brand) {
+        brandInput.value = opt.dataset.brand;
+        typeSelect.value = opt.dataset.type;
+      } else {
+        brandInput.value = '';
+        typeSelect.value = '干粮';
+      }
+    });
+  }
+})();
+</script>
+<% } %>
+
+<%- include('../partials/foot') %>

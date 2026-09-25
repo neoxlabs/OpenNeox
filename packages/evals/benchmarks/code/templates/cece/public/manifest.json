@@ -1,0 +1,31 @@
+{
+  "name": "Cece 宠物管家",
+  "short_name": "Cece",
+  "description": "你的宠物护理好帮手 — 遛狗、喂食、健康、医疗一站式管理",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F3F8",
+  "theme_color": "#E88D95",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "lang": "zh-CN"
+}

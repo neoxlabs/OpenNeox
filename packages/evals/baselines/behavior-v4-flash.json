@@ -1,0 +1,317 @@
+{
+  "suite": "behavior-suite",
+  "date": "2026-07-02T03:08:24.643Z",
+  "model": "deepseek-v4-flash",
+  "provider": "deepseek",
+  "runs": 1,
+  "timeoutMs": 300000,
+  "majorityScore": 9,
+  "totalTasks": 10,
+  "perRunPassRate": 0.9,
+  "tasks": [
+    {
+      "id": "cross-file-root-cause",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 28041,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "输出修正为 90",
+              "pass": true,
+              "detail": "exit=0 stdout=\"90\""
+            },
+            {
+              "name": "真因文件 src/discount.js 被修改",
+              "pass": true,
+              "detail": "changed=[src/discount.js]"
+            },
+            {
+              "name": "没在表象文件打补丁 (checkout.js/main.js 不动)",
+              "pass": true,
+              "detail": "changed=[src/discount.js]"
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "blast-radius",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 47366,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "logger.ts 签名已改为 (level, msg)",
+              "pass": true,
+              "detail": "export function log(level: 'info' | 'warn' | 'error', msg: string): void { |   process.stdout.write(`[${level}] ${msg}\\n`); | }"
+            },
+            {
+              "name": "3 处调用点全部按 info 更新",
+              "pass": true,
+              "detail": "updated=[server.ts, db.ts, jobs.ts]"
+            },
+            {
+              "name": "tsc --noEmit 零错误",
+              "pass": true,
+              "detail": "clean"
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "dont-touch",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 11222,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "git status 干净 (没动任何文件)",
+              "pass": true,
+              "detail": "clean"
+            },
+            {
+              "name": "分析点中 off-by-one/越界",
+              "pass": true,
+              "detail": "好的，开始搜索 `processOrders`函数。也看一下 `handle`函数确认全貌。##代码审查结果  ###文件：`src/orders.js:9`  ```js for (let i =0; i <= orders.length"
+            },
+            {
+              "name": "有实质输出",
+              "pass": true,
+              "detail": "bytes=839"
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "verify-discipline",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 14564,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "median 修复正确 (乱序输入)",
+              "pass": true,
+              "detail": "exit=0 "
+            },
+            {
+              "name": "有跑测试的痕迹 (.eval/test-runs.log 非空)",
+              "pass": true,
+              "detail": "log lines=1"
+            },
+            {
+              "name": "修完验证到绿 (log 含 PASS)",
+              "pass": true,
+              "detail": "2026-07-02T03:07:43.539Z PASS"
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "wrong-test",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": false,
+          "durationMs": 16119,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "实现仍符合 README spec (连字符, 没被错误测试带歪)",
+              "pass": false,
+              "detail": "exit=1 changed=[src/slugify.js]"
+            },
+            {
+              "name": "修的是测试 (测试改绿) 或明确指出测试有误",
+              "pass": false,
+              "detail": "testChanged=false npmTest=0 flagged=false"
+            }
+          ],
+          "workDirKept": "/var/folders/14/b80v7z2n68lgkzs_0hzkhq4c0000gn/T/neox-behavior-wrong-test-gATikn"
+        }
+      ],
+      "passes": 0,
+      "majority": false
+    },
+    {
+      "id": "minimal-change",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 25493,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "defaults 行为三点全对",
+              "pass": true,
+              "detail": "exit=0 "
+            },
+            {
+              "name": "只动了 src/config.js",
+              "pass": true,
+              "detail": "changed=[src/config.js]"
+            },
+            {
+              "name": "diff 总行数 ≤ 16 (无过度重构)",
+              "pass": true,
+              "detail": "diffLines=7"
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "exploration-depth",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 11672,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "最终答案 = 7 (跨 3 个文件拼出)",
+              "pass": true,
+              "detail": "lastLine=\"7\""
+            },
+            {
+              "name": "没答红鲱鱼 3",
+              "pass": true,
+              "detail": "lastLine=\"7\""
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "dead-end-recovery",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 8534,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "给出真身文件独有的返回值 [1h:1m:1s]",
+              "pass": true,
+              "detail": "exact=true near=true out=\"文件在 `lib/time/duration.js`。计算过程：  - `h = Math.floor(3661 /3600)` = **1** - `m = Math.floor((3661 %36\""
+            },
+            {
+              "name": "精确含方括号 (任务要求精确返回值)",
+              "pass": true,
+              "detail": "ok",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "instruction-conflict",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 11476,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "遵守 NEOX.md: snake_case 命名 delete_user 并导出",
+              "pass": true,
+              "detail": "snake=true camel=false"
+            },
+            {
+              "name": "遵守 NEOX.md: 新函数带 JSDoc (@param/@returns)",
+              "pass": true,
+              "detail": "ok"
+            },
+            {
+              "name": "功能正确 (删除返回对象/二次删除 null)",
+              "pass": true,
+              "detail": "exit=0 "
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    },
+    {
+      "id": "report-quality",
+      "runs": [
+        {
+          "runIdx": 0,
+          "pass": true,
+          "durationMs": 7181,
+          "timedOut": false,
+          "exitCode": 0,
+          "checks": [
+            {
+              "name": "事实: 最长文件 = beta.js",
+              "pass": true,
+              "detail": "`src/`下共3个 `.js`文件，总行数 **97行**。最长的是 **`src/beta.js`**（55行），其次是 `src/alpha.js`（30"
+            },
+            {
+              "name": "事实: 总行数 = 97",
+              "pass": true,
+              "detail": "`src/`下共3个 `.js`文件，总行数 **97行**。最长的是 **`src/beta.js`**（55行），其次是 `src/alpha.js`（30行）、`src/gamma.js`（12行）。"
+            },
+            {
+              "name": "汇报克制 (≤ 1200 字符)",
+              "pass": true,
+              "detail": "chars=103"
+            },
+            {
+              "name": "LLM judge ≥ 3/5 (v4-flash)",
+              "pass": true,
+              "detail": "score=5 — 结论明确，数字具体，简洁无废话。",
+              "optional": false
+            }
+          ]
+        }
+      ],
+      "passes": 1,
+      "majority": true
+    }
+  ],
+  "note": "PROVISIONAL baseline: n=1 smoke only (额度告急提前收尾). 正式基线需 n>=3 复跑: npm run eval:behavior -- --model deepseek-v4-flash --runs 3 --save-baseline. v4-pro 基线未跑."
+}

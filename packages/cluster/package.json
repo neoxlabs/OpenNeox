@@ -1,0 +1,46 @@
+{
+  "name": "@neoxlabs/cluster",
+  "version": "0.1.0",
+  "private": true,
+  "description": "集群底座 — agent loop 作为原子节点 + 确定性调度器。只知道节点/依赖/领地/预算, 不懂业务目标。",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node/*": {
+      "types": "./dist/node/*.d.ts",
+      "import": "./dist/node/*.js"
+    },
+    "./scheduler/*": {
+      "types": "./dist/scheduler/*.d.ts",
+      "import": "./dist/scheduler/*.js"
+    },
+    "./integrate/*": {
+      "types": "./dist/integrate/*.d.ts",
+      "import": "./dist/integrate/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit --project tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@neoxlabs/core": "*",
+    "@neoxlabs/platform": "*"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/cluster"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

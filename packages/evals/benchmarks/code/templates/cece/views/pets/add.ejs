@@ -1,0 +1,118 @@
+<%- include('../partials/head', { title: '添加宠物' }) %>
+
+<div class="page-header">
+  <div>
+    <a href="/pets" class="back-link">← 返回宠物列表</a>
+    <div class="page-kicker">新成员</div>
+    <h1>🐾 添加宠物</h1>
+    <p class="page-subtitle">填写档案，开启毛孩子的专属护理旅程</p>
+  </div>
+</div>
+
+<div class="section pet-form-section">
+  <form action="/pets" method="POST" enctype="multipart/form-data" class="pet-form">
+
+    <!-- 基本信息 -->
+    <div class="form-section">
+      <div class="form-section-title">📋 基本信息</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>宠物名称 *</label>
+          <input type="text" name="name" class="form-control" required placeholder="例如：旺财">
+        </div>
+        <div class="form-group">
+          <label>种类 *</label>
+          <select name="species" class="form-control" required>
+            <option value="">请选择种类</option>
+            <option value="狗">🐕 狗</option>
+            <option value="猫">🐈 猫</option>
+            <option value="鸟">🐦 鸟</option>
+            <option value="鱼">🐟 鱼</option>
+            <option value="兔子">🐰 兔子</option>
+            <option value="仓鼠">🐹 仓鼠</option>
+            <option value="其他">🐾 其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>品种</label>
+          <input type="text" name="breed" class="form-control" placeholder="例如：金毛、英短">
+        </div>
+        <div class="form-group">
+          <label>性别</label>
+          <select name="gender" class="form-control">
+            <option value="未知">未知</option>
+            <option value="公">公 ♂</option>
+            <option value="母">母 ♀</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>出生日期</label>
+          <input type="date" name="birth_date" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>体重 (kg)</label>
+          <input type="number" step="0.1" name="weight" class="form-control" placeholder="0.0">
+        </div>
+        <div class="form-group">
+          <label>颜色 / 花纹</label>
+          <input type="text" name="color" class="form-control" placeholder="例如：橘色虎斑、纯白">
+        </div>
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" name="neutered" id="neutered" value="1">
+            <label for="neutered">已绝育</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 身份 & 医疗信息 -->
+    <div class="form-section">
+      <div class="form-section-title">🏥 身份 & 医疗</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>芯片号</label>
+          <input type="text" name="microchip" class="form-control" placeholder="例如：900108001234567">
+        </div>
+        <div class="form-group">
+          <label>保险信息</label>
+          <input type="text" name="insurance" class="form-control" placeholder="例如：平安宠物险 - P2024001">
+        </div>
+        <div class="form-group">
+          <label>关联兽医 ID</label>
+          <input type="text" name="provider_id" class="form-control" placeholder="兽医服务商编号">
+        </div>
+        <div class="form-group full-width">
+          <label>过敏信息</label>
+          <textarea name="allergies" class="form-control" rows="2" placeholder="例如：鸡肉过敏、花粉过敏..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 照片 & 备注 -->
+    <div class="form-section">
+      <div class="form-section-title">📸 照片 & 备注</div>
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>照片</label>
+          <div class="file-upload-zone">
+            <span class="file-upload-icon">🖼️</span>
+            <span>支持 JPG、PNG、GIF 格式，建议正方形照片效果最佳</span>
+          </div>
+          <input type="file" name="photo" class="form-control" accept="image/*" style="margin-top:12px">
+        </div>
+        <div class="form-group full-width">
+          <label>备注</label>
+          <textarea name="notes" class="form-control" rows="3" placeholder="宠物特点、喜好、特殊需求..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="/pets" class="btn btn-outline">取消</a>
+      <button type="submit" class="btn btn-primary">💾 保存宠物</button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

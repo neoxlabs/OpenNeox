@@ -1,0 +1,47 @@
+<%- include('../partials/head', { title: '邀请照护者' }) %>
+
+<div class="page-header">
+  <h1>✉️ 邀请照护者</h1>
+  <a href="/family" class="btn btn-outline">← 返回</a>
+</div>
+
+<div class="section">
+  <form action="/family/invite" method="POST">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>选择宠物 *</label>
+        <select name="pet_id" class="form-control" required>
+          <option value="">请选择宠物</option>
+          <% pets.forEach(p => { %>
+          <option value="<%= p.id %>"><%= p.name %> (<%= p.species %>)</option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>对方邮箱 *</label>
+        <input type="email" name="email" class="form-control" required 
+               placeholder="对方注册时使用的邮箱">
+        <small style="color:var(--text-muted);margin-top:4px;display:block">
+          对方需要已在本系统注册账号
+        </small>
+      </div>
+<div class="form-group">
+        <label>权限</label>
+        <select name="permission" class="form-control">
+          <option value="view">仅查看 — 浏览档案与记录</option>
+          <option value="edit">可编辑 — 新增/修改日常记录</option>
+          <option value="admin">可管理 — 编辑档案、日程与分享级设置</option>
+        </select>
+        <small style="color:var(--text-muted);margin-top:4px;display:block">
+          可管理包含可编辑权限，并允许改档案/计划；删除宠物仍仅限主人
+        </small>
+      </div>
+    </div>
+    <div class="form-actions" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px">
+      <a href="/family" class="btn btn-outline">取消</a>
+      <button type="submit" class="btn btn-primary">✉️ 发送邀请</button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

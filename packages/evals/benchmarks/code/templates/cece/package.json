@@ -1,0 +1,29 @@
+{
+  "name": "cece-pet-system",
+  "version": "1.0.0",
+  "description": "Cece 宠物管理系统 - 全方位宠物管理平台",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js",
+    "check": "node --check app.js && node --check config/database.js && node --check config/scheduler.js",
+    "test": "npm run check && node -e \"const { loadConfig, createApp } = require('./app'); if (loadConfig({ NODE_ENV: 'test', PORT: '0' }).port !== 0) process.exit(1); createApp({ config: loadConfig({ NODE_ENV: 'test', PORT: '0' }) });\" && node --test test/**/*.test.js",
+    "test:unit": "node --test test/**/*.test.js",
+    "db:seed": "node database/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.4.3",
+    "better-sqlite3-session-store": "^0.1.0",
+    "chart.js": "^4.4.1",
+    "ejs": "^3.1.9",
+    "express": "^4.22.2",
+    "express-rate-limit": "^8.5.2",
+    "express-session": "^1.17.3",
+    "helmet": "^8.2.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^4.2.1",
+    "uuid": "^14.0.1"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,30 @@
+# xAI Grok 4.5 — 500K context
+
+id: grok-4.5
+display_name: xAI Grok 4.5
+family: xai
+released: 2026-06
+availability: ga
+
+context_window: 500000
+max_output_tokens: 128000
+
+upstream_slugs:
+  prov_openrouter: x-ai/grok-4.5
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  prompt_cache:
+    supported: false
+
+effort_map:
+  fast:     {}
+  standard: {}
+
+pricing:
+  input_per_mtok: 5.00
+  cached_input_per_mtok: 1.25
+  output_per_mtok: 15.00
+  currency: USD

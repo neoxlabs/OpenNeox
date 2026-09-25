@@ -1,0 +1,35 @@
+# 智谱 GLM / ChatGLM 家族能力声明
+
+id: glm
+display_name: 智谱 GLM
+
+aliases:
+  - glm
+  - zhipu
+  - chatglm
+
+capabilities:
+  thinking:
+    # GLM 4.7+ 真实有 thinking 字段, 早期版本误标 native:false。
+    # adapter 把 options.thinking 直接透传, 形态跟 anthropic/kimi 同 (type: enabled/disabled)。
+    native: true
+    field: thinking
+    builder_hint: toggle
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: true
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+
+# GLM 规则型, 简单约束就吃
+markdown_constraint: glm_terse
+supplement_key: glm
+
+fast_patterns:
+  - /\bturbo\b/i
+  - /\bflash\b/i
+  - /\b4\.5\b/i
+  - /\b4-air\b/i
+  - /\b4-\d/i

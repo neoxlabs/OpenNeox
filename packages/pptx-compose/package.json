@@ -1,0 +1,56 @@
+{
+  "name": "@neoxlabs/pptx-compose",
+  "version": "2.6.0",
+  "private": true,
+  "description": "Declarative PPTX layout engine",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js",
+      "require": "./dist/node.js"
+    },
+    "./package.json": "./package.json",
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "verify": "node scripts/verify-render.mjs",
+    "audit:style": "node scripts/audit-style-drift.mjs",
+    "check": "npm run build && npm run verify && npm run audit:style",
+    "bake:icons": "node scripts/bake-icons.mjs"
+  },
+  "dependencies": {
+    "@neoxlabs/pptx-renderer": "2.6.0"
+  },
+  "devDependencies": {
+    "@tabler/icons": "^3.46.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/pptx-compose"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

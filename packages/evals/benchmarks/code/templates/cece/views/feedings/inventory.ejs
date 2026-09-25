@@ -1,0 +1,73 @@
+<%- include('../partials/head', { title: '食物库存' }) %>
+
+<div class="page-header">
+  <h1>📦 食物库存</h1>
+  <div class="page-header-actions">
+    <a href="/feedings" class="btn btn-outline">← 喂食记录</a>
+    <a href="/feedings/inventory/add" class="btn btn-primary">+ 添加食物</a>
+  </div>
+
+<%
+var invFilterBar = { filters: typeof filters !== 'undefined' ? filters : {}, showSearch: true, showPetFilter: true, showDateRange: false, showType: true, typeOptions: [{value:'干粮',label:'干粮'},{value:'湿粮',label:'湿粮'},{value:'零食',label:'零食'},{value:'snack',label:'小吃'}] };
+var currentPath = '/feedings/inventory';
+%>
+<%- include('../partials/filter-bar') %>
+
+<div class="section">
+  <div class="section-header"><h2>库存列表</h2></div>
+  <% if (typeof inventory === 'undefined' || inventory.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">📦</span><p>暂无库存，点击上方按钮添加食物吧！</p></div>
+  <% } else { %>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>品牌</th>
+          <th>类型</th>
+          <th>口味</th>
+          <th>宠物</th>
+          <th>余量</th>
+          <th>保质期</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% inventory.forEach(function(item) {
+          var pct = item.total_grams > 0 ? Math.round(item.remaining_grams / item.total_grams * 100) : 0;
+          var isLow = item.remaining_grams < 100;
+          var isExpired = item.expiry_date && item.expiry_date < new Date().toISOString().slice(0,10);
+        %>
+        <tr<%= isLow ? ' style="background:var(--red-bg)"' : '' %>>
+          <td><strong><%= item.brand %></strong></td>
+          <td><span class="badge"><%= item.food_type %></span></td>
+          <td><%= item.flavor || '-' %></td>
+          <td><%= item.pet_name || '-' %></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;min-width:140px;">
+              <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+                <div style="height:100%;width:<%= pct %>%;background:<%= isLow ? 'var(--red)' : 'var(--primary)' %>;border-radius:4px;transition:width 0.3s;"></div>
+              </div>
+              <small style="white-space:nowrap;<%= isLow ? 'color:var(--red);font-weight:600' : '' %>"><%= item.remaining_grams %>/<%= item.total_grams %>g</small>
+            </div>
+          </td>
+          <td>
+            <span<%= isExpired ? ' style="color:var(--red);font-weight:600"' : '' %>>
+              <%= item.expiry_date || '-' %><%= isExpired ? ' ⚠️' : '' %>
+            </span>
+          </td>
+          <td>
+            <form action="/feedings/inventory/<%= item.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/pagination') %>
+
+<%- include('../partials/foot') %>

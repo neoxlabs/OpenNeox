@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Cece 宠物管理' %></title>
+  <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+</head>
+<body>
+  <!-- Floating paw particles -->
+  <div class="paw-particles" id="pawParticles"></div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <button class="hamburger" id="hamburgerBtn" aria-label="菜单">☰</button>
+      <a href="/" class="nav-brand">Cece</a>
+      <% if (user) { %>
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-link <%= path.startsWith('/dashboard') ? 'active' : '' %>">📊 总览</a>
+        <a href="/pets" class="nav-link <%= path.startsWith('/pets') ? 'active' : '' %>">🐕 宠物</a>
+        <a href="/walks" class="nav-link <%= path.startsWith('/walks') ? 'active' : '' %>">🦮 遛狗</a>
+        <a href="/feedings" class="nav-link <%= path.startsWith('/feedings') ? 'active' : '' %>">🍖 喂食</a>
+        <a href="/health" class="nav-link <%= path.startsWith('/health') ? 'active' : '' %>">💊 健康</a>
+        <a href="/medical" class="nav-link <%= path.startsWith('/medical') ? 'active' : '' %>">🏥 医疗</a>
+        <a href="/grooming" class="nav-link <%= path.startsWith('/grooming') ? 'active' : '' %>">💇 美容</a>
+        <a href="/schedules" class="nav-link <%= path.startsWith('/schedules') ? 'active' : '' %>">📅 计划</a>
+        <a href="/calendar" class="nav-link <%= path.startsWith('/calendar') ? 'active' : '' %>">🗓️ 日历</a>
+        <a href="/reminders" class="nav-link <%= path.startsWith('/reminders') ? 'active' : '' %>">🔔 提醒</a>
+      </div>
+      <div class="nav-user">
+        <button class="theme-toggle" id="themeToggle" aria-label="切换主题" title="切换深色/浅色模式">🌙</button>
+        <span class="nav-username"><%= user.username %></span>
+        <a href="/auth/logout" class="btn btn-sm btn-outline">退出</a>
+      </div>
+      <% } %>
+    </div>
+  </nav>
+
+  <main class="main-container page-transition">
+    <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+    <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    <%- body %>
+  </main>
+
+  <footer class="site-footer">
+    <span class="paw-print">🐾</span> Cece 宠物管理 <span class="paw-print">🐾</span>
+    <br><small>用心守护每一位毛孩子</small>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

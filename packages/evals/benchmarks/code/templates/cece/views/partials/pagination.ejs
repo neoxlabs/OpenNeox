@@ -1,0 +1,58 @@
+<!-- Pagination Partial - Reusable pagination component -->
+<%
+var pg = (typeof pagination !== 'undefined') ? pagination : null;
+var pgFilters = (typeof filters !== 'undefined') ? filters : {};
+function buildQS(f, overrides) {
+  var p = {};
+  for (var k in f) { if (f[k] !== '' && f[k] !== null && f[k] !== undefined) p[k] = f[k]; }
+  for (var k in overrides) { p[k] = overrides[k]; }
+  var parts = [];
+  for (var k in p) { parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(p[k])); }
+  return parts.length ? '?' + parts.join('&') : '';
+}
+%>
+
+<% if (pg && pg.totalPages > 1) { %>
+<div class="pagination-bar">
+  <div class="pagination-info">
+    共 <strong><%= pg.total %></strong> 条，第 <%= pg.start %>-<%= pg.end %> 条
+  </div>
+  <div class="pagination-links">
+    <% if (pg.hasPrev) { %>
+    <a href="<%= buildQS(pgFilters, { page: pg.prevPage }) %>" 
+       class="pagination-btn">‹ 上一页</a>
+    <% } else { %>
+    <span class="pagination-btn disabled">‹ 上一页</span>
+    <% } %>
+
+    <% 
+    var maxVisible = 5;
+    var startP = Math.max(1, pg.page - Math.floor(maxVisible / 2));
+    var endP = Math.min(pg.totalPages, startP + maxVisible - 1);
+    if (endP - startP < maxVisible - 1) startP = Math.max(1, endP - maxVisible + 1);
+    
+    if (startP > 1) { %>
+    <a href="<%= buildQS(pgFilters, { page: 1 }) %>" class="pagination-num">1</a>
+    <% if (startP > 2) { %><span class="pagination-ellipsis">…</span><% } %>
+    <% } %>
+
+    <% for (var i = startP; i <= endP; i++) { %>
+    <a href="<%= buildQS(pgFilters, { page: i }) %>" 
+       class="pagination-num <%= i === pg.page ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+
+    <% if (endP < pg.totalPages) { %>
+    <% if (endP < pg.totalPages - 1) { %><span class="pagination-ellipsis">…</span><% } %>
+    <a href="<%= buildQS(pgFilters, { page: pg.totalPages }) %>" 
+       class="pagination-num"><%= pg.totalPages %></a>
+    <% } %>
+
+    <% if (pg.hasNext) { %>
+    <a href="<%= buildQS(pgFilters, { page: pg.nextPage }) %>" 
+       class="pagination-btn">下一页 ›</a>
+    <% } else { %>
+    <span class="pagination-btn disabled">下一页 ›</span>
+    <% } %>
+  </div>
+
+<% } %>

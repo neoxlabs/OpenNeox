@@ -1,0 +1,44 @@
+{
+  "name": "@neoxlabs/sandbox",
+  "version": "2.6.0",
+  "private": true,
+  "description": "OS-level sandbox for agent shell commands (Seatbelt on macOS, bubblewrap on Linux)",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json && node -e \"const fs=require('fs');fs.copyFileSync('src/winJobRunner.mjs','dist/winJobRunner.mjs');fs.copyFileSync('src/winAppContainerRunner.mjs','dist/winAppContainerRunner.mjs')\"",
+    "clean": "rm -rf dist"
+  },
+  "optionalDependencies": {
+    "koffi": "^2.16.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/sandbox"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

@@ -1,0 +1,64 @@
+{
+  "name": "@neoxlabs/pptx-renderer",
+  "version": "2.6.0",
+  "private": true,
+  "description": "PPTX parser and renderer",
+  "type": "module",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js",
+      "require": "./dist/node.js"
+    },
+    "./package.json": "./package.json",
+    "./*.js": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.8.10",
+    "jszip": "^3.10.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/pptx-renderer"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

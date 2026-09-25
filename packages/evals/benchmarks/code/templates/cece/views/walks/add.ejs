@@ -1,0 +1,68 @@
+<%- include('../partials/head', { title: title || '记录遛狗' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">户外时光</div>
+    <h1>🦮 记录遛狗</h1>
+  </div>
+  <a href="/walks" class="btn btn-outline">← 返回</a>
+</div>
+
+<div class="section">
+  <div class="form-card-walk">
+    <form action="/walks" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>🐾 选择宠物 *</label>
+          <select name="pet_id" class="form-control" required>
+            <option value="">请选择</option>
+            <% pets.forEach(function(p) { %><option value="<%= p.id %>" <%= prefill && prefill.pet_id == p.id ? 'selected' : '' %>><%= p.name %></option><% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>📅 日期 *</label>
+          <input type="date" name="walk_date" class="form-control" required value="<%= prefill ? prefill.walk_date : '' %>">
+        </div>
+        <div class="form-group">
+          <label>🕐 开始时间</label>
+          <input type="time" name="start_time" class="form-control" value="<%= prefill ? prefill.start_time : '' %>">
+        </div>
+        <div class="form-group">
+          <label>🕑 结束时间</label>
+          <input type="time" name="end_time" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>⏱ 时长(分钟)</label>
+          <input type="number" name="duration_minutes" class="form-control" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>📏 距离(km)</label>
+          <input type="number" step="0.01" name="distance_km" class="form-control" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>🗺️ 路线</label>
+          <input type="text" name="route" class="form-control" placeholder="例如：小区公园">
+        </div>
+        <div class="form-group">
+          <label>💭 心情</label>
+          <select name="mood" class="form-control">
+            <option value="正常">😊 正常</option>
+            <option value="开心">😄 开心</option>
+            <option value="兴奋">🤩 兴奋</option>
+            <option value="疲惫">😴 疲惫</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>📝 备注</label>
+        <textarea name="notes" class="form-control" placeholder="额外记录..."></textarea>
+      </div>
+      <div class="form-actions">
+        <a href="/walks" class="btn btn-outline">取消</a>
+        <button type="submit" class="btn btn-primary">💾 保存记录</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/foot') %>

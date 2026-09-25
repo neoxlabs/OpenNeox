@@ -1,0 +1,213 @@
+import type { Scenario } from '../../../types.js';
+
+export const compact: Scenario[] = [
+  {
+    id: 'desktop.compact.badge-drops',
+    module: 'desktop.compact',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P0',
+    title: '压缩后 composer ctx 表盘降到 finalTokens',
+    why: '与 CLI ctx 回归同源',
+    mode: 'manual',
+    codeHint: 'useStreamHandler handleContextCompaction',
+    steps: [
+      { action: '拉高上下文后触发压缩', expect: 'timeline 有压缩卡片 xx→yy' },
+      { action: '看 composer ctx badge', expect: '数字降到 finalTokens 附近' },
+    ],
+  },
+  {
+    id: 'desktop.compact.card-copy',
+    module: 'desktop.compact',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P1',
+    title: '压缩卡片文案中英正确、无重复 Compact',
+    why: '文案回归',
+    mode: 'manual',
+    steps: [
+      { action: '触发压缩看卡片', expect: '标题/正文无双前缀，进度可读' },
+    ],
+  },
+  {
+    id: 'desktop.compact.popup-sync',
+    module: 'desktop.compact',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P0',
+    title: 'Context popup 与 badge 压缩后一致',
+    why: 'popup 串旧值',
+    mode: 'manual',
+    codeHint: 'ContextDetailPopup',
+    steps: [
+      { action: '压缩后打开 context 详情', expect: 'used/budget 与 badge 一致' },
+    ],
+  },
+];
+
+export const session: Scenario[] = [
+  {
+    id: 'desktop.session.no-orphan-running',
+    module: 'desktop.session',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P0',
+    title: 'Esc/中断后无永久运行中孤儿卡',
+    why: '回归: session_interrupted',
+    mode: 'manual',
+    codeHint: 'session_interrupted',
+    steps: [
+      { action: '长任务中点停止/Esc', expect: '运行卡收尾' },
+      { action: '发下一轮', expect: '正常，无永久 running 头' },
+    ],
+  },
+  {
+    id: 'desktop.session.switch-isolation',
+    module: 'desktop.session',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P0',
+    title: '切 session 后 context/流不串号',
+    why: 'A 的流写到 B',
+    mode: 'manual',
+    steps: [
+      { action: '会话 A 跑任务中切到 B', expect: 'B 独立；回 A 仍是 A 的内容' },
+      { action: '看 ctx badge', expect: '随当前 session 变，不串' },
+    ],
+  },
+  {
+    id: 'desktop.session.create-rename',
+    module: 'desktop.session',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P1',
+    title: '新建 / 重命名会话',
+    why: '侧栏基础',
+    mode: 'manual',
+    steps: [
+      { action: '新建会话', expect: '侧栏出现，composer 空' },
+      { action: '重命名', expect: '标题更新且持久' },
+    ],
+  },
+  {
+    id: 'desktop.session.delete',
+    module: 'desktop.session',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P1',
+    title: '删除会话后不可再选中幽灵项',
+    why: '删除残留',
+    mode: 'manual',
+    steps: [
+      { action: '删除非当前会话', expect: '列表移除' },
+      { action: '删除当前会话', expect: '切到其它或空态，无白屏' },
+    ],
+  },
+];
+
+export const byok: Scenario[] = [
+  {
+    id: 'desktop.byok.bad-key-classified',
+    module: 'desktop.byok',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P0',
+    title: '坏 key / 死 baseURL 分类错误非静默挂起',
+    why: '无限 thinking',
+    mode: 'manual',
+    codeHint: 'error_classified',
+    steps: [
+      { action: 'Providers 填坏 key 发消息', expect: '明确错误卡片/toast' },
+      { action: '看 composer', expect: '可再编辑发送，非锁死' },
+    ],
+  },
+  {
+    id: 'desktop.byok.health-check',
+    module: 'desktop.byok',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P0',
+    title: 'Provider health check 状态可信',
+    why: '绿点假活 / 误报',
+    mode: 'manual',
+    codeHint: 'ProvidersTab',
+    steps: [
+      { action: '对可用 provider 点检测', expect: 'online/成功' },
+      { action: '对坏配置检测', expect: 'offline/error + 可读原因' },
+    ],
+  },
+  {
+    id: 'desktop.byok.pin-model-menu',
+    module: 'desktop.byok',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P1',
+    title: '钉选模型进入菜单并可选用',
+    why: '钉了找不到',
+    mode: 'manual',
+    steps: [
+      { action: '设置里钉选模型', expect: 'composer 模型菜单出现' },
+      { action: '选中发消息', expect: '请求走该模型' },
+    ],
+  },
+  {
+    id: 'desktop.byok.preset-gallery',
+    module: 'desktop.byok',
+    surface: 'desktop',
+    tier: 'core',
+    priority: 'P1',
+    title: 'Preset gallery 添加自定义 provider',
+    why: '中转站配置主路径',
+    mode: 'manual',
+    codeHint: 'ProviderPresetGallery',
+    steps: [
+      { action: '从 preset 添加并填 key', expect: '保存成功出现在列表' },
+      { action: '选模对话', expect: '通' },
+    ],
+  },
+];
+
+export const oauth: Scenario[] = [
+  {
+    id: 'desktop.oauth.plugin-login',
+    module: 'desktop.oauth',
+    surface: 'desktop',
+    tier: 'nightly',
+    priority: 'P0',
+    title: 'Claude/Codex/Grok OAuth 登录成功',
+    why: '订阅插件主路径',
+    mode: 'manual',
+    codeHint: 'OauthSubscriptionPanel',
+    steps: [
+      { action: '设置 → OAuth 点登录', expect: '系统浏览器打开授权页' },
+      { action: '完成授权回调', expect: '面板显示已登录，可选用对应模型' },
+    ],
+  },
+  {
+    id: 'desktop.oauth.cancel',
+    module: 'desktop.oauth',
+    surface: 'desktop',
+    tier: 'nightly',
+    priority: 'P0',
+    title: 'OAuth 中途取消可恢复',
+    why: '僵尸 pending',
+    mode: 'manual',
+    steps: [
+      { action: '点登录后关掉浏览器/取消', expect: 'UI 回可点登录，无永久 loading' },
+    ],
+  },
+  {
+    id: 'desktop.oauth.logout-relogin',
+    module: 'desktop.oauth',
+    surface: 'desktop',
+    tier: 'nightly',
+    priority: 'P1',
+    title: '登出后再登录',
+    why: '凭证残留/清不掉',
+    mode: 'manual',
+    steps: [
+      { action: '登出', expect: '模型不可用或需重新授权' },
+      { action: '再登录', expect: '成功' },
+    ],
+  },
+];

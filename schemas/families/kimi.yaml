@@ -1,0 +1,36 @@
+# Moonshot Kimi 家族能力声明
+
+id: kimi
+display_name: Moonshot Kimi
+
+aliases:
+  - kimi
+  - moonshot
+
+capabilities:
+  thinking:
+    native: true
+    field: thinking
+    builder_hint: toggle  # kimi 是开关式 {type: enabled|disabled}
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: false  # k2 系列不可靠的多 tool 调用
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+  # k2.5 / k2.5-code 必须 temperature=1, 由 kimi.ts adapter 强制覆盖
+  fixed_temperature:
+    enabled: true
+    models: [kimi-k2.5, kimi-k2.5-code]
+    value: 1
+
+# kimi 约束压不住 (实测), 但用最强约束 + 渲染端兜底
+markdown_constraint: kimi
+supplement_key: kimi
+
+# k2.5 是廉价档, k2.6 才是主力 (别拿裸 \bk2\b 否则把 k2.6 也判 fast)
+fast_patterns:
+  - /k2\.5/i
+  - /k2-.*preview/i
+  - /\blite\b/i

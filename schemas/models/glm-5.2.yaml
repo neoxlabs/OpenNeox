@@ -1,0 +1,38 @@
+id: glm-5.2
+display_name: GLM-5.2
+family: glm
+released: 2026-06
+availability: ga
+
+context_window: 256000
+max_output_tokens: 8192
+
+# OpenRouter 上还是 z-ai/glm-5, 我们 display 是 5.2 但 upstream 路 glm-5 (上线后改回)
+upstream_slugs:
+  prov_openrouter: z-ai/glm-5
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    default_level: max
+  prompt_cache:
+    supported: false   # OpenRouter→z-ai 路径暂不透传 cache
+
+# GLM-5.x thinking (2026-07-03 调研, docs.bigmodel.cn/cn/guide/models/text/glm-5.2):
+#   thinking:{type:enabled|disabled} — 4.7+/5.x 上游默认 enabled (实测慢, 给用户显式档);
+#   GLM-5.2 另支持 reasoning_effort:"max" 控制推理深度 (仅 5.2)。
+#   之前这里只有 billing_multiplier → effortLevel 传了也是 no-op, UI 不显示档位 (审计实锤)。
+effort_map:
+  off:  { thinking: { type: disabled } }
+  on:   { thinking: { type: enabled } }
+  max:  { thinking: { type: enabled }, reasoning_effort: max }
+
+pricing:
+  input_per_mtok: 1.00
+  cached_input_per_mtok: 0.25
+  output_per_mtok: 1.00
+  currency: USD

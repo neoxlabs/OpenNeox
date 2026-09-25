@@ -1,0 +1,33 @@
+# xAI Grok 4 — 2026 主力
+#
+# OpenRouter: x-ai/grok-4
+
+id: grok-4
+display_name: xAI Grok 4
+family: xai
+released: 2026-05
+availability: ga
+
+context_window: 256000
+max_output_tokens: 8192
+
+upstream_slugs:
+  prov_openrouter: x-ai/grok-4
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: false
+  prompt_cache:
+    supported: false
+
+# Grok 4 暂无 native reasoning 控制 — effort_map 仅给 billing 抓手。
+effort_map:
+  fast:     {}
+  standard: {}
+
+pricing:
+  input_per_mtok: 5.00
+  cached_input_per_mtok: 1.25
+  output_per_mtok: 15.00
+  currency: USD

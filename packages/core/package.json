@@ -1,0 +1,803 @@
+{
+  "name": "@neoxlabs/core",
+  "version": "2.6.0",
+  "private": true,
+  "description": "Neox product runtime: tools, memory, checkpoints, server, browser automation, MCP",
+  "type": "module",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md"
+  ],
+  "main": "./dist/sdk/index.js",
+  "types": "./dist/sdk/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/sdk/index.d.ts",
+      "import": "./dist/sdk/index.js",
+      "require": "./dist/sdk/index.js"
+    },
+    "./package.json": "./package.json",
+    "./version.js": {
+      "types": "./dist/version.d.ts",
+      "import": "./dist/version.js",
+      "require": "./dist/version.js"
+    },
+    "./version": {
+      "types": "./dist/version.d.ts",
+      "import": "./dist/version.js",
+      "require": "./dist/version.js"
+    },
+    "./core/permissions/index.js": {
+      "types": "./dist/core/permissions/index.d.ts",
+      "import": "./dist/core/permissions/index.js",
+      "require": "./dist/core/permissions/index.js"
+    },
+    "./core/permissions/index": {
+      "types": "./dist/core/permissions/index.d.ts",
+      "import": "./dist/core/permissions/index.js",
+      "require": "./dist/core/permissions/index.js"
+    },
+    "./intent/index.js": {
+      "types": "./dist/intent/index.d.ts",
+      "import": "./dist/intent/index.js",
+      "require": "./dist/intent/index.js"
+    },
+    "./intent/index": {
+      "types": "./dist/intent/index.d.ts",
+      "import": "./dist/intent/index.js",
+      "require": "./dist/intent/index.js"
+    },
+    "./knowledge/index.js": {
+      "types": "./dist/knowledge/index.d.ts",
+      "import": "./dist/knowledge/index.js",
+      "require": "./dist/knowledge/index.js"
+    },
+    "./knowledge/index": {
+      "types": "./dist/knowledge/index.d.ts",
+      "import": "./dist/knowledge/index.js",
+      "require": "./dist/knowledge/index.js"
+    },
+    "./life/briefHintText.js": {
+      "types": "./dist/life/briefHintText.d.ts",
+      "import": "./dist/life/briefHintText.js",
+      "require": "./dist/life/briefHintText.js"
+    },
+    "./life/briefHintText": {
+      "types": "./dist/life/briefHintText.d.ts",
+      "import": "./dist/life/briefHintText.js",
+      "require": "./dist/life/briefHintText.js"
+    },
+    "./life/index.js": {
+      "types": "./dist/life/index.d.ts",
+      "import": "./dist/life/index.js",
+      "require": "./dist/life/index.js"
+    },
+    "./life/index": {
+      "types": "./dist/life/index.d.ts",
+      "import": "./dist/life/index.js",
+      "require": "./dist/life/index.js"
+    },
+    "./mcp/clientManager.js": {
+      "types": "./dist/mcp/clientManager.d.ts",
+      "import": "./dist/mcp/clientManager.js",
+      "require": "./dist/mcp/clientManager.js"
+    },
+    "./mcp/clientManager": {
+      "types": "./dist/mcp/clientManager.d.ts",
+      "import": "./dist/mcp/clientManager.js",
+      "require": "./dist/mcp/clientManager.js"
+    },
+    "./mcp/index.js": {
+      "types": "./dist/mcp/index.d.ts",
+      "import": "./dist/mcp/index.js",
+      "require": "./dist/mcp/index.js"
+    },
+    "./mcp/index": {
+      "types": "./dist/mcp/index.d.ts",
+      "import": "./dist/mcp/index.js",
+      "require": "./dist/mcp/index.js"
+    },
+    "./memory/index.js": {
+      "types": "./dist/memory/index.d.ts",
+      "import": "./dist/memory/index.js",
+      "require": "./dist/memory/index.js"
+    },
+    "./memory/index": {
+      "types": "./dist/memory/index.d.ts",
+      "import": "./dist/memory/index.js",
+      "require": "./dist/memory/index.js"
+    },
+    "./memory/moduleContext.js": {
+      "types": "./dist/memory/moduleContext.d.ts",
+      "import": "./dist/memory/moduleContext.js",
+      "require": "./dist/memory/moduleContext.js"
+    },
+    "./memory/moduleContext": {
+      "types": "./dist/memory/moduleContext.d.ts",
+      "import": "./dist/memory/moduleContext.js",
+      "require": "./dist/memory/moduleContext.js"
+    },
+    "./memory/resumeSessions.js": {
+      "types": "./dist/memory/resumeSessions.d.ts",
+      "import": "./dist/memory/resumeSessions.js",
+      "require": "./dist/memory/resumeSessions.js"
+    },
+    "./memory/resumeSessions": {
+      "types": "./dist/memory/resumeSessions.d.ts",
+      "import": "./dist/memory/resumeSessions.js",
+      "require": "./dist/memory/resumeSessions.js"
+    },
+    "./memory/session-manager.js": {
+      "types": "./dist/memory/session-manager.d.ts",
+      "import": "./dist/memory/session-manager.js",
+      "require": "./dist/memory/session-manager.js"
+    },
+    "./memory/session-manager": {
+      "types": "./dist/memory/session-manager.d.ts",
+      "import": "./dist/memory/session-manager.js",
+      "require": "./dist/memory/session-manager.js"
+    },
+    "./memory/session-sync.js": {
+      "types": "./dist/memory/session-sync.d.ts",
+      "import": "./dist/memory/session-sync.js",
+      "require": "./dist/memory/session-sync.js"
+    },
+    "./memory/session-sync": {
+      "types": "./dist/memory/session-sync.d.ts",
+      "import": "./dist/memory/session-sync.js",
+      "require": "./dist/memory/session-sync.js"
+    },
+    "./memory/sqlite-session.js": {
+      "types": "./dist/memory/sqlite-session.d.ts",
+      "import": "./dist/memory/sqlite-session.js",
+      "require": "./dist/memory/sqlite-session.js"
+    },
+    "./memory/sqlite-session": {
+      "types": "./dist/memory/sqlite-session.d.ts",
+      "import": "./dist/memory/sqlite-session.js",
+      "require": "./dist/memory/sqlite-session.js"
+    },
+    "./migrate/index.js": {
+      "types": "./dist/migrate/index.d.ts",
+      "import": "./dist/migrate/index.js",
+      "require": "./dist/migrate/index.js"
+    },
+    "./migrate/index": {
+      "types": "./dist/migrate/index.d.ts",
+      "import": "./dist/migrate/index.js",
+      "require": "./dist/migrate/index.js"
+    },
+    "./models/protocolModels.js": {
+      "types": "./dist/models/protocolModels.d.ts",
+      "import": "./dist/models/protocolModels.js",
+      "require": "./dist/models/protocolModels.js"
+    },
+    "./models/protocolModels": {
+      "types": "./dist/models/protocolModels.d.ts",
+      "import": "./dist/models/protocolModels.js",
+      "require": "./dist/models/protocolModels.js"
+    },
+    "./platform/actionLog/index.js": {
+      "types": "./dist/platform/actionLog/index.d.ts",
+      "import": "./dist/platform/actionLog/index.js",
+      "require": "./dist/platform/actionLog/index.js"
+    },
+    "./platform/actionLog/index": {
+      "types": "./dist/platform/actionLog/index.d.ts",
+      "import": "./dist/platform/actionLog/index.js",
+      "require": "./dist/platform/actionLog/index.js"
+    },
+    "./platform/cliLogger.js": {
+      "types": "./dist/platform/cliLogger.d.ts",
+      "import": "./dist/platform/cliLogger.js",
+      "require": "./dist/platform/cliLogger.js"
+    },
+    "./platform/cliLogger": {
+      "types": "./dist/platform/cliLogger.d.ts",
+      "import": "./dist/platform/cliLogger.js",
+      "require": "./dist/platform/cliLogger.js"
+    },
+    "./platform/membershipCacheRead.js": {
+      "types": "./dist/platform/membershipCacheRead.d.ts",
+      "import": "./dist/platform/membershipCacheRead.js",
+      "require": "./dist/platform/membershipCacheRead.js"
+    },
+    "./platform/membershipCacheRead": {
+      "types": "./dist/platform/membershipCacheRead.d.ts",
+      "import": "./dist/platform/membershipCacheRead.js",
+      "require": "./dist/platform/membershipCacheRead.js"
+    },
+    "./platform/providerHealthCheck.js": {
+      "types": "./dist/platform/providerHealthCheck.d.ts",
+      "import": "./dist/platform/providerHealthCheck.js",
+      "require": "./dist/platform/providerHealthCheck.js"
+    },
+    "./platform/providerHealthCheck": {
+      "types": "./dist/platform/providerHealthCheck.d.ts",
+      "import": "./dist/platform/providerHealthCheck.js",
+      "require": "./dist/platform/providerHealthCheck.js"
+    },
+    "./platform/sessionStore.js": {
+      "types": "./dist/platform/sessionStore.d.ts",
+      "import": "./dist/platform/sessionStore.js",
+      "require": "./dist/platform/sessionStore.js"
+    },
+    "./platform/sessionStore": {
+      "types": "./dist/platform/sessionStore.d.ts",
+      "import": "./dist/platform/sessionStore.js",
+      "require": "./dist/platform/sessionStore.js"
+    },
+    "./relay-transport/index.js": {
+      "types": "./dist/relay-transport/index.d.ts",
+      "import": "./dist/relay-transport/index.js",
+      "require": "./dist/relay-transport/index.js"
+    },
+    "./relay-transport/index": {
+      "types": "./dist/relay-transport/index.d.ts",
+      "import": "./dist/relay-transport/index.js",
+      "require": "./dist/relay-transport/index.js"
+    },
+    "./runtime/agent/agentTypeRegistry.js": {
+      "types": "./dist/runtime/agent/agentTypeRegistry.d.ts",
+      "import": "./dist/runtime/agent/agentTypeRegistry.js",
+      "require": "./dist/runtime/agent/agentTypeRegistry.js"
+    },
+    "./runtime/agent/agentTypeRegistry": {
+      "types": "./dist/runtime/agent/agentTypeRegistry.d.ts",
+      "import": "./dist/runtime/agent/agentTypeRegistry.js",
+      "require": "./dist/runtime/agent/agentTypeRegistry.js"
+    },
+    "./runtime/agent/agenticModeTools.js": {
+      "types": "./dist/runtime/agent/agenticModeTools.d.ts",
+      "import": "./dist/runtime/agent/agenticModeTools.js",
+      "require": "./dist/runtime/agent/agenticModeTools.js"
+    },
+    "./runtime/agent/agenticModeTools": {
+      "types": "./dist/runtime/agent/agenticModeTools.d.ts",
+      "import": "./dist/runtime/agent/agenticModeTools.js",
+      "require": "./dist/runtime/agent/agenticModeTools.js"
+    },
+    "./runtime/agent/backgroundAgent.js": {
+      "types": "./dist/runtime/agent/backgroundAgent.d.ts",
+      "import": "./dist/runtime/agent/backgroundAgent.js",
+      "require": "./dist/runtime/agent/backgroundAgent.js"
+    },
+    "./runtime/agent/backgroundAgent": {
+      "types": "./dist/runtime/agent/backgroundAgent.d.ts",
+      "import": "./dist/runtime/agent/backgroundAgent.js",
+      "require": "./dist/runtime/agent/backgroundAgent.js"
+    },
+    "./runtime/agent/backgroundExecution.js": {
+      "types": "./dist/runtime/agent/backgroundExecution.d.ts",
+      "import": "./dist/runtime/agent/backgroundExecution.js",
+      "require": "./dist/runtime/agent/backgroundExecution.js"
+    },
+    "./runtime/agent/backgroundExecution": {
+      "types": "./dist/runtime/agent/backgroundExecution.d.ts",
+      "import": "./dist/runtime/agent/backgroundExecution.js",
+      "require": "./dist/runtime/agent/backgroundExecution.js"
+    },
+    "./runtime/agent/worktreeIsolation.js": {
+      "types": "./dist/runtime/agent/worktreeIsolation.d.ts",
+      "import": "./dist/runtime/agent/worktreeIsolation.js",
+      "require": "./dist/runtime/agent/worktreeIsolation.js"
+    },
+    "./runtime/agent/worktreeIsolation": {
+      "types": "./dist/runtime/agent/worktreeIsolation.d.ts",
+      "import": "./dist/runtime/agent/worktreeIsolation.js",
+      "require": "./dist/runtime/agent/worktreeIsolation.js"
+    },
+    "./runtime/agentBudgetAccessor.js": {
+      "types": "./dist/runtime/agentBudgetAccessor.d.ts",
+      "import": "./dist/runtime/agentBudgetAccessor.js",
+      "require": "./dist/runtime/agentBudgetAccessor.js"
+    },
+    "./runtime/agentBudgetAccessor": {
+      "types": "./dist/runtime/agentBudgetAccessor.d.ts",
+      "import": "./dist/runtime/agentBudgetAccessor.js",
+      "require": "./dist/runtime/agentBudgetAccessor.js"
+    },
+    "./runtime/agentRuntimeHost.js": {
+      "types": "./dist/runtime/agentRuntimeHost.d.ts",
+      "import": "./dist/runtime/agentRuntimeHost.js",
+      "require": "./dist/runtime/agentRuntimeHost.js"
+    },
+    "./runtime/agentRuntimeHost": {
+      "types": "./dist/runtime/agentRuntimeHost.d.ts",
+      "import": "./dist/runtime/agentRuntimeHost.js",
+      "require": "./dist/runtime/agentRuntimeHost.js"
+    },
+    "./runtime/browser/browserManager.js": {
+      "types": "./dist/runtime/browser/browserManager.d.ts",
+      "import": "./dist/runtime/browser/browserManager.js",
+      "require": "./dist/runtime/browser/browserManager.js"
+    },
+    "./runtime/browser/browserManager": {
+      "types": "./dist/runtime/browser/browserManager.d.ts",
+      "import": "./dist/runtime/browser/browserManager.js",
+      "require": "./dist/runtime/browser/browserManager.js"
+    },
+    "./runtime/browser/browserSession.js": {
+      "types": "./dist/runtime/browser/browserSession.d.ts",
+      "import": "./dist/runtime/browser/browserSession.js",
+      "require": "./dist/runtime/browser/browserSession.js"
+    },
+    "./runtime/browser/browserSession": {
+      "types": "./dist/runtime/browser/browserSession.d.ts",
+      "import": "./dist/runtime/browser/browserSession.js",
+      "require": "./dist/runtime/browser/browserSession.js"
+    },
+    "./runtime/browser/chromeLauncher.js": {
+      "types": "./dist/runtime/browser/chromeLauncher.d.ts",
+      "import": "./dist/runtime/browser/chromeLauncher.js",
+      "require": "./dist/runtime/browser/chromeLauncher.js"
+    },
+    "./runtime/browser/chromeLauncher": {
+      "types": "./dist/runtime/browser/chromeLauncher.d.ts",
+      "import": "./dist/runtime/browser/chromeLauncher.js",
+      "require": "./dist/runtime/browser/chromeLauncher.js"
+    },
+    "./runtime/modeFactory.js": {
+      "types": "./dist/runtime/modeFactory.d.ts",
+      "import": "./dist/runtime/modeFactory.js",
+      "require": "./dist/runtime/modeFactory.js"
+    },
+    "./runtime/modeFactory": {
+      "types": "./dist/runtime/modeFactory.d.ts",
+      "import": "./dist/runtime/modeFactory.js",
+      "require": "./dist/runtime/modeFactory.js"
+    },
+    "./runtime/modeHome.js": {
+      "types": "./dist/runtime/modeHome.d.ts",
+      "import": "./dist/runtime/modeHome.js",
+      "require": "./dist/runtime/modeHome.js"
+    },
+    "./runtime/modeHome": {
+      "types": "./dist/runtime/modeHome.d.ts",
+      "import": "./dist/runtime/modeHome.js",
+      "require": "./dist/runtime/modeHome.js"
+    },
+    "./runtime/runtimeBuilder.js": {
+      "types": "./dist/runtime/runtimeBuilder.d.ts",
+      "import": "./dist/runtime/runtimeBuilder.js",
+      "require": "./dist/runtime/runtimeBuilder.js"
+    },
+    "./runtime/runtimeBuilder": {
+      "types": "./dist/runtime/runtimeBuilder.d.ts",
+      "import": "./dist/runtime/runtimeBuilder.js",
+      "require": "./dist/runtime/runtimeBuilder.js"
+    },
+    "./runtime/runtimeHostService.js": {
+      "types": "./dist/runtime/runtimeHostService.d.ts",
+      "import": "./dist/runtime/runtimeHostService.js",
+      "require": "./dist/runtime/runtimeHostService.js"
+    },
+    "./runtime/runtimeHostService": {
+      "types": "./dist/runtime/runtimeHostService.d.ts",
+      "import": "./dist/runtime/runtimeHostService.js",
+      "require": "./dist/runtime/runtimeHostService.js"
+    },
+    "./runtime/runtimeOrchestrator.js": {
+      "types": "./dist/runtime/runtimeOrchestrator.d.ts",
+      "import": "./dist/runtime/runtimeOrchestrator.js",
+      "require": "./dist/runtime/runtimeOrchestrator.js"
+    },
+    "./runtime/runtimeOrchestrator": {
+      "types": "./dist/runtime/runtimeOrchestrator.d.ts",
+      "import": "./dist/runtime/runtimeOrchestrator.js",
+      "require": "./dist/runtime/runtimeOrchestrator.js"
+    },
+    "./runtime/runtimeTypes.js": {
+      "types": "./dist/runtime/runtimeTypes.d.ts",
+      "import": "./dist/runtime/runtimeTypes.js",
+      "require": "./dist/runtime/runtimeTypes.js"
+    },
+    "./runtime/runtimeTypes": {
+      "types": "./dist/runtime/runtimeTypes.d.ts",
+      "import": "./dist/runtime/runtimeTypes.js",
+      "require": "./dist/runtime/runtimeTypes.js"
+    },
+    "./runtime/sandboxModeApi.js": {
+      "types": "./dist/runtime/sandboxModeApi.d.ts",
+      "import": "./dist/runtime/sandboxModeApi.js",
+      "require": "./dist/runtime/sandboxModeApi.js"
+    },
+    "./runtime/sandboxModeApi": {
+      "types": "./dist/runtime/sandboxModeApi.d.ts",
+      "import": "./dist/runtime/sandboxModeApi.js",
+      "require": "./dist/runtime/sandboxModeApi.js"
+    },
+    "./runtime/services/autoRestartManager.js": {
+      "types": "./dist/runtime/services/autoRestartManager.d.ts",
+      "import": "./dist/runtime/services/autoRestartManager.js",
+      "require": "./dist/runtime/services/autoRestartManager.js"
+    },
+    "./runtime/services/autoRestartManager": {
+      "types": "./dist/runtime/services/autoRestartManager.d.ts",
+      "import": "./dist/runtime/services/autoRestartManager.js",
+      "require": "./dist/runtime/services/autoRestartManager.js"
+    },
+    "./runtime/services/scanWorkspace.js": {
+      "types": "./dist/runtime/services/scanWorkspace.d.ts",
+      "import": "./dist/runtime/services/scanWorkspace.js",
+      "require": "./dist/runtime/services/scanWorkspace.js"
+    },
+    "./runtime/services/scanWorkspace": {
+      "types": "./dist/runtime/services/scanWorkspace.d.ts",
+      "import": "./dist/runtime/services/scanWorkspace.js",
+      "require": "./dist/runtime/services/scanWorkspace.js"
+    },
+    "./runtime/services/serviceConfigStoreCache.js": {
+      "types": "./dist/runtime/services/serviceConfigStoreCache.d.ts",
+      "import": "./dist/runtime/services/serviceConfigStoreCache.js",
+      "require": "./dist/runtime/services/serviceConfigStoreCache.js"
+    },
+    "./runtime/services/serviceConfigStoreCache": {
+      "types": "./dist/runtime/services/serviceConfigStoreCache.d.ts",
+      "import": "./dist/runtime/services/serviceConfigStoreCache.js",
+      "require": "./dist/runtime/services/serviceConfigStoreCache.js"
+    },
+    "./runtime/services/serviceLauncher.js": {
+      "types": "./dist/runtime/services/serviceLauncher.d.ts",
+      "import": "./dist/runtime/services/serviceLauncher.js",
+      "require": "./dist/runtime/services/serviceLauncher.js"
+    },
+    "./runtime/services/serviceLauncher": {
+      "types": "./dist/runtime/services/serviceLauncher.d.ts",
+      "import": "./dist/runtime/services/serviceLauncher.js",
+      "require": "./dist/runtime/services/serviceLauncher.js"
+    },
+    "./runtime/shell/backgroundTaskNotifier.js": {
+      "types": "./dist/runtime/shell/backgroundTaskNotifier.d.ts",
+      "import": "./dist/runtime/shell/backgroundTaskNotifier.js",
+      "require": "./dist/runtime/shell/backgroundTaskNotifier.js"
+    },
+    "./runtime/shell/backgroundTaskNotifier": {
+      "types": "./dist/runtime/shell/backgroundTaskNotifier.d.ts",
+      "import": "./dist/runtime/shell/backgroundTaskNotifier.js",
+      "require": "./dist/runtime/shell/backgroundTaskNotifier.js"
+    },
+    "./runtime/shell/scheduledWakeupRegistry.js": {
+      "types": "./dist/runtime/shell/scheduledWakeupRegistry.d.ts",
+      "import": "./dist/runtime/shell/scheduledWakeupRegistry.js",
+      "require": "./dist/runtime/shell/scheduledWakeupRegistry.js"
+    },
+    "./runtime/shell/scheduledWakeupRegistry": {
+      "types": "./dist/runtime/shell/scheduledWakeupRegistry.d.ts",
+      "import": "./dist/runtime/shell/scheduledWakeupRegistry.js",
+      "require": "./dist/runtime/shell/scheduledWakeupRegistry.js"
+    },
+    "./runtime/store/OrganizationConfigService.js": {
+      "types": "./dist/runtime/store/OrganizationConfigService.d.ts",
+      "import": "./dist/runtime/store/OrganizationConfigService.js",
+      "require": "./dist/runtime/store/OrganizationConfigService.js"
+    },
+    "./runtime/store/OrganizationConfigService": {
+      "types": "./dist/runtime/store/OrganizationConfigService.d.ts",
+      "import": "./dist/runtime/store/OrganizationConfigService.js",
+      "require": "./dist/runtime/store/OrganizationConfigService.js"
+    },
+    "./runtime/store/PendingAskUserStore.js": {
+      "types": "./dist/runtime/store/PendingAskUserStore.d.ts",
+      "import": "./dist/runtime/store/PendingAskUserStore.js",
+      "require": "./dist/runtime/store/PendingAskUserStore.js"
+    },
+    "./runtime/store/PendingAskUserStore": {
+      "types": "./dist/runtime/store/PendingAskUserStore.d.ts",
+      "import": "./dist/runtime/store/PendingAskUserStore.js",
+      "require": "./dist/runtime/store/PendingAskUserStore.js"
+    },
+    "./runtime/systemPrompt.js": {
+      "types": "./dist/runtime/systemPrompt.d.ts",
+      "import": "./dist/runtime/systemPrompt.js",
+      "require": "./dist/runtime/systemPrompt.js"
+    },
+    "./runtime/systemPrompt": {
+      "types": "./dist/runtime/systemPrompt.d.ts",
+      "import": "./dist/runtime/systemPrompt.js",
+      "require": "./dist/runtime/systemPrompt.js"
+    },
+    "./runtime/watch/WatchCoordinator.js": {
+      "types": "./dist/runtime/watch/WatchCoordinator.d.ts",
+      "import": "./dist/runtime/watch/WatchCoordinator.js",
+      "require": "./dist/runtime/watch/WatchCoordinator.js"
+    },
+    "./runtime/watch/WatchCoordinator": {
+      "types": "./dist/runtime/watch/WatchCoordinator.d.ts",
+      "import": "./dist/runtime/watch/WatchCoordinator.js",
+      "require": "./dist/runtime/watch/WatchCoordinator.js"
+    },
+    "./sdk/client.js": {
+      "types": "./dist/sdk/client.d.ts",
+      "import": "./dist/sdk/client.js",
+      "require": "./dist/sdk/client.js"
+    },
+    "./sdk/client": {
+      "types": "./dist/sdk/client.d.ts",
+      "import": "./dist/sdk/client.js",
+      "require": "./dist/sdk/client.js"
+    },
+    "./sdk/localNeoxClient.js": {
+      "types": "./dist/sdk/localNeoxClient.d.ts",
+      "import": "./dist/sdk/localNeoxClient.js",
+      "require": "./dist/sdk/localNeoxClient.js"
+    },
+    "./sdk/localNeoxClient": {
+      "types": "./dist/sdk/localNeoxClient.d.ts",
+      "import": "./dist/sdk/localNeoxClient.js",
+      "require": "./dist/sdk/localNeoxClient.js"
+    },
+    "./sdk/localRuntimeAdapter.js": {
+      "types": "./dist/sdk/localRuntimeAdapter.d.ts",
+      "import": "./dist/sdk/localRuntimeAdapter.js",
+      "require": "./dist/sdk/localRuntimeAdapter.js"
+    },
+    "./sdk/localRuntimeAdapter": {
+      "types": "./dist/sdk/localRuntimeAdapter.d.ts",
+      "import": "./dist/sdk/localRuntimeAdapter.js",
+      "require": "./dist/sdk/localRuntimeAdapter.js"
+    },
+    "./sdk/remoteRuntimeAdapter.js": {
+      "types": "./dist/sdk/remoteRuntimeAdapter.d.ts",
+      "import": "./dist/sdk/remoteRuntimeAdapter.js",
+      "require": "./dist/sdk/remoteRuntimeAdapter.js"
+    },
+    "./sdk/remoteRuntimeAdapter": {
+      "types": "./dist/sdk/remoteRuntimeAdapter.d.ts",
+      "import": "./dist/sdk/remoteRuntimeAdapter.js",
+      "require": "./dist/sdk/remoteRuntimeAdapter.js"
+    },
+    "./sdk/runtimeAdapter.js": {
+      "types": "./dist/sdk/runtimeAdapter.d.ts",
+      "import": "./dist/sdk/runtimeAdapter.js",
+      "require": "./dist/sdk/runtimeAdapter.js"
+    },
+    "./sdk/runtimeAdapter": {
+      "types": "./dist/sdk/runtimeAdapter.d.ts",
+      "import": "./dist/sdk/runtimeAdapter.js",
+      "require": "./dist/sdk/runtimeAdapter.js"
+    },
+    "./sdk/runtimeWorkerEntry.js": {
+      "types": "./dist/sdk/runtimeWorkerEntry.d.ts",
+      "import": "./dist/sdk/runtimeWorkerEntry.js",
+      "require": "./dist/sdk/runtimeWorkerEntry.js"
+    },
+    "./sdk/runtimeWorkerEntry": {
+      "types": "./dist/sdk/runtimeWorkerEntry.d.ts",
+      "import": "./dist/sdk/runtimeWorkerEntry.js",
+      "require": "./dist/sdk/runtimeWorkerEntry.js"
+    },
+    "./sdk/workerRuntimeAdapter.js": {
+      "types": "./dist/sdk/workerRuntimeAdapter.d.ts",
+      "import": "./dist/sdk/workerRuntimeAdapter.js",
+      "require": "./dist/sdk/workerRuntimeAdapter.js"
+    },
+    "./sdk/workerRuntimeAdapter": {
+      "types": "./dist/sdk/workerRuntimeAdapter.d.ts",
+      "import": "./dist/sdk/workerRuntimeAdapter.js",
+      "require": "./dist/sdk/workerRuntimeAdapter.js"
+    },
+    "./server/client-agent/index.js": {
+      "types": "./dist/server/client-agent/index.d.ts",
+      "import": "./dist/server/client-agent/index.js",
+      "require": "./dist/server/client-agent/index.js"
+    },
+    "./server/client-agent/index": {
+      "types": "./dist/server/client-agent/index.d.ts",
+      "import": "./dist/server/client-agent/index.js",
+      "require": "./dist/server/client-agent/index.js"
+    },
+    "./server/main.js": {
+      "types": "./dist/server/main.d.ts",
+      "import": "./dist/server/main.js",
+      "require": "./dist/server/main.js"
+    },
+    "./server/main": {
+      "types": "./dist/server/main.d.ts",
+      "import": "./dist/server/main.js",
+      "require": "./dist/server/main.js"
+    },
+    "./server/processManager.js": {
+      "types": "./dist/server/processManager.d.ts",
+      "import": "./dist/server/processManager.js",
+      "require": "./dist/server/processManager.js"
+    },
+    "./server/processManager": {
+      "types": "./dist/server/processManager.d.ts",
+      "import": "./dist/server/processManager.js",
+      "require": "./dist/server/processManager.js"
+    },
+    "./server/services/imageGenSetup.js": {
+      "types": "./dist/server/services/imageGenSetup.d.ts",
+      "import": "./dist/server/services/imageGenSetup.js",
+      "require": "./dist/server/services/imageGenSetup.js"
+    },
+    "./server/services/imageGenSetup": {
+      "types": "./dist/server/services/imageGenSetup.d.ts",
+      "import": "./dist/server/services/imageGenSetup.js",
+      "require": "./dist/server/services/imageGenSetup.js"
+    },
+    "./server/services/providerResolver.js": {
+      "types": "./dist/server/services/providerResolver.d.ts",
+      "import": "./dist/server/services/providerResolver.js",
+      "require": "./dist/server/services/providerResolver.js"
+    },
+    "./server/services/providerResolver": {
+      "types": "./dist/server/services/providerResolver.d.ts",
+      "import": "./dist/server/services/providerResolver.js",
+      "require": "./dist/server/services/providerResolver.js"
+    },
+    "./services/imageGenService.js": {
+      "types": "./dist/services/imageGenService.d.ts",
+      "import": "./dist/services/imageGenService.js",
+      "require": "./dist/services/imageGenService.js"
+    },
+    "./services/imageGenService": {
+      "types": "./dist/services/imageGenService.d.ts",
+      "import": "./dist/services/imageGenService.js",
+      "require": "./dist/services/imageGenService.js"
+    },
+    "./shared/projectStartup/types.js": {
+      "types": "./dist/shared/projectStartup/types.d.ts",
+      "import": "./dist/shared/projectStartup/types.js",
+      "require": "./dist/shared/projectStartup/types.js"
+    },
+    "./shared/projectStartup/types": {
+      "types": "./dist/shared/projectStartup/types.d.ts",
+      "import": "./dist/shared/projectStartup/types.js",
+      "require": "./dist/shared/projectStartup/types.js"
+    },
+    "./shared/scheduling/coalescingScheduler.js": {
+      "types": "./dist/shared/scheduling/coalescingScheduler.d.ts",
+      "import": "./dist/shared/scheduling/coalescingScheduler.js",
+      "require": "./dist/shared/scheduling/coalescingScheduler.js"
+    },
+    "./shared/scheduling/coalescingScheduler": {
+      "types": "./dist/shared/scheduling/coalescingScheduler.d.ts",
+      "import": "./dist/shared/scheduling/coalescingScheduler.js",
+      "require": "./dist/shared/scheduling/coalescingScheduler.js"
+    },
+    "./skills/index.js": {
+      "types": "./dist/skills/index.d.ts",
+      "import": "./dist/skills/index.js",
+      "require": "./dist/skills/index.js"
+    },
+    "./skills/index": {
+      "types": "./dist/skills/index.d.ts",
+      "import": "./dist/skills/index.js",
+      "require": "./dist/skills/index.js"
+    },
+    "./skills/installManager.js": {
+      "types": "./dist/skills/installManager.d.ts",
+      "import": "./dist/skills/installManager.js",
+      "require": "./dist/skills/installManager.js"
+    },
+    "./skills/installManager": {
+      "types": "./dist/skills/installManager.d.ts",
+      "import": "./dist/skills/installManager.js",
+      "require": "./dist/skills/installManager.js"
+    },
+    "./tools/askUserTool.js": {
+      "types": "./dist/tools/askUserTool.d.ts",
+      "import": "./dist/tools/askUserTool.js",
+      "require": "./dist/tools/askUserTool.js"
+    },
+    "./tools/askUserTool": {
+      "types": "./dist/tools/askUserTool.d.ts",
+      "import": "./dist/tools/askUserTool.js",
+      "require": "./dist/tools/askUserTool.js"
+    },
+    "./tools/files/fileSnapshotStore.js": {
+      "types": "./dist/tools/files/fileSnapshotStore.d.ts",
+      "import": "./dist/tools/files/fileSnapshotStore.js",
+      "require": "./dist/tools/files/fileSnapshotStore.js"
+    },
+    "./tools/files/fileSnapshotStore": {
+      "types": "./dist/tools/files/fileSnapshotStore.d.ts",
+      "import": "./dist/tools/files/fileSnapshotStore.js",
+      "require": "./dist/tools/files/fileSnapshotStore.js"
+    },
+    "./tools/packs/toolPack.js": {
+      "types": "./dist/tools/packs/toolPack.d.ts",
+      "import": "./dist/tools/packs/toolPack.js",
+      "require": "./dist/tools/packs/toolPack.js"
+    },
+    "./tools/packs/toolPack": {
+      "types": "./dist/tools/packs/toolPack.d.ts",
+      "import": "./dist/tools/packs/toolPack.js",
+      "require": "./dist/tools/packs/toolPack.js"
+    },
+    "./tools/runtimeTools.js": {
+      "types": "./dist/tools/runtimeTools.d.ts",
+      "import": "./dist/tools/runtimeTools.js",
+      "require": "./dist/tools/runtimeTools.js"
+    },
+    "./tools/runtimeTools": {
+      "types": "./dist/tools/runtimeTools.d.ts",
+      "import": "./dist/tools/runtimeTools.js",
+      "require": "./dist/tools/runtimeTools.js"
+    },
+    "./tools/shell/osSandbox.js": {
+      "types": "./dist/tools/shell/osSandbox.d.ts",
+      "import": "./dist/tools/shell/osSandbox.js",
+      "require": "./dist/tools/shell/osSandbox.js"
+    },
+    "./tools/shell/osSandbox": {
+      "types": "./dist/tools/shell/osSandbox.d.ts",
+      "import": "./dist/tools/shell/osSandbox.js",
+      "require": "./dist/tools/shell/osSandbox.js"
+    },
+    "./tools/shell/shellUiCallbacks.js": {
+      "types": "./dist/tools/shell/shellUiCallbacks.d.ts",
+      "import": "./dist/tools/shell/shellUiCallbacks.js",
+      "require": "./dist/tools/shell/shellUiCallbacks.js"
+    },
+    "./tools/shell/shellUiCallbacks": {
+      "types": "./dist/tools/shell/shellUiCallbacks.d.ts",
+      "import": "./dist/tools/shell/shellUiCallbacks.js",
+      "require": "./dist/tools/shell/shellUiCallbacks.js"
+    },
+    "./tools/smart-read/index.js": {
+      "types": "./dist/tools/smart-read/index.d.ts",
+      "import": "./dist/tools/smart-read/index.js",
+      "require": "./dist/tools/smart-read/index.js"
+    },
+    "./tools/smart-read/index": {
+      "types": "./dist/tools/smart-read/index.d.ts",
+      "import": "./dist/tools/smart-read/index.js",
+      "require": "./dist/tools/smart-read/index.js"
+    },
+    "./tools/targetModeTools.js": {
+      "types": "./dist/tools/targetModeTools.d.ts",
+      "import": "./dist/tools/targetModeTools.js",
+      "require": "./dist/tools/targetModeTools.js"
+    },
+    "./tools/targetModeTools": {
+      "types": "./dist/tools/targetModeTools.d.ts",
+      "import": "./dist/tools/targetModeTools.js",
+      "require": "./dist/tools/targetModeTools.js"
+    },
+    "./tools/workspace/pathHelpers.js": {
+      "types": "./dist/tools/workspace/pathHelpers.d.ts",
+      "import": "./dist/tools/workspace/pathHelpers.js",
+      "require": "./dist/tools/workspace/pathHelpers.js"
+    },
+    "./tools/workspace/pathHelpers": {
+      "types": "./dist/tools/workspace/pathHelpers.d.ts",
+      "import": "./dist/tools/workspace/pathHelpers.js",
+      "require": "./dist/tools/workspace/pathHelpers.js"
+    }
+  },
+  "scripts": {
+    "build": "node ../../scripts/bake-skills.mjs && tsc --project tsconfig.build.json && node scripts/copy-non-ts-assets.mjs",
+    "_build_obfuscate_DO_NOT_USE": "tsc --project tsconfig.build.json && node scripts/obfuscate.mjs",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "@neoxlabs/kernel": "2.6.0",
+    "@neoxlabs/platform": "2.6.0",
+    "@neoxlabs/sandbox": "2.6.0",
+    "@neoxlabs/pptx-renderer": "2.6.0",
+    "@neoxlabs/pptx-compose": "2.6.0",
+    "ghost-cursor": "^1.4.2",
+    "pixelmatch": "^7.2.0",
+    "playwright-core": "^1.60.0",
+    "pngjs": "^7.0.0",
+    "undici": "^6.19.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

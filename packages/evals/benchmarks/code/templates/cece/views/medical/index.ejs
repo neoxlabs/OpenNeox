@@ -1,0 +1,160 @@
+<%- include('../partials/head', { title: '医疗记录' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">就诊档案</div>
+    <h1>🏥 医疗记录</h1>
+    <p class="page-subtitle">完整保存每一次医疗与用药记录</p>
+  </div>
+</div>
+
+<%- include('../partials/filter-bar') %>
+
+<div data-tabs>
+  <div class="tabs">
+    <div class="tab active" data-tab="records">📋 就诊记录</div>
+    <div class="tab" data-tab="medications">💊 药品管理</div>
+    <div class="tab" data-tab="providers">👩‍⚕️ 服务商</div>
+  </div>
+
+  <div class="tab-panel" data-panel="records" style="display:block">
+    <div class="section">
+      <div class="section-header"><h2>就诊记录</h2><a href="/medical/add" class="btn btn-primary btn-sm">+ 添加</a></div>
+      <% if (typeof records === 'undefined' || records.length === 0) { %>
+      <div class="empty-state"><span class="empty-icon">📋</span><p>暂无就诊记录，点击右上角添加第一条记录吧</p></div>
+      <% } else { %>
+      <div class="record-list stagger-children">
+        <% records.forEach(r => { const files = attachmentsByRecord[r.id] || []; %>
+        <div class="record-card">
+          <div class="record-icon">🏥</div>
+          <div class="record-info">
+            <h4><%= r.diagnosis || '就诊记录' %></h4>
+            <div class="record-meta">
+              <span>🐾 <%= r.pet_name %></span>
+              <span>📅 <%= r.visit_date %></span>
+              <% if (r.provider_name) { %><span>👩‍⚕️ <%= r.provider_name %></span><% } %>
+              <% if (r.vet_name) { %><span>🩺 <%= r.vet_name %></span><% } %>
+              <% if (r.vet_clinic) { %><span>🏥 <%= r.vet_clinic %></span><% } %>
+              <% if (r.cost) { %><span class="badge badge-warning">¥<%= r.cost %></span><% } %>
+              <% if (r.next_visit) { %><span>🔜 复诊：<%= r.next_visit %></span><% } %>
+            </div>
+            <% if (files.length > 0) { %>
+            <div class="record-meta" style="margin-top:4px;">
+              📎
+              <% files.forEach(file => { %>
+              <a href="<%= file.file_path %>" target="_blank" class="badge badge-teal"><%= file.original_name %></a>
+              <form action="/medical/attachments/<%= file.id %>/delete" method="POST" class="delete-form inline-form" style="display:inline;">
+                <button class="btn btn-sm" style="font-size:0.7rem;padding:1px 6px;">✕</button>
+              </form>
+              <% }) %>
+            </div>
+            <% } %>
+          </div>
+          <div class="record-actions">
+            <form action="/medical/<%= r.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="medications">
+    <div class="section">
+      <div class="section-header"><h2>药品管理</h2><a href="/medical/medications/add" class="btn btn-primary btn-sm">+ 添加药品</a></div>
+      <% if (typeof medications === 'undefined' || medications.length === 0) { %>
+      <div class="empty-state"><span class="empty-icon">💊</span><p>暂无药品记录，点击右上角添加第一条记录吧</p></div>
+      <% } else { %>
+      <div class="record-list stagger-children">
+        <% medications.forEach(m => { %>
+        <div class="record-card">
+          <div class="record-icon">💊</div>
+          <div class="record-info">
+            <h4><%= m.medicine_name %></h4>
+            <div class="record-meta">
+              <span>🐾 <%= m.pet_name %></span>
+              <% if (m.dosage) { %><span>📏 <%= m.dosage %></span><% } %>
+              <% if (m.frequency) { %><span>🔄 <%= m.frequency %></span><% } %>
+              <span>⏰ <%= m.dose_time || '09:00' %></span>
+              <span>📅 <%= m.start_date %><% if (m.end_date) { %> ~ <%= m.end_date %><% } %></span>
+              <span><span class="badge <%= m.is_active ? 'badge-success' : 'badge-danger' %>"><%= m.is_active ? '进行中' : '已结束' %></span></span>
+            </div>
+          </div>
+          <div class="record-actions">
+            <form action="/medical/medications/<%= m.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="providers">
+    <div class="section">
+      <div class="section-header"><h2>服务商联系人</h2></div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><h3>➕ 添加服务商</h3></div>
+        <form action="/medical/providers" method="POST">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>名称 *</label>
+              <input type="text" name="name" class="form-control" required placeholder="例如：安心动物医院">
+            </div>
+            <div class="form-group">
+              <label>类型</label>
+              <select name="type" class="form-control">
+                <option value="兽医">兽医</option>
+                <option value="医院">医院</option>
+                <option value="药房">药房</option>
+                <option value="急诊">急诊</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>电话</label>
+              <input type="text" name="phone" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>邮箱</label>
+              <input type="email" name="email" class="form-control">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">添加服务商</button>
+        </form>
+      </div>
+
+      <% if (!providers || providers.length === 0) { %>
+      <div class="empty-state"><span class="empty-icon">👩‍⚕️</span><p>暂无服务商联系人</p></div>
+      <% } else { %>
+      <div class="record-list stagger-children">
+        <% providers.forEach(provider => { %>
+        <div class="record-card">
+          <div class="record-icon">👩‍⚕️</div>
+          <div class="record-info">
+            <h4><%= provider.name %> <span class="badge badge-lavender"><%= provider.type %></span></h4>
+            <div class="record-meta">
+              <span>📞 <%= provider.phone || '无电话' %></span>
+              <% if (provider.email) { %><span>📧 <%= provider.email %></span><% } %>
+            </div>
+          </div>
+          <div class="record-actions">
+            <form action="/medical/providers/<%= provider.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+<%- include('../partials/pagination') %>
+
+<%- include('../partials/foot') %>

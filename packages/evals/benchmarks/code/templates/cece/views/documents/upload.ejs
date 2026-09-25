@@ -1,0 +1,59 @@
+<%- include('../partials/head', { title: '上传文档' }) %>
+
+<div class="page-header">
+  <h1>📤 上传文档</h1>
+  <a href="/documents" class="btn btn-outline">← 返回</a>
+</div>
+
+<div class="section">
+  <form action="/documents" method="POST" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>文档标题</label>
+        <input type="text" name="title" class="form-control" placeholder="例如：旺财2024年疫苗证书">
+      </div>
+      <div class="form-group">
+        <label>关联宠物</label>
+        <select name="pet_id" class="form-control">
+          <option value="">不关联宠物</option>
+          <% pets.forEach(p => { %>
+          <option value="<%= p.id %>"><%= p.name %> (<%= p.species %>)</option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>所属模块</label>
+        <select name="module" class="form-control">
+          <option value="vaccine">疫苗</option>
+          <option value="deworming">驱虫</option>
+          <option value="medical">医疗</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>文档类型</label>
+        <select name="doc_type" class="form-control">
+          <option value="vaccine_cert">疫苗证书</option>
+          <option value="deworming_cert">驱虫证明</option>
+          <option value="medical_bill">医疗账单</option>
+          <option value="prescription">处方单</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:20px">
+      <label>📎 选择文件 *</label>
+      <div class="file-upload-hint" style="padding:24px;background:var(--bg-alt);border-radius:var(--radius-md);border:2px dashed var(--border);text-align:center;color:var(--text-muted);font-size:0.9rem;">
+        🖼️ 支持 JPG、PNG、PDF、DOC、DOCX、XLS、XLSX 等格式<br>
+        <small style="color:var(--text-weak)">文件大小限制 10MB</small>
+      </div>
+      <input type="file" name="file" class="form-control" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" required style="margin-top:12px">
+    </div>
+    <div class="form-actions" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px">
+      <a href="/documents" class="btn btn-outline">取消</a>
+      <button type="submit" class="btn btn-primary">📤 上传文档</button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

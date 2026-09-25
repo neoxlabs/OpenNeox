@@ -1,0 +1,32 @@
+id: xiaomi/mimo-v2.5-pro
+display_name: MiMo v2.5 Pro
+family: mimo
+vendor: Xiaomi
+released: 2026-06
+availability: ga
+
+context_window: 128000
+max_output_tokens: 8192
+
+upstream_slugs:
+  prov_openrouter: xiaomi/mimo-v2.5-pro
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: false
+  prompt_cache:
+    supported: false
+
+# 原来四档只有 billing_multiplier —— 选了等于没选, UI 也不显示档位 (hasEffortMap=false)。
+# 跟 mimo-v2.5 同一个小米 API: 小米官方认 thinking:{type:disabled}, OpenRouter 认
+# reasoning:{enabled:false}, off 档两个都发 (2026-09-13 在 mimo-v2.5 上实测)。
+effort_map:
+  off: { thinking: { type: disabled }, reasoning: { enabled: false } }
+  on:  { thinking: { type: enabled } }
+
+pricing:
+  input_per_mtok: 0.50
+  cached_input_per_mtok: 0.10
+  output_per_mtok: 1.50
+  currency: USD

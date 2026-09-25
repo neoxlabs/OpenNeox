@@ -1,0 +1,76 @@
+{
+  "name": "@neoxlabs/evals",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Neox Agent · 公开 benchmark harness · SWE-bench / HumanEval / Browser-verify bench",
+  "type": "module",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "neox-evals": "./dist/cli/neox-evals.js",
+    "neox-release-test": "./dist/release-suite/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./runners/swebench": {
+      "types": "./dist/runners/swebench.d.ts",
+      "import": "./dist/runners/swebench.js"
+    },
+    "./harness/headlessAgent": {
+      "types": "./dist/harness/headlessAgent.d.ts",
+      "import": "./dist/harness/headlessAgent.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm run build",
+    "release-test": "tsx src/release-suite/cli.ts",
+    "eval:behavior": "tsx src/behavior-suite/run.ts"
+  },
+  "keywords": [
+    "neox",
+    "agent",
+    "benchmark",
+    "swe-bench",
+    "humaneval",
+    "evaluation",
+    "harness"
+  ],
+  "author": "MK-CO",
+  "dependencies": {
+    "@neoxlabs/core": "2.6.0",
+    "@neoxlabs/kernel": "2.6.0",
+    "@neoxlabs/platform": "2.6.0",
+    "commander": "^12.0.0",
+    "execa": "^8.0.1",
+    "undici": "^6.19.8",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/evals"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

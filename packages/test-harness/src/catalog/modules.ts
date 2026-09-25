@@ -1,0 +1,35 @@
+import type { ModuleMeta } from '../types.js';
+
+export const MODULES: ModuleMeta[] = [
+  // CLI
+  { id: 'cli.interrupt', surface: 'cli', title: 'CLI · Interrupt', description: 'Esc/Enter/Explore' },
+  { id: 'cli.compact', surface: 'cli', title: 'CLI · Compact', description: '/compact · ctx' },
+  { id: 'cli.statusline', surface: 'cli', title: 'CLI · StatusLine', description: '表盘 · busy' },
+  { id: 'cli.streaming', surface: 'cli', title: 'CLI · Streaming', description: '流式' },
+  { id: 'cli.shell', surface: 'cli', title: 'CLI · Shell', description: 'shell 卡' },
+  { id: 'cli.byok', surface: 'cli', title: 'CLI · BYOK', description: 'provider' },
+  { id: 'cli.timeline', surface: 'cli', title: 'CLI · Timeline', description: '消息序' },
+  { id: 'cli.slash', surface: 'cli', title: 'CLI · Slash', description: '斜杠命令' },
+  { id: 'cli.agent-flow', surface: 'cli', title: 'CLI · Agent journeys', description: '对话组合旅程 + 矩阵' },
+  { id: 'cli.auth', surface: 'cli', title: 'CLI · Auth', description: 'login / logout / device-code / 过期' },
+  { id: 'cli.session', surface: 'cli', title: 'CLI · Session', description: '会话切换 / 新建 / 恢复' },
+  { id: 'cli.artifact', surface: 'cli', title: 'CLI · Artifacts', description: 'HTML / Vite / PPT / Word / Sheet 产出' },
+  // Desktop
+  { id: 'desktop.boot', surface: 'desktop', title: 'Desktop · Boot', description: '启动' },
+  { id: 'desktop.timeline', surface: 'desktop', title: 'Desktop · Timeline', description: '时间线' },
+  { id: 'desktop.approval', surface: 'desktop', title: 'Desktop · Approval', description: '审批' },
+  { id: 'desktop.compact', surface: 'desktop', title: 'Desktop · Compact', description: '压缩表盘' },
+  { id: 'desktop.session', surface: 'desktop', title: 'Desktop · Session', description: '会话切换隔离' },
+  { id: 'desktop.byok', surface: 'desktop', title: 'Desktop · BYOK', description: 'Providers' },
+  { id: 'desktop.oauth', surface: 'desktop', title: 'Desktop · OAuth plugins', description: 'Claude/Codex/Grok' },
+  { id: 'desktop.surface', surface: 'desktop', title: 'Desktop · Surfaces', description: '右栏 viewer' },
+  { id: 'desktop.plugins', surface: 'desktop', title: 'Desktop · Plugins', description: '插件市场' },
+  { id: 'desktop.diff', surface: 'desktop', title: 'Desktop · Diff', description: 'EditDiff' },
+  { id: 'desktop.composer', surface: 'desktop', title: 'Desktop · Composer', description: '输入区' },
+  { id: 'desktop.settings', surface: 'desktop', title: 'Desktop · Settings', description: '设置' },
+  { id: 'desktop.agent-flow', surface: 'desktop', title: 'Desktop · Agent journeys', description: '对话组合' },
+  { id: 'desktop.timeline-layout', surface: 'desktop', title: 'Desktop · Timeline layout', description: '对齐叠层' },
+  { id: 'desktop.auth', surface: 'desktop', title: 'Desktop · Auth / Cloud', description: '登录注册登出会员' },
+  { id: 'desktop.artifact', surface: 'desktop', title: 'Desktop · Artifacts', description: 'HTML/Vite/PPT/Word/Sheet + surface' },
+  { id: 'desktop.cloud', surface: 'desktop', title: 'Desktop · Cloud features', description: '订阅/兑换/云能力' },
+];

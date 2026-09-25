@@ -1,0 +1,82 @@
+<%- include('../partials/head', { title: '护理日历' }) %>
+
+<%
+  const [year, monthNumber] = month.split('-').map(Number);
+  const prevMonthDate = new Date(year, monthNumber - 2, 1);
+  const nextMonthDate = new Date(year, monthNumber, 1);
+  const toMonth = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  const typeLabels = { reminder: '提醒', walk: '遛狗', feeding: '喂食', vaccine: '疫苗', deworming: '驱虫', weight: '体重', medical: '医疗', medication: '用药' };
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+%>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">月度总览</div>
+    <h1>🗓️ 护理日历</h1>
+    <p class="page-subtitle">一眼看清本月所有护理安排</p>
+  </div>
+</div>
+
+<div class="calendar-nav">
+  <a href="/calendar?month=<%= toMonth(prevMonthDate) %>" class="btn btn-outline">◀ 上个月</a>
+  <span class="calendar-nav-title"><%= month %></span>
+  <a href="/calendar?month=<%= toMonth(nextMonthDate) %>" class="btn btn-outline">下个月 ▶</a>
+  <a href="/calendar" class="btn btn-outline btn-sm">本月</a>
+</div>
+
+<div class="stats-grid stagger-children">
+  <div class="stat-card stat-card-pink"><div class="stat-icon">📆</div><div class="stat-label">当前月份</div><div class="stat-value" style="font-size:1.6rem"><%= month %></div></div>
+  <div class="stat-card stat-card-teal"><div class="stat-icon">📌</div><div class="stat-label">本月事件</div><div class="stat-value"><%= events.length %></div></div>
+  <div class="stat-card stat-card-amber"><div class="stat-icon">🐾</div><div class="stat-label">宠物数</div><div class="stat-value"><%= pets.length %></div></div>
+</div>
+
+<div class="section">
+  <div class="section-header"><h2>月视图</h2></div>
+  <div class="calendar-day-header">
+    <% weekDays.forEach(d => { %><div class="calendar-day-header-item"><%= d %></div><% }) %>
+  </div>
+  <div class="calendar-grid">
+    <% days.forEach(day => { %>
+    <div class="calendar-day <%= day.events.length ? 'has-events' : '' %>">
+      <div class="calendar-day-number"><%= day.day %></div>
+      <% day.events.slice(0, 4).forEach(event => { %>
+      <a href="<%= event.href %>" class="calendar-event calendar-event-<%= event.type %>">
+        <span><%= event.icon %></span>
+        <span><%= event.time ? event.time + ' ' : '' %><%= event.title %></span>
+      </a>
+      <% }) %>
+      <% if (day.events.length > 4) { %><div class="calendar-more">+<%= day.events.length - 4 %> 更多</div><% } %>
+    </div>
+    <% }) %>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><h2>本月事件列表</h2></div>
+  <% if (events.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">📆</span><p>本月暂无护理事件</p></div>
+  <% } else { %>
+  <div class="record-list stagger-children">
+    <% events.forEach(event => { %>
+    <div class="record-card">
+      <div class="record-icon"><%= event.icon %></div>
+      <div class="record-info">
+        <div class="record-title"><%= event.title %></div>
+        <div class="record-meta">
+          <span>📅 <%= event.date %></span>
+          <% if (event.time) { %><span>🕐 <%= event.time %></span><% } %>
+          <span>🐾 <%= event.pet_name %></span>
+          <span class="badge"><%= typeLabels[event.type] || event.type %></span>
+          <% if (event.detail) { %><span>💬 <%= event.detail %></span><% } %>
+        </div>
+      </div>
+      <div class="record-actions">
+        <a href="<%= event.href %>" class="btn btn-sm btn-outline">查看</a>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/foot') %>

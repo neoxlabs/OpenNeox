@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slide Outline</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1e1f22;
+      color: #bcbec4;
+      font-size: 13px;
+    }
+    .header {
+      padding: 10px 14px;
+      border-bottom: 1px solid #2b2d30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #7c9fd4;
+      letter-spacing: 0.5px;
+    }
+    .empty {
+      padding: 48px 14px;
+      text-align: center;
+      color: #6b6f76;
+    }
+    .empty code {
+      background: #2b2d30;
+      border: 1px solid #393b40;
+      border-radius: 3px;
+      padding: 2px 6px;
+      color: #bcbec4;
+    }
+    .slides {
+      padding: 10px 14px 24px;
+    }
+    .slide {
+      background: #2b2d30;
+      border: 1px solid #393b40;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .slide-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #d4d7dc;
+      margin: 0 0 8px 0;
+    }
+    .slide-num {
+      display: inline-block;
+      background: #394b6a;
+      color: #bcbec4;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin-bottom: 3px; color: #bcbec4; }
+    button {
+      background: #2b2d30;
+      border: 1px solid #393b40;
+      color: #bcbec4;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    button:hover { background: #393b40; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>SLIDE OUTLINE</h1>
+    <button onclick="load()">Reload</button>
+  </div>
+  <div id="root" class="empty">
+    <p>No outline yet.</p>
+    <p>Ask the AI:</p>
+    <p><code>/ppt-outline Your topic here</code></p>
+    <p>Then call <code>ppt_outline_save</code> with the generated JSON.</p>
+  </div>
+
+  <script>
+    function resize() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: 'neox.plugin.resize', height }, '*');
+    }
+
+    function render(slides) {
+      const root = document.getElementById('root');
+      if (!Array.isArray(slides) || slides.length === 0) {
+        root.className = 'empty';
+        root.innerHTML = '<p>No slides saved yet.</p>';
+        resize();
+        return;
+      }
+      root.className = 'slides';
+      root.innerHTML = slides.map((s, i) => `
+        <div class="slide">
+          <div class="slide-title"><span class="slide-num">${i + 1}</span>${escapeHtml(s.title || 'Untitled')}</div>
+          <ul>${(s.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join('')}</ul>
+        </div>
+      `).join('');
+      resize();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[c]);
+    }
+
+    async function load() {
+      try {
+        // 目前 iframe 无 postMessage 桥去调主进程读文件, 占位 demo.
+        // 真实场景里这里走 window.parent.postMessage({ type: 'neox.plugin.invokeTool', ... })
+        // 然后监听回包. 本示例先展示一份内置样例.
+        const demoUrl = 'outline.json';
+        const res = await fetch(demoUrl).catch(() => null);
+        if (res && res.ok) {
+          const data = await res.json();
+          render(data);
+          return;
+        }
+        render([
+          { title: 'Demo: replace with real outline', bullets: ['Point A', 'Point B', 'Point C'] },
+        ]);
+      } catch {
+        render([]);
+      }
+    }
+
+    window.addEventListener('load', () => { load(); resize(); });
+  </script>
+</body>
+</html>

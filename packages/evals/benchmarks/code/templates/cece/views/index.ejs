@@ -1,0 +1,75 @@
+<%- include('partials/head', { title: 'Cece 宠物管理' }) %>
+
+<div class="landing-shell">
+  <div class="hero">
+    <span class="hero-pet-icon" aria-hidden="true">🐾</span>
+    <div class="page-kicker">优雅 · 治愈 · 家庭共享</div>
+    <h1>Cece 宠物管理</h1>
+    <p class="hero-subtitle">用温柔而专业的方式守护毛孩子 — 遛狗、喂食、健康、医疗、提醒，一站式记录与洞察</p>
+    <% if (typeof user === 'undefined' || !user) { %>
+    <div class="hero-actions">
+      <a href="/auth/register" class="btn btn-primary btn-lg">免费开始</a>
+      <a href="/auth/login" class="btn btn-outline btn-lg">已有账号登录</a>
+    </div>
+    <% } else { %>
+    <div class="hero-actions">
+      <a href="/dashboard" class="btn btn-primary btn-lg">进入数据总览</a>
+      <a href="/pets" class="btn btn-outline btn-lg">管理我的宠物</a>
+    </div>
+    <% } %>
+    <div class="hero-pills">
+      <span class="hero-pill">🦮 日常护理</span>
+      <span class="hero-pill">💊 健康档案</span>
+      <span class="hero-pill">🔔 智能提醒</span>
+      <span class="hero-pill">👨‍👩‍👧‍👦 家庭共享</span>
+    </div>
+  </div>
+
+  <div class="features">
+    <h2>✨ 核心功能</h2>
+    <p class="features-lead">从日常到医疗，把每一位毛孩子的生活照顾得井井有条</p>
+    <div class="feature-grid stagger-children">
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">🦮</span></div>
+        <h3>遛狗管理</h3>
+        <p>记录时长、距离与心情，活动目标一目了然，养成规律散步习惯</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">🍖</span></div>
+        <h3>喂食计划</h3>
+        <p>自定义喂食时间与份量，库存提醒与摄入分析，科学喂养每一天</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">💊</span></div>
+        <h3>健康追踪</h3>
+        <p>疫苗、驱虫、体重与体征趋势，关键节点自动提醒，健康更安心</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">🏥</span></div>
+        <h3>医疗记录</h3>
+        <p>就诊、药品与服务商资料完整归档，附件账单随时可查</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">💇</span></div>
+        <h3>美容护理</h3>
+        <p>洗澡、剪甲、梳毛、洁牙，每一次精致护理都有迹可循</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">🔔</span></div>
+        <h3>智能提醒</h3>
+        <p>统一提醒中心聚合待办事项，支持贪睡，再也不会错过重要日程</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">🗓️</span></div>
+        <h3>护理日历</h3>
+        <p>月视图总览所有护理事件，轻松规划家庭与宠物的每一天</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap"><span class="feature-icon">📊</span></div>
+        <h3>数据总览</h3>
+        <p>可视化 Dashboard，连续打卡、趋势洞察与快捷操作尽在掌握</p>
+      </div>
+    </div>
+  </div>
+
+<%- include('partials/foot') %>

@@ -1,0 +1,38 @@
+id: claude-haiku-4-5
+display_name: Claude Haiku 4.5
+family: claude
+released: 2026-04
+availability: ga
+
+context_window: 200000
+max_output_tokens: 8192
+
+upstream_slugs:
+  prov_openrouter: anthropic/claude-haiku-4.5
+  prov_anthropic_direct: claude-haiku-4-5-20260401
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: false   # haiku 没 thinking
+  prompt_cache:
+    supported: true
+    type: ephemeral
+    max_breakpoints: 4
+    breakpoint_targets:
+      - tools_last
+      - system_first
+      - last_user_or_tool
+
+# haiku 是快的小模型, effort 档主要是占位, 不真切换 thinking
+effort_map:
+  fast:     {}
+  standard: {}
+  deep:     {}
+  max:      {}
+
+pricing:
+  input_per_mtok: 0.25
+  cached_input_per_mtok: 0.03
+  output_per_mtok: 1.25
+  currency: USD

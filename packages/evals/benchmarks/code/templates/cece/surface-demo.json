@@ -1,0 +1,14 @@
+{
+  "surfaceTest": {
+    "version": 1,
+    "position": "right-panel",
+    "formats": ["markdown", "html", "svg", "mermaid", "code"],
+    "features": {
+      "syntaxHighlighting": true,
+      "liveFileWatch": true,
+      "interactiveHtml": true,
+      "responsive": true
+    },
+    "status": "ready"
+  }
+}

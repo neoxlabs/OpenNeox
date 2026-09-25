@@ -1,0 +1,22 @@
+<%- include('../partials/head', { title: '登录' }) %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-badge" aria-hidden="true">🐾</div>
+    <h2>欢迎回来</h2>
+    <p class="auth-subtitle">登录 Cece，继续温柔守护你的毛孩子</p>
+    <form method="POST" action="/auth/login">
+      <div class="form-group">
+        <label>用户名或邮箱</label>
+        <input type="text" name="username" class="form-control" required placeholder="请输入用户名或邮箱" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" name="password" class="form-control" required placeholder="请输入密码" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block btn-lg">登录</button>
+    </form>
+    <p class="auth-footer">还没有账号？<a href="/auth/register">免费注册</a></p>
+  </div>
+
+<%- include('../partials/foot') %>

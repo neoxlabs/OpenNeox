@@ -1,0 +1,188 @@
+<%- include('../partials/head', { title: '健康管理' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">健康档案</div>
+    <h1>💊 健康管理</h1>
+    <p class="page-subtitle">疫苗、驱虫与体征趋势一手掌握</p>
+  </div>
+</div>
+
+<%- include('../partials/filter-bar') %>
+
+<div data-tabs>
+  <div class="tabs">
+    <div class="tab active" data-tab="vaccines">💉 疫苗记录</div>
+    <div class="tab" data-tab="deworming">🪱 驱虫记录</div>
+    <div class="tab" data-tab="weight">⚖️ 体重追踪</div>
+  </div>
+
+  <div class="tab-panel" data-panel="vaccines" style="display:block">
+    <div class="section">
+      <div class="section-header"><h2>疫苗记录</h2><a href="/health/vaccines/add" class="btn btn-primary btn-sm">+ 添加</a></div>
+      <% if (typeof vaccines === 'undefined' || vaccines.length === 0) { %>
+      <div class="empty-state"><span class="empty-icon">💉</span><p>暂无疫苗记录，点击右上角添加第一条记录吧</p></div>
+      <% } else { %>
+      <div class="record-list stagger-children">
+        <% vaccines.forEach(v => { %>
+        <div class="record-card">
+          <div class="record-icon">💉</div>
+          <div class="record-info">
+            <h4><%= v.vaccine_name %></h4>
+            <div class="record-meta">
+              <span>🐾 <%= v.pet_name %></span>
+              <span>📅 接种：<%= v.vaccine_date %></span>
+              <% if (v.next_date) { %><span>🔜 下次：<%= v.next_date %></span><% } %>
+              <% if (v.vet_clinic) { %><span>🏥 <%= v.vet_clinic %></span><% } %>
+              <% if (v.notes) { %><span>📝 <%= v.notes %></span><% } %>
+            </div>
+          </div>
+          <div class="record-actions">
+            <form action="/health/vaccines/<%= v.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="deworming">
+    <div class="section">
+      <div class="section-header"><h2>驱虫记录</h2><a href="/health/deworming/add" class="btn btn-primary btn-sm">+ 添加</a></div>
+      <% if (typeof dewormings === 'undefined' || dewormings.length === 0) { %>
+      <div class="empty-state"><span class="empty-icon">🪱</span><p>暂无驱虫记录，点击右上角添加第一条记录吧</p></div>
+      <% } else { %>
+      <div class="record-list stagger-children">
+        <% dewormings.forEach(d => { %>
+        <div class="record-card">
+          <div class="record-icon">🪱</div>
+          <div class="record-info">
+            <h4><%= d.deworming_type %>驱虫</h4>
+            <div class="record-meta">
+              <span>🐾 <%= d.pet_name %></span>
+              <span>📅 日期：<%= d.deworming_date %></span>
+              <% if (d.next_date) { %><span>🔜 下次：<%= d.next_date %></span><% } %>
+              <% if (d.medicine_name) { %><span>💊 <%= d.medicine_name %></span><% } %>
+              <% if (d.notes) { %><span>📝 <%= d.notes %></span><% } %>
+            </div>
+          </div>
+          <div class="record-actions">
+            <form action="/health/deworming/<%= d.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="weight">
+    <div class="section">
+      <div class="section-header"><h2>体重记录</h2></div>
+
+      <% if (typeof weights !== 'undefined' && weights.length > 0) { %>
+      <div class="chart-wrap">
+        <canvas id="weightChart"></canvas>
+      </div>
+      <% } %>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header"><h3>📝 记录体重</h3></div>
+        <form action="/health/weight" method="POST" class="weight-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>宠物 *</label>
+              <select name="pet_id" class="form-control" required>
+                <option value="">选择宠物</option>
+                <% if (typeof pets !== 'undefined') { pets.forEach(p => { %>
+                <option value="<%= p.id %>"><%= p.name %></option>
+                <% }) } %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>体重 (kg) *</label>
+              <input type="number" step="0.1" name="weight" class="form-control" required placeholder="0.0">
+            </div>
+            <div class="form-group">
+              <label>日期 *</label>
+              <input type="date" name="record_date" class="form-control" required value="<%= new Date().toISOString().slice(0,10) %>">
+            </div>
+            <div class="form-group">
+              <label>备注</label>
+              <input type="text" name="notes" class="form-control" placeholder="可选">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">📊 记录体重</button>
+        </form>
+      </div>
+
+      <% if (typeof weights === 'undefined' || weights.length === 0) { %>
+      <div class="empty-state" style="margin-top:20px;"><span class="empty-icon">⚖️</span><p>暂无体重记录，在上方添加第一条记录</p></div>
+      <% } else { %>
+      <div class="table-container stagger-children" style="margin-top:20px;">
+        <table>
+          <thead><tr><th>宠物</th><th>体重</th><th>日期</th><th>备注</th></tr></thead>
+          <tbody>
+            <% weights.forEach(w => { %>
+            <tr>
+              <td><span class="badge"><%= w.pet_name %></span></td>
+              <td><strong><%= w.weight %> kg</strong></td>
+              <td><%= w.record_date %></td>
+              <td><%= w.notes || '-' %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+
+<% if (typeof weights !== 'undefined' && weights.length > 0) { %>
+<script>
+(function() {
+  var raw = <%- JSON.stringify(weights) %>;
+  var labels = raw.map(function(w) { return w.record_date; });
+  var data = raw.map(function(w) { return parseFloat(w.weight); });
+  var ctx = document.getElementById('weightChart');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '体重 (kg)',
+          data: data,
+          borderColor: '#E78B96',
+          backgroundColor: 'rgba(231,139,150,0.12)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#E78B96',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: false, title: { display: true, text: '体重 (kg)' } },
+          x: { title: { display: true, text: '日期' } }
+        }
+      }
+    });
+  }
+})();
+</script>
+<% } %>
+
+<%- include('../partials/pagination') %>
+
+<%- include('../partials/foot') %>

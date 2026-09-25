@@ -1,0 +1,35 @@
+# Mistral 家族能力声明
+#
+# 含 Mistral-Large / Mixtral / Codestral / Pixtral 等. 函数调用形态接近 OpenAI
+# 但有些细节差异 (tool_choice 等). 通过 Mistral 官方 API / OpenRouter 都能用.
+
+id: mistral
+display_name: Mistral
+
+aliases:
+  - mistral
+  - codestral
+  - mixtral
+  - pixtral
+
+capabilities:
+  thinking:
+    native: false   # mistral-large-2 没有 thinking 字段; 若 m3 / reasoning 版本出来再开
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: true
+  prompt_cache: false
+  structured_output: true   # mistral 官方 API 支持 json_schema 严格模式
+  tool_use_shape: openai-function
+
+# Mistral 默认输出规整, 轻量约束即可
+markdown_constraint: light
+# 暂复用 openai supplement (海外协议接近, 通用建议适用); 后续真有 Mistral quirks 再加专属
+supplement_key: openai
+
+fast_patterns:
+  - /\bmini\b/i
+  - /\bsmall\b/i
+  - /\btiny\b/i
+  - /\bnemo\b/i  # mistral-nemo 是轻量档

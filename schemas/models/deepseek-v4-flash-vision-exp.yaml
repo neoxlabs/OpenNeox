@@ -1,0 +1,60 @@
+# DeepSeek V4 Flash Vision Exp — DeepSeek 第一个多模态 (图片输入) 模型
+#
+# 官方: api-docs.deepseek.com/news/news260821/ + /guides/vision/ (2026-08-25 核对)
+#   · 文本能力对齐 deepseek-v4-flash (agents / reasoning / world knowledge)
+#   · 图片只允许出现在 **user** 消息里, system/assistant 带图直接 400
+#   · 单图 ≤ 384 token; 内部会把图缩到约 800×800 再算
+#   · detail: low(512×512) / high(原图) / original / auto
+#   · 上限: 单请求最多 600 张; 单图 32MiB (base64/URL) 或 64MiB (Files API); body 48MiB
+#   · 定价跟 v4-flash 同档, 图片按 token 计入 input
+#
+# ⚠️ 这个 yaml 存在的**首要理由**是 capabilities.vision: true ——
+#   platform/modelCapabilities.ts 的 TEXT_ONLY_PATTERN 里有 `deepseek`,
+#   名字启发式会把任何含 "deepseek" 的模型判成纯文本, OpenAIProvider.assertImageCompat
+#   于是在**发出请求之前**就抛"当前模型不支持图片输入"。schema 权威值优先于正则,
+#   所以模型进了这里, 图才发得出去。(glm-5.2 / doubao-pro / qwen-3-max 当初同样被误杀。)
+
+id: deepseek-v4-flash-vision-exp
+display_name: DeepSeek V4 Flash Vision (Exp)
+family: deepseek
+released: 2026-08
+availability: preview   # 官方标 experimental, 随时可能改
+
+context_window: 1000000
+max_output_tokens: 384000
+
+upstream_slugs:
+  prov_openrouter: deepseek/deepseek-v4-flash-vision-exp
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    budget_unit: tokens
+    min_budget: 0
+    max_budget: 32000
+    default_level: high
+  reasoning_effort:
+    supported: true
+    default: high
+  prompt_cache:
+    supported: true
+    type: openai-prompt-cache
+
+# 跟 deepseek-v4-flash 同一套 thinking 协议 (官方称文本能力对齐)。
+effort_map:
+  off:  { thinking: { type: disabled } }
+  low:  { thinking: { type: enabled }, reasoning_effort: low }
+  high: { thinking: { type: enabled }, reasoning_effort: high }
+  max:  { thinking: { type: enabled }, reasoning_effort: max }
+
+# 官方 Models & Pricing (2026-08-25 核对) — **这里填高峰价**, 跟 NeoxCloud models 表
+# 高峰时段: UTC 周一至周五 01:00-04:00 与 06:00-10:00。
+pricing:
+  input_per_mtok: 0.44
+  cached_input_per_mtok: 0.014
+  output_per_mtok: 1.32
+  currency: USD

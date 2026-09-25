@@ -1,0 +1,212 @@
+<%- include('../partials/head', { title: '日程计划' }) %>
+
+<%
+  const dayNames = { '1': '周一', '2': '周二', '3': '周三', '4': '周四', '5': '周五', '6': '周六', '7': '周日' };
+  const formatDays = days => (days || '').split(',').filter(Boolean).map(day => dayNames[day] || day).join('、') || '每天';
+%>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">日程规划</div>
+    <h1>📅 护理计划</h1>
+    <p class="page-subtitle">让日常护理自动运转起来</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/reminders" class="btn btn-outline">查看提醒</a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-card stat-card-teal">
+    <div class="stat-icon">🦮</div>
+    <div class="stat-label">遛狗计划</div>
+    <div class="stat-value"><%= walkSchedules.length %></div>
+  </div>
+  <div class="stat-card stat-card-amber">
+    <div class="stat-icon">🍖</div>
+    <div class="stat-label">喂食计划</div>
+    <div class="stat-value"><%= feedingSchedules.length %></div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" data-tab="tab-walk-schedules">🦮 遛狗计划</button>
+  <button class="tab" data-tab="tab-feeding-schedules">🍖 喂食计划</button>
+  <button class="tab" data-tab="tab-add-walk">➕ 新增遛狗</button>
+  <button class="tab" data-tab="tab-add-feeding">➕ 新增喂食</button>
+</div>
+
+<!-- Tab: Walk Schedules -->
+<div class="tab-content active" id="tab-walk-schedules">
+  <div class="section">
+    <div class="section-header"><h2>🦮 当前遛狗计划 <span class="counter-badge"><%= walkSchedules.length %></span></h2></div>
+    <% if (walkSchedules.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🦮</span><p>暂无遛狗计划</p></div>
+    <% } else { %>
+    <div class="record-list">
+    <% walkSchedules.forEach(s => { %>
+    <div class="record-card <%= s.is_active ? '' : 'reminder-completed' %>">
+      <div class="record-icon">🦮</div>
+      <div class="record-info">
+        <div class="record-title"><%= s.pet_name %> 遛狗</div>
+        <div class="record-meta">
+          <span>🕐 <%= s.time_of_day %></span>
+          <span>📅 <%= formatDays(s.days_of_week) %></span>
+          <% if (s.target_duration) { %><span>⏱️ <%= s.target_duration %>分钟</span><% } %>
+        </div>
+      </div>
+      <div class="record-actions">
+        <form action="/schedules/walks/<%= s.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+      </div>
+    </div>
+    <% }) %>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Tab: Feeding Schedules -->
+<div class="tab-content" id="tab-feeding-schedules">
+  <div class="section">
+    <div class="section-header"><h2>🍖 当前喂食计划 <span class="counter-badge"><%= feedingSchedules.length %></span></h2></div>
+    <% if (feedingSchedules.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🍖</span><p>暂无喂食计划</p></div>
+    <% } else { %>
+    <div class="record-list">
+    <% feedingSchedules.forEach(s => { %>
+    <div class="record-card <%= s.is_active ? '' : 'reminder-completed' %>">
+      <div class="record-icon">🍖</div>
+      <div class="record-info">
+        <div class="record-title"><%= s.pet_name %> 喂食</div>
+        <div class="record-meta">
+          <span>🕐 <%= s.time_of_day %></span>
+          <span>📅 <%= formatDays(s.days_of_week) %></span>
+          <% if (s.portion_grams) { %><span>⚖️ <%= s.portion_grams %>g</span><% } %>
+          <% if (s.food_type) { %><span>🍽️ <%= s.food_type %></span><% } %>
+        </div>
+      </div>
+      <div class="record-actions">
+        <form action="/schedules/feedings/<%= s.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+      </div>
+    </div>
+    <% }) %>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Tab: Add Walk Schedule -->
+<div class="tab-content" id="tab-add-walk">
+  <div class="schedule-plan-card">
+    <h2 style="margin-bottom:18px">🦮 新增遛狗计划</h2>
+    <% if (pets.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🐾</span><p>请先添加宠物，再创建计划。</p></div>
+    <% } else { %>
+    <form action="/schedules/walks" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>🐾 宠物 *</label>
+          <select name="pet_id" class="form-control" required>
+            <% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>🕐 时间 *</label>
+          <input type="time" name="time_of_day" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>⏱️ 目标时长(分钟)</label>
+          <input type="number" name="target_duration" class="form-control" value="30" min="5" max="180">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>📅 重复</label>
+        <div class="checkbox-row">
+          <% Object.entries(dayNames).forEach(([value, label]) => { %>
+          <label><input type="checkbox" name="days_of_week" value="<%= value %>" checked> <%= label %></label>
+          <% }) %>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 保存遛狗计划</button>
+      </div>
+    </form>
+    <% } %>
+  </div>
+</div>
+
+<!-- Tab: Add Feeding Schedule -->
+<div class="tab-content" id="tab-add-feeding">
+  <div class="schedule-plan-card">
+    <h2 style="margin-bottom:18px">🍖 新增喂食计划</h2>
+    <% if (pets.length === 0) { %>
+    <div class="empty-state"><span class="empty-icon">🐾</span><p>请先添加宠物，再创建计划。</p></div>
+    <% } else { %>
+    <form action="/schedules/feedings" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>🐾 宠物 *</label>
+          <select name="pet_id" class="form-control" required>
+            <% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>🕐 时间 *</label>
+          <input type="time" name="time_of_day" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>🏷️ 品牌</label>
+          <input type="text" name="food_brand" class="form-control" placeholder="例如 Royal Canin">
+        </div>
+        <div class="form-group">
+          <label>🍽️ 类型</label>
+          <select name="food_type" class="form-control">
+            <option value="干粮">🦴 干粮</option>
+            <option value="湿粮">🥫 湿粮</option>
+            <option value="零食">🍪 零食</option>
+            <option value="自制">🍳 自制</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>⚖️ 份量(g)</label>
+          <input type="number" step="0.1" name="portion_grams" class="form-control" value="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>📅 重复</label>
+        <div class="checkbox-row">
+          <% Object.entries(dayNames).forEach(([value, label]) => { %>
+          <label><input type="checkbox" name="days_of_week" value="<%= value %>" checked> <%= label %></label>
+          <% }) %>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 保存喂食计划</button>
+      </div>
+    </form>
+    <% } %>
+  </div>
+</div>
+
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab');
+  var contents = document.querySelectorAll('.tab-content');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.getAttribute('data-tab');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      contents.forEach(function(c) { c.classList.remove('active'); });
+      this.classList.add('active');
+      var el = document.getElementById(target);
+      if (el) el.classList.add('active');
+    });
+  });
+})();
+</script>
+
+<%- include('../partials/pagination') %>
+
+<%- include('../partials/foot') %>

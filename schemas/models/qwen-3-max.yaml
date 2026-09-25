@@ -1,0 +1,40 @@
+# Qwen 3 Max — 阿里通义千问主力 2026
+#
+# OpenRouter 上以 qwen/qwen-3-max slug 提供。
+
+id: qwen-3-max
+display_name: Qwen 3 Max
+family: qwen
+released: 2026-02
+availability: ga
+
+context_window: 128000
+max_output_tokens: 8192
+
+upstream_slugs:
+  prov_openrouter: qwen/qwen-3-max
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: enable_thinking
+  prompt_cache:
+    supported: false
+
+# Qwen3 混合思考 (2026-07-03 调研更新, help.aliyun.com/zh/model-studio/deep-thinking):
+#   enable_thinking: true|false (布尔开关, 非对象), 思考内容走 reasoning_content;
+#   可选 thinking_budget 限思考链长度。之前 family 标 native:false 是错的。
+#   默认不发字段 (交上游默认), 不设 default_level — qwen-3-max 混合模式上游自适应。
+effort_map:
+  off:      { enable_thinking: false }
+  on:       { enable_thinking: true }
+  max:      { enable_thinking: true, thinking_budget: 32768 }
+
+pricing:
+  input_per_mtok: 2.50
+  cached_input_per_mtok: 0.50
+  output_per_mtok: 10.00
+  currency: USD

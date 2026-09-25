@@ -1,0 +1,98 @@
+<%- include('../partials/head', { title: title || '活动目标' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">户外时光</div>
+    <h1>🎯 活动目标</h1>
+  </div>
+  <div class="page-header-actions">
+    <a href="/walks" class="btn btn-outline">← 返回遛狗管理</a>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><h2>已设目标</h2></div>
+  <% if (typeof goals === 'undefined' || goals.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">🎯</span><p>暂无活动目标，在下方添加第一个目标吧！</p></div>
+  <% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>宠物</th>
+          <th>目标类型</th>
+          <th>目标值</th>
+          <th>单位</th>
+          <th>周期</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% goals.forEach(function(g) { %>
+        <tr>
+          <td><span class="badge badge-lavender">🐾 <%= g.pet_name %></span></td>
+          <td>每日遛狗</td>
+          <td><strong><%= g.target_value %></strong></td>
+          <td><%= g.unit === 'minutes' ? '分钟' : g.unit === 'km' ? '公里' : '次' %></td>
+          <td><%= g.period === 'daily' ? '每日' : '每周' %></td>
+          <td>
+            <form action="/walks/goals/<%= g.id %>/delete" method="POST" class="delete-form inline-form">
+              <button class="btn btn-sm btn-danger">删除</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<div class="section" id="add-goal">
+  <div class="section-header"><h2>添加新目标</h2></div>
+  <div class="form-card-walk">
+    <form action="/walks/goals" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>🐾 选择宠物 *</label>
+          <select name="pet_id" class="form-control" required>
+            <option value="">请选择</option>
+            <% if (typeof pets !== 'undefined') { pets.forEach(function(p) { %>
+            <option value="<%= p.id %>"><%= p.name %> (<%= p.species %>)</option>
+            <% }) } %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>🎯 目标类型</label>
+          <select name="goal_type" class="form-control">
+            <option value="daily_walk">每日遛狗</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>📐 目标值 *</label>
+          <input type="number" name="target_value" class="form-control" value="30" min="1" step="1" required>
+        </div>
+        <div class="form-group">
+          <label>📏 单位</label>
+          <select name="unit" class="form-control">
+            <option value="minutes">分钟</option>
+            <option value="km">公里</option>
+            <option value="times">次</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>📅 周期</label>
+          <select name="period" class="form-control">
+            <option value="daily">每日</option>
+            <option value="weekly">每周</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 保存目标</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/foot') %>

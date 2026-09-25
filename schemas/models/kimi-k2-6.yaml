@@ -1,0 +1,42 @@
+# Moonshot Kimi K2.6 — 2026 主力模型
+#
+# OpenRouter 上以 moonshotai/kimi-k2 slug 提供 (k2 系列, 网关侧路由到具体小版本).
+# K2.6 是当前主力, K2.5 是廉价档 (见 exploreModelPolicy fast_patterns).
+
+id: kimi-k2-6
+display_name: Kimi K2.6
+family: kimi
+released: 2026-04
+availability: ga
+
+context_window: 256000
+max_output_tokens: 8192
+
+upstream_slugs:
+  prov_openrouter: moonshotai/kimi-k2
+
+capabilities:
+  vision: false
+  tool_use: true
+  reasoning_blocks: false
+  thinking:
+    supported: true
+    field: thinking
+    budget_unit: tokens
+    min_budget: 0
+    max_budget: 32000
+    default_level: on
+  prompt_cache:
+    supported: false
+
+# Kimi 是开关式 thinking, 跟 deepseek 一样的 toggle hint.
+# 不像 Claude/OpenAI 有细分档, 但 yaml 写 4 档让 UI 能展示渐进, 实际只有 enabled/disabled 两态。
+effort_map:
+  off:    { thinking: { type: disabled } }
+  on:     { thinking: { type: enabled } }
+
+pricing:
+  input_per_mtok: 0.30
+  cached_input_per_mtok: 0.15
+  output_per_mtok: 1.20
+  currency: USD

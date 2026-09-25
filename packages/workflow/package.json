@@ -1,0 +1,37 @@
+{
+  "name": "@neoxlabs/workflow",
+  "version": "0.1.0",
+  "private": true,
+  "description": "编排层 — 目标 → 节点图, 以及运行中改图。只产出/修改 NodeSpec[], 执行一律交给 cluster。",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./templates/*": {
+      "types": "./dist/templates/*.d.ts",
+      "import": "./dist/templates/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit --project tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@neoxlabs/cluster": "*"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/workflow"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

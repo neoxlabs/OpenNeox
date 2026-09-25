@@ -1,0 +1,43 @@
+{
+  "_comment": "大文件行数棘轮基线: 只准变小。新增内容请放新文件, 不要往这些文件里继续堆。",
+  "generatedFrom": "scripts/check-file-size-ratchet.mjs --update",
+  "threshold": 2500,
+  "_manualBumps": [
+    "2026-09-20 布局对齐开源仓 (宿主收进 apps/) 后, 闸门扫描根从 [packages] 扩到 [apps, packages],",
+    "于是 apps/cli 与 apps/desktop 下**既有**的大文件第一次进入扫描范围 —— 它们不是这次变大, 是这次才被看见。",
+    "按闸门设计登记进基线 (棘轮从此生效, 只准变小)。",
+    "另有 3 个文件 (runner / agentRuntimeHost / server main) 因中断续跑功能各涨 3-10 行,",
+    "属既有函数体内的分支, 拆成新模块只会多一跳调用而无收益, 故一并登记。",
+    "2026-09-21 mac 3.8.7 发版时登记: 10e75cea3 (版本对齐 + 会话恢复) 与 Jev 系列 sync(open) 提交让 9 个文件涨了 1-55 行",
+    "(openai +55 / NeoxRuntimeBridge +51 / runner +27 / useStreamHandler +17 / agentRuntimeHost +9 / server main +6 / 其余 +1~2)。",
+    "这些文件是从开源仓同步来的, 拆分要先在 OpenNeox 做再同步, 否则两仓漂移; 已列为技术债。TimelineComposer 同批收紧 8110→8077。",
+    "2026-09-22 win 3.8.8 发版时登记: 工具运行中插话立即打断长命令, 让 runner +41 (requestSteeringInterrupt 的工具阶段分支与它上面那段标定注释 —— 注释记的是 5s 宽限期怎么测出来的, 拆出去等于把「为什么是这个数」跟代码分开)、TimelineComposer +12 (submit 开头的连点去重, 必须在回调内部读当前 value, 抽成模块要多传一次 state 反而更绕)。",
+    "两处都是既有函数体内的分支, 新模块只会多一跳调用而无收益, 与上一条同类, 一并登记。",
+    "2026-09-22 mac 3.8.9: 登记已合并的 Windows 文件管理器修复 (Sidebar +1 / SettingsPage +1 / CodeSurfaceViewer +4) 和子 agent 统计接线 (mapTimeline +3 / useStreamHandler +12)。增量为现有视图的 import、字段和事件接线; 发送守卫及草稿去重已独立成新模块, 不提高 Bridge/Composer 基线。",
+    "2026-09-24 mac 3.8.10: ServicesSurfaceViewer 因窗格布局 +167, 已把 Env/Health 两个 tab 拆到 servicesDetailPanes.tsx (4755 → 4518, 低于原基线), 不登记。",
+    "其余 7 处是 3.8.9 之后几十个提交里零散的既有函数内分支: InkRuntime +7 / InkUIAdapter +19 (CLI 状态行与 hero) / SettingsPage +17 (积分并进余额) / runner +10 / anthropic +18 / openai +6 (如实报告停止原因、不整段重发) / database +8 (空会话回收)。拆出去只会多一跳调用, 登记。"
+  ],
+  "files": {
+    "apps/cli/src/ink/InkRuntime.tsx": 2786,
+    "apps/cli/src/ink/InkUIAdapter.ts": 4296,
+    "apps/cli/src/main.ts": 3040,
+    "apps/desktop/src/ui/electron/mobile-bridge/wsServer.ts": 2501,
+    "apps/desktop/src/ui/renderer/app/NeoxRuntimeBridge.tsx": 4692,
+    "apps/desktop/src/ui/renderer/modules/agent-timeline/TimelineComposer.tsx": 8089,
+    "apps/desktop/src/ui/renderer/modules/agent-timeline/hooks/useTimelineScrollController.ts": 2588,
+    "apps/desktop/src/ui/renderer/modules/agent-timeline/mapTimeline.ts": 4631,
+    "apps/desktop/src/ui/renderer/modules/shell/Sidebar.tsx": 2601,
+    "apps/desktop/src/ui/renderer/modules/surface/viewers/CodeSurfaceViewer.tsx": 2558,
+    "apps/desktop/src/ui/renderer/modules/surface/viewers/ServicesSurfaceViewer.tsx": 4519,
+    "apps/desktop/src/ui/renderer/pages/onboarding/OnboardingPage.tsx": 2745,
+    "apps/desktop/src/ui/renderer/pages/settings/SettingsPage.tsx": 5962,
+    "apps/desktop/src/ui/renderer/pages/workspace/hooks/useStreamHandler.ts": 8711,
+    "packages/core/src/runtime/agentRuntimeHost.ts": 5086,
+    "packages/core/src/server/main.ts": 3270,
+    "packages/kernel/src/core/runner.ts": 4513,
+    "packages/kernel/src/models/anthropic.ts": 3088,
+    "packages/kernel/src/models/openai.ts": 4446,
+    "packages/platform/src/models/registry/index.ts": 3157,
+    "packages/platform/src/platform/database.ts": 3491
+  }
+}

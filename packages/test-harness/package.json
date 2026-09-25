@@ -1,0 +1,60 @@
+{
+  "name": "@neoxlabs/test-harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Neox product QA · modular scenario catalog · CDP / CLI / manual regression (not agent evals)",
+  "type": "module",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "neox-test": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "cli": "tsx src/cli.ts",
+    "list": "tsx src/cli.ts list",
+    "smoke": "tsx src/cli.ts run --tier smoke"
+  },
+  "keywords": [
+    "neox",
+    "qa",
+    "cdp",
+    "regression",
+    "scenario"
+  ],
+  "author": "MK-CO",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/test-harness"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

@@ -1,0 +1,159 @@
+<%- include('../partials/head', { title: '提醒中心' }) %>
+
+<%
+  const typeIcon = (type) => {
+    if (type === '疫苗') return '💉';
+    if (type === '驱虫') return '🪱';
+    if (type === '遛狗') return '🦮';
+    if (type === '喂食') return '🍖';
+    if (type === '医疗') return '🏥';
+    if (type === '用药') return '💊';
+    if (type === '美容') return '🧼';
+    return '🔔';
+  };
+%>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">待办中心</div>
+    <h1>🔔 提醒中心</h1>
+    <p class="page-subtitle">重要日程聚合一处，支持完成、贪睡与删除</p>
+  </div>
+  <div class="page-header-actions">
+    <button class="btn btn-primary" data-modal="addReminderModal">+ 添加提醒</button>
+  </div>
+</div>
+
+<% if (overdueReminders && overdueReminders.length > 0) { %>
+<div class="reminder-overdue-section">
+  <div class="section-header">
+    <h2>⚠️ 已过期 <span class="counter-badge"><%= overdueReminders.length %></span></h2>
+  </div>
+  <div class="record-list">
+  <% overdueReminders.forEach(r => { %>
+  <div class="record-card">
+    <div class="record-icon"><%= typeIcon(r.type) %></div>
+    <div class="record-info">
+      <div class="record-title"><%= r.title %></div>
+      <div class="record-meta"><%= r.pet_name ? '🐾 ' + r.pet_name + ' · ' : '' %><%= r.reminder_date || '' %> <%= r.reminder_time || '' %></div>
+    </div>
+    <div class="record-actions">
+      <form action="/reminders/<%= r.id %>/complete" method="POST" class="inline-form"><button class="btn btn-sm btn-success">✓ 完成</button></form>
+      <form action="/reminders/<%= r.id %>/snooze" method="POST" class="inline-form">
+        <input type="hidden" name="minutes" value="30">
+        <button class="btn btn-sm btn-outline" title="延后 30 分钟">😴 30分</button>
+      </form>
+      <form action="/reminders/<%= r.id %>/snooze" method="POST" class="inline-form">
+        <input type="hidden" name="minutes" value="1440">
+        <button class="btn btn-sm btn-outline" title="延后到明天">😴 明天</button>
+      </form>
+      <form action="/reminders/<%= r.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+    </div>
+  </div>
+  <% }) %>
+  </div>
+</div>
+<% } %>
+
+<div class="section">
+  <div class="section-header">
+    <h2>📅 今日提醒 <span class="counter-badge"><%= todayReminders.length %></span></h2>
+  </div>
+  <% if (todayReminders.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">🎉</span><p>今天没有待办提醒！</p></div>
+  <% } else { %>
+  <div class="record-list">
+  <% todayReminders.forEach(r => { %>
+  <div class="record-card">
+    <div class="record-icon"><%= typeIcon(r.type) %></div>
+    <div class="record-info">
+      <div class="record-title"><%= r.title %></div>
+      <div class="record-meta"><%= r.pet_name ? '🐾 ' + r.pet_name + ' · ' : '' %><%= r.reminder_time || '' %></div>
+    </div>
+    <div class="record-actions">
+      <% if (r.type === '遛狗') { %>
+      <form action="/reminders/<%= r.id %>/complete-and-record" method="POST" class="inline-form"><button class="btn btn-sm btn-teal">✓ 记录遛狗</button></form>
+      <% } else if (r.type === '喂食') { %>
+      <form action="/reminders/<%= r.id %>/complete-and-record" method="POST" class="inline-form"><button class="btn btn-sm btn-amber">✓ 记录喂食</button></form>
+      <% } else { %>
+      <form action="/reminders/<%= r.id %>/complete" method="POST" class="inline-form"><button class="btn btn-sm btn-success">✓ 完成</button></form>
+      <% } %>
+      <form action="/reminders/<%= r.id %>/snooze" method="POST" class="inline-form">
+        <input type="hidden" name="minutes" value="30">
+        <button class="btn btn-sm btn-outline" title="延后 30 分钟">😴 30分</button>
+      </form>
+      <form action="/reminders/<%= r.id %>/snooze" method="POST" class="inline-form">
+        <input type="hidden" name="minutes" value="60">
+        <button class="btn btn-sm btn-outline" title="延后 1 小时">😴 1时</button>
+      </form>
+      <form action="/reminders/<%= r.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+    </div>
+  </div>
+  <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <h2>📋 所有提醒 <span class="counter-badge"><%= reminders.length %></span></h2>
+  </div>
+  <% if (reminders.length === 0) { %>
+  <div class="empty-state"><span class="empty-icon">🔔</span><p>暂无提醒</p></div>
+  <% } else { %>
+  <div class="record-list">
+  <% reminders.forEach(r => { %>
+  <div class="record-card <%= r.is_completed ? 'reminder-completed' : '' %>">
+    <div class="record-icon"><%= typeIcon(r.type) %></div>
+    <div class="record-info">
+      <div class="record-title"><%= r.title %></div>
+      <div class="record-meta">
+        <% if (r.pet_name) { %>🐾 <%= r.pet_name %> · <% } %><%= r.reminder_date || '' %> <%= r.reminder_time || '' %>
+        <% if (r.is_completed) { %><span class="badge badge-success">已完成</span><% } %>
+      </div>
+    </div>
+    <div class="record-actions">
+      <% if (!r.is_completed) { %>
+        <% if (r.type === '遛狗') { %>
+        <form action="/reminders/<%= r.id %>/complete-and-record" method="POST" class="inline-form"><button class="btn btn-sm btn-teal">✓ 记录</button></form>
+        <% } else if (r.type === '喂食') { %>
+        <form action="/reminders/<%= r.id %>/complete-and-record" method="POST" class="inline-form"><button class="btn btn-sm btn-amber">✓ 记录</button></form>
+        <% } else { %>
+        <form action="/reminders/<%= r.id %>/complete" method="POST" class="inline-form"><button class="btn btn-sm btn-success">✓</button></form>
+        <% } %>
+        <form action="/reminders/<%= r.id %>/snooze" method="POST" class="inline-form">
+          <input type="hidden" name="minutes" value="30">
+          <button class="btn btn-sm btn-outline">😴</button>
+        </form>
+      <% } %>
+      <form action="/reminders/<%= r.id %>/delete" method="POST" class="delete-form inline-form"><button class="btn btn-sm btn-danger">删除</button></form>
+    </div>
+  </div>
+  <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="addReminderModal">
+  <div class="modal card-panel">
+    <h3 style="margin-bottom:20px">🔔 添加提醒</h3>
+    <form action="/reminders" method="POST">
+      <div class="form-group"><label>宠物 (可选)</label><select name="pet_id" class="form-control"><option value="">通用</option><% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %></select></div>
+      <div class="form-group"><label>类型</label><select name="type" class="form-control"><option value="自定义">自定义</option><option value="遛狗">遛狗</option><option value="喂食">喂食</option><option value="疫苗">疫苗</option><option value="驱虫">驱虫</option><option value="医疗">医疗</option><option value="用药">用药</option><option value="美容">美容</option></select></div>
+      <div class="form-group"><label>标题 *</label><input type="text" name="title" class="form-control" required placeholder="提醒内容"></div>
+      <div class="form-grid">
+        <div class="form-group"><label>日期</label><input type="date" name="reminder_date" class="form-control"></div>
+        <div class="form-group"><label>时间</label><input type="time" name="reminder_time" class="form-control"></div>
+      </div>
+      <div class="modal-actions" style="margin-top:18px">
+        <button type="button" class="btn btn-outline" data-close-modal>取消</button>
+        <button type="submit" class="btn btn-primary">添加</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/pagination') %>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,46 @@
+<%- include('../partials/head', { title: '添加驱虫' }) %>
+
+<div class="page-header">
+  <h1>🪱 添加驱虫记录</h1>
+  <a href="/health" class="btn btn-outline">← 返回</a>
+</div>
+
+<div class="card">
+  <form action="/health/deworming" method="POST">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>选择宠物 *</label>
+        <select name="pet_id" class="form-control" required>
+          <option value="">请选择宠物</option>
+          <% pets.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>驱虫类型</label>
+        <select name="deworming_type" class="form-control">
+          <option value="体内">体内</option>
+          <option value="体外">体外</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>驱虫日期 *</label>
+        <input type="date" name="deworming_date" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>下次驱虫</label>
+        <input type="date" name="next_date" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>药品名称</label>
+        <input type="text" name="medicine_name" class="form-control" placeholder="例如：拜耳驱虫药">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>备注</label>
+      <textarea name="notes" class="form-control" placeholder="驱虫反应等..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">💾 保存记录</button>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,538 @@
+<%- include('../partials/head', { title: pet.name }) %>
+<%
+  const n = (v, fallback = 0) => { const x = Number(v); return Number.isFinite(x) ? Math.round(x) : fallback; };
+  const speciesEmoji = pet.species === '狗' ? '🐕' : pet.species === '猫' ? '🐱' : pet.species === '鸟' ? '🐦' : pet.species === '鱼' ? '🐟' : pet.species === '兔子' ? '🐰' : pet.species === '仓鼠' ? '🐹' : '🐾';
+  const genderClass = pet.gender === '公' ? 'gender-male' : pet.gender === '母' ? 'gender-female' : 'gender-unknown';
+  const happiness = n(stats?.happiness);
+  const hunger = n(stats?.hunger);
+  const energy = n(stats?.energy);
+  const health = n(stats?.health_stat);
+  const overall = n((happiness + hunger + energy + health) / 4);
+  const level = Math.max(1, Math.min(10, Math.ceil(overall / 10)));
+  const levelLabel = overall >= 80 ? '巅峰' : overall >= 60 ? '良好' : overall >= 40 ? '一般' : '需关照';
+  function statTone(v) {
+    if (v >= 70) return 'high';
+    if (v >= 40) return 'mid';
+    return 'low';
+  }
+  function statBadge(v) {
+    if (v >= 70) return '充沛';
+    if (v >= 40) return '平稳';
+    return '偏低';
+  }
+%>
+
+<div class="page-header pet-detail-header">
+  <div>
+    <a href="/pets" class="back-link">← 返回宠物列表</a>
+    <h1><%= pet.name %> 的档案</h1>
+    <p class="page-subtitle">活力、健康与日常护理一站查看</p>
+  </div>
+<div class="page-header-actions">
+    <a href="/breed/<%= pet.id %>/card" class="btn btn-outline" target="_blank">🆔 宠物身份证</a>
+    <a href="/pets/<%= pet.id %>/trend" class="btn btn-outline">📈 健康趋势</a>
+    <a href="/report/<%= pet.id %>" class="btn btn-outline">📋 健康月报</a>
+    <a href="/pets/<%= pet.id %>/edit" class="btn btn-primary">编辑资料</a>
+  </div>
+</div>
+
+<% if (typeof healthAlerts !== 'undefined' && healthAlerts && healthAlerts.length) { %>
+  <% const hasSevere = healthAlerts.some(a => a.level === 'severe'); %>
+  <div class="health-alerts <%= hasSevere ? 'health-alerts-severe' : '' %>" role="alert">
+    <div class="health-alerts-head">
+      <span class="health-alerts-icon"><%= hasSevere ? '🚨' : '🔔' %></span>
+      <span class="health-alerts-title"><%= pet.name %> 需要你的关注</span>
+    </div>
+    <ul class="health-alerts-list">
+      <% healthAlerts.forEach(function(a) { %>
+        <li class="health-alert-item health-alert-<%= a.level %>">
+          <span class="health-alert-emoji"><%= a.icon %></span>
+          <span class="health-alert-msg"><%= a.message %></span>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<!-- Profile Hero -->
+<section class="pet-hero">
+  <div class="pet-hero-bg"></div>
+  <div class="pet-hero-inner">
+    <div class="pet-hero-photo-wrap">
+      <% if (pet.photo) { %>
+      <img class="pet-hero-photo" src="<%= pet.photo %>" alt="<%= pet.name %>">
+      <% } else { %>
+      <div class="pet-hero-photo pet-hero-photo-placeholder"><%= speciesEmoji %></div>
+      <% } %>
+      <span class="pet-hero-mood" title="<%= mood.label %>"><%= mood.emoji %></span>
+      <span class="pet-level-badge" title="综合活力等级">Lv.<%= level %></span>
+    </div>
+
+    <div class="pet-hero-info">
+      <div class="pet-hero-title-row">
+        <h2 class="pet-hero-name"><%= pet.name %></h2>
+        <span class="pet-card-gender <%= genderClass %>" title="<%= pet.gender %>"><%= pet.gender === '公' ? '♂' : pet.gender === '母' ? '♀' : '·' %></span>
+        <span class="pet-overall-chip tone-<%= statTone(overall) %>"><%= levelLabel %> · <%= overall %>%</span>
+      </div>
+
+      <div class="pet-hero-tags">
+        <span class="badge badge-primary"><%= speciesEmoji %> <%= pet.species %></span>
+        <% if (pet.breed) { %><span class="badge badge-teal"><%= pet.breed %></span><% } %>
+        <% if (pet.neutered) { %><span class="badge badge-lavender">已绝育</span><% } %>
+        <% if (pet.color) { %><span class="badge badge-amber"><%= pet.color %></span><% } %>
+        <span class="badge badge-info">等级 <%= level %></span>
+      </div>
+
+      <p class="pet-hero-summary">
+        <%= pet.gender %> · <%= pet.age || '年龄未知' %> · <%= pet.weight ? pet.weight + ' kg' : '体重未填' %>
+        · <span class="pet-mood-label" style="color:<%= mood.color %>"><%= mood.emoji %> <%= mood.label %></span>
+      </p>
+
+      <!-- Mini vitality strip in hero -->
+      <div class="pet-hero-vitality">
+        <div class="mini-stat">
+          <div class="mini-stat-head"><span>😊 心情</span><strong><%= happiness %>%</strong></div>
+          <div class="mini-stat-bar"><div class="mini-stat-fill vitality-happy" style="width:<%= happiness %>%"></div></div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-head"><span>🍖 饱腹</span><strong><%= hunger %>%</strong></div>
+          <div class="mini-stat-bar"><div class="mini-stat-fill vitality-hunger" style="width:<%= hunger %>%"></div></div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-head"><span>⚡ 活力</span><strong><%= energy %>%</strong></div>
+          <div class="mini-stat-bar"><div class="mini-stat-fill vitality-energy" style="width:<%= energy %>%"></div></div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-head"><span>💚 健康</span><strong><%= health %>%</strong></div>
+          <div class="mini-stat-bar"><div class="mini-stat-fill vitality-health" style="width:<%= health %>%"></div></div>
+        </div>
+      </div>
+
+      <div class="pet-hero-stats">
+        <div class="pet-hero-stat">
+          <span class="stat-label">生日</span>
+          <span class="stat-value"><%= pet.birth_date || '未知' %></span>
+        </div>
+        <div class="pet-hero-stat">
+          <span class="stat-label">体重</span>
+          <span class="stat-value"><%= pet.weight ? pet.weight + ' kg' : '—' %></span>
+        </div>
+        <div class="pet-hero-stat">
+          <span class="stat-label">芯片</span>
+          <span class="stat-value"><%= pet.microchip || '未录入' %></span>
+        </div>
+        <div class="pet-hero-stat">
+          <span class="stat-label">保险</span>
+          <span class="stat-value"><%= pet.insurance || '未投保' %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 🫀 Pet Vitality Stats -->
+<div class="section vitality-section">
+  <div class="section-header">
+    <h2>🫀 活力状态</h2>
+    <span class="section-meta">综合 <%= overall %>% · Lv.<%= level %></span>
+  </div>
+
+  <div class="vitality-overview">
+    <div class="vitality-score-ring tone-<%= statTone(overall) %>">
+      <div class="vitality-score-inner">
+        <span class="vitality-score-num"><%= overall %></span>
+        <span class="vitality-score-unit">综合</span>
+      </div>
+    </div>
+    <div class="vitality-score-copy">
+      <div class="vitality-score-title"><%= mood.emoji %> <%= mood.label %></div>
+      <p class="vitality-score-desc">根据心情、饱腹、活力、健康四项实时计算。遛狗、喂食和健康护理都能提升状态。</p>
+      <div class="vitality-score-badges">
+        <span class="stat-chip tone-<%= statTone(happiness) %>">心情 <%= happiness %>%</span>
+        <span class="stat-chip tone-<%= statTone(hunger) %>">饱腹 <%= hunger %>%</span>
+        <span class="stat-chip tone-<%= statTone(energy) %>">活力 <%= energy %>%</span>
+        <span class="stat-chip tone-<%= statTone(health) %>">健康 <%= health %>%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vitality-grid">
+    <div class="vitality-item tone-<%= statTone(happiness) %>">
+      <div class="vitality-item-top">
+        <div class="vitality-label"><span class="vitality-emoji">😊</span> 心情</div>
+        <span class="stat-chip tone-<%= statTone(happiness) %>"><%= statBadge(happiness) %></span>
+      </div>
+      <div class="vitality-bar">
+        <div class="vitality-fill" style="width:<%= happiness %>%"></div>
+      </div>
+      <div class="vitality-value"><%= happiness %>%</div>
+    </div>
+    <div class="vitality-item tone-<%= statTone(hunger) %>">
+      <div class="vitality-item-top">
+        <div class="vitality-label"><span class="vitality-emoji">🍖</span> 饱腹</div>
+        <span class="stat-chip tone-<%= statTone(hunger) %>"><%= statBadge(hunger) %></span>
+      </div>
+      <div class="vitality-bar">
+        <div class="vitality-fill vitality-hunger" style="width:<%= hunger %>%"></div>
+      </div>
+      <div class="vitality-value"><%= hunger %>%</div>
+    </div>
+    <div class="vitality-item tone-<%= statTone(energy) %>">
+      <div class="vitality-item-top">
+        <div class="vitality-label"><span class="vitality-emoji">⚡</span> 活力</div>
+        <span class="stat-chip tone-<%= statTone(energy) %>"><%= statBadge(energy) %></span>
+      </div>
+      <div class="vitality-bar">
+        <div class="vitality-fill vitality-energy" style="width:<%= energy %>%"></div>
+      </div>
+      <div class="vitality-value"><%= energy %>%</div>
+    </div>
+    <div class="vitality-item tone-<%= statTone(health) %>">
+      <div class="vitality-item-top">
+        <div class="vitality-label"><span class="vitality-emoji">💚</span> 健康</div>
+        <span class="stat-chip tone-<%= statTone(health) %>"><%= statBadge(health) %></span>
+      </div>
+      <div class="vitality-bar">
+        <div class="vitality-fill vitality-health" style="width:<%= health %>%"></div>
+      </div>
+      <div class="vitality-value"><%= health %>%</div>
+    </div>
+  </div>
+
+  <p class="vitality-tip">
+    💡 遛狗提升心情和活力 · 喂食补充饱腹 · 疫苗和体检提升健康 · 数值随时间自然衰减
+  </p>
+
+  <!-- ⚡ Quick Actions -->
+  <div class="quick-actions">
+    <form action="/pets/<%= pet.id %>/quick-feed" method="POST" class="quick-action-form">
+      <button class="quick-action-btn quick-action-feed" title="一键记录喂食，补充饱腹+10、心情+3">
+        <span class="quick-action-icon">🍖</span>
+        <span class="quick-action-text">喂食</span>
+        <span class="quick-action-hint">饱腹+10</span>
+      </button>
+    </form>
+    <form action="/pets/<%= pet.id %>/quick-walk" method="POST" class="quick-action-form">
+      <button class="quick-action-btn quick-action-walk" title="一键记录遛狗，心情+5、活力+8">
+        <span class="quick-action-icon">🦮</span>
+        <span class="quick-action-text">遛狗</span>
+        <span class="quick-action-hint">活力+8</span>
+      </button>
+    </form>
+    <a href="/feedings/add?pet_id=<%= pet.id %>" class="quick-action-btn quick-action-detail" title="填写详细记录">
+      <span class="quick-action-icon">📝</span>
+      <span class="quick-action-text">详细</span>
+      <span class="quick-action-hint">完整表单</span>
+    </a>
+  </div>
+</div>
+
+<!-- 🎯 Goal Progress -->
+<div class="goal-section">
+  <div class="goal-header">
+    <span class="goal-title">🎯 今日目标</span>
+    <% if (typeof goalsProgress !== 'undefined' && goalsProgress.length > 0) { %>
+    <span class="goal-badge goal-badge-active">已设定</span>
+    <% } else { %>
+    <span class="goal-badge">未设定</span>
+    <% } %>
+  </div>
+
+  <% if (typeof goalsProgress !== 'undefined' && goalsProgress.length > 0) { %>
+    <% goalsProgress.forEach(function(g) { %>
+    <div class="goal-card">
+      <div class="goal-card-header">
+        <span class="goal-card-icon">🦮</span>
+        <span class="goal-card-label">遛狗</span>
+        <span class="goal-card-target">目标 <%= g.target_value %> 分钟</span>
+        <span class="goal-card-progress-text"><%= n(g.progress) %>%</span>
+      </div>
+      <div class="goal-progress-bar">
+        <div class="goal-progress-fill" style="width:<%= n(g.progress) %>%"></div>
+      </div>
+      <div class="goal-card-actions">
+        <form action="/pets/<%= pet.id %>/quick-goal" method="POST" class="goal-inline-form">
+          <input type="number" name="target_value" class="goal-input" value="<%= g.target_value %>" min="5" max="180" step="5" title="调整目标（分钟）">
+          <button class="btn btn-sm btn-outline">更新</button>
+        </form>
+        <a href="/walks/goals" class="goal-link">管理 →</a>
+      </div>
+    </div>
+    <% }) %>
+  <% } else { %>
+    <div class="goal-card goal-card-empty">
+      <div class="goal-empty-icon">🎯</div>
+      <div class="goal-empty-text">还没设置目标？设一个每日遛狗目标，追踪进度吧！</div>
+      <form action="/pets/<%= pet.id %>/quick-goal" method="POST" class="goal-quick-setup">
+        <span class="goal-setup-label">每天遛狗</span>
+        <input type="number" name="target_value" class="goal-input" value="30" min="5" max="180" step="5" title="目标分钟数">
+        <span class="goal-setup-label">分钟</span>
+        <button class="btn btn-sm btn-primary">✅ 设定目标</button>
+      </form>
+    </div>
+  <% } %>
+</div>
+
+<!-- 📋 Today's Tasks -->
+<% if (typeof todayTasks !== 'undefined' && todayTasks.length > 0) { %>
+<div class="section">
+  <div class="section-header"><h2>📋 今日日程</h2></div>
+  <div class="record-list stagger-children">
+  <% todayTasks.forEach(r => { %>
+  <div class="record-card">
+    <div class="record-icon"><%= r.type === '疫苗' ? '💉' : r.type === '驱虫' ? '🪱' : r.type === '遛狗' ? '🦮' : r.type === '喂食' ? '🍖' : r.type === '用药' ? '💊' : r.type === '美容' ? '🧼' : '🔔' %></div>
+    <div class="record-info">
+      <div class="record-title"><%= r.title %></div>
+      <div class="record-meta"><%= r.reminder_time || '' %></div>
+    </div>
+    <div class="record-actions">
+      <% if (r.type === '遛狗') { %>
+      <form action="/reminders/<%= r.id %>/complete-and-record" method="POST" class="inline-form"><button class="btn btn-sm btn-teal">✓ 记录遛狗</button></form>
+      <% } else if (r.type === '喂食') { %>
+      <form action="/reminders/<%= r.id %>/complete-and-record" method="POST" class="inline-form"><button class="btn btn-sm btn-amber">✓ 记录喂食</button></form>
+      <% } else { %>
+      <form action="/reminders/<%= r.id %>/complete" method="POST" class="inline-form"><button class="btn btn-sm btn-success">✓ 完成</button></form>
+      <% } %>
+    </div>
+  </div>
+  <% }) %>
+  </div>
+</div>
+<% } %>
+
+<!-- 🏆 Achievements -->
+<div class="section">
+  <div class="section-header"><h2>🏆 成就徽章</h2></div>
+
+  <% if (!achievements || achievements.length === 0) { %>
+  <div class="empty-state">
+    <span class="empty-icon">🏅</span>
+    <p>还没有解锁任何成就，开始记录护理就会获得徽章哦！</p>
+  </div>
+  <% } else { %>
+  <div class="badge-grid">
+    <% achievements.forEach(a => { %>
+    <% const badge = allBadges[a.badge_key]; %>
+    <div class="badge-card badge-unlocked" title="<%= badge ? badge.desc : '' %>">
+      <span class="badge-icon"><%= badge ? badge.icon : '🏅' %></span>
+      <span class="badge-name"><%= badge ? badge.name : a.badge_key %></span>
+    </div>
+    <% }) %>
+  </div>
+  <div class="badge-grid badge-grid-locked">
+    <% Object.entries(allBadges).forEach(([key, badge]) => { %>
+    <% if (!achievements.find(a => a.badge_key === key)) { %>
+    <div class="badge-card badge-locked" title="<%= badge.desc %>">
+      <span class="badge-icon">🔒</span>
+      <span class="badge-name"><%= badge.name %></span>
+    </div>
+    <% } %>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- 🆘 Emergency Info Card -->
+<div class="section emergency-section">
+  <div class="section-header" style="cursor:pointer;" onclick="document.getElementById('emergencyCard').classList.toggle('hidden')">
+    <h2>🆘 紧急信息卡</h2>
+    <span class="section-meta emergency-toggle">点击展开 / 收起</span>
+  </div>
+  <div id="emergencyCard" class="hidden">
+    <div class="emergency-card">
+      <div class="emergency-banner">⚠️ 紧急情况时请出示此信息</div>
+      <div class="emergency-grid">
+        <div class="emergency-item">
+          <div class="emergency-label">宠物名称</div>
+          <div class="emergency-value"><%= pet.name %></div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">品种 / 颜色</div>
+          <div class="emergency-value"><%= pet.species %> <%= pet.breed ? '· ' + pet.breed : '' %> <%= pet.color ? '· ' + pet.color : '' %></div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">性别 / 绝育</div>
+          <div class="emergency-value"><%= pet.gender %> · <%= pet.neutered ? '已绝育' : '未绝育' %></div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">出生日期 / 年龄</div>
+          <div class="emergency-value"><%= pet.birth_date || '未知' %> · <%= pet.age || '未知' %></div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">体重</div>
+          <div class="emergency-value"><%= pet.weight %> kg</div>
+        </div>
+        <div class="emergency-item emergency-item-alert">
+          <div class="emergency-label">⚠️ 过敏信息</div>
+          <div class="emergency-value"><%= pet.allergies || '无已知过敏' %></div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">芯片号</div>
+          <div class="emergency-value emergency-mono"><%= pet.microchip || '未植入' %></div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">保险</div>
+          <div class="emergency-value"><%= pet.insurance || '未投保' %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Basic Info Section -->
+<div class="section">
+  <div class="section-header"><h2>📋 基本信息</h2></div>
+  <div class="info-grid">
+    <div class="info-tile">
+      <div class="info-tile-label">种类</div>
+      <div class="info-tile-value"><%= pet.species %></div>
+    </div>
+    <% if (pet.breed) { %>
+    <div class="info-tile">
+      <div class="info-tile-label">品种</div>
+      <div class="info-tile-value"><%= pet.breed %></div>
+    </div>
+    <% } %>
+    <div class="info-tile">
+      <div class="info-tile-label">性别</div>
+      <div class="info-tile-value"><%= pet.gender %></div>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-label">出生日期</div>
+      <div class="info-tile-value"><%= pet.birth_date || '未设置' %></div>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-label">年龄</div>
+      <div class="info-tile-value"><%= pet.age || '未知' %></div>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-label">体重</div>
+      <div class="info-tile-value"><%= pet.weight %> kg</div>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-label">绝育状态</div>
+      <div class="info-tile-value"><%= pet.neutered ? '已绝育' : '未绝育' %></div>
+    </div>
+    <% if (pet.color) { %>
+    <div class="info-tile">
+      <div class="info-tile-label">颜色 / 花纹</div>
+      <div class="info-tile-value"><%= pet.color %></div>
+    </div>
+    <% } %>
+    <% if (pet.microchip) { %>
+    <div class="info-tile">
+      <div class="info-tile-label">芯片号</div>
+      <div class="info-tile-value info-mono"><%= pet.microchip %></div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Health & Medical Info -->
+<% if (pet.allergies || pet.insurance) { %>
+<div class="section">
+  <div class="section-header"><h2>🏥 健康 &amp; 保险</h2></div>
+  <div class="info-grid">
+    <% if (pet.allergies) { %>
+    <div class="info-tile info-tile-alert">
+      <div class="info-tile-label">过敏信息</div>
+      <div class="info-tile-value"><%= pet.allergies %></div>
+    </div>
+    <% } %>
+    <% if (pet.insurance) { %>
+    <div class="info-tile">
+      <div class="info-tile-label">保险信息</div>
+      <div class="info-tile-value"><%= pet.insurance %></div>
+    </div>
+    <% } %>
+  </div>
+</div>
+<% } %>
+
+<!-- Notes -->
+<% if (pet.notes) { %>
+<div class="section">
+  <div class="section-header"><h2>📝 备注</h2></div>
+  <p class="pet-notes"><%= pet.notes %></p>
+</div>
+<% } %>
+
+<!-- Recent Feeding -->
+<div class="section">
+  <div class="section-header"><h2>🍽️ 最近喂食</h2></div>
+  <% if (pet.access_role && pet.access_role !== 'view') { %>
+  <form class="feed-form" action="/pets/<%= pet.id %>/feed" method="POST">
+    <input class="feed-input" type="text" name="food_name" placeholder="食物名（如 鸡肉干粮）" maxlength="60">
+    <input class="feed-input feed-input-sm" type="text" name="portion" placeholder="份量（如 50g）" maxlength="30">
+    <button type="submit" class="btn btn-primary">记录喂食</button>
+  </form>
+  <% } %>
+  <% if (!feedingLogs || feedingLogs.length === 0) { %>
+  <div class="empty-state">
+    <span class="empty-icon">🥣</span>
+    <p>暂无喂食记录，记录一次喂食后会显示在这里。</p>
+  </div>
+  <% } else { %>
+  <%
+    function timeAgo(dateStr) {
+      const now = Date.now();
+      const then = new Date(dateStr).getTime();
+      const diff = Math.floor((now - then) / 1000);
+      if (diff < 60) return '刚刚';
+      if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+      if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+      if (diff < 604800) return Math.floor(diff / 86400) + '天前';
+      if (diff < 2592000) return Math.floor(diff / 604800) + '周前';
+      if (diff < 31536000) return Math.floor(diff / 2592000) + '个月前';
+      return Math.floor(diff / 31536000) + '年前';
+    }
+    const foodEmojis = { '干粮': '🟤', '湿粮': '🥫', '零食': '🍪', '罐头': '🥫', '肉类': '🥩', '蔬菜': '🥬', '水果': '🍎', '奶': '🥛', '鱼': '🐟', '蛋': '🥚', '鸡肉': '🍗', '牛肉': '🥩' };
+    function foodIcon(name) {
+      if (!name) return '🍖';
+      for (const [k, v] of Object.entries(foodEmojis)) { if (name.includes(k)) return v; }
+      return '🍖';
+    }
+  %>
+  <div class="feed-timeline">
+    <% feedingLogs.forEach((log, i) => { %>
+    <div class="feed-timeline-item">
+      <div class="feed-timeline-dot"><span class="feed-timeline-emoji"><%= foodIcon(log.food_name) %></span></div>
+      <div class="feed-timeline-card">
+        <div class="feed-timeline-card-header">
+          <span class="feed-timeline-food"><%= log.food_name || '未填写食物' %></span>
+          <span class="feed-timeline-time"><%= timeAgo(log.fed_at) %></span>
+        </div>
+        <div class="feed-timeline-card-body">
+          <% if (log.portion) { %><span class="feed-timeline-portion"><%= log.portion %></span><% } %>
+          <span class="feed-timeline-date"><%= new Date(log.fed_at).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', weekday: 'short' }) %></span>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- Timeline -->
+<div class="section">
+  <div class="section-header"><h2>📜 护理时间线</h2></div>
+  <% if (!timeline || timeline.length === 0) { %>
+  <div class="empty-state">
+    <span class="empty-icon">📋</span>
+    <p>暂无护理记录，添加遛狗、喂食、健康或医疗记录后会自动汇总到这里。</p>
+  </div>
+  <% } else { %>
+  <div class="care-timeline">
+    <% timeline.forEach(event => { %>
+    <div class="care-timeline-item">
+      <div class="care-timeline-dot"></div>
+      <div class="care-timeline-date"><%= event.date %></div>
+      <div class="care-timeline-title"><%= event.icon %> <%= event.title %></div>
+      <% if (event.detail) { %><div class="care-timeline-detail"><%= event.detail %></div><% } %>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/foot') %>

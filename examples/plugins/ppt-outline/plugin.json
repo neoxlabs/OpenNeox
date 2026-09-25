@@ -1,0 +1,25 @@
+{
+  "name": "ppt-outline",
+  "version": "0.1.0",
+  "description": "Generate slide outlines and preview them in a built-in panel",
+  "author": {
+    "name": "Neox Examples"
+  },
+  "category": "productivity",
+  "keywords": ["ppt", "slides", "presentation"],
+  "tools": ["tools/index.js"],
+  "commands": ["commands"],
+  "views": [
+    {
+      "id": "ppt-outline.panel",
+      "title": "Slide Outline",
+      "location": "workspace",
+      "entry": "ui/index.html",
+      "icon": "ui/icon.svg",
+      "preferredSize": { "width": 480 }
+    }
+  ],
+  "permissions": {
+    "network": false
+  }
+}

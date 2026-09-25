@@ -1,0 +1,123 @@
+<%- include('../partials/head', { title: '宠物管理' }) %>
+
+<div class="page-header">
+  <div>
+    <div class="page-kicker">家庭成员</div>
+    <h1>🐕 我的毛孩子</h1>
+    <p class="page-subtitle">用心记录每一位家人的日常与健康</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/pets/add" class="btn btn-primary">+ 添加宠物</a>
+  </div>
+</div>
+
+<% if (pets.length === 0) { %>
+<div class="empty-state empty-state-pets">
+  <span class="empty-icon">🐾</span>
+  <p>还没有添加宠物哦～</p>
+  <p class="empty-hint">点击上方按钮，把第一位毛孩子接回家吧</p>
+  <a href="/pets/add" class="btn btn-primary" style="margin-top:18px">+ 添加第一只宠物</a>
+</div>
+<% } else { %>
+
+<div class="pets-toolbar">
+  <div class="search-bar pets-search">
+    <span class="search-bar-icon">🔍</span>
+    <input type="text" class="form-control" id="petSearch" placeholder="搜索名字、品种、物种..." autocomplete="off">
+  </div>
+  <div class="pets-count" id="petsCount"><%= pets.length %> 位家人</div>
+</div>
+
+<div class="pet-cards-grid" id="petCardsGrid">
+  <% pets.forEach(pet => {
+    const speciesEmoji = pet.species === '狗' ? '🐕' : pet.species === '猫' ? '🐱' : pet.species === '鸟' ? '🐦' : pet.species === '鱼' ? '🐟' : pet.species === '兔子' ? '🐰' : pet.species === '仓鼠' ? '🐹' : '🐾';
+    const genderClass = pet.gender === '公' ? 'gender-male' : pet.gender === '母' ? 'gender-female' : 'gender-unknown';
+  %>
+  <article class="pet-card"
+           data-searchable="<%= pet.name %> <%= pet.species %> <%= pet.breed || '' %>"
+           onclick="if(!event.target.closest('a,button,form')) location.href='/pets/<%= pet.id %>'">
+    <div class="pet-card-banner">
+      <div class="pet-card-banner-shine"></div>
+    </div>
+    <div class="pet-card-photo-wrap">
+      <% if (pet.photo) { %>
+      <img class="pet-card-photo" src="<%= pet.photo %>" alt="<%= pet.name %>">
+      <% } else { %>
+      <div class="pet-card-photo pet-card-photo-placeholder"><%= speciesEmoji %></div>
+      <% } %>
+      <span class="pet-card-species-chip"><%= speciesEmoji %> <%= pet.species %></span>
+    </div>
+
+    <div class="pet-card-body">
+      <div class="pet-card-title-row">
+        <h3 class="pet-card-name"><%= pet.name %></h3>
+        <span class="pet-card-gender <%= genderClass %>" title="<%= pet.gender %>"><%= pet.gender === '公' ? '♂' : pet.gender === '母' ? '♀' : '·' %></span>
+      </div>
+      <p class="pet-card-breed"><%= pet.breed || '品种未填' %></p>
+
+      <div class="pet-card-meta">
+        <div class="pet-card-meta-item">
+          <span class="meta-label">年龄</span>
+          <span class="meta-value"><%= pet.age || '未知' %></span>
+        </div>
+        <div class="pet-card-meta-item">
+          <span class="meta-label">体重</span>
+          <span class="meta-value"><%= pet.weight ? pet.weight + ' kg' : '—' %></span>
+        </div>
+        <div class="pet-card-meta-item">
+          <span class="meta-label">生日</span>
+          <span class="meta-value"><%= pet.birth_date || '—' %></span>
+        </div>
+      </div>
+
+      <div class="pet-card-status-row" aria-hidden="true">
+        <span class="pet-status-pill pet-status-mood">档案完整</span>
+        <% if (pet.neutered) { %><span class="pet-status-pill pet-status-ok">已绝育</span><% } %>
+        <% if (pet.microchip) { %><span class="pet-status-pill pet-status-chip">有芯片</span><% } %>
+      </div>
+
+      <div class="pet-card-actions" onclick="event.stopPropagation()">
+        <a href="/pets/<%= pet.id %>" class="btn btn-sm btn-primary">查看档案</a>
+        <a href="/pets/<%= pet.id %>/edit" class="btn btn-sm btn-ghost" title="编辑">✏️</a>
+        <form action="/pets/<%= pet.id %>/delete" method="POST" class="delete-form" onsubmit="return confirm('确定要删除 <%= pet.name %> 吗？此操作不可撤销。')">
+          <button type="submit" class="btn btn-sm btn-danger" title="删除">🗑️</button>
+        </form>
+      </div>
+    </div>
+  </article>
+  <% }) %>
+</div>
+
+<div class="empty-state" id="searchEmpty" style="display:none">
+  <span class="empty-icon">🔍</span>
+  <p>没有找到匹配的宠物</p>
+  <p class="empty-hint">试试其他关键词吧～</p>
+</div>
+
+<% } %>
+
+<script>
+(function() {
+  var search = document.getElementById('petSearch');
+  if (!search) return;
+  var cards = document.querySelectorAll('.pet-card');
+  var emptyMsg = document.getElementById('searchEmpty');
+  var countEl = document.getElementById('petsCount');
+  var total = cards.length;
+
+  search.addEventListener('input', function() {
+    var term = this.value.toLowerCase().trim();
+    var found = 0;
+    cards.forEach(function(card) {
+      var text = (card.getAttribute('data-searchable') || '').toLowerCase();
+      var match = !term || text.indexOf(term) !== -1;
+      card.style.display = match ? '' : 'none';
+      if (match) found++;
+    });
+    if (emptyMsg) emptyMsg.style.display = (found === 0 && term) ? '' : 'none';
+    if (countEl) countEl.textContent = term ? (found + ' / ' + total + ' 位家人') : (total + ' 位家人');
+  });
+})();
+</script>
+
+<%- include('../partials/foot') %>

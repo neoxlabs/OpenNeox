@@ -1,0 +1,138 @@
+<%- include('../partials/head', { title: title }) %>
+
+<div class="page-header">
+  <div>
+    <a href="/pets/<%= pet.id %>" class="back-link">← 返回详情</a>
+    <div class="page-kicker">健康洞察</div>
+    <h1>📋 <%= pet.name %> · <%= monthStr %> 健康月报</h1>
+    <p class="page-subtitle">汇总本月护理、花费与活动趋势</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="/pets/<%= pet.id %>" class="btn btn-outline">档案</a>
+    <button class="btn btn-primary" onclick="window.print()">🖨️ 打印报告</button>
+  </div>
+</div>
+
+<!-- Month Navigator -->
+<div class="report-month-nav">
+  <a href="?year=<%= month == 1 ? year - 1 : year %>&month=<%= month == 1 ? 12 : month - 1 %>" class="btn btn-outline btn-sm">← 上个月</a>
+  <span class="report-month-label"><%= year %>年<%= month %>月</span>
+  <a href="?year=<%= month == 12 ? year + 1 : year %>&month=<%= month == 12 ? 1 : month + 1 %>" class="btn btn-outline btn-sm">下个月 →</a>
+</div>
+
+<!-- Summary Cards -->
+<div class="report-card-grid">
+  <div class="report-card report-card-walk">
+    <div class="report-card-icon">🦮</div>
+    <div class="report-card-value"><%= walks.count %></div>
+    <div class="report-card-label">本月遛狗</div>
+    <div class="report-card-sub"><%= walks.total_min %> 分钟 · <%= (walks.total_km || 0).toFixed(1) %> km</div>
+  </div>
+  <div class="report-card report-card-feed">
+    <div class="report-card-icon">🍖</div>
+    <div class="report-card-value"><%= feedings.count %></div>
+    <div class="report-card-label">本月喂食</div>
+    <div class="report-card-sub"><%= (feedings.total_grams / 1000).toFixed(1) %> kg 食物</div>
+  </div>
+  <div class="report-card report-card-vaccine">
+    <div class="report-card-icon">💉</div>
+    <div class="report-card-value"><%= vaccines.count %></div>
+    <div class="report-card-label">疫苗接种</div>
+    <div class="report-card-sub">&nbsp;</div>
+  </div>
+  <div class="report-card report-card-medical">
+    <div class="report-card-icon">🏥</div>
+    <div class="report-card-value"><%= medical.count %></div>
+    <div class="report-card-label">就诊次数</div>
+    <div class="report-card-sub">¥<%= (medical.total_cost || 0).toFixed(0) %></div>
+  </div>
+  <div class="report-card report-card-groom">
+    <div class="report-card-icon">💇</div>
+    <div class="report-card-value"><%= grooming.count %></div>
+    <div class="report-card-label">美容护理</div>
+    <div class="report-card-sub">¥<%= (grooming.total_cost || 0).toFixed(0) %></div>
+  </div>
+  <div class="report-card report-card-cost">
+    <div class="report-card-icon">💰</div>
+    <div class="report-card-value">¥<%= totalCost.toFixed(0) %></div>
+    <div class="report-card-label">本月总花费</div>
+    <div class="report-card-sub">医疗 + 美容</div>
+  </div>
+</div>
+
+<!-- Weight Section -->
+<div class="section">
+  <div class="section-header"><h2>⚖️ 体重变化</h2></div>
+  <% if (weightChange !== null) { %>
+  <div class="report-weight-panel">
+    <div class="report-weight-delta <%= weightChange > 0 ? 'up' : weightChange < 0 ? 'down' : 'flat' %>">
+      <%= weightChange > 0 ? '+' : '' %><%= weightChange %> kg
+    </div>
+    <div class="report-weight-range">
+      月初 <%= weightStart.weight %> kg → 月末 <%= weightEnd.weight %> kg
+    </div>
+  </div>
+  <% } else { %>
+  <div class="empty-state">
+    <span class="empty-icon">⚖️</span>
+    <p>本月暂无体重记录</p>
+  </div>
+  <% } %>
+</div>
+
+<!-- Daily Walk Heatmap -->
+<div class="section">
+  <div class="section-header"><h2>🗓️ 每日遛狗热力图</h2></div>
+  <div class="heatmap-grid">
+    <% for (let d = 1; d <= daysInMonth; d++) { %>
+    <% const dateStr = monthStr + '-' + String(d).padStart(2, '0'); %>
+    <% const dayWalk = dailyWalks.find(w => w.walk_date === dateStr); %>
+    <% let intensity = 0; %>
+    <% if (dayWalk) { intensity = Math.min(dayWalk.minutes / 60, 1); } %>
+    <div class="heatmap-cell" style="background:rgba(126,200,200,<%= intensity * 0.7 %>);" title="<%= dateStr %>: <%= dayWalk ? dayWalk.minutes + '分钟' : '未遛狗' %>">
+      <span class="heatmap-day"><%= d %></span>
+    </div>
+    <% } %>
+  </div>
+  <div class="heatmap-legend">
+    <span>少</span>
+    <div class="heatmap-swatch" style="background:rgba(126,200,200,0.1);"></div>
+    <div class="heatmap-swatch" style="background:rgba(126,200,200,0.3);"></div>
+    <div class="heatmap-swatch" style="background:rgba(126,200,200,0.5);"></div>
+    <div class="heatmap-swatch" style="background:rgba(126,200,200,0.7);"></div>
+    <span>多</span>
+  </div>
+</div>
+
+<!-- Monthly Insights -->
+<div class="section">
+  <div class="section-header"><h2>💡 月度洞察</h2></div>
+  <div class="insight-list">
+    <% if (walks.total_min > 0) { %>
+    <div class="insight-item">
+      <span class="insight-icon">🦮</span>
+      <span>本月共遛狗 <strong><%= walks.count %></strong> 次，累计 <strong><%= walks.total_min %></strong> 分钟<% if (walks.count >= daysInMonth * 0.8) { %>，几乎天天出门，太棒了！🎉<% } else if (walks.count < daysInMonth * 0.3) { %>，可以多带毛孩子出去走走哦～<% } %></span>
+    </div>
+    <% } %>
+    <% if (feedings.count > 0) { %>
+    <div class="insight-item">
+      <span class="insight-icon">🍖</span>
+      <span>本月共喂食 <strong><%= feedings.count %></strong> 次，平均每天 <strong><%= (feedings.total_grams / daysInMonth).toFixed(0) %></strong>g<% if (feedings.count < 30) { %>，记得按时喂食哦<% } %></span>
+    </div>
+    <% } %>
+    <% if (totalCost > 0) { %>
+    <div class="insight-item">
+      <span class="insight-icon">💰</span>
+      <span>本月宠物支出 <strong>¥<%= totalCost.toFixed(0) %></strong>，其中医疗 ¥<%= (medical.total_cost || 0).toFixed(0) %>，美容 ¥<%= (grooming.total_cost || 0).toFixed(0) %></span>
+    </div>
+    <% } %>
+    <% if (walks.count === 0 && feedings.count === 0) { %>
+    <div class="insight-item">
+      <span class="insight-icon">💤</span>
+      <span>本月还没有记录任何护理数据，快去遛狗或喂食吧！</span>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/foot') %>

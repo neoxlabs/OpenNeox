@@ -1,0 +1,33 @@
+[package]
+name = "neox-native"
+version = "0.1.0"
+edition = "2021"
+description = "Neox 客户端关键算法 native 模块 — fingerprint / hmac sig / pin 校验"
+license = "Proprietary"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "2", default-features = false, features = ["napi6"] }
+napi-derive = "2"
+sha2 = "0.10"
+hmac = "0.12"
+hkdf = "0.12"
+hex = "0.4"
+obfstr = "0.4"
+# SEC-4 (2026-06-17): AEAD request body 加密
+aes-gcm = "0.10"
+rand_core = { version = "0.6", features = ["getrandom"] }
+
+[build-dependencies]
+napi-build = "2"
+
+# 反逆向加固编译开关
+[profile.release]
+opt-level = 3
+lto = "fat"            # 全程内联, 调用图打散, 反汇编可读性骤降
+codegen-units = 1      # 单 codegen 单元配合 LTO 最大化优化
+panic = "abort"        # 不带 panic unwind, 二进制更小, 没有 unwind 表泄漏函数布局
+strip = "symbols"      # 砍符号表, 函数名全没了
+debug = false

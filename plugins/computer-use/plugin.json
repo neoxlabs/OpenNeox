@@ -1,0 +1,19 @@
+{
+  "name": "computer-use",
+  "version": "0.1.0",
+  "description": "让 Neox 操作你电脑上的原生应用 —— 读界面元素、点按钮、填表单。默认不带, 装了才有。",
+  "author": {
+    "name": "Neox",
+    "url": "https://neox.chat"
+  },
+  "kind": "module",
+  "category": "productivity",
+  "capabilities": ["computer-use"],
+  "platform": ["darwin", "win32"],
+  "engines": {
+    "neox": ">=3.7.0"
+  },
+  "skills": ["skills"],
+  "permissions": {},
+  "keywords": ["computer use", "macos", "windows", "accessibility", "ui automation", "gui", "自动化", "电脑操作"]
+}
