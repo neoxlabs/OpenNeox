@@ -73,8 +73,13 @@ jobs:
       - name: Package
         run: npx tsx scripts/build-cli-node-package.ts --platform=${{ matrix.id }}
 
+      # Run from a copy outside the checkout: inside it, a missing dependency still resolves
+      # through the repository's own node_modules and the test passes for the wrong reason.
       - name: Smoke test
-        run: node release/cli-node-publish/platforms/${{ matrix.id }}/bin/neox.mjs --version
+        run: |
+          rm -rf "$RUNNER_TEMP/smoke" && mkdir -p "$RUNNER_TEMP/smoke"
+          cp -R release/cli-node-publish/platforms/${{ matrix.id }} "$RUNNER_TEMP/smoke/pkg"
+          node "$RUNNER_TEMP/smoke/pkg/bin/neox.mjs" --version
 
       - name: Publish
         working-directory: release/cli-node-publish/platforms/${{ matrix.id }}

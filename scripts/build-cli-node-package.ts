@@ -32,12 +32,36 @@ function readDeps(rel: string): Record<string, string> {
   return existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')).dependencies ?? {}) : {};
 }
 
-/** 发布包 runtime deps = union(cli+core+sdk) + root extra, 去 @neoxlabs/*. (neox-native 单独内嵌) */
+/** 工作区包名 → 它的 package.json 相对路径 (packages/* 与 apps/*) */
+function workspaceManifests(): Map<string, string> {
+  const out = new Map<string, string>();
+  for (const dir of ['packages', 'apps']) {
+    const abs = join(REPO_ROOT, dir);
+    if (!existsSync(abs)) continue;
+    for (const name of readdirSync(abs)) {
+      const rel = join(dir, name, 'package.json');
+      if (!existsSync(join(REPO_ROOT, rel))) continue;
+      const pkgName = JSON.parse(readFileSync(join(REPO_ROOT, rel), 'utf8')).name;
+      if (pkgName) out.set(pkgName, rel);
+    }
+  }
+  return out;
+}
+
 function computeDeps(): Record<string, string> {
+  const ws = workspaceManifests();
+  const isWorkspace = (k: string) => ws.has(k) || BUNDLED_SCOPES.some((s) => k.startsWith(s));
   const merged: Record<string, string> = {};
-  for (const p of ['apps/cli/package.json', 'packages/core/package.json', 'packages/sdk/package.json']) {
+  const seen = new Set<string>();
+  const queue = ['apps/cli/package.json', 'packages/core/package.json', 'packages/sdk/package.json'];
+  while (queue.length) {
+    const p = queue.shift()!;
+    if (seen.has(p)) continue;
+    seen.add(p);
     for (const [k, v] of Object.entries(readDeps(p))) {
-      if (!BUNDLED_SCOPES.some((s) => k.startsWith(s))) merged[k] = v;
+      if (k === VENDORED_NATIVE) continue;
+      if (isWorkspace(k)) { const rel = ws.get(k); if (rel) queue.push(rel); continue; }
+      if (!(k in merged)) merged[k] = v;
     }
   }
   const rootDeps = readDeps('package.json');
@@ -89,6 +113,28 @@ function vendorNeoxNative(destNodeModules: string): number {
   return nodeFiles.length;
 }
 
+const VENDORED_WORKSPACE = ['@neoxlabs/sandbox'];
+
+/** 内嵌外部化的工作区包: package.json + dist (去 sourcemap)。返回 {包名: 版本} */
+function vendorWorkspacePackages(destNodeModules: string): Record<string, string> {
+  const ws = workspaceManifests();
+  const out: Record<string, string> = {};
+  for (const name of VENDORED_WORKSPACE) {
+    const rel = ws.get(name);
+    if (!rel) throw new Error(`${name} 不在工作区`);
+    const srcDir = join(REPO_ROOT, dirname(rel));
+    if (!existsSync(join(srcDir, 'dist'))) throw new Error(`${name} 没 build (缺 dist)`);
+    const dest = join(destNodeModules, name);
+    mkdirSync(dest, { recursive: true });
+    const pkg = JSON.parse(readFileSync(join(srcDir, 'package.json'), 'utf8'));
+    delete pkg.devDependencies; delete pkg.scripts;
+    writeFileSync(join(dest, 'package.json'), JSON.stringify(pkg, null, 2));
+    cpSync(join(srcDir, 'dist'), join(dest, 'dist'), { recursive: true, filter: (p) => !isLeakyDistFile(p) });
+    out[name] = pkg.version;
+  }
+  return out;
+}
+
 /**
  * 打单个 platform 包 = dist + 该平台全套 prebuilt native (npm install 拉) + 内嵌 neox-native.
  * 必须在目标平台 runner 上跑 (npm install 拿该平台 prebuilt; CI runner 有工具链兜底编译)。
@@ -115,6 +161,8 @@ function buildPlatformPackage(id: string) {
   /* 3. 内嵌 neox-native (闭源, 不上 npm) */
   const nNative = vendorNeoxNative(join(outDir, 'node_modules'));
   log(`  内嵌 ${VENDORED_NATIVE}: ${nNative} 个 .node`);
+  const vendoredWs = vendorWorkspacePackages(join(outDir, 'node_modules'));
+  log(`  内嵌工作区包: ${Object.keys(vendoredWs).join(', ')}`);
 
   /* 4. bin/neox.mjs launcher (platform 包自带, main wrapper 也可直接 exec dist) */
   mkdirSync(join(outDir, 'bin'), { recursive: true });
@@ -123,7 +171,7 @@ function buildPlatformPackage(id: string) {
   chmodSync(join(outDir, 'bin', 'neox.mjs'), 0o755);
 
   /* 5. 终版 package.json: os/cpu 锁定 + bundledDependencies=全部 (装时零下载零编译) */
-  const bundled = [...Object.keys(deps), VENDORED_NATIVE];
+  const bundled = [...Object.keys(deps), VENDORED_NATIVE, ...Object.keys(vendoredWs)];
   const pkg = {
     name: `@neoxlabs/cli-${id}`,
     version: v,
@@ -135,7 +183,7 @@ function buildPlatformPackage(id: string) {
     engines: { node: '>=20.0.0' },
     bin: { neox: 'bin/neox.mjs' },
     files: ['bin/', 'dist/', 'README.md'],
-    dependencies: { ...deps, [VENDORED_NATIVE]: nativeVersion() },
+    dependencies: { ...deps, [VENDORED_NATIVE]: nativeVersion(), ...vendoredWs },
     bundledDependencies: bundled,
     publishConfig: { access: 'restricted' },
   };
