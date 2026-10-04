@@ -1,0 +1,41 @@
+# Moonshot Kimi K2.7 Code (订阅: Pro / Go)
+#
+# 2026-09-13 实测 (阿里云百炼 / OpenRouter / relay-c):
+#   · 关不掉思考: thinking:{type:disabled} / enable_thinking:false 百炼照样思考;
+#     OpenRouter reasoning 关闭直接回 "Reasoning is mandatory"。所以没有 off 档。
+#   · reasoning_effort: low / high 三条路由都接受; **max 百炼回 400**
+#     ("must be one of none/minimal/low/medium/high/xhigh"), 所以不给 max。
+id: kimi-k2.7-code
+display_name: Kimi K2.7 Code
+family: kimi
+availability: ga
+
+context_window: 262144
+max_output_tokens: 32000
+
+upstream_slugs:
+  prov_openrouter: moonshotai/kimi-k2.7-code
+
+capabilities:
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: reasoning_effort
+    default_level: high
+  reasoning_effort:
+    supported: true
+    values: [low, high]
+    default: high
+  prompt_cache:
+    supported: false
+
+effort_map:
+  low:  { reasoning_effort: low }
+  high: { reasoning_effort: high }
+
+pricing:
+  input_per_mtok: 1.257965
+  cached_input_per_mtok: 0.251593
+  output_per_mtok: 5.225392
+  currency: USD

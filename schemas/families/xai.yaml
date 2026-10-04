@@ -1,0 +1,25 @@
+# xAI Grok 家族能力声明
+
+id: xai
+display_name: xAI Grok
+
+aliases:
+  - grok
+  - xai
+
+capabilities:
+  thinking:
+    native: false
+  reasoning_effort:
+    supported: false
+  vision: true
+  parallel_tool_use: true
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+
+markdown_constraint: light
+supplement_key: generic_parallel
+
+fast_patterns:
+  - /mini/i

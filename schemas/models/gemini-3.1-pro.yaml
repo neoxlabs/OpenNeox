@@ -1,0 +1,44 @@
+id: gemini-3.1-pro
+display_name: Gemini 3.1 Pro
+family: gemini
+released: 2026-05
+availability: ga
+
+context_window: 2000000
+max_output_tokens: 8192
+
+# OpenRouter 上 GA 还没出, 暂用 preview slug
+upstream_slugs:
+  prov_openrouter: google/gemini-3.1-pro-preview
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  # Gemini thinking 走 thinking_budget 字段
+  thinking:
+    supported: true
+    field: thinking_config
+    budget_unit: tokens
+    min_budget: 0
+    max_budget: 24576
+    default_level: deep
+  prompt_cache:
+    supported: true
+    type: gemini-context-cache
+  # Gemini 字段名特殊
+  search_grounding_supported: true
+
+# Gemini thinking_budget 4 档: 0 (off) / 4K / 8K / 24K.
+# fast 之前没 payload 字段=假的, 已加 thinking_budget:0 显式关 thinking, 真有差异.
+effort_map:
+  fast:     { thinking_config: { thinking_budget: 0 } }
+  standard: { thinking_config: { thinking_budget: 4096 } }
+  deep:     { thinking_config: { thinking_budget: 8192 } }
+  max:      { thinking_config: { thinking_budget: 24576 } }
+
+pricing:
+  input_per_mtok: 1.25
+  cached_input_per_mtok: 0.31
+  output_per_mtok: 5.00
+  currency: USD

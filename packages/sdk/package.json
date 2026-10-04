@@ -1,0 +1,82 @@
+{
+  "name": "@neoxlabs/sdk",
+  "version": "2.7.0",
+  "private": true,
+  "description": "Embeddable agent SDK for Neox",
+  "type": "module",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./tools": {
+      "types": "./dist/tools/index.d.ts",
+      "import": "./dist/tools/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "import": "./dist/testing/index.js"
+    },
+    "./testing/node": {
+      "types": "./dist/testing/node.d.ts",
+      "import": "./dist/testing/node.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js"
+    }
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "axios": "^1.6.0",
+    "zod": "^3.22.0",
+    "zod-to-json-schema": "^3.25.2"
+  },
+  "devDependencies": {
+    "@neoxlabs/kernel": "*",
+    "esbuild": "^0.27.0"
+  },
+  "scripts": {
+    "build": "node scripts/sync-version.mjs && tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm run build:bundle",
+    "version:sync": "node scripts/sync-version.mjs",
+    "version:check": "node scripts/sync-version.mjs --check",
+    "check:examples": "node scripts/check-examples.mjs",
+    "build:bundle": "tsc --project tsconfig.build.json && node scripts/bundle.mjs",
+    "check:publish": "node scripts/check-publish.mjs"
+  },
+  "keywords": [
+    "agent",
+    "ai",
+    "llm",
+    "claude",
+    "openai",
+    "agent-sdk",
+    "mcp",
+    "tool-use"
+  ],
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

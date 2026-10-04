@@ -1,0 +1,42 @@
+{
+  "name": "@neoxlabs/native",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "description": "Optional native module for Neox (device fingerprint, request signing)",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node"
+  ],
+  "scripts": {
+    "build": "node scripts/build-native.cjs build --platform --release --strip",
+    "build:debug": "node scripts/build-native.cjs build --platform",
+    "test": "node tests/smoke.mjs"
+  },
+  "napi": {
+    "name": "neox-native",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "x86_64-apple-darwin",
+        "aarch64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "x86_64-unknown-linux-gnu"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.4"
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/native"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

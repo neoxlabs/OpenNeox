@@ -1,0 +1,45 @@
+# GLM-5.3 Flash — 智谱快速档 (订阅: Pro / Go)
+#
+# 2026-09-13 在三条路由上实测 (智谱官方 / OpenRouter / relay-c) 得出下面的 effort_map:
+#   · **始终思考, 不能关**: thinking:{type:disabled} 智谱回 400
+#     "该模型始终思考，不支持关闭思考；请使用 low、high 或 max"; OpenRouter reasoning 关闭回
+#     "Reasoning is mandatory"。所以这里没有 off 档。
+#   · reasoning_effort: low / high 两档实测几乎不产出思考 (思考 token=0), max 明显更长。
+#     智谱官方与 OpenRouter 行为一致, relay-c 不回思考内容 (中转剥掉了)。
+#   · 不发任何参数时上游默认会思考, 曾出现一轮思考到 32000 token 撞 max_tokens (189s)。
+#     所以默认档给 high —— 快, 且不会失控。
+id: glm-5.3-flash
+display_name: GLM-5.3 Flash
+family: glm
+availability: ga
+
+context_window: 1000000
+max_output_tokens: 128000
+
+upstream_slugs:
+  prov_openrouter: z-ai/glm-5.3-flash
+
+capabilities:
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: reasoning_effort
+    default_level: high
+  reasoning_effort:
+    supported: true
+    values: [low, high, max]
+    default: high
+  prompt_cache:
+    supported: false
+
+effort_map:
+  low:  { reasoning_effort: low }
+  high: { reasoning_effort: high }
+  max:  { reasoning_effort: max }
+
+pricing:
+  input_per_mtok: 0.1444
+  cached_input_per_mtok: 0.0415
+  output_per_mtok: 0.5056
+  currency: USD

@@ -1,0 +1,41 @@
+# Moonshot Kimi K3
+#
+# 推理档 2026-09-28 实测 (relay-c, Kimi 第二档; 第一档 relay-a 同源):
+#   · 关不掉思考: thinking:{type:disabled} / enable_thinking:false 照样在想 —— 没有 off 档, 别给假开关。
+#   · reasoning_effort 调不动深浅: 第一次单测 low 104 → high 275, 复测 (relay-c) low 175 → high 134,
+#     relay-a 上干脆不返回推理。三次方向不一致 = 噪声, 不给档位, 只一档「思考固定开着」。
+#   · 这一档发 thinking:{type:enabled}: 必须有一个真实字段, 否则 schema handler 算不出有效档,
+#     界面会退回家族兜底表 (off/on/max) —— 又冒出一排假档位。
+id: kimi-k3
+display_name: Kimi K3
+family: kimi
+released: 2026-07
+availability: ga
+
+context_window: 1048576
+max_output_tokens: 32000
+
+upstream_slugs:
+  prov_openrouter: moonshotai/kimi-k3
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    default_level: on
+  reasoning_effort:
+    supported: false
+  prompt_cache:
+    supported: false
+
+effort_map:
+  on: { thinking: { type: enabled } }
+
+pricing:
+  input_per_mtok: 3.00
+  cached_input_per_mtok: 0.30
+  output_per_mtok: 15.00
+  currency: USD

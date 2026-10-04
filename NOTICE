@@ -1,0 +1,37 @@
+OpenNeox
+Copyright 2026 neoxlabs
+
+OpenNeox project code is licensed under the Apache License, Version 2.0.
+See LICENSE for the complete license text.
+
+Third-party components
+----------------------
+
+The repository includes or stages the following third-party materials. Their
+original licenses remain applicable to those materials and are not replaced by
+the OpenNeox project license.
+
+* Ink vendor snapshot (`apps/cli/vendor/ink`): MIT License.
+  The snapshot is Ink 6.6.0 by Vadym Demedes and retains its upstream
+  `license` file.
+* Monaco Editor 0.55.1 staged by `packages/editor-engine`: MIT License,
+  copyright Microsoft Corporation. The generated distribution retains its
+  upstream `LICENSE` and `ThirdPartyNotices.txt` files.
+* Provider icons under `apps/desktop/.../assets/icons/providers` and
+  `apps/mobile/assets/icons/providers`: MIT License, from lobe-icons.
+* CSS and other developer/file icons: MIT-licensed assets from devicon where
+  identified in the adjacent license notices.
+* Browser and file-type brand icons from simple-icons: CC0 1.0 Universal,
+  as described by the adjacent license notices.
+* Mobile font assets: fonts are distributed under the SIL Open Font License,
+  Version 1.1, with the applicable notice in `apps/mobile/assets/fonts`.
+* Java debug adapter resource (`resources/java-debug/com.microsoft.java.debug.plugin.jar`)
+  and the accompanying Java debug integration are redistributed subject to
+  the upstream component's license. Consult the upstream distribution and
+  `resources/java-debug/README.md` before redistributing a packaged build.
+* Monaco's bundled icon font and all other generated third-party notices retain
+  the licenses supplied by their upstream packages.
+
+The npm and Flutter dependency manifests identify additional dependencies and
+their license metadata. Downstream distributions must preserve the applicable
+notices for the dependencies they package.

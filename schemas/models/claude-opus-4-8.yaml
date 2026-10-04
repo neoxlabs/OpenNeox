@@ -1,0 +1,55 @@
+id: claude-opus-4-8
+display_name: Claude Opus 4.8
+family: claude
+released: 2026-06
+availability: ga
+
+context_window: 1000000
+max_output_tokens: 128000
+
+upstream_slugs:
+  prov_openrouter: anthropic/claude-opus-4.8
+  prov_anthropic_direct: claude-opus-4-8-20260601
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    # 2026-07-03: 默认思考档 — 之前用户不动 effort 时我们什么都不发, kernel 白名单又停在
+    # opus-4-6 → 旗舰默认无思考。现在 adapter 按此档默认注入 adaptive thinking。
+    default_level: high
+  # Anthropic /v1/messages 没有 OpenAI 式顶层 reasoning_effort 字段。
+  # Opus 4.8 走 adaptive thinking + output_config.effort。
+  reasoning_effort:
+    supported: false
+  prompt_cache:
+    supported: true
+    type: ephemeral
+    max_breakpoints: 4
+    # client 注入位置 (按重要性排, 用上前 N 个 breakpoint)
+    breakpoint_targets:
+      - tools_last
+      - system_first
+      - last_user_or_tool
+
+# Claude Opus 4.8 adaptive thinking 档位。
+# UI 5 档展示 Low/Medium/High/XHigh/Max, payload 发 Anthropic 官方字段:
+#   thinking:{type: adaptive} + output_config:{effort:<level>}
+# 手动 budget_tokens 在 Opus 4.8 上不再支持。
+effort_map:
+  # off = 显式关思考 (adapter 识别 disabled 后直接不发 thinking 字段)
+  off:    { thinking: { type: disabled } }
+  low:    { thinking: { type: adaptive }, output_config: { effort: low } }
+  medium: { thinking: { type: adaptive }, output_config: { effort: medium } }
+  high:   { thinking: { type: adaptive }, output_config: { effort: high } }
+  xhigh:  { thinking: { type: adaptive }, output_config: { effort: xhigh } }
+  max:    { thinking: { type: adaptive }, output_config: { effort: max } }
+
+pricing:
+  input_per_mtok: 5.00
+  cached_input_per_mtok: 0.50
+  output_per_mtok: 25.00
+  currency: USD

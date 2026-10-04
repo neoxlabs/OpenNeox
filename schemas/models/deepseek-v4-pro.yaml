@@ -1,0 +1,51 @@
+# DeepSeek V4 Pro — 2026 主力
+#
+# OpenRouter 上 deepseek/deepseek-v4-pro slug; 国内 BYOK 可直连 api.deepseek.com.
+
+id: deepseek-v4-pro
+display_name: DeepSeek V4 Pro
+family: deepseek
+released: 2026-03
+availability: ga
+
+context_window: 1000000
+max_output_tokens: 384000
+
+upstream_slugs:
+  prov_openrouter: deepseek/deepseek-v4-pro
+
+capabilities:
+  vision: false
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    budget_unit: tokens
+    min_budget: 0
+    max_budget: 32000
+    # 官方默认 effort=high (api-docs.deepseek.com/guides/thinking_mode)
+    default_level: high
+  reasoning_effort:
+    supported: true
+    default: high
+  prompt_cache:
+    supported: true
+    type: openai-prompt-cache
+
+# DeepSeek V4 thinking (2026-08 核对 api-docs.deepseek.com/guides/thinking_mode):
+#   开关: thinking:{type:enabled|disabled}; 分档: reasoning_effort low|high|max。
+#   Pro 上 low→high、xhigh→max (映射); UI 仍暴露 low 以便与 Flash 对齐。
+#   "Fast" = 选 deepseek-v4-flash, 不是 effort 档。
+effort_map:
+  off:  { thinking: { type: disabled } }
+  low:  { thinking: { type: enabled }, reasoning_effort: low }
+  high: { thinking: { type: enabled }, reasoning_effort: high }
+  max:  { thinking: { type: enabled }, reasoning_effort: max }
+
+# 官方 Models & Pricing (2026-08-25 核对) — 高峰价, 低谷 50% (同 flash, 见那个文件的说明)。
+pricing:
+  input_per_mtok: 1.32
+  cached_input_per_mtok: 0.044
+  output_per_mtok: 3.96
+  currency: USD

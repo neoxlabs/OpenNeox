@@ -1,0 +1,30 @@
+{
+	// 上游 ink 仓库带过来的 "extends": "@sindresorhus/tsconfig" 已删 —— 那个包不在本仓依赖里,
+	// 任何读 tsconfig 的工具(vite/esbuild)一碰 vendor/ink 源码就直接抛 TSConfckParseError。
+	// 实际构建走根 tsconfig(tsup), 这里只需自洽即可; 关键项与根 tsconfig 对齐, 免得两边语义不一致。
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"outDir": "build",
+		"lib": [
+			"DOM",
+			"DOM.Iterable",
+			"ES2023"
+		],
+		"sourceMap": true,
+		"jsx": "react",
+		"isolatedModules": true
+	},
+	"include": ["src"],
+	"ts-node": {
+		"transpileOnly": true,
+		"files": true,
+		"experimentalResolver": true,
+		"experimentalSpecifierResolution": "node"
+	}
+}

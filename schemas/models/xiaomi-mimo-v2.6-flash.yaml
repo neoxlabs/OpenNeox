@@ -1,0 +1,39 @@
+# 小米 MiMo v2.6 Flash
+#
+# 推理档 2026-09-28 实测 (relay-c 上的 v2.6-pro / 小米官方的 v2.6-flash):
+#   · thinking:{type:disabled} 真关, thinking:{type:enabled} 真开; 只有开 / 关两档, 强弱调不动。
+#   · 默认行为两家不一样: relay-c 的 pro 不带参数不思考, 官方 flash 不带参数会思考 ——
+#     所以两档都显式发字段, 不依赖上游默认。
+id: xiaomi/mimo-v2.6-flash
+display_name: MiMo v2.6 Flash
+family: mimo
+vendor: Xiaomi
+released: 2026-09
+availability: ga
+
+context_window: 1048576
+max_output_tokens: 32000
+
+upstream_slugs:
+  prov_openrouter: xiaomi/mimo-v2.6-flash
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    default_level: on
+  prompt_cache:
+    supported: false
+
+effort_map:
+  off: { thinking: { type: disabled }, reasoning: { enabled: false } }
+  on:  { thinking: { type: enabled } }
+
+pricing:
+  input_per_mtok: 0.14
+  cached_input_per_mtok: 0.0028
+  output_per_mtok: 0.28
+  currency: USD

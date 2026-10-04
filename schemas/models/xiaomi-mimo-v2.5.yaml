@@ -1,0 +1,39 @@
+# 小米 MiMo V2.5 (订阅: Pro / Go)
+#
+# 2026-09-13 实测 (小米官方 / OpenRouter / relay-c):
+#   · 默认会先思考, 首字要等 ~3s; 关掉思考后首字 ~0.5s。
+#   · 关思考两家写法不同: 小米官方认 thinking:{type:disabled} (OpenRouter 不认这个),
+#     OpenRouter 认 reasoning:{enabled:false} (小米官方忽略它, 不报错)。
+#     off 档两个字段一起发, 主路由和备用路由都能真的关掉。
+#   · reasoning_effort:max 小米官方回 400, 所以不做分档, 只给开 / 关。
+id: xiaomi/mimo-v2.5
+display_name: MiMo V2.5
+family: mimo
+vendor: Xiaomi
+availability: ga
+
+context_window: 1050000
+max_output_tokens: 32768
+
+upstream_slugs:
+  prov_openrouter: xiaomi/mimo-v2.5
+
+capabilities:
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    default_level: on
+  prompt_cache:
+    supported: false
+
+effort_map:
+  off: { thinking: { type: disabled }, reasoning: { enabled: false } }
+  on:  { thinking: { type: enabled } }
+
+pricing:
+  input_per_mtok: 0.19201
+  cached_input_per_mtok: 0.004115
+  output_per_mtok: 0.38402
+  currency: USD

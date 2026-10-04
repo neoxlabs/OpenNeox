@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    name: Node checks and builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # The runtime targets Node >=20; the test suite needs 22 because the
+      # session-context tests build a real database through node:sqlite.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # ripgrep backs the source-scanning guard tests, zsh is the shell the
+      # shell-invocation regression asserts against. Neither is preinstalled.
+      - name: Install test shell tooling
+        run: sudo apt-get update && sudo apt-get install -y ripgrep zsh
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          # @vscode/ripgrep 的 postinstall 去 GitHub API 找预编译产物。匿名请求受
+          # 全 runner 共享的速率限制, 抢不到额度就整条 npm ci 失败, 表现为与改动无关的红。
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Check package boundaries
+        run: npm run check:boundaries
+
+      - name: Check package specifiers
+        run: npm run check:specifiers
+
+      - name: Check license metadata
+        run: npm run check:licenses
+
+      - name: Test comment tooling
+        run: node --test scripts/__tests__/comment-tools.test.mjs
+
+      - name: Audit source comments
+        run: npm run audit:comments
+
+      - name: Run unit tests
+        run: npm run test:ci
+
+      - name: Build CLI
+        run: npm run build
+
+      - name: Smoke-run CLI
+        run: node apps/cli/dist/cli/main.js --version
