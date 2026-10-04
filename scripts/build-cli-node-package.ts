@@ -119,7 +119,7 @@ function buildPlatformPackage(id: string) {
   /* 4. bin/neox.mjs launcher (platform 包自带, main wrapper 也可直接 exec dist) */
   mkdirSync(join(outDir, 'bin'), { recursive: true });
   writeFileSync(join(outDir, 'bin', 'neox.mjs'),
-    `#!/usr/bin/env node\nimport { fileURLToPath } from 'node:url';\nimport { dirname, join } from 'node:path';\nconst here = dirname(fileURLToPath(import.meta.url));\nawait import(join(here, '..', 'dist', 'cli', 'main.js'));\n`);
+    `#!/usr/bin/env node\nimport { fileURLToPath, pathToFileURL } from 'node:url';\nimport { dirname, join } from 'node:path';\nconst here = dirname(fileURLToPath(import.meta.url));\nawait import(pathToFileURL(join(here, '..', 'dist', 'cli', 'main.js')).href);\n`);
   chmodSync(join(outDir, 'bin', 'neox.mjs'), 0o755);
 
   /* 5. 终版 package.json: os/cpu 锁定 + bundledDependencies=全部 (装时零下载零编译) */
@@ -222,7 +222,8 @@ function main() {
   let platform = get('--platform');
   if (platform === 'current') platform = currentPlatformId();
 
-  if (!existsSync(join(DIST_SRC, 'cli', 'main.js'))) {
+  /* 只有平台包要拷 dist; 只发主包 (wrapper + package.json) 时不需要整仓构建 —— 公开 CI 的主包 job 就是这样 */
+  if (platform && !existsSync(join(DIST_SRC, 'cli', 'main.js'))) {
     console.error('❌ dist 没 build. 先: npm run build:packages && npx tsup');
     process.exit(2);
   }

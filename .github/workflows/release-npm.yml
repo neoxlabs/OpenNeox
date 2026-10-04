@@ -80,7 +80,9 @@ jobs:
         working-directory: release/cli-node-publish/platforms/${{ matrix.id }}
         run: |
           node -e 'const f="package.json",p=require("./"+f);p.repository={type:"git",url:process.env.REPO_URL};p.license="Apache-2.0";p.publishConfig={access:"public"};require("fs").writeFileSync(f,JSON.stringify(p,null,2))'
-          npm publish --provenance --access public
+          # Re-runs: a version that is already on npm can't be published again — treat it as done.
+          NAME=$(node -p 'require("./package.json").name')
+          if npm view "$NAME@$V" version >/dev/null 2>&1; then echo "$NAME@$V already published"; else npm publish --provenance --access public; fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -122,7 +124,7 @@ jobs:
           NEOX_CLI_PLATFORMS="$PLATFORMS" npx tsx scripts/build-cli-node-package.ts --main
           cd release/cli-node-publish/main
           node -e 'const f="package.json",p=require("./"+f);p.repository={type:"git",url:process.env.REPO_URL};p.license="Apache-2.0";p.publishConfig={access:"public"};require("fs").writeFileSync(f,JSON.stringify(p,null,2))'
-          npm publish --provenance --access public
+          if npm view "@neoxlabs/cli@$V" version >/dev/null 2>&1; then echo "already published"; else npm publish --provenance --access public; fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -159,6 +161,6 @@ jobs:
             require("fs").writeFileSync(f,JSON.stringify(p,null,2)+"\n")' "$V"
           npm run version:sync
           npm run check:publish
-          npm publish --provenance --access public
+          if npm view "@neoxlabs/sdk@$V" version >/dev/null 2>&1; then echo "already published"; else npm publish --provenance --access public; fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
