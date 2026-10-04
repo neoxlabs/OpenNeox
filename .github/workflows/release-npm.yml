@@ -1,0 +1,164 @@
+name: Release (npm)
+
+# Publishes @neoxlabs/cli (+ one @neoxlabs/cli-<platform> package per OS/CPU) and @neoxlabs/sdk
+# to npm with provenance, built from this repository's source.
+#
+#   git tag v3.10.0 && git push origin v3.10.0      # or run it by hand with a version
+#
+# Each platform job builds its own package on its own runner (the native module and the
+# bundled prebuilt dependencies are platform specific), so they cannot be cross-built.
+# The main package only lists the platform packages that were actually published.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 3.10.0)'
+        required: true
+
+permissions:
+  contents: read
+  id-token: write   # npm provenance
+
+env:
+  VERSION: ${{ inputs.version || github.ref_name }}
+  REPO_URL: git+https://github.com/${{ github.repository }}.git
+
+jobs:
+  platform:
+    name: cli-${{ matrix.id }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.optional == true }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { id: darwin-arm64, os: macos-14 }
+          - { id: darwin-x64,   os: macos-15-intel, optional: true }
+          - { id: linux-x64,    os: ubuntu-latest }
+          - { id: linux-arm64,  os: ubuntu-24.04-arm, optional: true }
+          - { id: win32-x64,    os: windows-latest }
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set version
+        run: |
+          V="${VERSION#v}"; echo "V=$V" >> "$GITHUB_ENV"
+          node -e 'const f="apps/cli/package.json",p=require("./"+f);p.version=process.argv[1];require("fs").writeFileSync(f,JSON.stringify(p,null,2)+"\n")' "$V"
+
+      - name: Build
+        run: |
+          npm run build
+          (cd packages/native && npm run build)
+
+      - name: Package
+        run: npx tsx scripts/build-cli-node-package.ts --platform=${{ matrix.id }}
+
+      - name: Smoke test
+        run: node release/cli-node-publish/platforms/${{ matrix.id }}/bin/neox.mjs --version
+
+      - name: Publish
+        working-directory: release/cli-node-publish/platforms/${{ matrix.id }}
+        run: |
+          node -e 'const f="package.json",p=require("./"+f);p.repository={type:"git",url:process.env.REPO_URL};p.license="Apache-2.0";p.publishConfig={access:"public"};require("fs").writeFileSync(f,JSON.stringify(p,null,2))'
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Record success
+        run: mkdir -p ok && echo "${{ matrix.id }}" > ok/${{ matrix.id }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ok-${{ matrix.id }}
+          path: ok/
+
+  main:
+    name: cli (main package)
+    needs: platform
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ok-*
+          path: ok
+          merge-multiple: true
+
+      - name: Build and publish main package
+        run: |
+          V="${VERSION#v}"
+          PLATFORMS=$(ls ok | paste -sd, -)
+          [ -n "$PLATFORMS" ] || { echo "no platform package was published"; exit 1; }
+          echo "platforms: $PLATFORMS"
+          node -e 'const f="apps/cli/package.json",p=require("./"+f);p.version=process.argv[1];require("fs").writeFileSync(f,JSON.stringify(p,null,2)+"\n")' "$V"
+          npm install --no-save --no-audit --no-fund tsx
+          NEOX_CLI_PLATFORMS="$PLATFORMS" npx tsx scripts/build-cli-node-package.ts --main
+          cd release/cli-node-publish/main
+          node -e 'const f="package.json",p=require("./"+f);p.repository={type:"git",url:process.env.REPO_URL};p.license="Apache-2.0";p.publishConfig={access:"public"};require("fs").writeFileSync(f,JSON.stringify(p,null,2))'
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  sdk:
+    name: sdk
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build workspace packages
+        run: npm run build:packages
+
+      # packages/sdk is private with a guard hook so nobody publishes it by accident from a laptop.
+      # Here: set the version, lift the guard, verify the real tarball, publish.
+      - name: Publish
+        working-directory: packages/sdk
+        run: |
+          V="${VERSION#v}"
+          node -e '
+            const f="package.json",p=require("./"+f);
+            p.version=process.argv[1]; p.private=false; delete p.scripts.prepublishOnly;
+            p.publishConfig={access:"public"}; p.repository={type:"git",url:process.env.REPO_URL,directory:"packages/sdk"};
+            require("fs").writeFileSync(f,JSON.stringify(p,null,2)+"\n")' "$V"
+          npm run version:sync
+          npm run check:publish
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

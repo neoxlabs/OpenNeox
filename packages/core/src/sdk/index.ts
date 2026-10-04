@@ -29,6 +29,16 @@ export { getTools, setToolServices, preloadShellEnv } from '../tools/runtimeTool
 /* PDF 文本层抽取 (pdftotext) —— 桌面主进程解析手机发来的 PDF 附件用, 跟 readfile 同一条通道 */
 export { extractPdfText } from '../tools/image/imageProcessor.js';
 
+export { setPhoneExecutor, type PhoneExecRequest, type PhoneExecResult } from '../tools/phoneTools.js';
+export {
+  setReportExecutor, type ReportRequest, type ReportResult, type ReportStatus, type ReportUrgency,
+} from '../tools/reportTools.js';
+export { setCallUserExecutor, type CallUserRequest, type CallUserResult, type CallUrgency } from '../tools/callTools.js';
+export {
+  readPilotProfiles, getPilotProfile, savePilotProfile, removePilotProfile, type PilotProfile,
+} from '../runtime/pilotProfiles.js';
+export { spokenLeadOf } from '../services/spokenLead.js';
+
 export type {
   Tool,
   AgentConfig,

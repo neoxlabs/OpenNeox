@@ -610,36 +610,6 @@
       "import": "./dist/shared/ipc/plugin.js",
       "require": "./dist/shared/ipc/plugin.js"
     },
-    "./shared/ipc/providerInputs.js": {
-      "types": "./dist/shared/ipc/providerInputs.d.ts",
-      "import": "./dist/shared/ipc/providerInputs.js",
-      "require": "./dist/shared/ipc/providerInputs.js"
-    },
-    "./shared/ipc/providerInputs": {
-      "types": "./dist/shared/ipc/providerInputs.d.ts",
-      "import": "./dist/shared/ipc/providerInputs.js",
-      "require": "./dist/shared/ipc/providerInputs.js"
-    },
-    "./shared/ipc/rendererApi/debug.js": {
-      "types": "./dist/shared/ipc/rendererApi/debug.d.ts",
-      "import": "./dist/shared/ipc/rendererApi/debug.js",
-      "require": "./dist/shared/ipc/rendererApi/debug.js"
-    },
-    "./shared/ipc/rendererApi/debug": {
-      "types": "./dist/shared/ipc/rendererApi/debug.d.ts",
-      "import": "./dist/shared/ipc/rendererApi/debug.js",
-      "require": "./dist/shared/ipc/rendererApi/debug.js"
-    },
-    "./shared/ipc/rendererApi/storage.js": {
-      "types": "./dist/shared/ipc/rendererApi/storage.d.ts",
-      "import": "./dist/shared/ipc/rendererApi/storage.js",
-      "require": "./dist/shared/ipc/rendererApi/storage.js"
-    },
-    "./shared/ipc/rendererApi/storage": {
-      "types": "./dist/shared/ipc/rendererApi/storage.d.ts",
-      "import": "./dist/shared/ipc/rendererApi/storage.js",
-      "require": "./dist/shared/ipc/rendererApi/storage.js"
-    },
     "./shared/largeFile/thresholds.js": {
       "types": "./dist/shared/largeFile/thresholds.d.ts",
       "import": "./dist/shared/largeFile/thresholds.js",

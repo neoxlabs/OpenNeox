@@ -118,14 +118,19 @@ export type ImageStreamHandler = (ev: ImageStreamEvent) => void;
 // Provider Interface
 // ============================================================================
 
+/** 出图调用的可选项. signal: 用户 / agent 中断 —— 订阅路径会顺手取消网关上的任务 (预占退回) */
+export interface ImageCallOptions {
+  signal?: AbortSignal;
+}
+
 export interface ImageProvider {
   readonly id: string;
-  generate(req: ImageGenerationRequest): Promise<ImageGenerationResult>;
+  generate(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult>;
   /**
    * edit 路径 — 图生图 / inpaint. 部分 provider 可能不支持, 抛错即可.
    * gpt-image-1 通过 POST /v1/images/edits 支持 image+mask.
    */
-  edit(req: ImageGenerationRequest): Promise<ImageGenerationResult>;
+  edit(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult>;
   /**
    * 流式出图 (可选) — 边生成边推 partial 预览帧. 只有支持的 provider (OpenRouter) 实现;
    * 不实现时 ImageGenService 自动降级到 generate() 并合成一个 completed 事件.
@@ -158,18 +163,18 @@ export class NeoxCloudImageProvider implements ImageProvider {
     this.apiKey = opts.apiKey;
   }
 
-  async generate(req: ImageGenerationRequest): Promise<ImageGenerationResult> {
-    return this.callEndpoint('/images/generations', req);
+  async generate(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult> {
+    return this.callEndpoint('/images/generations', req, opts?.signal);
   }
 
-  async edit(req: ImageGenerationRequest): Promise<ImageGenerationResult> {
+  async edit(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult> {
     if (!req.image) {
       throw new Error('edit_image: image field required (data URL or public URL)');
     }
-    return this.callEndpoint('/images/edits', req);
+    return this.callEndpoint('/images/edits', req, opts?.signal);
   }
 
-  private async callEndpoint(subPath: string, req: ImageGenerationRequest): Promise<ImageGenerationResult> {
+  private async callEndpoint(subPath: string, req: ImageGenerationRequest, signal?: AbortSignal): Promise<ImageGenerationResult> {
     const url = `${this.baseUrl}${subPath}`;
     const payload: Record<string, unknown> = {
       model: req.model,
@@ -224,14 +229,19 @@ export class NeoxCloudImageProvider implements ImageProvider {
       headers['X-Client-Version'] = sig.version;
     }
 
+    headers['Prefer'] = 'respond-async';
+
     const startedAt = Date.now();
-    const resp = await fetch(url, { method: 'POST', headers, body: bodyStr });
-    const latencyMs = Date.now() - startedAt;
+    const resp = await fetch(url, { method: 'POST', headers, body: bodyStr, signal });
     if (!resp.ok) {
       const errText = await resp.text().catch(() => '');
       throw new Error(`NeoxCloud image ${subPath} failed: ${resp.status} ${errText.slice(0, 500)}`);
     }
-    const json = await resp.json() as any;
+    let json = await resp.json() as any;
+    if (resp.status === 202 && typeof json?.id === 'string') {
+      json = await this.waitForJob(json.id, subPath, headers, signal);
+    }
+    const latencyMs = Date.now() - startedAt;
     const data: ImageItem[] = Array.isArray(json?.data)
       ? json.data.map((d: any) => ({
           url: typeof d?.url === 'string' ? d.url : undefined,
@@ -251,6 +261,75 @@ export class NeoxCloudImageProvider implements ImageProvider {
       },
     };
   }
+
+  /**
+   * 轮询网关任务直到终态, 返回同步接口原样的响应体。
+   * · 查询本身失败 (断网 / 网关重启中) 不算任务失败, 接着查 —— 任务在服务器上照跑;
+   * · 中断 (signal) 时顺手 DELETE 任务: 网关掐掉上游并退回预占, 不为没人要的图付钱;
+   * · 失败时抛出跟同步接口同一种格式的错误 (`failed: <status> <envelope>`), 上层解析不用分叉。
+   */
+  private async waitForJob(jobId: string, subPath: string, submitHeaders: Record<string, string>, signal?: AbortSignal): Promise<any> {
+    const jobUrl = `${this.baseUrl}/media/jobs/${encodeURIComponent(jobId)}`;
+    const headers: Record<string, string> = { Authorization: submitHeaders.Authorization };
+    for (const h of ['User-Agent', 'X-Device-FP', 'X-Client-Version']) {
+      if (submitHeaders[h]) headers[h] = submitHeaders[h];
+    }
+    const cancelJob = () => {
+      void fetch(jobUrl, { method: 'DELETE', headers }).catch(() => { /* 取消是尽力而为, 网关 10 分钟后也会自己停 */ });
+    };
+    /* 网关任务预算 10 分钟; 多等 2 分钟给重试 / 换渠道收尾和网络抖动 */
+    const deadline = Date.now() + 12 * 60_000;
+    let pollErrors = 0;
+    while (Date.now() < deadline) {
+      await sleepUnlessAborted(IMAGE_JOB_POLL_MS, signal, cancelJob);
+      let resp: Response;
+      try {
+        resp = await fetch(jobUrl, { method: 'GET', headers, signal });
+      } catch (err: any) {
+        if (err?.name === 'AbortError' || signal?.aborted) { cancelJob(); throw err; }
+        if (++pollErrors >= 30) throw new Error(`NeoxCloud image ${subPath} failed: polling job ${jobId}: ${err?.message ?? err}`);
+        continue;
+      }
+      if (resp.status === 404) {
+        const errText = await resp.text().catch(() => '');
+        throw new Error(`NeoxCloud image ${subPath} failed: 404 ${errText.slice(0, 500)}`);
+      }
+      if (!resp.ok) {
+        if (++pollErrors >= 30) throw new Error(`NeoxCloud image ${subPath} failed: polling job ${jobId}: HTTP ${resp.status}`);
+        continue;
+      }
+      pollErrors = 0;
+      const job = await resp.json() as any;
+      if (job?.status === 'succeeded') return job.result;
+      if (job?.status === 'failed' || job?.status === 'cancelled') {
+        const status = typeof job.http_status === 'number' ? job.http_status : 502;
+        throw new Error(`NeoxCloud image ${subPath} failed: ${status} ${JSON.stringify({ error: job.error ?? { message: job.status } }).slice(0, 500)}`);
+      }
+    }
+    cancelJob();
+    throw new Error(`NeoxCloud image ${subPath} failed: 504 job ${jobId} did not finish in 12 minutes`);
+  }
+}
+
+const IMAGE_JOB_POLL_MS = 2000;
+const BYOK_IMAGE_MAX_ATTEMPTS = 2;
+
+/** 直连中转时值得原样重发一次的失败: 限流 / 5xx (含 Cloudflare 520~524) / 中转偶发的安全拦截 */
+export function isTransientImageFailure(status: number, body: string): boolean {
+  if (status === 429 || status >= 500) return true;
+  if (status === 400) return /安全政策|safety|content_policy|moderation/i.test(body);
+  return false;
+}
+
+/** 等 ms; 期间被中断就调 onAbort 并抛 AbortError */
+function sleepUnlessAborted(ms: number, signal: AbortSignal | undefined, onAbort: () => void): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const abortErr = () => Object.assign(new Error('aborted'), { name: 'AbortError' });
+    if (signal?.aborted) { onAbort(); reject(abortErr()); return; }
+    const timer = setTimeout(() => { signal?.removeEventListener('abort', onAbortEvt); resolve(); }, ms);
+    function onAbortEvt() { clearTimeout(timer); onAbort(); reject(abortErr()); }
+    signal?.addEventListener('abort', onAbortEvt, { once: true });
+  });
 }
 
 // ============================================================================
@@ -293,17 +372,17 @@ export class BYOKImageProvider implements ImageProvider {
     return this.baseUrl.includes('openrouter.ai');
   }
 
-  async generate(req: ImageGenerationRequest): Promise<ImageGenerationResult> {
+  async generate(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult> {
     const subPath = this.isOpenRouter() ? '/images' : '/images/generations';
-    return this.callEndpoint(subPath, req);
+    return this.callEndpoint(subPath, req, opts?.signal);
   }
 
-  async edit(req: ImageGenerationRequest): Promise<ImageGenerationResult> {
+  async edit(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult> {
     if (!req.image) {
       throw new Error('edit_image (BYOK): image field required');
     }
     /* OpenRouter 编辑走同一 /images 端点 (input_references 就是编辑). */
-    if (this.isOpenRouter()) return this.callEndpoint('/images', req);
+    if (this.isOpenRouter()) return this.callEndpoint('/images', req, opts?.signal);
 
     const payload = this.buildPayload('/images/edits', req);   // 含通用字段 + 老式 image/mask
     if (this.imageEditFormat === 'images-array') {
@@ -312,7 +391,7 @@ export class BYOKImageProvider implements ImageProvider {
       payload.images = refs.map((url) => ({ image_url: { url } }));
     }
     /* 'image-field' → 保留 buildPayload 里的 image/mask 原样. */
-    return this.postPayload('/images/edits', payload, req);
+    return this.postPayload('/images/edits', payload, req, opts?.signal);
   }
 
   /** 构造上游 payload (generate/edit/stream 共用). */
@@ -358,22 +437,38 @@ export class BYOKImageProvider implements ImageProvider {
     };
   }
 
-  private async callEndpoint(subPath: string, req: ImageGenerationRequest): Promise<ImageGenerationResult> {
-    return this.postPayload(subPath, this.buildPayload(subPath, req), req);
+  private async callEndpoint(subPath: string, req: ImageGenerationRequest, signal?: AbortSignal): Promise<ImageGenerationResult> {
+    return this.postPayload(subPath, this.buildPayload(subPath, req), req, signal);
   }
 
-  /** 发一个已构造好的 payload 到某端点, 解析成 ImageGenerationResult. (供 callEndpoint + 编辑自适应复用) */
-  private async postPayload(subPath: string, payload: Record<string, unknown>, req: ImageGenerationRequest): Promise<ImageGenerationResult> {
+  private async postPayload(subPath: string, payload: Record<string, unknown>, req: ImageGenerationRequest, signal?: AbortSignal): Promise<ImageGenerationResult> {
     const url = `${this.baseUrl}${subPath}`;
     const headers = this.headers();
+    const body = JSON.stringify(payload);
     const startedAt = Date.now();
-    const resp = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
-    const latencyMs = Date.now() - startedAt;
-    if (!resp.ok) {
-      const errText = await resp.text().catch(() => '');
-      throw new Error(`BYOK image ${subPath} failed: ${resp.status} ${errText.slice(0, 500)}`);
+    let resp: Response | undefined;
+    for (let attempt = 1; ; attempt++) {
+      let transient: string | null = null;
+      try {
+        resp = await fetch(url, { method: 'POST', headers, body, signal });
+        if (resp.ok) break;
+        const errText = await resp.text().catch(() => '');
+        const failure = `BYOK image ${subPath} failed: ${resp.status} ${errText.slice(0, 500)}`;
+        if (attempt >= BYOK_IMAGE_MAX_ATTEMPTS || !isTransientImageFailure(resp.status, errText)) throw new Error(failure);
+        transient = failure;
+      } catch (err: any) {
+        if (transient === null) {
+          /* 上面 throw 出来的 HTTP 失败 / 用户中断: 原样抛; 只有网络层失败 (fetch 自己抛) 才重试 */
+          if (err?.name === 'AbortError' || signal?.aborted || /^BYOK image /.test(String(err?.message))) throw err;
+          if (attempt >= BYOK_IMAGE_MAX_ATTEMPTS) throw err;
+          transient = String(err?.message ?? err);
+        }
+      }
+      cliLogger.debug('IMAGEGEN', `BYOK ${subPath} attempt ${attempt} transient failure, retrying: ${transient.slice(0, 200)}`);
+      await sleepUnlessAborted(3000, signal, () => {});
     }
-    const json = await resp.json() as any;
+    const latencyMs = Date.now() - startedAt;
+    const json = await resp!.json() as any;
     const data: ImageItem[] = Array.isArray(json?.data)
       ? json.data.map((d: any) => ({
           url: typeof d?.url === 'string' ? d.url : undefined,
@@ -747,7 +842,7 @@ export class ImageGenService {
     );
   }
 
-  async generate(req: ImageGenerationRequest): Promise<ImageGenerationResult & { mode: string; providerLabel?: string; tier?: ImageTier }> {
+  async generate(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult & { mode: string; providerLabel?: string; tier?: ImageTier }> {
     const tier = req.tier;
     if (tier && !req.providerId) {
       const cands = this.tierCandidates(tier, 'image', req.model);
@@ -755,9 +850,10 @@ export class ImageGenService {
       for (const c of cands) {
         try {
           cliLogger.debug('IMAGEGEN', `generate tier=${tier} label=${c.label} model=${req.model}`);
-          const result = await c.provider.generate(req);
+          const result = await c.provider.generate(req, opts);
           return { ...result, mode: 'byok', tier };
         } catch (err) {
+          if ((err as Error)?.name === 'AbortError' || opts?.signal?.aborted) throw err; /* 用户中断不换下一家 */
           errors.push(`${c.label}: ${(err as Error)?.message ?? String(err)}`.slice(0, 160));
         }
       }
@@ -771,7 +867,7 @@ export class ImageGenService {
 
     const { provider, mode, label } = this.currentProvider('image', req.model, req.providerId);
     cliLogger.debug('IMAGEGEN', `generate model=${req.model} mode=${mode} label=${label ?? '-'} size=${req.size ?? 'auto'} n=${req.n ?? 1}`);
-    const result = await provider.generate(req);
+    const result = await provider.generate(req, opts);
     return { ...result, mode, providerLabel: label };
   }
 
@@ -800,7 +896,7 @@ export class ImageGenService {
      *   不能走 generate() 把 image 塞进文生图端点 —— 那样上游忽略图 / 返空 = "no images" bug. */
     const isImg2Img = !!req.image && (!Array.isArray(req.image) || req.image.length > 0);
     cliLogger.debug('IMAGEGEN', `generateStream(fallback,${isImg2Img ? 'edit' : 'gen'}) model=${req.model} mode=${mode}`);
-    const result = isImg2Img ? await provider.edit(req) : await provider.generate(req);
+    const result = isImg2Img ? await provider.edit(req, { signal }) : await provider.generate(req, { signal });
     for (let i = 0; i < result.data.length; i++) {
       const b = result.data[i]?.b64Json;
       if (b) onEvent({ type: 'completed', b64Json: b, imageIndex: i });
@@ -809,10 +905,10 @@ export class ImageGenService {
     return { ...result, mode, providerLabel: label, streamed: false };
   }
 
-  async edit(req: ImageGenerationRequest): Promise<ImageGenerationResult & { mode: string; providerLabel?: string }> {
+  async edit(req: ImageGenerationRequest, opts?: ImageCallOptions): Promise<ImageGenerationResult & { mode: string; providerLabel?: string }> {
     const { provider, mode, label } = this.currentProvider('image-edit', req.model, req.providerId);
     cliLogger.debug('IMAGEGEN', `edit model=${req.model} mode=${mode} label=${label ?? '-'}`);
-    const result = await provider.edit(req);
+    const result = await provider.edit(req, opts);
     return { ...result, mode, providerLabel: label };
   }
 }

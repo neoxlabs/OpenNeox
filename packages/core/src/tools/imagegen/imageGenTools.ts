@@ -179,7 +179,7 @@ Cost: NeoxCloud charges per image based on size×quality. Users see the deductio
     required: ['prompt'],
   },
 
-  async function(args: GenerateImageArgs): Promise<string> {
+  async function(args: GenerateImageArgs, context?: { signal?: AbortSignal }): Promise<string> {
     if (!args?.prompt || typeof args.prompt !== 'string' || !args.prompt.trim()) {
       return JSON.stringify({ error: 'prompt required and must be non-empty string' });
     }
@@ -226,7 +226,8 @@ Cost: NeoxCloud charges per image based on size×quality. Users see the deductio
     if (cachedBufs) {
       result = { data: cachedBufs.map((buf) => ({ b64Json: buf.toString('base64') })), mode: 'cache' } as any;
     } else try {
-      result = await getImageGenService().generate(req);
+      /* 中断时订阅路径会取消网关上的任务 (退回预占), 不为没人要的图付钱 */
+      result = await getImageGenService().generate(req, { signal: context?.signal });
     } catch (err: any) {
       return JSON.stringify({
         error: `image generation failed: ${err?.message ?? String(err)}`,
@@ -369,7 +370,7 @@ Cost: same per-image billing as generate_image, typically 1.2-1.5x due to source
     required: ['source', 'prompt'],
   },
 
-  async function(args: EditImageArgs): Promise<string> {
+  async function(args: EditImageArgs, context?: { signal?: AbortSignal }): Promise<string> {
     if (!args?.source || !args?.prompt) {
       return JSON.stringify({ error: 'source and prompt required' });
     }
@@ -410,7 +411,7 @@ Cost: same per-image billing as generate_image, typically 1.2-1.5x due to source
 
     let result;
     try {
-      result = await getImageGenService().edit(req);
+      result = await getImageGenService().edit(req, { signal: context?.signal });
     } catch (err: any) {
       return JSON.stringify({
         error: `image edit failed: ${err?.message ?? String(err)}`,

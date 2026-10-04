@@ -65,16 +65,6 @@
       "import": "./dist/knowledge/index.js",
       "require": "./dist/knowledge/index.js"
     },
-    "./life/briefHintText.js": {
-      "types": "./dist/life/briefHintText.d.ts",
-      "import": "./dist/life/briefHintText.js",
-      "require": "./dist/life/briefHintText.js"
-    },
-    "./life/briefHintText": {
-      "types": "./dist/life/briefHintText.d.ts",
-      "import": "./dist/life/briefHintText.js",
-      "require": "./dist/life/briefHintText.js"
-    },
     "./life/index.js": {
       "types": "./dist/life/index.d.ts",
       "import": "./dist/life/index.js",
@@ -275,16 +265,6 @@
       "import": "./dist/runtime/agent/backgroundAgent.js",
       "require": "./dist/runtime/agent/backgroundAgent.js"
     },
-    "./runtime/agent/backgroundExecution.js": {
-      "types": "./dist/runtime/agent/backgroundExecution.d.ts",
-      "import": "./dist/runtime/agent/backgroundExecution.js",
-      "require": "./dist/runtime/agent/backgroundExecution.js"
-    },
-    "./runtime/agent/backgroundExecution": {
-      "types": "./dist/runtime/agent/backgroundExecution.d.ts",
-      "import": "./dist/runtime/agent/backgroundExecution.js",
-      "require": "./dist/runtime/agent/backgroundExecution.js"
-    },
     "./runtime/agent/worktreeIsolation.js": {
       "types": "./dist/runtime/agent/worktreeIsolation.d.ts",
       "import": "./dist/runtime/agent/worktreeIsolation.js",
@@ -325,16 +305,6 @@
       "import": "./dist/runtime/browser/browserManager.js",
       "require": "./dist/runtime/browser/browserManager.js"
     },
-    "./runtime/browser/browserSession.js": {
-      "types": "./dist/runtime/browser/browserSession.d.ts",
-      "import": "./dist/runtime/browser/browserSession.js",
-      "require": "./dist/runtime/browser/browserSession.js"
-    },
-    "./runtime/browser/browserSession": {
-      "types": "./dist/runtime/browser/browserSession.d.ts",
-      "import": "./dist/runtime/browser/browserSession.js",
-      "require": "./dist/runtime/browser/browserSession.js"
-    },
     "./runtime/browser/chromeLauncher.js": {
       "types": "./dist/runtime/browser/chromeLauncher.d.ts",
       "import": "./dist/runtime/browser/chromeLauncher.js",
@@ -364,26 +334,6 @@
       "types": "./dist/runtime/modeHome.d.ts",
       "import": "./dist/runtime/modeHome.js",
       "require": "./dist/runtime/modeHome.js"
-    },
-    "./runtime/pilotProfiles.js": {
-      "types": "./dist/runtime/pilotProfiles.d.ts",
-      "import": "./dist/runtime/pilotProfiles.js",
-      "require": "./dist/runtime/pilotProfiles.js"
-    },
-    "./tools/callTools.js": {
-      "types": "./dist/tools/callTools.d.ts",
-      "import": "./dist/tools/callTools.js",
-      "require": "./dist/tools/callTools.js"
-    },
-    "./tools/phoneTools.js": {
-      "types": "./dist/tools/phoneTools.d.ts",
-      "import": "./dist/tools/phoneTools.js",
-      "require": "./dist/tools/phoneTools.js"
-    },
-    "./tools/reportTools.js": {
-      "types": "./dist/tools/reportTools.d.ts",
-      "import": "./dist/tools/reportTools.js",
-      "require": "./dist/tools/reportTools.js"
     },
     "./runtime/runtimeBuilder.js": {
       "types": "./dist/runtime/runtimeBuilder.d.ts",
@@ -664,31 +614,6 @@
       "types": "./dist/services/imageGenService.d.ts",
       "import": "./dist/services/imageGenService.js",
       "require": "./dist/services/imageGenService.js"
-    },
-    "./services/spokenLead.js": {
-      "types": "./dist/services/spokenLead.d.ts",
-      "import": "./dist/services/spokenLead.js",
-      "require": "./dist/services/spokenLead.js"
-    },
-    "./shared/projectStartup/types.js": {
-      "types": "./dist/shared/projectStartup/types.d.ts",
-      "import": "./dist/shared/projectStartup/types.js",
-      "require": "./dist/shared/projectStartup/types.js"
-    },
-    "./shared/projectStartup/types": {
-      "types": "./dist/shared/projectStartup/types.d.ts",
-      "import": "./dist/shared/projectStartup/types.js",
-      "require": "./dist/shared/projectStartup/types.js"
-    },
-    "./shared/scheduling/coalescingScheduler.js": {
-      "types": "./dist/shared/scheduling/coalescingScheduler.d.ts",
-      "import": "./dist/shared/scheduling/coalescingScheduler.js",
-      "require": "./dist/shared/scheduling/coalescingScheduler.js"
-    },
-    "./shared/scheduling/coalescingScheduler": {
-      "types": "./dist/shared/scheduling/coalescingScheduler.d.ts",
-      "import": "./dist/shared/scheduling/coalescingScheduler.js",
-      "require": "./dist/shared/scheduling/coalescingScheduler.js"
     },
     "./skills/index.js": {
       "types": "./dist/skills/index.d.ts",

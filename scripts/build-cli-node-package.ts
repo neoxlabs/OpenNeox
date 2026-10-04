@@ -167,8 +167,11 @@ function buildMain() {
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(join(outDir, 'bin'), { recursive: true });
 
+  const only = (process.env.NEOX_CLI_PLATFORMS ?? '').split(',').map((s) => s.trim()).filter(Boolean);
   const optionalDeps: Record<string, string> = {};
-  for (const id of Object.keys(PLATFORMS)) optionalDeps[`@neoxlabs/cli-${id}`] = v;
+  for (const id of Object.keys(PLATFORMS)) {
+    if (only.length === 0 || only.includes(id)) optionalDeps[`@neoxlabs/cli-${id}`] = v;
+  }
 
   /* cli-wrapper.cjs: 找匹配平台子包, node 跑它的 dist/cli/main.js, forward stdio/signals. */
   const wrapper = `#!/usr/bin/env node
