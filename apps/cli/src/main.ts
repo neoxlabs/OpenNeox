@@ -123,6 +123,7 @@ if (!process.stdin.isTTY && !_isPrintMode) {
 // 安装 CLI 崩溃日志处理器（必须最先执行）
 import { cliLogger, installCrashHandler, cliHealthMonitor } from '@neoxlabs/kernel/platform/cliLogger.js';
 import { applySystemProxySync, startSystemProxyWatch } from '@neoxlabs/platform/platform/systemProxy.js';
+import { installEdgeRouting } from '@neoxlabs/platform';
 import { bootstrapMasterKey } from '@neoxlabs/platform/platform/dbCipher.js';
 import { bootstrapDebugFlagsFromArgv, installDebugConsoleInterceptor, setInkConsolePatch } from './bootstrap/consolePatch.js';
 import { registerCliFallbackHandlers } from './bootstrap/registerCliFallbackHandlers.js';
@@ -2671,6 +2672,13 @@ async function main() {
     startSystemProxyWatch(30000);
   } catch (err) {
     cliLogger.error('CLI', `systemProxy 安装失败 — 将直连, 需要代理才能联网的用户会看到 fetch failed: ${(err as any)?.message ?? err}`);
+  }
+
+  /* 接入线路自动选择 (后台测速, 见 edgeRoute.ts) —— 跟代理一样要在第一个请求之前装好 */
+  try {
+    installEdgeRouting();
+  } catch (err) {
+    cliLogger.warn('CLI', `edgeRoute 安装失败, 照常直连: ${(err as any)?.message ?? err}`);
   }
 
   /* DB master key —— 必须在任何人打开 SQLite 之前 await 完。

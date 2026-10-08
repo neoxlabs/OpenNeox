@@ -47,6 +47,17 @@ async function main(): Promise<void> {
     cliLogger.warn('WORKER_RT', `systemProxy 安装失败, worker 将直连: ${err?.message ?? err}`);
   }
 
+  /* 0.1 接入线路自动选择 —— 同样必须在任何请求之前, 而且 worker 要自己装:
+   *   dns.lookup / fetch 的接管是按 JS 环境生效的, 主进程装了管不到这里 (模型请求恰恰都在这)。
+   *   结论跟主进程共用 ~/.neox/edge-route.json, 谁先测谁写。 */
+  try {
+    const { installEdgeRouting, activeEdge } = await import('@neoxlabs/platform');
+    installEdgeRouting();
+    cliLogger.info('WORKER_RT', `edge route = ${activeEdge()}`);
+  } catch (err: any) {
+    cliLogger.warn('WORKER_RT', `edgeRoute 安装失败, 照常直连: ${err?.message ?? err}`);
+  }
+
   try {
     const { loadConfig } = await import('@neoxlabs/platform/utils/config.js');
     const lang = (loadConfig() as { language?: string })?.language === 'en' ? 'en' : 'zh';

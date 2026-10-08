@@ -21,6 +21,7 @@ build/
 !apps/desktop/src/ui/renderer/assets/theme-boot.js
 *.js.map
 *.d.ts
+!packages/editor-chat-ui/src/assets.d.ts
 !src/**/*.ts
 
 !packages/neox-lite-shell/ui-shim/*.js
