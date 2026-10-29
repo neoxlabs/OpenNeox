@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neox UI</title>
+  <script src="./theme-boot.js"></script>
+  <link rel="icon" type="image/png" href="./icon.png" />
+  <!-- 字体全部本地打包 (fonts/inter/, fonts/MesloLGS-*) —— 这里原来还挂着一组
+       Google Fonts <link>, 有三个问题: ① 桌面应用没理由为了字体去连外网 (离线即无字体,
+       且是一次对外请求); ② 它靠 onload="this.media='all'" 切换, 而内联事件处理器被
+       打包版 CSP (script-src 'self') 挡掉, 于是那张表永远停在 media="print", 压根不生效;
+       ③ 本地 Inter 已经覆盖同样的字重。整组删掉。 -->
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <div id="app-skeleton" aria-hidden="true">
+    <div class="sk-mark">
+      <img class="sk-mark__ring" src="./brand/motion-ring.webp" alt="" draggable="false" />
+      <span class="sk-mark__orbit"><img class="sk-mark__ball" src="./brand/motion-ball.webp" alt="" draggable="false" /></span>
+    </div>
+    <div class="sk-word"></div>
+    <!-- 启动慢的时候才出声 (#115)。
+         只有 logo 时, 用户不知道是在启动还是卡死了 —— 尤其首次启动:
+         PATH 探测最长 3 秒 + 数据库迁移。
+         但**快启动不该看到任何多余文字**, 所以用纯 CSS 的 animation-delay 让它 1.6s 后才淡入:
+         正常启动早就被 dismissHtmlSplash() 淡出了, 这行字根本不会出现。
+         零 JS —— 文案分中英靠 <html lang>, 由 head 里那段早注入脚本设好。 -->
+    <div class="sk-hint" aria-hidden="true">
+      <span class="sk-hint__en">Starting up — first launch takes a little longer</span>
+      <span class="sk-hint__zh">正在启动 · 首次启动会久一点</span>
+    </div>
+  </div>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--neox-bg-canvas, #1e1f22);
+      color-scheme: dark;
+    }
+    html[data-theme="light"], html[data-theme="light"] body {
+      background: var(--neox-bg-canvas, #fbf7f0);
+      color-scheme: light;
+    }
+
+    #app-skeleton, .app-enter-transition {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483000;   /* 压住一切, 但 React 一挂载就会被 dismissHtmlSplash() 摘掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      background: var(--neox-bg-canvas, #1e1f22);
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: default;
+      opacity: 1;
+      transition: opacity 240ms ease-out;
+    }
+    #app-skeleton.fading { opacity: 0; pointer-events: none; }
+    .app-enter-transition--out { animation: sk-out 240ms ease-out both; pointer-events: none; }
+    @keyframes sk-out { from { opacity: 1; } to { opacity: 0; } }
+    /* 跟上面 body 的防白闪规则同源 —— 骨架的兜底色必须分主题写。
+       首帧时 theme-tokens.css 还没加载, var() 用的就是这里的 fallback;
+       只写暗色的话浅色用户会先看到一屏深色再闪白。<html data-theme> 由 head 里那段
+       早注入脚本在任何 CSS 之前就设好了, 所以这条选择器首帧即命中。 */
+    html[data-theme="light"] #app-skeleton,
+    html[data-theme="light"] .app-enter-transition {
+      background: var(--neox-bg-canvas, #fbf7f0);
+    }
+
+    /* 标: 几何跟 NeoxMarkMotion 同一组数 (环心 46.3% / 49.8%, 半径 45.1%, 球 28.9%, 静止角 38.3°) */
+    .sk-mark {
+      --rest: 38.3deg;
+      position: relative;
+      width: 76px; height: 76px;
+      animation: sk-in 260ms ease-out both;
+    }
+    .sk-mark__ring { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .sk-mark__orbit {
+      position: absolute; inset: 0;
+      transform-origin: 46.3% 49.8%;
+      transform: rotate(var(--rest));
+      animation: sk-orbit 1.6s cubic-bezier(.45,.05,.35,1) 200ms infinite;
+    }
+    .sk-mark__ball {
+      position: absolute; display: block;
+      width: 28.9%; height: 28.9%;
+      left: calc(46.3% + 45.1% - 14.45%); top: calc(49.8% - 14.45%);
+      transform: rotate(calc(-1 * var(--rest)));
+    }
+    @keyframes sk-orbit { from { transform: rotate(var(--rest)); } to { transform: rotate(calc(var(--rest) + 360deg)); } }
+    /* 字标: 用 wordmark 当遮罩, 颜色跟主题墨色走 (一张图深浅两用) */
+    .sk-word {
+      width: 88px; height: 15px; margin-top: 22px;
+      background: var(--neox-fg-primary, rgba(255,255,255,.88));
+      -webkit-mask: url(./brand/wordmark-light.png) center / contain no-repeat;
+      mask: url(./brand/wordmark-light.png) center / contain no-repeat;
+      opacity: .82;
+      animation: sk-in 260ms ease-out 80ms both;
+    }
+    html[data-theme="light"] .sk-word { background: var(--neox-fg-primary, #2a2622); }
+
+    /* 启动提示 —— 1.6s 后才淡入 (见上面那段说明)。
+       both + 长 delay = 在 delay 期间保持 from 状态 (opacity:0), 不需要任何脚本。 */
+    .sk-hint {
+      margin-top: 28px;
+      font: 12px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      color: var(--neox-fg-hint, rgba(255,255,255,.34));
+      letter-spacing: .02em;
+      opacity: 0;
+      animation: sk-hint-in 420ms ease-out 1600ms both;
+    }
+    @keyframes sk-hint-in { from { opacity: 0; } to { opacity: 1; } }
+    html[data-theme="light"] .sk-hint { color: var(--neox-fg-hint, rgba(0,0,0,.34)); }
+    /* 默认英文; <html lang> 以 zh 开头时换中文。两行都在 DOM 里, 靠 display 切, 零 JS。 */
+    .sk-hint__zh { display: none; }
+    html[lang^="zh"] .sk-hint__en { display: none; }
+    html[lang^="zh"] .sk-hint__zh { display: inline; }
+
+    /* 三个呼吸点: 启动屏不用了, 懒加载浮层 (AppShell OverlaySuspenseVeil) 还在用 */
+    .sk-dots { display: flex; gap: 7px; }
+    .sk-dots i {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--neox-fg-hint, rgba(255,255,255,.30));
+      animation: sk-pulse 1.15s ease-in-out infinite;
+    }
+    html[data-theme="light"] .sk-dots i { background: var(--neox-fg-hint, rgba(0,0,0,.28)); }
+    .sk-dots i:nth-child(2) { animation-delay: .16s; }
+    .sk-dots i:nth-child(3) { animation-delay: .32s; }
+    @keyframes sk-in    { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes sk-pulse { 0%, 100% { opacity: .2; } 50% { opacity: .9; } }
+    @media (prefers-reduced-motion: reduce) {
+      /* 尊重"减少动态效果": 球停在原位, 提示不淡入但仍延迟出现 —— 延迟本身不是动效, 是时机。 */
+      #app-skeleton, .app-enter-transition, .sk-mark, .sk-word, .sk-mark__orbit, .sk-dots i { animation: none; }
+      .sk-hint { animation: sk-hint-in 1ms linear 1600ms both; }
+      .sk-dots i { opacity: .5; }
+    }
+  </style>
+  <script type="module" src="/main.tsx"></script>
+</body>
+
+</html>

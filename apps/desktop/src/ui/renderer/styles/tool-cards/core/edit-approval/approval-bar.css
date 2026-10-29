@@ -1,0 +1,198 @@
+/* ==================== 审批栏样式 ==================== */
+.approval-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.12) 0%, rgba(201, 162, 39, 0.06) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  margin: 0 16px 12px 16px;
+  gap: 12px;
+}
+
+.approval-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.approval-bar-info svg {
+  width: 18px;
+  height: 18px;
+  color: var(--gold-400);
+  flex-shrink: 0;
+}
+
+.approval-bar-text {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.approval-bar-files {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 400;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.approval-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.approval-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.approval-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.approval-btn.reject {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.approval-btn.reject:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.approval-btn.accept {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.approval-btn.accept:hover {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Reapply 按钮 - 蓝色/青色风格 */
+.approval-btn.reapply {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.approval-btn.reapply:hover {
+  background: rgba(59, 130, 246, 0.25);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Reapply only 模式 - 仅显示重新应用按钮 */
+.approval-bar-reapply-only {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.approval-bar-reapply-only .approval-bar-info svg {
+  color: #3b82f6;
+}
+
+/* +N 更多按钮 */
+.approval-bar-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  margin-left: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--gold-500);
+  background: rgba(201, 162, 39, 0.15);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.approval-bar-more:hover {
+  background: rgba(201, 162, 39, 0.25);
+  border-color: rgba(201, 162, 39, 0.5);
+  color: var(--gold-400);
+}
+
+/* ==================== Light theme ==================== */
+:root[data-theme="light"] .approval-bar {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.14) 0%, rgba(201, 162, 39, 0.06) 100%);
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+:root[data-theme="light"] .approval-bar-text {
+  color: var(--text-primary, #0f172a);
+}
+
+:root[data-theme="light"] .approval-bar-files {
+  color: var(--text-secondary, #475569);
+}
+
+:root[data-theme="light"] .approval-btn.reject {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+:root[data-theme="light"] .approval-btn.reject:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.55);
+}
+
+:root[data-theme="light"] .approval-btn.accept {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+:root[data-theme="light"] .approval-btn.accept:hover {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+:root[data-theme="light"] .approval-btn.reapply {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+:root[data-theme="light"] .approval-btn.reapply:hover {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+:root[data-theme="light"] .approval-bar-reapply-only {
+  background: rgba(59, 130, 246, 0.06);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+:root[data-theme="light"] .approval-bar-more {
+  background: rgba(201, 162, 39, 0.12);
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+:root[data-theme="light"] .approval-bar-more:hover {
+  background: rgba(201, 162, 39, 0.2);
+  border-color: rgba(201, 162, 39, 0.55);
+}
+

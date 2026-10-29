@@ -1,0 +1,382 @@
+
+.nx-diff-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 5px 0 2px;
+  min-width: 0;
+}
+
+.nx-diff {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  line-height: 1.6;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 11px;
+  background: var(--atl-tool-card-bg, transparent);
+  border: 1px solid var(--atl-tool-card-border, rgba(255, 255, 255, 0.075));
+  box-sizing: border-box;
+}
+
+.nx-diff__line {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: baseline;
+  /* 左右内边距由行自己给, 于是色带天然满宽、上下贴边 */
+  padding: 1px 12px;
+  white-space: pre;
+}
+
+.nx-diff__no {
+  text-align: right;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.nx-diff__sign {
+  /* 跟代码同格, 只占一个字宽; 单独成列会把代码再往右推一档 */
+  display: inline-block;
+  width: 1ch;
+  margin-right: 6px;
+  user-select: none;
+  color: var(--neox-fg-hint);
+}
+
+.nx-diff__code {
+  min-width: 0;
+  font: inherit;
+  color: var(--neox-fg-primary);
+  white-space: pre;
+}
+
+/* 增删: 只给一层淡底 + 一个可辨的符号色, 不描边不圆角不投影 */
+.nx-diff__line.is-add {
+  background: color-mix(in srgb, var(--neox-ok-ink, #4a9c5d) 9%, transparent);
+}
+.nx-diff__line.is-add .nx-diff__sign {
+  color: var(--neox-ok-ink, #4a9c5d);
+}
+.nx-diff__line.is-del {
+  background: color-mix(in srgb, var(--neox-err-ink, #d05b5b) 9%, transparent);
+}
+.nx-diff__line.is-del .nx-diff__sign {
+  color: var(--neox-err-ink, #d05b5b);
+}
+.nx-diff__line.is-ctx .nx-diff__code {
+  color: var(--neox-fg-secondary);
+}
+
+/* 未改动区间: 一条极轻的说明, 不做成按钮也不做成分隔卡 */
+.nx-diff__gap {
+  padding: 1px 0 3px calc(2.2em + 10px);
+  color: var(--neox-fg-hint);
+  font-size: calc(10.5px * var(--nx-fs-scale, 1));
+  user-select: none;
+}
+
+.nx-diff__empty {
+  color: var(--neox-fg-hint);
+  font-size: calc(11.5px * var(--nx-fs-scale, 1));
+  padding: 2px 0;
+}
+
+/* 「还有 N 行」和 回退/查看: 文字按钮, 不做成实心按钮 —— 它们是次要动作 */
+.nx-diff__more,
+.nx-diff__act {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.nx-diff__more:hover,
+.nx-diff__act:hover {
+  color: var(--neox-fg-primary);
+  text-decoration: underline;
+}
+
+.nx-diff__acts {
+  position: absolute;
+  top: 3px;
+  right: 8px;
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+.nx-diff-wrap:hover .nx-diff__acts,
+.nx-diff__acts:focus-within {
+  opacity: 1;
+}
+
+/* 流式写入时轻微提示正在长, 不加动画背景 (省合成) */
+.nx-diff.is-streaming .nx-diff__line:last-child .nx-diff__code::after {
+  content: '▍';
+  color: var(--neox-fg-hint);
+}
+
+.agent-timeline .atl-turnfold__head {
+  column-gap: 8px;
+}
+.agent-timeline .atl-turnfold__icon {
+  width: 16px;
+  min-width: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agent-timeline .atl-activity > .atl-activity__head,
+.agent-timeline .atl-activity .atl-activity-child > .atl-activity-child__head {
+  grid-template-columns: 16px minmax(0, 1fr) 58px 40px 18px;
+  column-gap: 8px;
+}
+/* 统计 (+N −N) 落在倒数第三列, 右对齐 */
+.agent-timeline .atl-activity__diff {
+  grid-column: 3;
+  justify-self: end;
+  white-space: nowrap;
+}
+/* 时长落在倒数第二列; 没有时长的行这一列自然留空, 箭头位置不变 */
+.agent-timeline .atl-activity__elapsed,
+.agent-timeline .atl-activity-child__meta {
+  grid-column: 4;
+  justify-self: end;
+  white-space: nowrap;
+}
+/* 箭头永远最后一列 */
+.agent-timeline .atl-activity__chevron,
+.agent-timeline .atl-activity-child__chevron {
+  grid-column: 5;
+  justify-self: end;
+}
+
+/* 箭头本身宽度也要统一 —— 活动行的 svg 是 14, 子行是 12, 于是右对齐后左缘差 8px。 */
+.agent-timeline .atl-activity__chevron,
+.agent-timeline .atl-activity-child__chevron {
+  width: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.agent-timeline .atl-activity__chevron > svg,
+.agent-timeline .atl-activity-child__chevron > svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* 两级右内边距统一 —— 差 6px 就会让 +N −N 和 ⌄ 各自错开一点点, 竖着看一眼就能看出来。 */
+.agent-timeline .atl-activity > .atl-activity__head,
+.agent-timeline .atl-activity .atl-activity-child > .atl-activity-child__head {
+  padding-right: 10px;
+}
+
+.agent-timeline .atl-activity > .atl-activity__head,
+.agent-timeline .atl-activity .atl-activity-child > .atl-activity-child__head {
+  grid-template-columns: 16px minmax(0, 1fr) max-content max-content 18px;
+}
+.agent-timeline .atl-activity__diff {
+  min-width: 52px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.agent-timeline .atl-activity__diff-add,
+.agent-timeline .atl-activity__diff-del {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* 时长那一列: 没有内容时宽度为 0, 但要留出跟统计之间的固定间距, 否则两级又会差一截 */
+.agent-timeline .atl-activity__elapsed {
+  min-width: 34px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+/* (已撤: ::before 占位反而把子行统计挤到最左 —— 伪元素成了 grid item, 抢了第 3 列) */
+
+
+
+/* 最后 8px 的真凶: 子行的统计带 margin-right:8px, 活动行没有 (见 agent-timeline.css
+ * `.atl-activity-child .atl-activity__diff { margin-right: 8px }`)。两级归零, 右轨才真齐。 */
+.agent-timeline .atl-activity-child .atl-activity__diff,
+.agent-timeline .atl-activity .atl-activity__diff {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+html body .agent-timeline .atl-turnfold__child > .atl-tool,
+html body .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool,
+html body .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-turnfold__child > .atl-tool,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-turnfold__child > .atl-tool,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool,
+[data-theme] .agent-timeline .atl-turnfold__child > .atl-tool,
+[data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool,
+[data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool {
+  margin-inline: 0 !important;
+}
+html body .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row,
+html body .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row,
+html body .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row,
+[data-theme] .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row,
+[data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row,
+[data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row {
+  padding-left: 0 !important;
+  padding-right: 10px !important;
+  column-gap: 0 !important;
+  grid-template-columns: 16px minmax(0, max-content) auto auto auto auto auto 14px !important;
+  justify-content: start !important;
+}
+/* 间距统一走 cell 边距 (24220 段的既有机制: gap 归零、间距由 margin 承担, 缺席的
+ * cell 连 gap 都不占) —— 但那边是无 !important 的 var(--atl-tool-gap), anye 把它
+ * 改成 7px, 于是标题差 1px。这里钉 8px, 跟活动头的 column-gap: 8px 同一个数。 */
+html body .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row > * + *,
+html body .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row > * + *,
+html body .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row > * + *,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row > * + *,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row > * + *,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row > * + *,
+[data-theme] .agent-timeline .atl-turnfold__child > .atl-tool > .atl-tool__row > * + *,
+[data-theme] .agent-timeline .atl-feed > .atl-row-clamp > .atl-tool > .atl-tool__row > * + *,
+[data-theme] .agent-timeline .atl-feed__virtual-item > .atl-row-clamp > .atl-tool > .atl-tool__row > * + * {
+  margin-left: 8px !important;
+}
+/* fold 头也归同一右轴: 它自己的 `padding: 4px 0` 让 caret 顶到列右缘 1086,
+ * 比所有行的 chevron (1076) 突出 10px —— 右缘同样是契约的一部分。 */
+html body .agent-timeline .atl-turnfold__head,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-turnfold__head,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-turnfold__head,
+[data-theme] .agent-timeline .atl-turnfold__head {
+  padding-right: 10px !important;
+}
+html body .agent-timeline .atl-tool.is-content-thinking .atl-tool__content-shell-inner,
+:root[data-theme-pack][data-theme] body .agent-timeline .atl-tool.is-content-thinking .atl-tool__content-shell-inner,
+:root[data-theme-preset][data-theme] body .agent-timeline .atl-tool.is-content-thinking .atl-tool__content-shell-inner,
+[data-theme] body .agent-timeline .atl-tool.is-content-thinking .atl-tool__content-shell-inner {
+  padding-left: var(--atl-thinking-indent, 24px) !important;
+  padding-right: 10px !important;
+}
+html body .agent-timeline .atl-thinking,
+:root[data-theme-pack][data-theme] body .agent-timeline .atl-thinking,
+:root[data-theme-preset][data-theme] body .agent-timeline .atl-thinking,
+[data-theme] body .agent-timeline .atl-thinking {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+html body .agent-timeline .atl-tool:not(.is-content-thinking):not(.is-content-plan):not(.is-content-error):not(.is-content-log) .atl-tool__content {
+  --atl-tool-content-indent: 0px;
+  --atl-tool-content-pad-r: 0px;
+}
+
+html body .agent-timeline .atl-agent-done__head,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-agent-done__head,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-agent-done__head,
+[data-theme] .agent-timeline .atl-agent-done__head {
+  padding-left: 0 !important;
+  padding-right: 10px !important;
+}
+/* 子 agent 卡 (展开态) 跟 diff 卡同起点同宽 —— 它俩现在是同一套容器语言, 落在
+ * 同一条线上才叫"统一"。外层只负责定位, 视觉全在里面那张 __card 上。 */
+html body .agent-timeline .atl-delegation,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-delegation,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-delegation,
+[data-theme] .agent-timeline .atl-delegation {
+  padding: 0 !important;
+  margin: 5px 0 2px !important;
+}
+/* 图标轨跟工具行同宽 (16px), 列间距同样交给 margin —— 这样图标中线、标题起点
+ * 都跟上下的工具行落在同一竖线上。 */
+html body .agent-timeline .atl-agent-done__head,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-agent-done__head,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-agent-done__head,
+[data-theme] .agent-timeline .atl-agent-done__head {
+  /* icon · 名字 · chips(2) · 描述(吃掉剩余) · 状态 · 进入按钮 —— 描述那一轨用 1fr
+   * 把后两轨顶到右边: 它俩是"这条的结论和出口", 跟一排卡片纵向对齐才好扫。 */
+  grid-template-columns: 16px max-content max-content max-content minmax(0, 1fr) max-content max-content !important;
+  column-gap: 0 !important;
+  justify-content: start !important;
+}
+html body .agent-timeline .atl-agent-done__head > * + *,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-agent-done__head > * + *,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-agent-done__head > * + *,
+[data-theme] .agent-timeline .atl-agent-done__head > * + * {
+  margin-left: 8px !important;
+}
+html body .agent-timeline .atl-agent-done__icon,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-agent-done__icon,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-agent-done__icon,
+[data-theme] .agent-timeline .atl-agent-done__icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+/* 展开区跟标题同轴: 行首 → 标题 = 16 轨 + 8 间距 = 24 (同 .is-content-thinking 那一段) */
+html body .agent-timeline .atl-agent-done__body,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-agent-done__body,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-agent-done__body,
+[data-theme] .agent-timeline .atl-agent-done__body {
+  margin-left: 24px !important;
+}
+
+html body .agent-timeline .atl-turnfold__label,
+:root[data-theme-pack][data-theme] .agent-timeline .atl-turnfold__label,
+:root[data-theme-preset][data-theme] .agent-timeline .atl-turnfold__label,
+[data-theme] .agent-timeline .atl-turnfold__label {
+  flex: 0 1 auto !important;
+}
+
+.nx-diff-wrap.is-reverted,
+.atl-edit-diff-card.is-reverted {
+  opacity: .55;
+}
+/* 定位上下文 —— 没有它伪元素会跑到最近的定位祖先上去 */
+.nx-diff-wrap.is-reverted,
+.atl-edit-diff-card.is-reverted { position: relative; }
+.nx-diff-wrap.is-reverted[data-reverted-label]::before,
+.atl-edit-diff-card.is-reverted[data-reverted-label]::before {
+  content: attr(data-reverted-label);
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  z-index: 2;
+  font-size: 10.5px;
+  font-style: italic;
+  color: var(--neox-fg-muted);
+  pointer-events: none;
+}
+/* 动作按钮不跟着淡 —— 「恢复」是这张卡现在唯一还能点的东西 */
+.nx-diff-wrap.is-reverted .nx-diff__acts,
+.atl-edit-diff-card.is-reverted .atl-edit-diff-card__actions { opacity: 1; }
+.nx-diff__act:disabled,
+.atl-edit-diff-card__action:disabled { opacity: .4; cursor: default; }

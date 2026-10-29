@@ -1,0 +1,200 @@
+/* ==================== 远程访问页面 ==================== */
+/* 扁平化 setting-row 设计 */
+
+/* ===== 状态指示行 ===== */
+.remote-status-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.remote-status-text {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.online {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+}
+
+.status-dot.offline {
+  background: #6b7280;
+}
+
+/* ===== 端口输入 ===== */
+.remote-port-input {
+  width: 90px;
+  padding: 5px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-family: var(--font-mono);
+  text-align: center;
+  flex-shrink: 0;
+  transition: border-color 0.12s;
+}
+
+.remote-port-input:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+}
+
+/* 去掉 number 箭头 */
+.remote-port-input::-webkit-inner-spin-button,
+.remote-port-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ===== Token 显示 ===== */
+.remote-token-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.remote-token-code {
+  padding: 4px 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== QR 展示 ===== */
+.remote-qr-display {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0 8px;
+}
+
+.remote-qr-img {
+  width: 160px;
+  height: 160px;
+  image-rendering: pixelated;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ===== 客户端列表 ===== */
+.remote-client-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.remote-empty-clients {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 0;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.remote-empty-clients svg {
+  opacity: 0.4;
+}
+
+.remote-clients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.remote-client-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.remote-client-row:last-child {
+  border-bottom: none;
+}
+
+.remote-client-row .status-dot {
+  width: 6px;
+  height: 6px;
+}
+
+.rc-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 80px;
+}
+
+.rc-ip {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  min-width: 100px;
+}
+
+.rc-time {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 10px;
+  flex: 1;
+}
+
+.rc-disconnect {
+  padding: 3px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+
+.rc-disconnect:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.rc-disconnect svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ===== section-header-row ===== */
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}

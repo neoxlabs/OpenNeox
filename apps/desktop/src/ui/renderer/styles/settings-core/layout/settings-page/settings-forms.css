@@ -1,0 +1,345 @@
+/* ==================== 表单组件 ==================== */
+/* 与主界面风格统一的表单元素 */
+
+/* Provider 编辑表单 */
+.provider-edit-compact {
+  padding: 14px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.form-field input,
+.form-field select {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.5;
+  outline: none;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out), box-shadow var(--neox-dur-fast) var(--neox-ease-out);
+  box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+.form-field input::placeholder {
+  color: var(--text-muted);
+}
+
+/* URL 输入组合 */
+.url-input-group {
+  display: flex;
+  gap: 0;
+}
+
+.url-input-group input:first-child {
+  flex: 1;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  border-right: none;
+}
+
+.url-input-group .url-suffix-input {
+  width: 160px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.url-input-group .url-suffix-input:focus {
+  border-left: 1px solid var(--text-accent, var(--gold-500));
+}
+
+/* 编辑操作按钮 */
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.btn-secondary {
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.btn-primary {
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--text-accent, var(--gold-500));
+  color: var(--neox-fg-invert, #fff);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-0.5px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==================== macOS Segmented Control ==================== */
+.language-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: var(--neox-radius-md, 10px);
+  background: color-mix(in srgb, var(--st-text, #0f172a) 6%, transparent);
+  border: 0;
+}
+:root[data-theme="dark"] .language-toggle {
+  background: rgba(255, 255, 255, 0.07);
+  border: 0;
+}
+
+.toggle-btn {
+  min-width: 52px;
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: var(--st-text-soft);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 650;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.toggle-btn + .toggle-btn {
+  border-left: none;
+}
+
+.toggle-btn:hover:not(.active) {
+  color: var(--st-text);
+}
+
+.toggle-btn.active {
+  background: var(--st-card, #fff);
+  color: var(--st-text);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .toggle-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--neox-fg-primary, var(--st-text));
+  box-shadow: none;
+}
+
+/* 三按钮 toggle */
+.language-toggle.triple {
+  gap: 0;
+}
+
+.language-toggle.triple .toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+}
+
+.language-toggle.triple .toggle-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==================== Setting Row Vertical ==================== */
+.setting-row.vertical {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.setting-row.vertical .setting-info {
+  margin-bottom: 2px;
+}
+
+/* ==================== API Key Input ==================== */
+.api-key-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.api-key-input-wrapper {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.api-key-input {
+  flex: 1;
+  padding: 9px 40px 9px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: var(--font-mono);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.api-key-input:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+.api-key-input::placeholder {
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+.toggle-visibility-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.toggle-visibility-btn:hover {
+  color: var(--text-primary);
+}
+
+.toggle-visibility-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.save-api-key-btn {
+  padding: 9px 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--text-accent, var(--gold-500));
+  color: #fff;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+}
+
+:root[data-theme="dark"] .save-api-key-btn {
+  color: #000;
+}
+
+.save-api-key-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-0.5px);
+}
+
+.save-api-key-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* API Key 提示 */
+.api-key-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--neox-fs-xs, 12px);
+  margin-top: 8px;
+}
+
+.api-key-hint.warning {
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+  color: #eab308;
+}
+
+.api-key-hint svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ==================== 设置操作按钮 ==================== */
+.setting-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.setting-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.setting-action-btn svg {
+  width: 14px;
+  height: 14px;
+}

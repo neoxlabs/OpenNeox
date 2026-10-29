@@ -1,0 +1,729 @@
+/* ==================== Card Action Labels (READ, WRITE, SHELL, etc.) ==================== */
+.card-action-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  display: inline-block;
+  min-width: 48px;
+}
+
+.card-action-label.read {
+  color: #3b82f6;
+}
+
+.card-action-label.write {
+  color: #22c55e;
+}
+
+.card-action-label.shell {
+  color: var(--shell-label-color, #a78bfa);
+}
+
+.card-action-label.search {
+  color: #f59e0b;
+}
+
+.card-action-label.edit {
+  color: var(--gold-400);
+}
+
+.card-action-label.tree {
+  color: #f59e0b;
+}
+
+/* ==================== ToolActionCard Body (args / result / error) ==================== */
+.tool-action-args {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.tool-action-arg {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.tool-action-arg .arg-key {
+  color: var(--text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.tool-action-arg .arg-key::after {
+  content: ':';
+}
+
+.tool-action-arg .arg-val {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-action-result {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 120px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.tool-action-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #ef4444;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.tool-action-error svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Light theme */
+:root[data-theme="light"] .tool-action-result {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.command-card {
+  background: var(--shell-card-bg, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--shell-card-border, transparent);
+  border-radius: 6px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+  overflow: hidden;
+}
+
+.command-card:hover {
+  border-color: var(--shell-card-border, var(--border-subtle));
+}
+
+.command-card.status-running {
+  animation: tool-executing-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.command-card.status-completed {}
+
+.command-card.status-error {}
+
+.command-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-card-header:hover {
+  background: var(--shell-card-hover-bg, var(--bg-hover, rgba(255, 255, 255, 0.04)));
+}
+
+.command-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.command-card-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.command-card-icon svg {
+  width: 13px;
+  height: 13px;
+  color: var(--shell-icon-color, #10b981);
+}
+
+/* Toolbar — now inline in header, kept for compat */
+.command-card-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.command-card-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.command-card-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.command-card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.command-card-status svg {
+  width: 10px;
+  height: 10px;
+}
+
+.command-card-status.running {
+  color: var(--shell-status-running, var(--gold-400));
+}
+
+.command-card-status.completed {
+  color: var(--shell-status-completed, #22c55e);
+}
+
+.command-card-status.error {
+  color: var(--shell-status-error, #ef4444);
+}
+
+.command-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.command-card-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--shell-accent-info-soft, rgba(59, 130, 246, 0.12));
+  color: var(--shell-accent-info, #60a5fa);
+}
+
+.command-card-duration {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.command-collapse-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out), border-color var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-collapse-btn:hover {
+  border-color: var(--border-gold);
+  color: var(--text-primary);
+}
+
+.command-collapse-btn svg {
+  width: 12px;
+  height: 12px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+.command-copy-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-copy-btn:hover {
+  color: var(--gold-400);
+  border-color: var(--gold-400);
+}
+
+.command-copy-btn.copied {
+  color: var(--shell-status-completed, #22c55e);
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.command-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+}
+
+.command-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+}
+
+.command-meta-item svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-muted);
+}
+
+.command-code-block {
+  background: var(--bg-code);
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  white-space: pre-wrap;
+  color: var(--text-primary);
+  max-height: 120px;
+  overflow: auto;
+  line-height: 1.4;
+}
+
+.command-card.collapsed .command-code-block {
+  max-height: 160px;
+}
+
+.command-result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.08);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--shell-status-completed, #22c55e);
+}
+
+.command-result.error {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--shell-status-error, #ef4444);
+}
+
+/* 紧凑型命令卡片样式 — kept for backward compat but now matches search-tool-card */
+.command-card.compact {
+  /* inherits base command-card */
+}
+
+.command-card.compact .command-card-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.command-card.compact .command-preview {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.command-card.compact .command-multiline-hint {
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  margin-left: 2px;
+}
+
+.command-card.compact .command-card-actions {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  margin-left: auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 680px) {
+  .command-card-header {
+    flex-wrap: wrap;
+    row-gap: 6px;
+    align-items: flex-start;
+  }
+
+  .command-card.compact .command-card-actions {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .command-card.compact .command-preview {
+    order: 3;
+    flex: 1 1 100%;
+  }
+}
+
+.command-card.compact .command-copy-btn,
+.command-card.compact .command-expand-btn {
+  width: 22px;
+  height: 22px;
+}
+
+.command-card.compact .command-copy-btn svg,
+.command-card.compact .command-expand-btn svg {
+  width: 11px;
+  height: 11px;
+}
+
+.command-expand-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-expand-btn:hover {
+  color: var(--gold-400);
+  border-color: var(--gold-400);
+}
+
+.command-expand-btn svg {
+  width: 11px;
+  height: 11px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-expand-btn.expanded svg {
+  transform: rotate(180deg);
+}
+
+/* ==================== Static Output Area (replaces xterm for history) ==================== */
+.command-static-output {
+  margin-top: 2px;
+}
+
+.command-exec-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.command-exec-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.command-exec-meta-label {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.command-exec-meta-value {
+  color: var(--text-secondary);
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-exec-meta-item.success {
+  color: var(--shell-status-completed, #22c55e);
+}
+
+.command-exec-meta-item.error {
+  color: var(--shell-status-error, #ef4444);
+}
+
+.command-exec-meta-item.running {
+  color: var(--shell-status-running, var(--gold-400));
+}
+
+.command-exec-meta-item svg {
+  flex-shrink: 0;
+}
+
+.command-output-block {
+  margin: 0 8px 8px;
+  border-radius: 6px;
+  background: var(--bg-code, rgba(0, 0, 0, 0.15));
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  position: relative;
+}
+
+.command-static-output.error .command-output-block {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.command-output-pre {
+  margin: 0;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  /* 兜底:即使 shouldCollapseOutput 逻辑漏判(比如工具返回 JSON 包装,字面 \n 没解析导致
+     行数=1 通过行数检查),也不能让单条输出撑爆整个 timeline.
+     展开状态下用 max-height + overflow-y 给一个滚动区,不会把 entry 高度抬到几千 px. */
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+/* 折叠状态下内容本来就短,不需要 max-height 限制(也避免叠加滚动条) */
+.command-output-block.collapsed-output .command-output-pre {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.command-static-output.error .command-output-pre {
+  color: var(--shell-status-error, #ef4444);
+}
+
+.command-output-block.collapsed-output {
+  /* no special styles needed — content is already sliced in JSX */
+}
+
+.command-output-fade {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 6px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.command-output-collapse {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 6px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.command-show-all-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  padding: 2px 12px;
+  border-radius: 4px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-show-all-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.command-no-output {
+  padding: 4px 12px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.6;
+}
+
+/* ==================== Service Hint ==================== */
+.command-service-hint {
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: rgba(46, 204, 113, 0.08);
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.command-service-hint-icon {
+  color: var(--shell-status-completed, #2ecc71);
+  font-size: var(--neox-fs-xxs, 11px);
+  animation: pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+/* ==================== Live PTY Terminal ====================
+ * 实时 xterm 区域 — 颜色全部走 --xterm-* token, 跟主题切换.
+ * xterm.js 自身的 background/foreground 由 JS 端读 var() 注入,
+ * 这里 wrapper 的 bg/border 给一个 fallback 防止 xterm 还没挂载时露出别的色.
+ */
+.command-live-terminal {
+  margin: 4px 8px 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--xterm-bg, var(--bg-code, #1a1a2e));
+  min-height: 100px;
+  border: 1px solid var(--xterm-border, var(--border-subtle, rgba(255, 255, 255, 0.06)));
+}
+
+/* ==================== Stop/Interrupt Buttons ==================== */
+.command-stop-service-btn,
+.command-interrupt-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 4px;
+  color: var(--neox-fg-invert, #fff);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--shell-status-error, #e74c3c);
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out), filter var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-stop-service-btn:hover,
+.command-interrupt-btn:hover {
+  opacity: 0.9;
+  filter: brightness(1.1);
+}
+
+/* ==================== Terminal Output Component ==================== */
+.terminal-output-wrapper {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.terminal-output-wrapper.loading {
+  opacity: 0;
+}
+
+.terminal-output-wrapper.ready {
+  opacity: 1;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.terminal-output-container {
+  background: var(--xterm-bg, var(--bg-code, #1a1a1a));
+  border-radius: 4px;
+}
+
+.terminal-output-container .xterm {
+  padding: 8px;
+}
+
+.terminal-output-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 10;
+}
+
+.open-terminal-float-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: var(--shell-accent-info-soft, rgba(59, 130, 246, 0.15));
+  color: var(--shell-accent-info, #60a5fa);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  opacity: 0;
+}
+
+.terminal-output-wrapper:hover .open-terminal-float-btn {
+  opacity: 1;
+}
+
+.open-terminal-float-btn:hover {
+  background: var(--shell-accent-info-soft, rgba(59, 130, 246, 0.25));
+  color: var(--shell-accent-info, #93c5fd);
+  filter: brightness(1.15);
+  transform: scale(1.05);
+}
+
+/* 命令卡片打开终端按钮 */
+.command-open-terminal-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-open-terminal-btn:hover {
+  background: var(--shell-accent-info-soft, rgba(59, 130, 246, 0.15));
+  color: var(--shell-accent-info, #60a5fa);
+}
+
+.command-open-terminal-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 命令终端输出样式 */
+.command-terminal-output {
+  margin: 0;
+}
+
+.command-result svg {
+  width: 14px;
+  height: 14px;
+}

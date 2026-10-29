@@ -1,0 +1,83 @@
+
+.ci3 {
+  --ci3-ink: var(--neox-fg-primary);
+  --ci3-muted: var(--neox-fg-muted);
+  --ci3-hint: var(--neox-fg-hint);
+  --ci3-line: var(--neox-line-subtle);
+  --ci3-green: #3F9D63;
+  --ci3-red: #C2492F;
+  --ci3-amber: #B7791F;
+  color: var(--ci3-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 卡: 发丝边、圆角 16、不加阴影 */
+.ci3 .nx-card {
+  border-radius: 16px;
+  border: 1px solid var(--ci3-line);
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* 行: 最小高 52、左右 padding 16、行间发丝分隔 */
+.ci3 .nx-row {
+  min-height: 52px;
+  padding: 10px 16px;
+  gap: 12px;
+}
+.ci3 .nx-row + .nx-row {
+  box-shadow: inset 0 1px 0 var(--ci3-line);
+}
+
+/* 分组标题在卡外上方 */
+.ci3 .nx-section-title__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ci3-ink);
+}
+
+/* 状态行标题: 名字 + 状态胶囊 + 更新时间 */
+.ci3 .ci-status {
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ci3-ink);
+}
+.ci3 .ci-status__when {
+  font-size: 12px;
+  color: var(--ci3-hint);
+}
+.ci3 .ci-pill {
+  padding: 1px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ci3-amber);
+  background: color-mix(in srgb, var(--ci3-amber) 12%, transparent);
+}
+.ci3 .ci-pill.is-ok {
+  color: var(--ci3-green);
+  background: color-mix(in srgb, var(--ci3-green) 12%, transparent);
+}
+
+/* 构建中的进度条 */
+.ci3 .ci-build {
+  font-size: 12px;
+  color: var(--ci3-muted);
+}
+.ci3 .ci-build__bar {
+  max-width: 100%;
+  height: 6px;
+  background: color-mix(in srgb, var(--ci3-ink) 8%, transparent);
+}
+.ci3 .ci-build__fill {
+  background: var(--ci3-ink);
+}
+
+/* 副说明 (文件数 / 符号数) 一行灰字 */
+.ci3 .nx-row__desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ci3-muted);
+}

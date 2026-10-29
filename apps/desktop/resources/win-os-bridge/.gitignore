@@ -1,0 +1,8 @@
+# cargo 的构建目录 —— 不进仓 (跟 mac 那边 .build-arm64/.build-x86_64 一个道理)
+target/
+
+# 日常 exe 被残留进程锁住时的旁路副本, 不进仓
+neox-os-bridge.next.exe
+
+# 本机 cargo 拉的依赖锁文件进仓 (保证打包机与开发机拿到同一套 windows crate)
+!Cargo.lock

@@ -1,0 +1,94 @@
+/* 设置 → 网页分享 · UI 3.0 陶土照稿 (sh3) —— 不加强制覆盖 */
+
+/* 左右 20 跟其他设置页 (.settings-panel-content) 同一条边 */
+.sh3 { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 32px; }
+
+/* 表单: 标签左对齐、输入框占满一格 (ws-config 的旧规则把它们居中缩成一小块) */
+.sh3 .share-form .share-field { align-items: stretch; text-align: left; }
+.sh3 .share-form .share-field.is-wide { grid-column: 1 / -1; }
+.sh3 .share-form .ws-config__input { position: relative; display: flex; width: 100%; }
+.sh3 .share-form .ws-config__input > :first-child { flex: 1; min-width: 0; width: 100%; }
+.sh3 .share-form .share-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; }
+
+/* 卡片: 发丝边, 圆角 16, 不加阴影 */
+.sh3 .sh3-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  padding: 16px 18px;
+}
+
+/* ---------- 顶部状态卡 ---------- */
+.sh3 .sh3-status {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+}
+.sh3 .sh3-status__icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.sh3 .sh3-status__text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sh3 .sh3-status h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--neox-fg-primary); }
+.sh3 .sh3-status p { margin: 0; font-size: 12px; line-height: 1.5; color: var(--neox-fg-muted); }
+.sh3 .sh3-status .mfs-link { align-self: flex-end; margin-top: 2px; font-size: 12px; }
+.sh3 .sh3-badge {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  white-space: nowrap;
+  color: var(--neox-fg-secondary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+/* 未配置: 暖色提示 (设计稿里的橙色小标签) */
+.sh3 .sh3-badge.is-warm {
+  color: #9A5B12;
+  background: color-mix(in srgb, #D98A2B 14%, transparent);
+}
+
+/* ---------- 卡内标题 + 步骤 ---------- */
+.sh3 .ws-config h4 {
+  margin: 0 0 10px;
+  font-size: 13px; font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.sh3 .share-steps {
+  margin: 0; padding-left: 18px;
+  font-size: 12.5px; line-height: 1.8;
+  color: var(--neox-fg-secondary);
+}
+
+/* ---------- 表单: 两列, 公开地址独占一行 ---------- */
+.sh3 .share-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 14px;
+}
+.sh3 .share-form > h4 { grid-column: 1 / -1; }
+.sh3 .share-field {
+  display: flex; flex-direction: column; gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--neox-fg-secondary);
+}
+.sh3 .share-field.is-wide { grid-column: 1 / -1; }
+.sh3 .share-field .ws-config__input { position: relative; min-width: 0; }
+.sh3 .share-field input { width: 100%; font-variant-numeric: tabular-nums; }
+
+.sh3 .share-actions {
+  grid-column: 1 / -1;
+  display: flex; justify-content: flex-end; gap: 8px;
+  margin-top: 4px;
+}
+.sh3 .share-test { grid-column: 1 / -1; margin: 0; font-size: 12px; line-height: 1.5; }
+.sh3 .share-test a { color: var(--clay-blue, #2F6BFF); word-break: break-all; }
+.sh3 .share-test.is-bad { color: #C2492F; }
+.sh3 .share-test.is-ok { color: var(--neox-fg-secondary); }
+
+@media (max-width: 720px) {
+  .sh3 .share-form { grid-template-columns: minmax(0, 1fr); }
+}

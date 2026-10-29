@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- ══ 权限用途说明 ═══════════════════════════════════════════════════
+	     iOS 上这些字符串不是"文案"，是硬性前置条件：plist 里没有对应的
+	     NS*UsageDescription，调用该能力的那一刻系统直接终止进程 —— 不是弹窗
+	     被拒，是 app 当场消失。之前只有麦克风和语音识别两条，于是：
+	       · 扫码配对页 initState 就 _scanner.start() → 相机 → 闪退
+	       · 相册选附件 → 闪退
+	       · 应用锁走 Face ID → 闪退
+	     文案要写"为什么要"而不是"要什么"，审核和用户看的都是这句。 -->
+	<!-- 这里是英文底稿 (审核员和海外用户看的), 中文在 zh-Hans.lproj/InfoPlist.strings, 两边要一起改 -->
+	<key>NSCameraUsageDescription</key>
+	<string>Neox uses the camera to scan the QR code shown on your computer to connect to it, and to take photos you attach to a chat.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Neox lets you pick photos from your library to attach to a chat or to edit with AI.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Neox saves images you generate to your photo library when you tap Save to Photos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Neox uses the microphone so you can talk to it instead of typing.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Neox turns what you say into text so it can answer your voice messages.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use Face ID to unlock Neox so others can't see your chats if they pick up your phone.</string>
+
+	<!-- ══ 本地网络 (Mode A · 同 Wi-Fi 直连电脑) ═══════════════════════════
+	     iOS 14 起多播/本地网络访问要显式授权。缺这两项时 multicast_dns 的查询
+	     **不报错**，只是永远返回空 —— 用户看到的是"附近没有电脑"，会以为是自己
+	     电脑没开。这是最难排查的一类失败，必须配。
+	     NSBonjourServices 要精确列出扫描的服务类型，跟 mdns_scanner.dart 的
+	     _kServiceFqn ('_neox._tcp.local') 对齐；这里不带 .local 后缀。 -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Neox finds your computer on the same Wi-Fi and connects to it directly, so your chats don't go through a server.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_neox._tcp</string>
+	</array>
+
+	<!-- ══ OAuth 回调 (GitHub / Google) ═══════════════════════════════════
+	     ASWebAuthenticationSession 授权完成后靠这个 scheme 把授权码交回 app 并
+	     自动关掉浏览层。没有它，授权页走完就那么挂着，回调永远回不来。
+	     Android 侧对应 AndroidManifest 的 CallbackActivity intent-filter，
+	     两端 scheme 必须一致 = browser_oauth.dart 的 kOAuthCallbackScheme。
+	     注意 GitHub/Google 注册的账号 password_hash 是随机占位值，那批用户
+	     **只能**走这条路登录 —— 这条不通等于他们在 iOS 上完全进不来。 -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.mkco.neox.mobile.oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>openneoxapp</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- ══ 出口合规 ═══════════════════════════════════════════════════════
+	     2026-10-09 用户拍板: 如实申报。云中继的端到端加密 (core/crypto 的 X25519 + AES-GCM)
+	     在 iOS 上经 cryptography_flutter 走系统 CryptoKit —— 属于「只使用 Apple 操作系统内的加密」,
+	     豁免, 不用交文稿 → false。
+	     ⚠ 别去掉 cryptography_flutter: 去掉后 cryptography 包回到纯 Dart 实现, 就成了「代替系统加密的
+	       标准算法」, Apple 要求上传加密文稿 (App 信息页「App 加密文稿」)。
+	     别标 true: true 要先上传文稿拿合规码, 不带码上传直接 409 (2026-10-09 实测)。 -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- Flutter 的界面语言在 Dart 里切, 但系统弹窗 (权限说明) 只认这里声明过的语言 -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>zh-Hans</string>
+	</array>
+	<!-- 跟 Android 的 android:label 对齐, 两端桌面图标下的字必须一样 -->
+	<key>CFBundleDisplayName</key>
+	<string>OpenNeox</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<!-- 系统授权弹窗 (「"Neox" Wants to Use … to Sign In」) 读的是这个, 不是 DisplayName -->
+	<key>CFBundleName</key>
+	<string>Neox</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+</dict>
+</plist>

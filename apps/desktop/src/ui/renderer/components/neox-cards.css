@@ -1,0 +1,2743 @@
+
+.ncard,
+.neox-card__pending,
+.neox-card__parse-err {
+  --nchart-c1: #4f7cff;
+  --nchart-c2: #eb6834;
+  --nchart-c3: #1baf7a;
+  --nchart-c4: #eda100;
+  --nchart-c5: #e87ba4;
+  /* 有重点项时其余柱子的暖灰 —— 用前景色混卡底, 浅暗两套自动跟着走, 不用另配暗色档 */
+  --nchart-muted: color-mix(in srgb, var(--neox-fg-primary) 15%, var(--neox-bg-card, #fbfaf7));
+  --nchart-c6: #4a3aa7;
+
+  --ncard-radius: 8px;
+  --ncard-radius-scene: 12px;
+  --ncard-radius-inner: 8px;
+  --ncard-pad: 14px;
+  --ncard-pad-inner: 12px;
+  --ncard-gap: 12px;
+  --ncard-border: color-mix(in srgb, var(--neox-fg-primary, #111827) 8%, transparent);
+  --ncard-border-inner: color-mix(in srgb, var(--neox-fg-primary, #111827) 6%, transparent);
+  --ncard-bg: var(--neox-bg-card, #fff);
+  --ncard-bg-inner: color-mix(in srgb, var(--neox-fg-primary, #111827) 3%, transparent);
+  --ncard-bg-hover: color-mix(in srgb, var(--neox-fg-primary, #111827) 5%, transparent);
+  --ncard-chip-bg: color-mix(in srgb, var(--neox-fg-primary, #111827) 6%, transparent);
+  --ncard-surface: color-mix(in srgb, var(--neox-fg-primary, #111827) 3.5%, transparent);
+  --ncard-tile: color-mix(in srgb, var(--neox-fg-primary, #111827) 4%, transparent);
+  --ncard-hairline: color-mix(in srgb, var(--neox-fg-primary, #111827) 7%, transparent);
+  /* 跟随 timeline 字号档位 (--nx-fs-scale, 见 timelinePreferences.ts) */
+  --ncard-fs-title: 1em;
+  --ncard-fs-body: 0.95em;
+  --ncard-fs-sub: 0.88em;
+  --ncard-fs-meta: 0.82em;
+}
+
+/* 暗底上的分类色 —— 同色相重新取的一档, 不是把亮色调暗。
+ * 两个作用域都写: media query 管系统设置, [data-theme] 管用户在应用里的手动切换,
+ * 后者必须两个方向都赢 (:not 守卫让"明"的显式标记压过系统暗色)。 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ncard,
+  :root:not([data-theme="light"]) .neox-card__pending {
+    --nchart-c1: #5b86ff;   /* 同亮色档: 不绑产品主色, 见上面 slot 1 的注释 */
+    --nchart-c2: #d95926;
+    --nchart-c3: #199e70;
+    --nchart-c4: #c98500;
+    --nchart-c5: #d55181;
+    --nchart-c6: #9085e9;
+  }
+}
+:root[data-theme="dark"] .ncard,
+:root[data-theme="dark"] .neox-card__pending {
+  --nchart-c1: #5b86ff;   /* 同亮色档: 不绑产品主色, 见上面 slot 1 的注释 */
+  --nchart-c2: #d95926;
+  --nchart-c3: #199e70;
+  --nchart-c4: #c98500;
+  --nchart-c5: #d55181;
+  --nchart-c6: #9085e9;
+}
+
+.ncard {
+  margin: 10px 0 14px;
+  padding: var(--ncard-pad);
+  border-radius: var(--ncard-radius);
+  border: 0;
+  background: var(--ncard-surface);
+}
+
+.ncard--chart,
+.ncard--metrics,
+.ncard--steps,
+.ncard--flow,
+.ncard--tl,
+.ncard--table,
+.ncard--diff,
+.ncard--summary {
+  background: transparent;
+  padding: 2px 0;
+  margin: 8px 0 12px;
+  /* 通栏 + 包住内部 float。卡缩成 max-content 孤岛时, 右边那截空是**没文字去填**,
+   * 不是"留白"。拉满之后空位留给绕着中间图形走的行框。 */
+  width: 100%;
+  max-width: 100%;
+  display: flow-root;
+}
+
+/* 自带深色 hero 材质的场景卡还原 12px —— 它们不是"融进 timeline 的回执",
+ * 本来就是一张独立的卡 (天气 / 餐厅 / 行程 / 画廊 …)。 */
+.ncard--rest,
+.ncard--weather,
+.ncard--booking,
+.ncard--tracking,
+.ncard--news,
+.ncard--trip,
+.ncard--gallery,
+.ncard--recipe,
+.ncard--product {
+  border-radius: var(--ncard-radius-scene);
+}
+
+.ncard__figure {
+  float: right;
+  width: max-content;
+  max-width: 46%;
+  margin: 0 0 0.45em 1.15em;
+}
+.ncard__figure--wide {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.35em 0 0;
+}
+@container (max-width: 380px) {
+  .ncard__figure {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 0.5em;
+  }
+}
+/* 紧凑图在浮槽里竖排, 槽才窄, 留给文字的绕行才宽 */
+.ncard__figure .nchart__pie {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+/* 图形在前时, 标题必须是行内元素才能绕. flex 容器是一块矩形, 绕不过去。 */
+.ncard:has(> .ncard__figure) > .nhead {
+  display: block;
+  margin-bottom: 0;
+}
+.ncard:has(> .ncard__figure) > .nhead .nhead__mark {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.ncard:has(> .ncard__figure) > .nhead .nhead__text {
+  display: inline;
+  padding-top: 0;
+}
+.ncard:has(> .ncard__figure) > .nhead .nhead__title {
+  display: inline;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+.ncard:has(> .ncard__figure) > .nhead .nhead__right {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 8px;
+  padding-top: 0;
+}
+/* 场景卡 (rest/weather/booking/tracking) 在下面各自覆盖 background 为渐变底, 不受这层 tint 影响 */
+.ncard-wrap,
+.ncard {
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  font-family: var(--neox-font-sans, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif);
+  text-align: left;
+}
+/* 兜底: React 那层没脱掉 <pre> 时, 至少让这层壳别再当代码块 (BFC + 等宽 + 灰底),
+ * 否则内部 float 绕不到旁边的正文。 */
+.markdown-content pre:has(> .ncard-wrap) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  white-space: normal;
+  overflow: visible;
+}
+.ncard__title {
+  font-size: var(--ncard-fs-title);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+  margin-bottom: 10px;
+}
+.ncard__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* 解析失败错误框 — 只在开发/调试用, 生产走 pending 占位.
+ * 硬色换 var, 暗色不再灼眼. */
+.neox-card__parse-err {
+  padding: var(--ncard-pad-inner);
+  border-radius: var(--ncard-radius-inner);
+  background: color-mix(in srgb, var(--neox-danger-500, #dc2626) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-danger-500, #dc2626) 18%, transparent);
+  color: color-mix(in srgb, var(--neox-danger-500, #dc2626) 82%, var(--neox-fg-primary));
+  font-size: var(--ncard-fs-sub);
+  white-space: pre-wrap;
+}
+
+/* 卡片生成中占位 — 三点 shimmer, 无红框, 无字, 只是提示 "还在长". */
+.neox-card__pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 4%, transparent);
+}
+.neox-card__pending-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 34%, transparent);
+  animation: neox-card-pending-blink 1.2s ease-in-out infinite;
+}
+.neox-card__pending-dot:nth-child(2) { animation-delay: 0.18s; }
+.neox-card__pending-dot:nth-child(3) { animation-delay: 0.36s; }
+@keyframes neox-card-pending-blink {
+  0%, 80%, 100% { opacity: 0.28; transform: scale(0.9); }
+  40%           { opacity: 1;    transform: scale(1); }
+}
+
+
+.ncard--dense { padding: 6px 4px; }
+.ncard--dense .ncard__title { padding: 6px 10px 2px; margin-bottom: 2px; }
+
+.ncard--rest {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  max-width: 520px;
+}
+.rest--chinese  { background: linear-gradient(178deg, #6f2318 0%, #8f3423 60%, #b34d33 100%); }
+.rest--japanese { background: linear-gradient(178deg, #542848 0%, #6f3860 60%, #8a4a7a 100%); }
+.rest--korean   { background: linear-gradient(178deg, #6b2818 0%, #8b3a1e 60%, #a04a24 100%); }
+.rest--western  { background: linear-gradient(178deg, #4a3428 0%, #634634 60%, #7c5942 100%); }
+.rest--dessert  { background: linear-gradient(178deg, #6a3a4d 0%, #874c65 60%, #a76384 100%); }
+.rest--vegan    { background: linear-gradient(178deg, #2c4a2a 0%, #416538 60%, #5a824a 100%); }
+.rest--neutral  { background: linear-gradient(178deg, #333a42 0%, #4c545e 60%, #6a7482 100%); }
+.rest__hero {
+  padding: 14px 16px 12px;
+  color: rgba(255,255,255,0.98);
+}
+.rest__hero-title {
+  font-size: calc(15px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.16);
+}
+.rest__hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  color: rgba(255,255,255,0.88);
+}
+.rest__hero-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.18);
+  color: #ffdf7a;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.rest__hero-chip {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.92);
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  letter-spacing: 0.15px;
+}
+.rest__list {
+  padding: 4px 6px 8px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+/* 深色 hero 下把 nrr 行改白系 */
+.ncard--rest .nrr:hover { background: rgba(255,255,255,0.08); }
+.ncard--rest .nrr + .nrr::before { background: rgba(255,255,255,0.12); }
+.ncard--rest .nrr__idx { color: rgba(255,255,255,0.55); }
+.ncard--rest .nrr__name { color: #fff; }
+.ncard--rest .nrr__meta { color: rgba(255,255,255,0.72); }
+.ncard--rest .nrr__meta > * + *::before { color: rgba(255,255,255,0.32); }
+.ncard--rest .nrr__rating { color: #ffdf7a; }
+.ncard--rest .nrr__l2 { color: rgba(255,255,255,0.68); }
+.ncard--rest .nrr__l2 > * + *::before { color: rgba(255,255,255,0.32); }
+.ncard--rest .nrr__hl { color: rgba(255,255,255,0.88); }
+.ncard--rest .nrr__addr { color: rgba(255,255,255,0.62); }
+.ncard--rest .nrr__tel { color: rgba(255,255,255,0.72); }
+.ncard--rest .nrr__tel:hover { color: #fff; }
+.ncard--rest .nrr__act { color: rgba(255,255,255,0.72); }
+.ncard--rest .nrr__act:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.nrr__list { display: flex; flex-direction: column; }
+.nrr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  transition: background 120ms ease;
+}
+.nrr + .nrr {
+  position: relative;
+}
+.nrr + .nrr::before {
+  content: '';
+  position: absolute;
+  left: 34px;
+  right: 10px;
+  top: 0;
+  height: 1px;
+  background: var(--ncard-border-inner);
+}
+.nrr:hover { background: var(--ncard-bg-hover); }
+.nrr__idx {
+  flex: none;
+  width: 16px;
+  text-align: center;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-semibold);
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+.nrr__main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.nrr__l1 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.nrr__name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nrr__meta {
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+}
+.nrr__meta > * + *::before { content: '·'; margin-right: 7px; color: var(--neox-fg-hint); }
+.nrr__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  color: color-mix(in srgb, #f59e0b 82%, var(--neox-fg-primary));
+  font-weight: var(--neox-fw-medium);
+  font-variant-numeric: tabular-nums;
+}
+.nrr__l2 {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.nrr__l2 > * + *::before { content: '·'; margin-right: 7px; color: var(--neox-fg-hint); }
+.nrr__hl { color: color-mix(in srgb, var(--neox-primary-600) 72%, var(--neox-fg-secondary)); flex: none; }
+.nrr__addr { overflow: hidden; text-overflow: ellipsis; }
+.nrr__tel { flex: none; color: var(--neox-fg-muted); text-decoration: none; }
+.nrr__tel:hover { color: var(--neox-primary-600); }
+.nrr__acts {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  opacity: 0.55;
+  transition: opacity 120ms ease;
+}
+.nrr:hover .nrr__acts { opacity: 1; }
+.nrr__act {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: var(--neox-fg-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+.nrr__act:hover {
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  color: var(--neox-primary-600);
+}
+.nrr__act > svg { width: 13px; height: 13px; }
+/* 窄栏: 第二行允许换行, 名字优先 */
+@media (max-width: 480px) {
+  .nrr__l1 { flex-wrap: wrap; }
+  .nrr__l2 { white-space: normal; }
+}
+
+/* ---------- Weather (Apple 天气式沉浸卡) ----------
+ * 自带天空配色, 不吃亮暗主题变量 (白字 + 状况渐变在两种主题下都成立)。
+ * 雨/雪动效 = 单层 repeating-gradient transform 平移, GPU 便宜。 */
+
+.ncard--weather.wx {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  max-width: 420px;
+}
+.wx--sun   { background: linear-gradient(178deg, #2f80d4 0%, #5aa8e8 55%, #8ec9f2 100%); }
+.wx--cloud { background: linear-gradient(178deg, #586f88 0%, #74889d 60%, #93a5b6 100%); }
+.wx--rain  { background: linear-gradient(178deg, #3b4a5e 0%, #506176 60%, #64778c 100%); }
+.wx--snow  { background: linear-gradient(178deg, #7e97ac 0%, #a3b8c9 60%, #c6d5e0 100%); }
+.wx--storm { background: linear-gradient(178deg, #2a2e44 0%, #3d4260 60%, #545a7c 100%); }
+.wx--fog   { background: linear-gradient(178deg, #6d7a88 0%, #8b98a5 60%, #aab5c0 100%); }
+
+.wx__inner {
+  position: relative;
+  z-index: 1;
+  padding: 18px 16px 14px;
+}
+
+/* 雨丝 / 雪点 */
+.wx__precip {
+  position: absolute;
+  inset: -40% 0 0 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.wx__precip--rain {
+  background: repeating-linear-gradient(
+    16deg,
+    transparent 0 11px,
+    rgba(255, 255, 255, 0.16) 11px 12px,
+    transparent 12px 26px
+  );
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 75%, transparent 100%);
+  animation: wx-rain-fall 0.9s linear infinite;
+  opacity: 0.5;
+}
+.wx__precip--snow {
+  background-image:
+    radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1.6px),
+    radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1.6px);
+  background-size: 46px 46px, 29px 29px;
+  background-position: 0 0, 14px 9px;
+  animation: wx-snow-fall 7s linear infinite;
+  opacity: 0.7;
+}
+@keyframes wx-rain-fall { to { transform: translateY(26px); } }
+@keyframes wx-snow-fall { to { transform: translateY(46px); } }
+@media (prefers-reduced-motion: reduce) {
+  .wx__precip { animation: none; }
+}
+
+/* 主区: 地点 / 大温度 / 状况行 */
+.wx__hero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+}
+.wx__loc {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.92;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  grid-column: 2;
+}
+.wx__temp {
+  font-size: calc(52px * var(--nx-fs-scale, 1));
+  font-weight: 200;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+.wx__cond {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+  font-weight: 500;
+  opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  grid-column: 2;
+  flex-wrap: wrap;
+}
+.wx__cond svg { opacity: 0.9; flex: none; }
+.wx__hl { opacity: 0.78; font-weight: 400; }
+
+/* 体感/湿度/风速 — 单行胶囊 chip 化, 高度从 ~60px 压到 ~28px */
+.wx__stats {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.11);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-size: var(--neox-fs-xs, 12px);
+  flex-wrap: wrap;
+}
+.wx__stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  padding: 0 6px;
+}
+.wx__stat + .wx__stat { border-left: 1px solid rgba(255, 255, 255, 0.18); }
+.wx__stat-k { font-size: var(--neox-fs-xxs, 11px); opacity: 0.72; letter-spacing: 0.04em; }
+.wx__stat-v { font-size: calc(13px * var(--nx-fs-scale, 1)); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* 预报: 更紧凑, 一行 4-5 天时高度不失控 */
+.wx__forecast {
+  margin-top: 8px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+.wx__day {
+  display: grid;
+  grid-template-columns: minmax(56px, auto) 30px 26px 1fr 26px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+}
+.wx__day + .wx__day { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.wx__day-name { font-weight: 500; opacity: 0.95; white-space: nowrap; }
+.wx__day-icon {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  opacity: 0.92;
+}
+.wx__day-rain {
+  font-size: calc(9px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  color: #aee3ff;
+  line-height: 1;
+}
+.wx__day-lo { opacity: 0.68; text-align: right; font-variant-numeric: tabular-nums; }
+.wx__day-hi { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.wx__day-bar {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.22);
+}
+.wx__day-bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #6ec6f5, #ffd56b);
+}
+.wx--snow .wx__day-bar-fill,
+.wx--fog .wx__day-bar-fill { background: linear-gradient(90deg, #8fd0f0, #f2f7fa); }
+.wx--storm .wx__day-bar-fill { background: linear-gradient(90deg, #7f9cf5, #f6ad55); }
+
+/* ---------- Todo (对齐场景卡: 顶级卡内一行 checkbox + text + badge) ---------- */
+
+.ncard-t {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* Todo items — macOS Reminders 风: 发丝线分隔, 无边框盒, 单行紧凑 */
+.ncard-t__it {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--ncard-border-inner);
+  background: transparent;
+  transition: background 120ms ease;
+}
+.ncard-t__it:last-child { border-bottom: 0; }
+.ncard-t__it:hover { background: var(--ncard-bg-hover); }
+.ncard-t__check {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--neox-fg-primary) 26%, transparent);
+}
+.ncard-t__it.is-done .ncard-t__check {
+  background: var(--neox-primary-500);
+  border-color: var(--neox-primary-500);
+}
+.ncard-t__it.is-done .ncard-t__text { text-decoration: line-through; color: var(--neox-fg-muted); }
+.ncard-t__text { flex: 1; font-size: calc(13px * var(--nx-fs-scale, 1)); color: var(--neox-fg-primary); }
+.ncard-t__badge {
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: color-mix(in srgb, #dc2626 12%, transparent);
+  color: #b91c1c;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-weight: var(--neox-fw-medium);
+}
+/* 高优不再画左侧红竖线, 只保留右侧 "高优" chip */
+.ncard-t__it.is-low { opacity: 0.75; }
+
+
+/* ---------- News ---------- */
+
+.ncard__list--news { display: flex; flex-direction: column; gap: 8px; }
+.ncard-n {
+  display: flex;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ncard-border-inner);
+  background: transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: background 120ms ease;
+}
+.ncard-n:last-child { border-bottom: 0; }
+.ncard-n:hover { background: var(--ncard-bg-hover); }
+.ncard-n__thumb {
+  flex: none;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.ncard-n__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.ncard-n__title { font-size: calc(14px * var(--nx-fs-scale, 1)); font-weight: var(--neox-fw-medium); color: var(--neox-fg-primary); line-height: 1.35; }
+.ncard-n__summary {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ncard-n__meta { display: flex; gap: 6px; align-items: center; font-size: var(--neox-fs-xxs, 11px); color: var(--neox-fg-muted); }
+.ncard-n__tag {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  color: var(--neox-primary-600);
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-weight: var(--neox-fw-medium);
+}
+.ncard-n__source { font-weight: var(--neox-fw-medium); color: var(--neox-fg-secondary); }
+
+/* ---------- Booking (train / flight / hotel) ---------- */
+
+.ncard--booking { padding: 0; overflow: hidden; }
+.ncard-bk__head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--neox-primary-600) 5%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.ncard-bk__icon { font-size: calc(20px * var(--nx-fs-scale, 1)); }
+.ncard-bk__meta { flex: 1; min-width: 0; }
+.ncard-bk__title { font-size: calc(14px * var(--nx-fs-scale, 1)); font-weight: var(--neox-fw-semibold); color: var(--neox-fg-primary); }
+.ncard-bk__date { font-size: calc(12px * var(--nx-fs-scale, 1)); color: var(--neox-fg-secondary); margin-top: 2px; }
+.ncard-bk__list { list-style: none; margin: 0; padding: 0; }
+.ncard-bk__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+.ncard-bk__row:last-child { border-bottom: 0; }
+.ncard-bk__row-left { flex: 1; min-width: 0; }
+.ncard-bk__row-right { display: flex; gap: 8px; align-items: center; flex: none; }
+.ncard-bk__time { font-size: var(--neox-fs-md, 14px); font-weight: var(--neox-fw-semibold); color: var(--neox-fg-primary); font-variant-numeric: tabular-nums; }
+.ncard-bk__row-sub { display: flex; gap: 6px; margin-top: 2px; font-size: var(--neox-fs-xxs, 11px); color: var(--neox-fg-muted); }
+.ncard-bk__detail { color: var(--neox-fg-secondary); }
+.ncard-bk__tag {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-weight: var(--neox-fw-medium);
+  background: color-mix(in srgb, #22c55e 14%, transparent);
+  color: #16a34a;
+}
+.ncard-bk__price { font-size: var(--neox-fs-sm, 13px); font-weight: var(--neox-fw-semibold); color: var(--neox-fg-primary); font-variant-numeric: tabular-nums; }
+.ncard-bk__btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--neox-primary-600);
+  color: #fff;
+  text-decoration: none;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  font-weight: var(--neox-fw-medium);
+  transition: opacity 120ms ease;
+}
+.ncard-bk__btn:hover { opacity: 0.9; }
+
+/* ---------- Recipe ---------- */
+
+/* Recipe body — hero 已独立, body 各 section 需自己的 padding 撑起呼吸 */
+.ncard-rc__head { display: none; }  /* 老 head 结构废弃 (旧 tsx 用了, 新用 rp__hero) */
+.ncard-rc__sect { padding: 10px 14px 4px; }
+.ncard-rc__sect + .ncard-rc__sect { padding-top: 8px; }
+.ncard-rc__sect-title { font-size: calc(12px * var(--nx-fs-scale, 1)); font-weight: var(--neox-fw-medium); color: var(--neox-fg-secondary); margin-bottom: 6px; letter-spacing: 0.02em; }
+.ncard-rc__ing { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
+.ncard-rc__ing li { display: flex; justify-content: space-between; align-items: baseline; font-size: calc(13px * var(--nx-fs-scale, 1)); padding: 5px 0; border-bottom: 1px solid var(--ncard-border-inner); }
+.ncard-rc__ing-name { color: var(--neox-fg-primary); }
+.ncard-rc__ing-amt { color: var(--neox-fg-secondary); font-size: calc(12px * var(--nx-fs-scale, 1)); }
+.ncard-rc__steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+.ncard-rc__steps li { font-size: calc(13px * var(--nx-fs-scale, 1)); color: var(--neox-fg-primary); line-height: 1.5; }
+.ncard-rc__step-time {
+  display: inline-block; margin-left: 6px; padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--ncard-chip-bg);
+  color: var(--neox-fg-secondary);
+  font-size: calc(11px * var(--nx-fs-scale, 1)); font-variant-numeric: tabular-nums;
+}
+.ncard-rc__tips { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: var(--neox-fs-xs, 12px); color: var(--neox-fg-secondary); }
+.ncard-rc__tips li { padding: 3px 0; }
+.ncard-rc__source { display: inline-block; margin: 10px 14px 12px; font-size: calc(12px * var(--nx-fs-scale, 1)); color: var(--neox-primary-500); text-decoration: none; }
+.ncard-rc__source:hover { text-decoration: underline; }
+
+/* ---------- Tracking (物流) ---------- */
+.ncard-tk__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.ncard-tk__title { flex: 1; min-width: 0; }
+.ncard-tk__name { font-size: var(--ncard-fs-title); font-weight: var(--neox-fw-medium); color: var(--neox-fg-primary); letter-spacing: -0.005em; margin-bottom: 3px; }
+.ncard-tk__meta { display: flex; align-items: center; gap: 8px; font-size: var(--ncard-fs-sub); color: var(--neox-fg-secondary); flex-wrap: wrap; }
+.ncard-tk__meta > * + *::before { content: '·'; margin-right: 8px; color: var(--neox-fg-hint); }
+.ncard-tk__no {
+  border: 0; background: transparent; padding: 0;
+  font-family: 'SF Mono', 'JetBrains Mono', monospace;
+  font-size: var(--ncard-fs-sub); color: var(--neox-primary-600); cursor: pointer;
+}
+.ncard-tk__no:hover { text-decoration: underline; }
+.ncard-tk__badge {
+  flex: none; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-primary-600) 12%, transparent);
+  color: var(--neox-primary-700, var(--neox-primary-600));
+  font-size: var(--ncard-fs-meta); font-weight: var(--neox-fw-medium);
+}
+.ncard-tk__steps { list-style: none; margin: 0; padding: 0 0 0 4px; }
+.ncard-tk__step { display: flex; gap: 10px; padding: 6px 0; position: relative; }
+.ncard-tk__step + .ncard-tk__step::before {
+  content: ''; position: absolute; left: 4px; top: -6px; bottom: 50%; width: 1.5px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+}
+.ncard-tk__step-dot {
+  flex: none; width: 9px; height: 9px; border-radius: 50%; margin-top: 5px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 20%, transparent);
+}
+.ncard-tk__step.is-latest .ncard-tk__step-dot {
+  background: var(--neox-primary-600);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--neox-primary-600) 20%, transparent);
+}
+.ncard-tk__step-body { flex: 1; min-width: 0; }
+.ncard-tk__step-status { font-size: var(--ncard-fs-body); color: var(--neox-fg-primary); }
+.ncard-tk__step-meta { display: flex; gap: 8px; font-size: var(--ncard-fs-meta); color: var(--neox-fg-muted); margin-top: 2px; }
+.ncard-tk__step-meta > * + *::before { content: '·'; margin-right: 8px; }
+
+/* ---------- Trip (机票/高铁) ---------- */
+.ncard-tp__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+.ncard-tp__title { font-size: var(--ncard-fs-title); font-weight: var(--neox-fw-medium); color: var(--neox-fg-primary); letter-spacing: -0.005em; }
+.ncard-tp__date { font-size: var(--ncard-fs-sub); color: var(--neox-fg-secondary); }
+.ncard-tp__legs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ncard-tp__leg {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--ncard-radius-inner);
+  border: 1px solid var(--ncard-border-inner); background: var(--ncard-bg-inner);
+  transition: border-color 140ms ease, background 140ms ease;
+}
+.ncard-tp__leg:hover { border-color: color-mix(in srgb, var(--neox-primary-600) 22%, transparent); background: var(--ncard-bg-hover); }
+.ncard-tp__leg-icon { flex: none; font-size: var(--neox-fs-xl, 18px); line-height: 1; }
+.ncard-tp__leg-body { flex: 1; min-width: 0; }
+.ncard-tp__leg-route { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: var(--ncard-fs-body); color: var(--neox-fg-primary); }
+.ncard-tp__leg-time { font-weight: var(--neox-fw-medium); font-variant-numeric: tabular-nums; }
+.ncard-tp__leg-city { color: var(--neox-fg-secondary); }
+.ncard-tp__leg-arrow { color: var(--neox-fg-hint); }
+.ncard-tp__leg-meta { display: flex; gap: 8px; margin-top: 3px; font-size: var(--ncard-fs-meta); color: var(--neox-fg-muted); flex-wrap: wrap; }
+.ncard-tp__leg-meta > * + *::before { content: '·'; margin-right: 8px; }
+.ncard-tp__leg-status { color: var(--neox-primary-600); }
+.ncard-tp__leg-price { flex: none; font-size: var(--ncard-fs-body); font-weight: var(--neox-fw-semibold); color: var(--neox-fg-primary); font-variant-numeric: tabular-nums; }
+
+/* ---------- Product (商品比价) ---------- */
+.ncard-pd__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.ncard-pd {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px; border-radius: var(--ncard-radius-inner);
+  border: 1px solid var(--ncard-border-inner); background: var(--ncard-bg-inner);
+  text-decoration: none; color: inherit;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+.ncard-pd:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--neox-primary-600) 22%, transparent); background: var(--ncard-bg-hover); }
+.ncard-pd__img {
+  width: 100%; aspect-ratio: 1.4; object-fit: cover;
+  border-radius: 8px; background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+}
+.ncard-pd__body { display: flex; flex-direction: column; gap: 4px; }
+.ncard-pd__name {
+  font-size: var(--ncard-fs-body); font-weight: var(--neox-fw-medium); color: var(--neox-fg-primary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  line-height: 1.35; min-height: 2.6em;
+}
+.ncard-pd__meta { display: flex; gap: 8px; font-size: var(--ncard-fs-meta); color: var(--neox-fg-muted); flex-wrap: wrap; }
+.ncard-pd__meta > * + *::before { content: '·'; margin-right: 8px; }
+.ncard-pd__highlight { font-size: var(--ncard-fs-meta); color: var(--neox-primary-600); }
+.ncard-pd__price-row { display: flex; align-items: baseline; gap: 8px; margin-top: 2px; }
+.ncard-pd__price { font-size: var(--ncard-fs-title); font-weight: var(--neox-fw-semibold); color: color-mix(in srgb, var(--neox-danger-500, #dc2626) 82%, var(--neox-fg-primary)); font-variant-numeric: tabular-nums; }
+.ncard-pd__orig { font-size: var(--ncard-fs-meta); color: var(--neox-fg-muted); }
+
+/* ---------- Gallery (图片画廊) ---------- */
+.ncard-gl__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.ncard-gl__cell {
+  position: relative; display: block; text-decoration: none; color: inherit;
+  border-radius: var(--ncard-radius-inner); overflow: hidden;
+  border: 1px solid var(--ncard-border-inner);
+  transition: transform 140ms ease, border-color 140ms ease;
+}
+.ncard-gl__cell:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--neox-primary-600) 22%, transparent); }
+.ncard-gl__img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.ncard-gl__caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 18px 8px 6px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.55));
+  color: #fff; font-size: var(--ncard-fs-meta);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ncard-gl__source { display: block; margin-top: 2px; font-size: calc(10px * var(--nx-fs-scale, 1)); opacity: 0.72; }
+
+/* ---------- Pin button (P2-11 一键钉到收藏) ---------- */
+.ncard-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  container-type: inline-size;
+}
+/* Word 插图: 总结卡 / 紧凑图表从正文里浮出来, 周围的字绕过去.
+ * 宽图 (柱/线/热力) 仍通栏, 不 float. */
+.markdown-content .ncard-wrap:has(.ncard--summary),
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) {
+  float: right;
+  width: min(40%, 236px);
+  margin: 0.2em 0 0 1.2em;
+}
+.markdown-content .ncard-wrap:has(.nrpt__secs),
+.markdown-content .ncard-wrap:has(.nrpt__foot) {
+  float: none;
+  clear: both;
+  width: 100%;
+  margin: 0.4em 0 0.6em;
+}
+/* 通栏之后标题就有地方了 —— 把上面那条 sr-only 收回来, 一行读得懂:
+   「明细 6 ›」而不是「6 ›」。特异度要压过 .nrpt__hero .nrpt__sec-t 那条。 */
+.markdown-content .ncard-wrap:has(.nrpt__secs) .nrpt__hero .nrpt__sec-t,
+.markdown-content .ncard-wrap:has(.nrpt__foot) .nrpt__hero .nrpt__sec-t {
+  position: static;
+  width: auto;
+  height: auto;
+  clip-path: none;
+}
+
+
+/* ============ 订票沉浸卡 (bk) — 学天气卡: 178deg 深蓝 3 段渐变 + 白字 + 玻璃行 ============ */
+.ncard--booking.bk {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  max-width: 460px;
+}
+.bk--train  { background: linear-gradient(178deg, #1e3350 0%, #2f4a70 60%, #476b92 100%); }
+.bk--flight { background: linear-gradient(178deg, #1f2f4d 0%, #33477a 60%, #4a63a0 100%); }
+.bk--hotel  { background: linear-gradient(178deg, #3a2e56 0%, #524374 60%, #6f5c9a 100%); }
+.bk__inner { padding: 15px 16px 13px; position: relative; z-index: 1; }
+.bk__top { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.88); }
+.bk__icon { display: inline-flex; }
+.bk__date {
+  font-size: var(--neox-fs-xs, 12px); font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.bk__route {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.bk__city {
+  font-size: calc(26px * var(--nx-fs-scale, 1));
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: #fff;
+}
+.bk__arrow { color: rgba(255,255,255,0.7); flex: none; }
+.bk__list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 6px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.22);
+}
+.bk__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+}
+.bk__row + .bk__row { border-top: 1px solid rgba(255,255,255,0.1); }
+.bk__row-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.bk__no {
+  font-size: calc(17px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+.bk__row-sub {
+  display: flex; align-items: center; gap: 8px;
+  font-size: calc(12px * var(--nx-fs-scale, 1)); color: rgba(255,255,255,0.78);
+  flex-wrap: wrap;
+}
+.bk__time { font-variant-numeric: tabular-nums; }
+.bk__tag {
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+}
+.bk__row-right { display: flex; align-items: center; gap: 12px; flex: none; }
+.bk__price {
+  font-size: calc(15px * var(--nx-fs-scale, 1)); font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+.bk__btn {
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  color: #1e3350;
+  text-decoration: none;
+}
+.bk__btn:hover { background: #fff; }
+
+/* ============ 物流沉浸卡 (tk) — 状态定深色渐变 + 白字 + 进度轴 ============ */
+.ncard--tracking.tk {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  max-width: 460px;
+}
+.tk--transit { background: linear-gradient(178deg, #253a5c 0%, #3a5480 60%, #506ea0 100%); }
+.tk--done    { background: linear-gradient(178deg, #1f4c40 0%, #2e6a55 60%, #45886d 100%); }
+.tk--alert   { background: linear-gradient(178deg, #5c3812 0%, #7f4c14 60%, #a56420 100%); }
+.tk__inner { padding: 15px 16px 13px; position: relative; z-index: 1; }
+.tk__top { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.88); }
+.tk__icon { display: inline-flex; }
+.tk__carrier { font-size: var(--neox-fs-xs, 12px); font-weight: 500; color: #fff; }
+.tk__no {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: ui-monospace, monospace;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.22);
+  color: rgba(255,255,255,0.88);
+  cursor: pointer;
+}
+.tk__no:hover { background: rgba(0,0,0,0.32); color: #fff; }
+.tk__status {
+  font-size: calc(24px * var(--nx-fs-scale, 1));
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  margin-top: 8px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.tk__eta { font-size: calc(13px * var(--nx-fs-scale, 1)); color: rgba(255,255,255,0.82); margin-top: 3px; }
+.tk__steps {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 8px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.22);
+}
+.tk__step {
+  position: relative;
+  display: flex;
+  gap: 11px;
+  padding: 5px 0 5px 2px;
+}
+.tk__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  position: relative;
+  z-index: 1;
+}
+.tk__step.is-latest .tk__dot {
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+}
+.tk__step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 5.5px;
+  top: 16px;
+  bottom: -8px;
+  width: 1.5px;
+  background: rgba(255,255,255,0.25);
+}
+.tk__step-body { min-width: 0; }
+.tk__step-status { font-size: calc(13px * var(--nx-fs-scale, 1)); font-weight: 500; line-height: 1.45; color: #fff; }
+.tk__step.is-latest .tk__step-status { font-weight: 600; }
+.tk__step-meta {
+  display: flex; gap: 8px;
+  font-size: var(--neox-fs-xxs, 11px); color: rgba(255,255,255,0.72);
+  margin-top: 1px;
+}
+.tk__link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+}
+.tk__link:hover { color: #fff; }
+
+.ncard--todo, .ncard--news, .ncard--recipe, .ncard--trip, .ncard--gallery {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  max-width: 560px;
+}
+
+/* ---------- Todo 沉浸 ---------- */
+.td--plan   { background: linear-gradient(178deg, #2a3654 0%, #3f507a 60%, #566c9e 100%); }
+.td--urgent { background: linear-gradient(178deg, #542818 0%, #7a3c22 60%, #a1522e 100%); }
+.td--done   { background: linear-gradient(178deg, #244838 0%, #386550 60%, #52856a 100%); }
+.td__hero {
+  padding: 14px 16px 12px;
+  color: rgba(255,255,255,0.98);
+}
+.td__hero-title {
+  font-size: calc(15px * var(--nx-fs-scale, 1)); font-weight: 600; letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.16);
+}
+.td__hero-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  font-size: calc(12px * var(--nx-fs-scale, 1)); color: rgba(255,255,255,0.88);
+}
+.td__hero-chip {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(255,255,255,0.16); color: rgba(255,255,255,0.94);
+  letter-spacing: 0.2px;
+}
+.td__hero-chip--warn { background: rgba(255, 180, 80, 0.32); color: #ffe1b0; }
+.td__hero-chip--done { background: rgba(180, 255, 200, 0.28); color: #d3ffe0; }
+.td__list {
+  padding: 4px 6px 8px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+
+/* Todo 行深色化 */
+.ncard--todo .ncard-t__it {
+  border-bottom-color: rgba(255,255,255,0.1);
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+.ncard--todo .ncard-t__it:hover { background: rgba(255,255,255,0.08); }
+.ncard--todo .ncard-t__check {
+  border-color: rgba(255,255,255,0.5);
+  width: 15px; height: 15px;
+}
+.ncard--todo .ncard-t__it.is-done .ncard-t__check {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(255,255,255,0.85);
+}
+.ncard--todo .ncard-t__it.is-done .ncard-t__text {
+  color: rgba(255,255,255,0.5);
+}
+.ncard--todo .ncard-t__text { color: #fff; }
+.ncard--todo .ncard-t__badge {
+  background: rgba(255, 180, 80, 0.32);
+  color: #ffe1b0;
+  padding: 1px 7px; border-radius: 999px;
+}
+
+/* ---------- News 沉浸 ---------- */
+.ncard--news { background: linear-gradient(178deg, #24304d 0%, #384776 60%, #4e619c 100%); }
+.nw__hero { padding: 14px 16px 12px; color: rgba(255,255,255,0.98); }
+.nw__hero-title {
+  font-size: calc(15px * var(--nx-fs-scale, 1)); font-weight: 600; letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.16);
+}
+.nw__hero-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  font-size: calc(12px * var(--nx-fs-scale, 1)); color: rgba(255,255,255,0.88);
+}
+.nw__hero-chip {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(255,255,255,0.16); color: rgba(255,255,255,0.94);
+}
+.nw__list {
+  padding: 4px 6px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.ncard--news .ncard-n {
+  border-bottom-color: rgba(255,255,255,0.08);
+  padding: 12px 14px;
+  border-radius: 6px;
+}
+.ncard--news .ncard-n:hover { background: rgba(255,255,255,0.06); }
+.ncard--news .ncard-n__title { color: #fff; }
+.ncard--news .ncard-n__summary { color: rgba(255,255,255,0.75); }
+.ncard--news .ncard-n__meta { color: rgba(255,255,255,0.62); }
+.ncard--news .ncard-n__tag {
+  background: rgba(255,255,255,0.16); color: #fff;
+  padding: 2px 8px; border-radius: 999px;
+}
+.ncard--news .ncard-n__source { color: rgba(255,255,255,0.82); }
+.ncard--news .ncard-n__thumb {
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* ---------- Recipe 沉浸 ---------- */
+.rp--easy   { background: linear-gradient(178deg, #2f4a2a 0%, #476838 60%, #618850 100%); }
+.rp--medium { background: linear-gradient(178deg, #7a4e1a 0%, #9c661f 60%, #c28331 100%); }
+.rp--hard   { background: linear-gradient(178deg, #6b2818 0%, #8f3a22 60%, #b25233 100%); }
+.rp__hero { padding: 14px 16px 12px; color: rgba(255,255,255,0.98); }
+.rp__hero-title {
+  font-size: calc(17px * var(--nx-fs-scale, 1)); font-weight: 600; letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+}
+.rp__hero-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  font-size: calc(12px * var(--nx-fs-scale, 1)); color: rgba(255,255,255,0.88);
+}
+.rp__hero-chip {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(255,255,255,0.16); color: rgba(255,255,255,0.94);
+}
+/* Recipe body 深色化 */
+.ncard--recipe .ncard-rc__sect { padding: 10px 16px 6px; }
+.ncard--recipe .ncard-rc__sect + .ncard-rc__sect { padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.12); }
+.ncard--recipe .ncard-rc__sect-title {
+  color: rgba(255,255,255,0.7);
+  font-size: var(--neox-fs-xxs, 11px); letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ncard--recipe .ncard-rc__ing li {
+  border-bottom-color: rgba(255,255,255,0.1);
+  padding: 5px 0;
+}
+.ncard--recipe .ncard-rc__ing-name { color: #fff; }
+.ncard--recipe .ncard-rc__ing-amt { color: rgba(255,255,255,0.7); }
+.ncard--recipe .ncard-rc__steps li { color: #fff; }
+.ncard--recipe .ncard-rc__step-time {
+  background: rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.92);
+  padding: 1px 7px; border-radius: 999px;
+}
+.ncard--recipe .ncard-rc__tips { color: rgba(255,255,255,0.85); }
+.ncard--recipe .ncard-rc__source { color: rgba(255,255,255,0.9); margin: 8px 16px 14px; }
+
+/* ---------- Trip 沉浸 ---------- */
+.ncard--trip { background: linear-gradient(178deg, #1e2d4a 0%, #304473 60%, #445d9a 100%); }
+.tp__hero {
+  padding: 14px 16px 12px;
+  color: rgba(255,255,255,0.98);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.tp__hero-title {
+  font-size: calc(15px * var(--nx-fs-scale, 1)); font-weight: 600; letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.16);
+}
+.tp__hero-date {
+  font-size: var(--neox-fs-xs, 12px); color: rgba(255,255,255,0.85);
+  font-variant-numeric: tabular-nums;
+}
+.tp__list {
+  list-style: none; margin: 0; padding: 6px;
+  display: flex; flex-direction: column; gap: 6px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.tp__leg {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.tp__leg-icon { display: inline-flex; color: rgba(255,255,255,0.85); flex-shrink: 0; }
+.tp__leg-body { flex: 1; min-width: 0; }
+.tp__leg-route {
+  display: flex; align-items: baseline; gap: 6px;
+  font-size: var(--neox-fs-md, 14px); flex-wrap: wrap;
+}
+.tp__leg-time { font-variant-numeric: tabular-nums; font-weight: 600; color: #fff; }
+.tp__leg-city { color: rgba(255,255,255,0.85); font-weight: 500; }
+.tp__leg-arrow { color: rgba(255,255,255,0.6); }
+.tp__leg-meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 4px; font-size: calc(12px * var(--nx-fs-scale, 1));
+  color: rgba(255,255,255,0.72);
+}
+.tp__leg-status {
+  padding: 1px 7px; border-radius: 999px;
+  background: rgba(120,255,180,0.22); color: #b9ffce;
+}
+.tp__leg-price {
+  font-weight: 600; font-variant-numeric: tabular-nums;
+  font-size: var(--neox-fs-md, 14px); color: #fff;
+}
+.tp__actions {
+  padding: 6px 14px 12px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.tp__action {
+  color: rgba(255,255,255,0.9); text-decoration: none;
+  font-size: var(--neox-fs-xs, 12px); font-weight: 500;
+}
+.tp__action:hover { color: #fff; }
+
+/* ---------- Gallery 沉浸 ---------- */
+.ncard--gallery { background: linear-gradient(178deg, #3a284a 0%, #55396a 60%, #75528e 100%); }
+.gl__hero { padding: 14px 16px 12px; color: rgba(255,255,255,0.98); }
+.gl__hero-title {
+  font-size: calc(15px * var(--nx-fs-scale, 1)); font-weight: 600; letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.16);
+}
+.gl__hero-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  font-size: calc(12px * var(--nx-fs-scale, 1)); color: rgba(255,255,255,0.88);
+}
+.gl__hero-chip {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(255,255,255,0.16); color: rgba(255,255,255,0.94);
+}
+.gl__grid {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.gl__cell {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.gl__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gl__cell--placeholder { display: flex; align-items: center; justify-content: center; }
+.gl__cell-fallback {
+  display: inline-flex;
+  color: rgba(255,255,255,0.55);
+}
+.gl__caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 10px 10px 6px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.68), rgba(0,0,0,0));
+  color: #fff;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  line-height: 1.35;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.gl__caption-text {
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.gl__source { font-size: calc(11px * var(--nx-fs-scale, 1)); opacity: 0.82; }
+
+
+
+/* ---------- 通用头部 (nhead) ---------- */
+.nhead {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 12px;
+}
+.nhead__mark {
+  flex: none;
+  width: 15px; height: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none;
+  border-radius: 0;
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nhead__mark.is-good { color: var(--neox-success-600, #16a34a); }
+.nhead__mark.is-warn { color: var(--neox-warning-600, #d97706); }
+.nhead__mark.is-bad  { color: var(--neox-danger-600, #dc2626); }
+.nhead__text { flex: 1 1 auto; min-width: 0; padding-top: 2px; }
+.nhead__title {
+  font-size: var(--ncard-fs-title);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nhead__sub {
+  margin-top: 2px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  line-height: 1.4;
+}
+.nhead__right { flex: none; padding-top: 2px; }
+
+/* ---------- 状态药丸 (npill) ---------- */
+.npill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px 2px 7px;
+  border-radius: 999px;
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-medium, 500);
+  background: var(--ncard-chip-bg);
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+}
+.npill.is-good { color: var(--neox-success-600, #16a34a); background: color-mix(in srgb, var(--neox-success-500, #22c55e) 13%, transparent); }
+.npill.is-warn { color: var(--neox-warning-600, #d97706); background: color-mix(in srgb, var(--neox-warning-500, #f59e0b) 15%, transparent); }
+.npill.is-bad  { color: var(--neox-danger-600, #dc2626);  background: color-mix(in srgb, var(--neox-danger-500, #ef4444) 13%, transparent); }
+.npill.is-info { color: var(--neox-primary-600, #3557d4); background: color-mix(in srgb, var(--neox-primary-500, #4f7cff) 12%, transparent); }
+
+/* ---------- 细进度条 (nbar) ---------- */
+.nbar {
+  display: block; margin-top: 6px;
+  height: 3px; border-radius: 2px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  overflow: hidden;
+}
+.nbar__fill {
+  display: block; height: 100%; border-radius: 2px;
+  background: var(--neox-primary-500, #4f7cff);
+  transition: width 260ms var(--neox-ease-out, ease);
+}
+.nbar.is-good .nbar__fill { background: var(--neox-success-500, #22c55e); }
+.nbar.is-warn .nbar__fill { background: var(--neox-warning-500, #f59e0b); }
+.nbar.is-bad  .nbar__fill { background: var(--neox-danger-500, #ef4444); }
+
+/* ---------- 数字条 (nstats) — summary / metrics / report 共用 ---------- */
+.nstats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 0;
+  margin-bottom: 10px;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+}
+.nstats__cell {
+  padding: 6px 12px 6px 0;
+  position: relative;
+}
+/* 竖向 hairline 分隔 —— 比 1px gap 露底的做法干净, 首列不画 */
+.nstats__cell + .nstats__cell::before {
+  content: ''; position: absolute; left: 0; top: 22%; bottom: 22%;
+  width: 1px; background: var(--ncard-hairline);
+}
+.nstats__val {
+  display: flex; align-items: baseline; gap: 5px;
+  /* 相对所在正文的 1.15 倍 —— KPI 数字是这条里唯一该被先看到的东西, 值得高半档,
+   * 但绝对值必须跟着宿主走: 写死 15px 在 11px 的正文里就是 1.4 倍, 又变成"比字还大"。 */
+  /* 横排之后值不再需要"大一号"来占据视觉重心 —— 同一行里字重和颜色就够分主次。
+   * 1.15 倍是竖排时代的遗留, 留着只会把行高顶起来。 */
+  font-size: var(--ncard-fs-body);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.nstats__cell.is-good .nstats__val { color: var(--neox-success-600, #16a34a); }
+.nstats__cell.is-warn .nstats__val { color: var(--neox-warning-600, #d97706); }
+.nstats__cell.is-bad  .nstats__val { color: var(--neox-danger-600, #dc2626); }
+.nstats__delta {
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nstats__delta.is-up   { color: var(--neox-success-600, #16a34a); }
+.nstats__delta.is-down { color: var(--neox-danger-600, #dc2626); }
+.nstats__lbl {
+  margin-top: 3px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---------- 章节列表 (nsec) — 图标代替圆点 ---------- */
+.nsec { margin-bottom: 12px; }
+.nsec:last-child { margin-bottom: 0; }
+.nsec__title {
+  display: flex; align-items: center; gap: 6px;
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-medium, 500);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  margin-bottom: 6px;
+}
+.nsec__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.nsec__it {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 4px 0;
+  font-size: var(--ncard-fs-body);
+  color: var(--neox-fg-primary);
+  line-height: 1.5;
+}
+.nsec__it-glyph {
+  flex: none; margin-top: 2px;
+  color: var(--neox-fg-quaternary, var(--neox-fg-tertiary, var(--neox-fg-secondary)));
+  opacity: 0.85;
+}
+/* 语义着色 — 图标带上色彩才有信息量, 但只给图标不给正文 (不刺眼) */
+.nsec__it.is-check  .nsec__it-glyph { color: var(--neox-success-600, #16a34a); opacity: 1; }
+.nsec__it.is-cross  .nsec__it-glyph,
+.nsec__it.is-bug    .nsec__it-glyph { color: var(--neox-danger-600, #dc2626); opacity: 1; }
+.nsec__it.is-alert  .nsec__it-glyph,
+.nsec__it.is-flag   .nsec__it-glyph { color: var(--neox-warning-600, #d97706); opacity: 1; }
+.nsec__it.is-shield .nsec__it-glyph,
+.nsec__it.is-bolt   .nsec__it-glyph,
+.nsec__it.is-rocket .nsec__it-glyph { color: var(--neox-primary-600, #3557d4); opacity: 1; }
+.nsec__it-text { min-width: 0; }
+
+/* ---------- 文件改动清单 ---------- */
+.nsum__files {
+  display: flex; flex-direction: column;
+  border-top: 1px solid var(--ncard-hairline);
+  padding-top: 2px;
+}
+.nsum__file {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.nsum__file + .nsum__file { box-shadow: inset 0 1px 0 0 var(--ncard-hairline); }
+.nsum__file:hover { background: var(--ncard-bg-hover); }
+.nsum__file-icon { flex: none; display: inline-flex; opacity: 0.9; }
+.nsum__file-path {
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--neox-font-mono);
+  font-size: var(--ncard-fs-sub);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* 目录压暗 + 文件名给主色 —— 一列等重灰字里挑文件名是最费眼的事 */
+.nsum__file-dir  { color: var(--neox-fg-quaternary, var(--neox-fg-tertiary, var(--neox-fg-secondary))); opacity: 0.75; }
+.nsum__file-name { color: var(--neox-fg-primary); font-weight: var(--neox-fw-medium, 500); }
+.nsum__file-note {
+  /* 第二个让位: 压不下就省略号, 不硬占宽度 */
+  flex: 0 4 auto;
+  min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nsum__file-bar {
+  /* 先塌的就是它 —— 窄到放不下时整根让掉, 数字还在 */
+  flex: 0 8 auto;
+  min-width: 0;
+  display: flex; align-items: center;
+  width: 54px; height: 3px;
+  border-radius: 2px; overflow: hidden;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+.nsum__file-bar-add { height: 100%; background: var(--neox-success-500, #22c55e); }
+.nsum__file-bar-del { height: 100%; background: var(--neox-danger-500, #ef4444); }
+.nsum__file-bar-pad { height: 100%; background: transparent; }
+.nsum__file-num {
+  flex: 0 0 auto;
+  display: inline-flex; gap: 5px;
+  font-size: var(--ncard-fs-meta);
+  font-variant-numeric: tabular-nums;
+  min-width: 62px; justify-content: flex-end;
+}
+.nsum__file-num .is-add  { color: var(--neox-success-600, #16a34a); }
+.nsum__file-num .is-del  { color: var(--neox-danger-600, #dc2626); }
+.nsum__file-num .is-none { color: var(--neox-fg-tertiary, var(--neox-fg-secondary)); }
+
+/* ---------- Chart ---------- */
+.nchart__empty {
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  padding: 6px 0;
+}
+.nchart__plot svg {
+  width: 100%;
+  height: auto;
+  max-height: 132px;
+  display: block;
+  overflow: visible;
+}
+.nchart__grid { stroke: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent); stroke-width: 1; }
+.nchart__axis { stroke: color-mix(in srgb, var(--neox-fg-primary) 16%, transparent); stroke-width: 1; }
+/* 10px 而不是 8.5px: viewBox 从 320 加宽到 480 后, 放大系数从 ~1.6 掉到 ~1.06,
+ * 不补这一档轴标签会缩到 9px 以下 (见 ColumnChart 顶上那段注释)。
+ * 补完约 10.6px 渲染 —— 仍明显小于 13.65px 的正文, 层级不乱。 */
+.nchart__tick,
+.nchart__cat {
+  font-size: 11px;
+  fill: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  font-family: var(--neox-font-sans, inherit);
+}
+.nchart__col-val {
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--neox-fg-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.nchart__col { transition: opacity 140ms ease; }
+.nchart__col:hover { opacity: 0.82; }
+/* 重点柱的数值用正文墨色加粗, 其余退一档 (4.0.1) */
+.is-focus > .nchart__col-val { fill: var(--neox-fg-primary); font-weight: 700; }
+.is-muted > .nchart__col-val { fill: var(--neox-fg-tertiary, var(--neox-fg-secondary)); font-weight: 500; }
+.nchart__grid { stroke-dasharray: 2 3; }
+
+.nchart__bars { display: flex; flex-direction: column; gap: 7px; }
+.nchart__bar-row { display: flex; align-items: center; gap: 9px; }
+.nchart__bar-lbl {
+  flex: 0 0 27%; min-width: 0;
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-secondary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nchart__bar-track {
+  flex: 1 1 auto;
+  height: 8px; border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  overflow: hidden;
+}
+.nchart__bar-fill {
+  display: block; height: 100%;
+  border-radius: 4px;
+  transition: width 260ms var(--neox-ease-out, ease);
+}
+.nchart__bar-val {
+  flex: none; min-width: 48px; text-align: right;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.nchart__bars--report { gap: 11px; }
+.nchart__bars--report .nchart__bar-lbl { flex-basis: 38%; font-size: var(--ncard-fs-sub); }
+.nchart__bars--report .nchart__bar-track { height: 10px; border-radius: 5px; }
+.nchart__bars--report .nchart__bar-fill { border-radius: 5px; }
+.nchart__bars--report .nchart__bar-val { min-width: 72px; }
+/* 提到图顶画一次的单位 —— 长单位逐行重复会把数值列挤到对不齐 */
+.nchart__bars-unit {
+  margin: 0 0 2px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+
+.nchart__line-path {
+  fill: none;
+  stroke: var(--nchart-c1);
+  stroke-width: 1.8;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.nchart__line-area { fill: color-mix(in srgb, var(--nchart-c1) 14%, transparent); stroke: none; }
+.nchart__line-dot  { fill: var(--nchart-c1); stroke: var(--neox-bg-card, #fff); stroke-width: 1.2; }
+
+.nchart__pie { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.nchart__pie-box { position: relative; flex: none; width: 112px; height: 112px; }
+.nchart__pie-svg { width: 112px; height: 112px; display: block; }
+.nchart__pie-slice { stroke: var(--neox-bg-card, #fff); stroke-width: 0.8; }
+.nchart__pie-hole { fill: var(--neox-bg-card, #fff); }
+.nchart__pie-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.nchart__pie-total {
+  /* 横排之后值不再需要"大一号"来占据视觉重心 —— 同一行里字重和颜色就够分主次。
+   * 1.15 倍是竖排时代的遗留, 留着只会把行高顶起来。 */
+  font-size: var(--ncard-fs-body);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+}
+.nchart__pie-total-lbl {
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nchart__legend {
+  flex: 1 1 170px; min-width: 0;
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 6px;
+}
+/* 构成条下面那排图例走横排 —— flex:none 是必须的: 它在 .nchart__stack (column flex) 里,
+   继承 .nchart__legend 的 flex:1 1 170px 会被拉高成一大块空白。 */
+.nchart__legend--inline { flex: none; flex-direction: row; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; }
+.nchart__legend li { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.nchart__legend i { flex: none; width: 8px; height: 8px; border-radius: 3px; }
+.nchart__legend-lbl {
+  flex: 1 1 auto; min-width: 0;
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nchart__legend-val {
+  flex: none;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  font-variant-numeric: tabular-nums;
+}
+
+/* 环形完成度 */
+.nchart__gauges { display: flex; flex-wrap: wrap; gap: 18px; justify-content: flex-start; }
+.nchart__gauge { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 66px; }
+.nchart__gauge-track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  stroke-width: 6;
+}
+.nchart__gauge-fill {
+  fill: none; stroke-width: 6; stroke-linecap: round;
+  transition: stroke-dasharray 320ms var(--neox-ease-out, ease);
+}
+.nchart__gauge-val {
+  font-size: 13px; font-weight: 600;
+  fill: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+.nchart__gauge-lbl {
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  max-width: 88px; text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* 构成条 */
+.nchart__stack { display: flex; flex-direction: column; gap: 8px; }
+.nchart__stack-row { display: flex; align-items: center; gap: 9px; }
+.nchart__stack-track {
+  flex: 1 1 auto;
+  display: flex; height: 10px;
+  border-radius: 5px; overflow: hidden;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+.nchart__stack-seg { height: 100%; transition: width 260ms var(--neox-ease-out, ease); }
+.nchart__stack-seg + .nchart__stack-seg { box-shadow: inset 1px 0 0 0 var(--neox-bg-card, #fff); }
+
+/* 热力矩阵 */
+.nchart__heat { display: flex; flex-direction: column; gap: 3px; overflow-x: auto; }
+.nchart__heat-row {
+  display: grid;
+  grid-template-columns: minmax(64px, 22%) repeat(var(--nheat-cols, 4), minmax(34px, 1fr));
+  gap: 3px; align-items: stretch;
+}
+.nchart__heat-rlbl,
+.nchart__heat-clbl {
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  display: flex; align-items: center;
+}
+.nchart__heat-clbl { justify-content: center; }
+.nchart__heat-cell {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 26px;
+  border-radius: 5px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Metrics — 复用 nstats, 只留卡容器 ---------- */
+.ncard--metrics .nstats { margin-bottom: 0; }
+
+/* ---------- Steps ---------- */
+.nstep__list {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column;
+}
+.nstep__it {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 7px 0;
+  position: relative;
+}
+/* 竖线连起来 —— 最后一条不画 */
+.nstep__it::before {
+  content: '';
+  position: absolute;
+  left: 9px; top: 27px; bottom: -7px;
+  width: 1px;
+  background: var(--ncard-hairline);
+}
+.nstep__it:last-child::before { display: none; }
+.nstep__marker {
+  flex: none;
+  width: 19px; height: 19px; margin-top: 1px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-medium, 500);
+  background: var(--ncard-chip-bg);
+  color: var(--neox-fg-secondary);
+  border: 1px solid transparent;
+}
+.nstep__marker-n { font-variant-numeric: tabular-nums; line-height: 1; }
+.nstep__it.is-done   .nstep__marker { background: color-mix(in srgb, var(--neox-success-500, #22c55e) 16%, transparent); color: var(--neox-success-600, #16a34a); }
+.nstep__it.is-failed .nstep__marker { background: color-mix(in srgb, var(--neox-danger-500, #ef4444) 14%, transparent);  color: var(--neox-danger-600, #dc2626); }
+.nstep__it.is-active .nstep__marker { background: color-mix(in srgb, var(--neox-primary-500, #4f7cff) 16%, transparent); color: var(--neox-primary-600, #3557d4); border-color: color-mix(in srgb, var(--neox-primary-500, #4f7cff) 40%, transparent); }
+.nstep__body { min-width: 0; }
+.nstep__title {
+  font-size: var(--ncard-fs-body);
+  color: var(--neox-fg-primary);
+  line-height: 1.45;
+}
+.nstep__it.is-todo .nstep__title { color: var(--neox-fg-secondary); }
+.nstep__desc {
+  margin-top: 2px;
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  line-height: 1.45;
+}
+
+/* ---------- Callout ---------- */
+.ncall {
+  --ncall-c: var(--neox-fg-primary);
+  display: flex; align-items: flex-start; gap: 11px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--ncall-c) 16%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ncall-c) 6%, var(--neox-bg-card, transparent));
+}
+.ncall.is-info { --ncall-c: var(--neox-fg-primary); background: color-mix(in srgb, var(--ncall-c) 4%, var(--neox-bg-card, transparent)); border-color: color-mix(in srgb, var(--ncall-c) 10%, transparent); }
+.ncall.is-good { --ncall-c: var(--neox-success-500, #22c55e); }
+.ncall.is-warn { --ncall-c: var(--neox-warning-500, #f59e0b); }
+.ncall.is-bad  { --ncall-c: var(--neox-danger-500, #ef4444); }
+.ncall__icon {
+  flex: none; display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-top: -1px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ncall-c) 14%, transparent);
+}
+.ncall.is-info .ncall__icon { color: var(--neox-fg-secondary); }
+.ncall.is-good .ncall__icon { color: var(--neox-success-600, #16a34a); }
+.ncall.is-warn .ncall__icon { color: var(--neox-warning-600, #d97706); }
+.ncall.is-bad  .ncall__icon { color: var(--neox-danger-600, #dc2626); }
+.ncall__body { min-width: 0; }
+.ncall__title {
+  font-size: var(--ncard-fs-body);
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  margin-bottom: 2px;
+}
+.ncall__text {
+  font-size: var(--ncard-fs-body);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+}
+
+/* ---------- Table 卡 ---------- */
+.ncard-c__wrap { overflow-x: auto; }
+.ncard-c {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ncard-fs-sub);
+}
+.ncard-c th {
+  text-align: left;
+  padding: 3px 12px 5px;
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-medium, 500);
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  border-bottom: 1px solid var(--ncard-hairline);
+  white-space: nowrap;
+}
+/* 7 → 5: 每行省 4px, 一张 6 行的表就省下 24px = 一行半正文 */
+.ncard-c td {
+  padding: 5px 12px;
+  color: var(--neox-fg-secondary);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.ncard-c tbody tr + tr td { border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.ncard-c th.is-first, .ncard-c td.is-first { padding-left: 2px; }
+.ncard-c td.is-first { color: var(--neox-fg-primary); font-weight: var(--neox-fw-medium, 500); }
+.ncard-c td.is-num  { text-align: right; font-variant-numeric: tabular-nums; color: var(--neox-fg-primary); }
+.ncard-c td.is-path { font-family: var(--neox-font-mono); font-size: var(--ncard-fs-meta); }
+.ncard-c td.is-good { color: var(--neox-success-600, #16a34a); }
+.ncard-c td.is-bad  { color: var(--neox-danger-600, #dc2626); }
+.ncard-c td.is-warn { color: var(--neox-warning-600, #d97706); }
+.ncard-c tbody tr:hover td { background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent); }
+
+/* ---------- Flow — 轻量流程图 ---------- */
+.nflow__body { display: flex; flex-direction: column; align-items: stretch; gap: 2px; }
+.nflow__layer { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.nflow__node {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 12px;
+  border-radius: 9px;
+  background: var(--ncard-tile);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  max-width: 100%;
+}
+.nflow__node.is-good { background: color-mix(in srgb, var(--neox-success-500, #22c55e) 10%, transparent); }
+.nflow__node.is-warn { background: color-mix(in srgb, var(--neox-warning-500, #f59e0b) 11%, transparent); }
+.nflow__node.is-bad  { background: color-mix(in srgb, var(--neox-danger-500, #ef4444) 10%, transparent); }
+.nflow__node-glyph { flex: none; color: var(--neox-fg-tertiary, var(--neox-fg-secondary)); display: inline-flex; }
+.nflow__node.is-good .nflow__node-glyph { color: var(--neox-success-600, #16a34a); }
+.nflow__node.is-warn .nflow__node-glyph { color: var(--neox-warning-600, #d97706); }
+.nflow__node.is-bad  .nflow__node-glyph { color: var(--neox-danger-600, #dc2626); }
+.nflow__node-text { min-width: 0; display: flex; flex-direction: column; }
+.nflow__node-label {
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nflow__node-note {
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nflow__arrow {
+  display: flex; justify-content: center;
+  color: color-mix(in srgb, var(--neox-fg-primary) 26%, transparent);
+}
+.nflow__edges {
+  margin-top: 10px; padding-top: 8px;
+  border-top: 1px solid var(--ncard-hairline);
+  display: flex; flex-wrap: wrap; gap: 4px 14px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+
+/* ---------- Timeline — 事件轴 ---------- */
+.ntl__list { list-style: none; margin: 0; padding: 0; }
+.ntl__it { display: flex; gap: 10px; padding: 6px 0; position: relative; }
+.ntl__it::before {
+  content: ''; position: absolute;
+  left: 9px; top: 26px; bottom: -6px; width: 1px;
+  background: var(--ncard-hairline);
+}
+.ntl__it:last-child::before { display: none; }
+.ntl__glyph {
+  flex: none; width: 19px; height: 19px; margin-top: 1px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ncard-chip-bg);
+  color: var(--neox-fg-secondary);
+}
+.ntl__it.is-good .ntl__glyph { background: color-mix(in srgb, var(--neox-success-500, #22c55e) 15%, transparent); color: var(--neox-success-600, #16a34a); }
+.ntl__it.is-warn .ntl__glyph { background: color-mix(in srgb, var(--neox-warning-500, #f59e0b) 16%, transparent); color: var(--neox-warning-600, #d97706); }
+.ntl__it.is-bad  .ntl__glyph { background: color-mix(in srgb, var(--neox-danger-500, #ef4444) 15%, transparent);  color: var(--neox-danger-600, #dc2626); }
+.ntl__body { min-width: 0; flex: 1 1 auto; }
+.ntl__l1 { display: flex; align-items: baseline; gap: 8px; }
+.ntl__title { font-size: var(--ncard-fs-body); color: var(--neox-fg-primary); line-height: 1.45; }
+.ntl__time {
+  flex: none; margin-left: auto;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  font-variant-numeric: tabular-nums;
+}
+.ntl__desc {
+  margin-top: 2px;
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  line-height: 1.45;
+}
+
+.ntl--rail .ntl__it {
+  display: grid;
+  grid-template-columns: 76px 20px 1fr;
+  gap: 0 14px;
+  padding: 11px 0;
+  align-items: start;
+}
+.ntl--rail .ntl__it::before {
+  left: 99px; top: 30px; bottom: -11px; width: 2px;
+  background: color-mix(in srgb, var(--nchart-c1) 30%, transparent);
+}
+.ntl--rail .ntl__when {
+  font-size: var(--ncard-fs-sub);
+  text-align: right;
+  padding-top: 2px;
+  color: var(--neox-fg-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ntl--rail .ntl__glyph {
+  width: 20px; height: 20px; margin-top: 1px;
+  background: color-mix(in srgb, var(--nchart-c1) 14%, transparent);
+  color: var(--nchart-c1);
+}
+/* 起点和终点实心 —— 一条轴上最重要的就是这两端 */
+.ntl--rail .ntl__it.is-edge .ntl__glyph { background: var(--nchart-c1); color: #fff; }
+.ntl--rail .ntl__title { font-weight: 600; }
+.ntl--rail .ntl__desc { margin-top: 3px; }
+
+/* ---------- Report — 报告入口卡 ----------
+ * 整块可点 (点开右栏 Surface), 所以给足 affordance: hover 抬面 + 右侧「打开 ›」。 */
+.ncard--report { padding: 0; overflow: hidden; }
+.nrep__main {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px var(--ncard-pad);
+  border-radius: 12px;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.nrep__main.is-clickable { cursor: pointer; }
+.nrep__main.is-clickable:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.nrep__main.is-clickable:hover .nrep__open { opacity: 1; transform: translateX(0); }
+.nrep__main:focus-visible { outline: 2px solid var(--neox-primary-500, #4f7cff); outline-offset: -2px; }
+.nrep__mark {
+  flex: none;
+  width: 16px; height: 16px;
+  margin-top: 2px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+.nrep__text { flex: 1 1 auto; min-width: 0; }
+.nrep__title {
+  /* 并入 --ncard-fs-title (= 所在正文同档): 层级交给字重, 不靠加大字号 */
+  font-size: var(--ncard-fs-title);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em; line-height: 1.35;
+}
+.nrep__summary {
+  margin-top: 3px;
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.nrep__meta {
+  margin-top: 7px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nrep__path {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--neox-font-mono);
+  max-width: 100%; min-width: 0;
+}
+.nrep__path > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nrep__meta-it b {
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-quaternary, var(--neox-fg-tertiary, var(--neox-fg-secondary)));
+  margin-right: 4px;
+}
+.nrep__open {
+  flex: none; align-self: center;
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-primary-600, #3557d4);
+  opacity: 0; transform: translateX(-4px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+/* 段间距 12 → 8: 收成折叠头之后, 剩下的几块之间不需要再各留一整行的空 */
+.ncard--report .nstats { margin: 0 var(--ncard-pad) 8px; }
+.ncard--report .nsec { margin: 0 var(--ncard-pad) 8px; }
+.nrep__files {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 8px var(--ncard-pad);
+  border-top: 1px solid var(--ncard-hairline);
+}
+.nrep__file {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border: 0; border-radius: 7px;
+  background: var(--ncard-tile);
+  color: var(--neox-fg-secondary);
+  font-size: var(--ncard-fs-meta);
+  font-family: var(--neox-font-mono);
+  cursor: pointer;
+  max-width: 100%;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease), color 120ms ease;
+}
+.nrep__file:hover { background: color-mix(in srgb, var(--neox-primary-500, #4f7cff) 12%, transparent); color: var(--neox-fg-primary); }
+.nrep__file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nrep__file-note { color: var(--neox-fg-tertiary, var(--neox-fg-secondary)); font-family: var(--neox-font-sans, inherit); }
+
+.ncard.nrpt {
+  /* 插图对象: 宽由外层 float 槽决定 (markdown 里约 280px), 自己把槽拉满. */
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 0;
+  overflow: visible;
+}
+.nrpt__viz-seal { display: flex; padding: 2px 0; color: var(--nrpt-ink, var(--nrpt-c)); }
+.nrpt__viz-ticks {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 3px;
+  width: 100%;
+}
+.nrpt__viz-ticks i {
+  display: block;
+  flex: 1 1 2px;
+  min-width: 2px;
+  max-width: 7px;
+  height: 18px;
+  border-radius: 1.5px;
+  background: currentColor;
+}
+/* 底片档 (够鲜亮才认得出是状态色), 文字那边才用 ink —— 见下面 --nrpt-ink 那段 */
+.nrpt__viz-ticks .is-add { color: var(--neox-ok, #3f9a52); }
+.nrpt__viz-ticks .is-del { color: var(--neox-err, #c0392b); }
+/* 增删相接处留一道缝, 两段才分得开 */
+.nrpt__viz-ticks .is-add + .is-del { margin-left: 5px; }
+.nrpt__hero-icon {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.nrpt__hero-icon:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); }
+.nrpt__nums {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-left: 0.55em;
+  vertical-align: middle;
+  font-size: var(--ncard-fs-meta);
+  font-variant-numeric: tabular-nums;
+}
+.nrpt__nums .is-add { color: var(--neox-ok-ink, var(--neox-ok, #3f9a52)); font-weight: var(--neox-fw-semibold, 600); }
+.nrpt__nums .is-del { color: var(--neox-err-ink, var(--neox-err, #c0392b)); font-weight: var(--neox-fw-semibold, 600); }
+.nrpt__size { color: var(--neox-fg-hint); }
+.nrpt.is-good { --nrpt-c: var(--neox-ok, #5fb46a);   --nrpt-ink: var(--neox-ok-ink, var(--neox-ok, #5fb46a)); }
+.nrpt.is-warn { --nrpt-c: var(--neox-warn, #ffb84d); --nrpt-ink: var(--neox-warn-ink, var(--neox-warn, #ffb84d)); }
+.nrpt.is-bad  { --nrpt-c: var(--neox-err, #e5534b);  --nrpt-ink: var(--neox-err-ink, var(--neox-err, #e5534b)); }
+.nrpt.is-info { --nrpt-c: var(--neox-info, #3B82F6); --nrpt-ink: var(--neox-info-ink, var(--neox-info, #3B82F6)); }
+
+/* hero: 行内元素, 才能绕过右侧 float 的图形. 再写成 flex 行, 文字就又是一块矩形。 */
+.nrpt__hero {
+  display: block;
+  padding: 0;
+  min-width: 0;
+}
+.nrpt__badge {
+  flex-shrink: 0;
+  width: 15px; height: 15px;
+  display: grid; place-items: center;
+  border-radius: 0;
+  color: var(--nrpt-ink, var(--nrpt-c));
+  background: none;
+}
+.nrpt__title {
+  display: inline;
+  font-size: var(--ncard-fs-title);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+  white-space: normal;
+}
+.nrpt__status {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  gap: 5px;
+  margin-left: 0.55em;
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-semibold, 600);
+  letter-spacing: 0.01em;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--nrpt-ink, var(--nrpt-c));
+}
+/* 印记比字略沉一点 —— 它是"盖上去"的, 不该和文字一样轻 */
+.nrpt__seal { flex: none; }
+
+.nrpt__kpis {
+  display: inline;
+  padding: 0;
+}
+.nrpt__kpi {
+  display: inline;
+  border: 0;
+  padding: 0;
+  margin-left: 0.7em;
+  white-space: nowrap;
+}
+.nrpt__kpi span,
+.nrpt__kpi b {
+  display: inline;
+  font-size: var(--ncard-fs-meta);
+  font-weight: var(--neox-fw-medium, 500);
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
+.nrpt__kpi span {
+  order: 0;
+  color: var(--neox-fg-muted);
+  margin-right: 0.35em;
+}
+.nrpt__kpi b {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+  line-height: inherit;
+  color: var(--neox-fg-primary);
+}
+.nrpt__kpi.is-good b { color: var(--neox-ok, #3f9a52); }
+.nrpt__kpi.is-warn b { color: var(--neox-warn, #b7791f); }
+.nrpt__kpi.is-bad  b { color: var(--neox-err, #c0392b); }
+
+/* 每段一行折叠头 —— 这才是"简单的布局": 默认只有标题 + 条数, 点开才铺内容 */
+.nrpt__secs { border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); }
+.nrpt__sec + .nrpt__sec { border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); }
+.nrpt__sec-h {
+  display: inline-flex; align-items: center; gap: 7px;
+  max-width: 100%;
+  border: 0; background: transparent;
+  padding: 5px 13px;
+  cursor: pointer;
+  font: inherit;
+  color: var(--neox-fg-secondary);
+  text-align: left;
+  border-radius: 6px;
+}
+.nrpt__sec-h:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.nrpt__sec-t { flex: 0 1 auto; min-width: 0; font-size: var(--ncard-fs-sub); }
+.nrpt__sec-n {
+  flex-shrink: 0;
+  font-size: var(--ncard-fs-meta); font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-hint);
+  padding: 0 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+.nrpt__sec-c { flex-shrink: 0; font-size: var(--ncard-fs-meta); color: var(--neox-fg-hint); width: 10px; text-align: center; }
+
+/* 文件行: 无进度条、无斑马纹。左边路径 (目录淡 / 文件名实), 右边定宽数字列。 */
+.nrpt__files {
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  padding: 4px 0;
+}
+.nrpt__f {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.nrpt__f:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.nrpt__f-icon { flex-shrink: 0; display: grid; place-items: center; width: 14px; }
+.nrpt__f-path {
+  /* 同 .nrpt__title: 不当填充物, +N −M 紧跟文件名 */
+  flex: 0 1 auto; min-width: 0;
+  font-family: var(--neox-font-mono);
+  font-size: var(--ncard-fs-meta);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.nrpt__f-dir { color: var(--neox-fg-hint); }
+.nrpt__f-name { color: var(--neox-fg-primary); }
+/* 定宽数字列 —— 所有行右对齐, 扫一眼就能比大小 */
+.nrpt__f-num {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 92px;
+  font-size: var(--ncard-fs-meta);
+  font-variant-numeric: tabular-nums;
+}
+.nrpt__f-num i { font-style: normal; text-align: right; }
+/* 同上: 这两个是**文字**(+18 / −4), 不是填充, 用 ink 档。
+ * 浅色下 --neox-ok (#10b981) 压在白底上只有 2.54。 */
+.nrpt__f-num .is-add { color: var(--neox-ok-ink, var(--neox-ok, #3f9a52)); }
+.nrpt__f-num .is-del { color: var(--neox-err-ink, var(--neox-err, #c0392b)); }
+.nrpt__f-num .is-none { grid-column: 1 / -1; color: var(--neox-fg-hint); }
+
+/* 展开后的句子段 */
+.nrpt__lines { margin: 0; padding: 0 13px 9px 26px; display: flex; flex-direction: column; gap: 3px; list-style: disc; }
+.nrpt__lines li { font-size: var(--ncard-fs-sub); line-height: 1.5; color: var(--neox-fg-secondary); }
+.nrpt__lines li::marker { color: color-mix(in srgb, var(--neox-fg-primary) 34%, transparent); }
+
+.nsec__title.is-toggle {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 5px;
+  transition: color var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.nsec__title.is-toggle:hover { color: var(--neox-fg-primary); }
+.nsec__count {
+  margin-left: auto;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+.nsec__chev {
+  flex: none;
+  margin-left: 6px;
+  color: var(--neox-fg-hint);
+  transition: transform var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.nsec__title.is-open .nsec__chev { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) {
+  .nsec__chev { transition: none; }
+}
+/* 行距收紧: 4px → 2px。收起之后剩下的那几行不该再各占一整行呼吸 */
+.nsec__it { padding: 2px 0; }
+
+.ncard .ncard-c,
+.ncard .ncard-c td { font-size: var(--ncard-fs-sub); }
+.ncard .ncard-c th { font-size: var(--ncard-fs-meta); }
+
+.nflow__body.is-linear {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nflow__body.is-linear .nflow__layer { justify-content: flex-start; }
+/* 箭头转 -90° 朝右 —— 同一枚图形复用, 不另画一个 */
+.nflow__body.is-linear .nflow__arrow { transform: rotate(-90deg); }
+
+
+.nrpt__foot {
+  /* 不要 clear、不要 flex: 二者都会让底栏变成通栏矩形, 图形旁边又空一截。
+   * 行内排, 文件 chip 作为行框继续绕过右侧的 KPI/图。 */
+  display: block;
+  padding: 4px 0 0;
+  border-top: 0;
+}
+/* 文件占主, 展开器只占它自己那点宽 */
+/* 0 1 auto 而不是 1 1 auto: 文件不撑开, 展开器紧跟在 +N 后面
+ * —— 最后一处「左边一头右边一头、中间全空」的地方 */
+.nrpt__foot .nrpt__files {
+  display: inline;
+  padding: 0;
+  border: 0;
+}
+.nrpt__foot .nrpt__f {
+  display: inline-flex;
+  vertical-align: middle;
+  padding: 2px 8px 2px 0;
+}
+.nrpt__foot .nrpt__secs {
+  display: inline-flex;
+  vertical-align: middle;
+  border: 0;
+}
+.nrpt__foot .nrpt__sec { display: inline-block; vertical-align: middle; border: 0; }
+/* 折叠头收成一枚小展开器: 标题不再占位, 只留 数字 + 箭头 */
+.nrpt__foot .nrpt__sec-h {
+  padding: 2px 6px;
+  border-radius: 6px;
+  gap: 4px;
+}
+.nrpt__foot .nrpt__sec-t {
+  /* 标题留给无障碍 / title 提示, 视觉上不占一整行 */
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* 展开后内容另起一行铺满 —— 它此刻才是主角 */
+.nrpt__foot .nrpt__sec.is-open { display: block; margin-top: 6px; }
+.nrpt__foot .nrpt__sec.is-open .nrpt__sec-t {
+  position: static; width: auto; height: auto; clip-path: none;
+}
+
+.nrpt__hero .nrpt__secs { display: inline; margin-left: 0.55em; border-top: 0; }
+/* 展开的那一刻整块转成通栏 —— inline 容器里放不下一段铺开的内容 */
+.nrpt__hero .nrpt__secs:has(.nrpt__sec.is-open) { display: block; margin-left: 0; }
+.nrpt__hero .nrpt__sec { display: inline-block; vertical-align: middle; border: 0; }
+.nrpt__hero .nrpt__sec-h { padding: 1px 4px; border-radius: 6px; gap: 3px; }
+
+.nrpt__hero { --nrpt-text-x: 0px; }
+.nrpt__hero:has(.nrpt__hero-icon) { --nrpt-text-x: 20px; }
+.nrpt__hero .nrpt__secs:has(.nrpt__sec.is-open) .nrpt__sec-h {
+  padding-left: var(--nrpt-text-x);
+}
+/* 正文再缩进一级 —— 章节头跟标题同轴, 条目比它深一层, 三级台阶一眼看得出层次 */
+.nrpt__hero .nrpt__secs:has(.nrpt__sec.is-open) .nrpt__lines {
+  padding-left: calc(var(--nrpt-text-x) + 20px);
+}
+.nrpt__hero .nrpt__sec-t {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.nrpt__hero .nrpt__sec-n {
+  padding: 0;
+  min-width: 0;
+  background: none;
+  color: var(--neox-fg-hint);
+}
+/* 展开后另起一行铺满 —— 此刻它才是主角, 标题也让位 */
+.nrpt__hero .nrpt__sec.is-open { display: block; margin-top: 6px; }
+.nrpt__hero .nrpt__sec.is-open .nrpt__sec-t {
+  position: static; width: auto; height: auto; clip-path: none;
+}
+
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) .ncard--chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) .ncard--chart > .nhead {
+  order: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 0;
+}
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) .ncard--chart > .nhead .nhead__mark { margin-right: 0; }
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) .ncard--chart > .nhead .nhead__text { display: block; padding-top: 0; }
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) .ncard--chart > .nhead .nhead__title {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--ncard-fs-sub);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-secondary);
+}
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) .ncard--chart > .ncard__figure {
+  order: 1;
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__pie {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+}
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__pie-box,
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__pie-svg { width: 72px; height: 72px; }
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__pie-total { font-size: var(--ncard-fs-sub); }
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__legend { flex: 1 1 0; min-width: 0; gap: 5px; }
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__legend li { justify-content: space-between; }
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__gauges { gap: 10px; justify-content: space-between; }
+
+.markdown-content .ncard-wrap:has(.ninset:not(.is-wide)) {
+  float: right;
+  clear: right;
+  width: min(40%, 236px);
+  margin: 0.2em 0 0 1.2em;
+}
+/* 图表 / 总结那两种老浮槽同样竖叠 */
+.markdown-content .ncard-wrap:has(.ncard--summary),
+.markdown-content .ncard-wrap:has(.ncard--chart):not(:has(.ncard__figure--wide)) { clear: right; }
+.markdown-content .ncard--link.ninset,
+.markdown-content .ncard--link.ninset:hover,
+.markdown-content .ncard--link.ninset * { text-decoration: none !important; border-bottom: 0; }
+.markdown-content .ncard-wrap:has(.ninset.is-wide) { float: none; width: 100%; }
+/* 窄面板 (侧栏 / 手机宽) 不环绕 —— 剩给正文的那一列会窄到一行放不下四个字 */
+@media (max-width: 720px) {
+  .markdown-content .ncard-wrap:has(.ninset) { float: none; width: 100%; margin: 0.4em 0 0.8em; }
+}
+
+.ncard.ninset {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--neox-font-sans, inherit);
+  line-height: 1.35;
+}
+figure.ncard.ninset { margin: 0; }
+
+/* ── link: 站点行 + 标题 + 一句描述, 有图则图在上 ──
+ * 这张有底有边: 它是一个可点的"外物" (跳出 Neox), 跟文中插图的图形不同, 需要一个
+ * 可辨认的按压面。浅色下 1px 描边 + 4% 底才站得住 (白底上纯透明面是隐形的)。 */
+.ncard--link.ninset {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 10px 9px 11px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  border: 0;
+  transition: background 140ms ease, box-shadow 140ms ease;
+}
+.ncard--link.ninset:hover { background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent); }
+.ninset__thumb {
+  display: block; width: 100%; aspect-ratio: 16 / 9;
+  overflow: hidden; border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.ninset__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ninset__body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ninset__site {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.ninset__mark { flex: none; width: 14px; height: 14px; border-radius: 3px; object-fit: contain; }
+.ninset__mark--letter {
+  display: inline-grid; place-items: center;
+  font-size: 9px; font-weight: var(--neox-fw-semibold, 600); line-height: 1;
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.ninset__site-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ninset__title {
+  font-size: var(--ncard-fs-title);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.ninset__desc {
+  font-size: var(--ncard-fs-sub);
+  color: var(--neox-fg-secondary);
+  line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.ninset__go { flex: none; margin-top: 3px; color: var(--neox-fg-hint); opacity: 0.7; }
+.ncard--link.ninset:hover .ninset__go { color: var(--neox-primary-600, #4f7cff); opacity: 1; }
+
+/* ── image / video: 一张图 + 一行图注 —— 没有底没有边, 图本身就是面 ── */
+.ninset__pic {
+  display: block; position: relative;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: inherit; text-decoration: none;
+}
+.ninset__pic img { display: block; width: 100%; height: auto; max-height: 170px; object-fit: cover; }
+a.ninset__pic { cursor: zoom-in; }
+.ninset__pic--video { aspect-ratio: 16 / 9; cursor: pointer; }
+.ninset__pic--video img { height: 100%; }
+.ninset__pic-void {
+  display: block; width: 100%; height: 100%;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--neox-fg-primary) 12%, transparent),
+    color-mix(in srgb, var(--neox-fg-primary) 4%, transparent));
+}
+.ninset__pic-empty {
+  display: grid; place-items: center; min-height: 72px; padding: 12px;
+  font-size: var(--ncard-fs-meta); color: var(--neox-fg-hint);
+}
+.ninset__play {
+  position: absolute; inset: 0; margin: auto;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(0, 0, 0, 0.55); color: #fff;
+  backdrop-filter: blur(4px);
+  transition: transform 140ms ease, background 140ms ease;
+}
+.ninset__play svg { margin-left: 2px; }
+.ninset__pic--video:hover .ninset__play { transform: scale(1.06); background: rgba(0, 0, 0, 0.7); }
+.ninset__dur {
+  position: absolute; right: 6px; bottom: 6px;
+  padding: 1px 6px; border-radius: 5px;
+  background: rgba(0, 0, 0, 0.6); color: #fff;
+  font-size: 10px; font-variant-numeric: tabular-nums; line-height: 1.5;
+}
+.ninset__video { display: block; width: 100%; border-radius: 10px; background: #000; }
+.ninset__cap {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  margin: 5px 2px 0;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+  line-height: 1.4;
+}
+.ninset__cap-title { flex: 1 1 auto; min-width: 0; color: var(--neox-fg-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ninset__cap-site { flex: none; color: var(--neox-fg-hint); }
+
+
+.markdown-content .ncard-wrap:has(.ninset.is-strip) {
+  float: none;
+  clear: none;
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  margin: 0.1em 0 0.45em;
+  container-type: normal;
+}
+.ncard--link.ninset.is-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  padding: 4px 11px 4px 8px;
+  border-radius: 999px;
+  min-width: 0;
+  border: 0;
+  /* 无边框 · 有质感: 两层 —— 面上一层极浅的渐变, 顶缘一道 1px 高光; 浅色下高光换成 1px 极淡的阴影环 */
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--neox-fg-primary) 7%, transparent),
+    color-mix(in srgb, var(--neox-fg-primary) 4.5%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent), 0 1px 2px rgba(0, 0, 0, 0.14);
+  font-size: var(--ncard-fs-sub);
+  line-height: 1.4;
+  transition: background 140ms ease, box-shadow 140ms ease;
+}
+.ncard--link.ninset.is-strip:hover {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--neox-fg-primary) 10%, transparent),
+    color-mix(in srgb, var(--neox-fg-primary) 7%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 8%, transparent), 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.ninset__strip-site { flex: none; color: var(--neox-fg-tertiary, var(--neox-fg-secondary)); font-size: var(--ncard-fs-meta); }
+.ninset__strip-title { flex: 0 1 auto; min-width: 0; max-width: 28em; color: var(--neox-fg-primary); font-weight: var(--neox-fw-medium, 500); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ninset__strip-desc { flex: 0 1 auto; min-width: 0; max-width: 22em; color: var(--neox-fg-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ninset__strip-desc::before { content: '— '; color: var(--neox-fg-hint); }
+
+/* 带预览图的网页卡: 无边框, 图压顶, 面是一块整体材质 (图 + 底) —— 不是"框里放图" */
+.ncard--link.ninset.has-image {
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--neox-fg-primary) 7%, transparent),
+    color-mix(in srgb, var(--neox-fg-primary) 4%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 5%, transparent), 0 1px 2px rgba(0, 0, 0, 0.16), 0 6px 18px -10px rgba(0, 0, 0, 0.35);
+}
+.ncard--link.ninset.has-image:hover {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--neox-fg-primary) 10%, transparent),
+    color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 7%, transparent), 0 2px 6px rgba(0, 0, 0, 0.2), 0 10px 24px -10px rgba(0, 0, 0, 0.45);
+}
+.ncard--link.ninset.has-image .ninset__thumb { border-radius: 0; aspect-ratio: 2.2 / 1; }
+.ncard--link.ninset.has-image .ninset__body { padding: 7px 10px 9px; }
+.ncard--link.ninset.has-image .ninset__title { font-size: var(--ncard-fs-sub); -webkit-line-clamp: 1; }
+.ncard--link.ninset.has-image .ninset__desc { font-size: var(--ncard-fs-meta); }
+.ncard--link.ninset.has-image .ninset__thumb img { transition: transform 260ms ease; }
+.ncard--link.ninset.has-image:hover .ninset__thumb img { transform: scale(1.03); }
+
+/* 左边那根柱: JS 按顺序交替标 data-side, 左浮的正文从右边绕 */
+.markdown-content .ncard-wrap[data-side="left"]:has(.ncard) {
+  float: left;
+  clear: left;
+  margin: 0.2em 1.2em 0 0;
+}
+.markdown-content .ncard-wrap[data-side="right"]:has(.ncard) { float: right; clear: right; }
+
+/* 横图通栏: 压扁到最多 240px 高, 用 cover 裁 —— 一张 16:9 的截图浮在旁边只有 150px 宽, 看不清 */
+.markdown-content .ncard-wrap:has(.ncard--image.is-wide) { float: none; clear: both; width: 100%; margin: 0.3em 0 0.6em; }
+.ncard--image.ninset.is-wide .ninset__pic img { max-height: 240px; width: 100%; object-fit: cover; }
+
+.markdown-content .ncard-wrap.is-orphan:has(.ncard) {
+  float: none;
+  clear: none;
+  display: inline-block;
+  vertical-align: top;
+  width: min(40%, 236px);
+  margin: 0 12px 12px 0;
+}
+.markdown-content .ncard-wrap.is-orphan:has(.ncard) + .ncard-wrap.is-orphan:has(.ncard) { margin-right: 0; }
+.markdown-content .ncard-wrap.is-orphan:has(.ncard) .ninset__pic img { max-height: 200px; }
+
+.nchart--report .nchart__plot svg { max-height: 320px; }
+/* viewBox 高度从 104 抬到 230, 放大系数掉了一半多 —— 字号要跟着补, 否则轴标签缩到 6px */
+.nchart--report .nchart__tick,
+.nchart--report .nchart__cat { font-size: 13px; }
+.nchart--report .nchart__col-val { font-size: 13px; fill: var(--neox-fg-primary); font-weight: 600; }
+/* 基线留着当"地面", 但比网格线还淡一点 —— 视觉重心该在柱子上 */
+.nchart--report .nchart__axis { stroke: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent); }
+.nchart--report .nchart__plot { padding: 4px 2px 0; }
+
+.nchart__cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 2px 0;
+  list-style: none;
+}
+.nchart__cloud li { line-height: 1.35; white-space: nowrap; }
+.nchart__cloud--report { gap: 10px 20px; padding: 10px 2px; }
+
+/* 报告里的饼图: 聊天里它是"能被文字绕的小插图"(72px), 报告里它是一张图 —— 放大到
+ * 176px, 图例跟着走一列且值紧贴标签 (不再被 flex:1 甩到卡片最右边)。 */
+.nchart--report .nchart__pie { gap: 28px; align-items: center; }
+.markdown-content .ncard-wrap:has(.nchart--report) .ncard__figure .nchart__pie-box,
+.markdown-content .ncard-wrap:has(.nchart--report) .ncard__figure .nchart__pie-svg,
+.nchart--report .nchart__pie-box,
+.nchart--report .nchart__pie-svg { width: 176px; height: 176px; }
+.nchart--report .nchart__legend { flex: 0 1 auto; gap: 9px; max-width: 300px; }
+.nchart--report .nchart__legend-val { margin-left: auto; }
+.nchart--report .nchart__legend li { gap: 10px; }
+.nchart--report .nchart__legend-lbl { flex: 0 1 auto; font-size: var(--ncard-fs-sub); }
+.nchart--report .nchart__legend-val { font-size: var(--ncard-fs-meta); color: var(--neox-fg-secondary); }
+/* 报告里的饼不走"文字绕图"那套 —— 图和图例并排占一整行 */
+.nchart--report .ncard__figure .nchart__pie,
+.ncard__figure .nchart--report .nchart__pie { flex-direction: row; align-items: center; }
+
+.nchart--report .nchart__plot svg { max-height: 360px; }
+.nchart--report .nchart__pie { justify-content: center; }
+
+.nchart--report .nchart__col-val {
+  font-size: 12px;
+  font-weight: 500;
+  fill: var(--neox-fg-secondary);
+}
+.nchart--report .nchart__tick,
+.nchart--report .nchart__cat {
+  font-size: 12px;
+  fill: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+.nchart--report .nchart__grid { stroke: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+/* 单位退到左上角画一次 (柱顶塞不下时) —— 它是全图共用的刻度说明, 不是每根柱子的属性 */
+.nchart__unit { font-size: 11px; fill: var(--neox-fg-tertiary, var(--neox-fg-secondary)); }
+/* 多系列图的图例: **横排在图上方**。饼图那套是竖排在右侧 (跟着扇区走), 这里不能复用 ——
+ * 分组柱的图例要先于图被读到: 读者得先知道颜色代表谁, 才看得懂柱子。 */
+.nchart__legend--top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0 0 6px;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+.nchart__legend--top li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--ncard-fs-meta);
+  color: var(--neox-fg-secondary);
+}
+.nchart__legend--top i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+/* 折线图右上角的首尾变化幅度 —— 折线讲的就是"变了多少", 让图自己把结论说出来 */
+.nchart__delta { font-size: 12px; font-weight: 600; fill: var(--neox-fg-secondary); }
+.nchart--report .nchart__unit { font-size: 12px; }
+.nchart--report .nchart__pie-slice { stroke: var(--neox-bg-card, #fff); stroke-width: 2.5; }
+.nchart--report .nchart__legend-lbl { color: var(--neox-fg-secondary); font-weight: 450; }
+.nchart--report .nchart__legend-val { color: var(--neox-fg-tertiary, var(--neox-fg-secondary)); }
+.nchart--report .nchart__legend i { width: 9px; height: 9px; border-radius: 50%; }
+
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__legend--top,
+.nchart--report .nchart__legend--top {
+  flex: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  max-width: none;
+}
+.markdown-content .ncard-wrap:has(.ncard--chart) .ncard__figure .nchart__legend--top li,
+.nchart--report .nchart__legend--top li { justify-content: flex-start; gap: 7px; }
+.nchart--report .nchart__legend--top .nchart__legend-lbl { flex: none; }
+.nchart--report .nchart__legend--top i { border-radius: 3px; }
+/* 折线: 线细一点、点小一点, 面积填充淡下去 —— 粗线大点也是"小学生感"的来源 */
+.nchart--report .nchart__line-path { stroke-width: 2; }
+.nchart--report .nchart__line-dot { fill: var(--nchart-c1); stroke: var(--neox-bg-card, #fff); stroke-width: 1.5; }
+
+.nchart__cloud { padding: 2px 0; }
+.nchart__cloud svg { width: 100%; height: auto; display: block; overflow: visible; }
+.nchart__cloud-w { font-family: var(--neox-font-sans, inherit); }
+.nchart__cloud-w--t0 { fill: var(--nchart-c1); font-weight: 650; }
+.nchart__cloud-w--t1 { fill: color-mix(in srgb, var(--nchart-c1) 62%, var(--neox-fg-primary)); font-weight: 550; }
+.nchart__cloud-w--t2 { fill: var(--neox-fg-tertiary, var(--neox-fg-secondary)); font-weight: 450; }
+
+.ncard--chart.nchart--report {
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  border-radius: 14px;
+  padding: 14px 16px 10px;
+  margin: 2px 0 4px;
+}
+/* 词云不画坐标, 底色给得更淡一点, 否则一块灰底上飘着一堆字, 比柱状图更显突兀 */
+.ncard--chart.nchart--report:has(.nchart__cloud) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 2%, transparent);
+}
+
+.nchart__stackfig-band,
+.nchart__targetfig-ring { stroke: var(--neox-bg-card, #fff); stroke-width: 2; }
+.nchart__riverfig-band { stroke: none; }
+.nchart__stackfig .nchart__cat,
+.nchart__targetfig .nchart__cat { text-anchor: start; fill: var(--neox-fg-primary); }
+.nchart__stackfig .nchart__col-val,
+.nchart__targetfig .nchart__col-val { text-anchor: start; }

@@ -1,0 +1,149 @@
+
+.br3 .nx-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* 行: 最小高 52, 行间用内阴影发丝线 (第二行起) */
+.br3 .nx-row {
+  min-height: 52px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+}
+.br3 .nx-row + .nx-row {
+  border-top: 0;
+  box-shadow: inset 0 1px 0 var(--neox-line-subtle);
+}
+.br3 .nx-row__title {
+  font-size: 14px;
+  color: var(--neox-fg-primary);
+}
+.br3 .nx-row__desc {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.br3 .nx-row__control {
+  flex-shrink: 0;
+}
+
+/* 段控件: 灰底胶囊, 选中段白色浮起 (不用实心蓝) */
+.br3 .nx-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.br3 .nx-segmented__btn {
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-muted);
+  transition: background 120ms ease, color 120ms ease;
+}
+.br3 .nx-segmented__btn[aria-selected="true"] {
+  --nx-selected-bg: var(--neox-bg-card, #fff);
+  background: var(--neox-bg-card, #fff);
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 0 0 1px var(--neox-line-subtle);
+}
+
+/* 日常 Chrome 用户下拉 */
+.br3 .br-profile__select {
+  min-width: 170px;
+}
+
+/* 站点名单: 小标签 chip, 回车添加 */
+.br3 .br-sites {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 36px;
+  padding: 4px 0;
+}
+.br3 .br-sites__label {
+  flex-basis: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  margin-bottom: 2px;
+}
+.br3 .br-sites__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 4px 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--neox-line-subtle);
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-primary);
+}
+.br3 .br-sites__chip button {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--neox-fg-hint);
+  font-size: 13px;
+  line-height: 16px;
+  cursor: pointer;
+}
+.br3 .br-sites__chip button:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+.br3 .br-sites__input {
+  flex: 1 1 160px;
+  min-width: 140px;
+  height: 26px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+  color: var(--neox-fg-primary);
+}
+.br3 .br-sites__input::placeholder {
+  color: var(--neox-fg-hint);
+}
+.br3 .br-sites.is-danger .br-sites__chip {
+  color: #C2492F;
+  border-color: color-mix(in srgb, #C2492F 30%, transparent);
+  background: color-mix(in srgb, #C2492F 6%, transparent);
+}
+.br3 .br-sites.is-danger .br-sites__label {
+  color: #C2492F;
+}
+
+/* 底部小字 */
+.br3 .set-note {
+  margin: 8px 4px 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--neox-fg-muted);
+}
+
+@media (max-width: 720px) {
+  .br3 .nx-row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .br3 .nx-row__control {
+    width: 100%;
+  }
+  .br3 .br-profile__select {
+    min-width: 0;
+    width: 100%;
+  }
+}

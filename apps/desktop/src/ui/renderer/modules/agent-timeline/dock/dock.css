@@ -1,0 +1,2068 @@
+
+/* token 挂 :root —— 药丸和那三张"必须当场决定"的卡片不在同一棵子树里,
+ * 挂组件上变量传不过去 (自定义属性只沿继承链走)。 */
+:root {
+  --nx-dock-gap: 6px;
+  --nx-dock-radius: 999px;
+  --nx-dock-card-radius: 14px;
+  --nx-dock-h: 26px;
+  --nx-dock-bg: var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg, var(--neox-bg-card, #fff)));
+  /* 药丸浮在 timeline 之上, 上面那条色多半是半透明的 —— 这条是垫在它下面的**不透明**基底,
+   * 只负责挡住底下的正文, 不参与观感 (观感全由 --nx-dock-bg 那层决定)。 */
+  --nx-dock-bg-solid: var(--neox-bg-canvas, var(--neox-bg-card, #fff));
+  --nx-dock-bg-hover: color-mix(in srgb, var(--nx-dock-bg) 92%, var(--neox-fg-primary) 8%);
+  --nx-dock-line: var(--neox-shell-flat-composer-border, var(--anye-line, var(--neox-line, rgba(0,0,0,.1))));
+  /* composer 是平的 (只有一道 inset 高光), 药丸也就不该有外投影 */
+  --nx-dock-shadow: var(--neox-shell-flat-composer-shadow, inset 0 1px 0 rgba(255,255,255,.03));
+  --nx-dock-fg: var(--neox-fg-secondary);
+  --nx-dock-fg-strong: var(--neox-fg-primary);
+  /* tone —— 只有这里定义颜色, 下游全用 var(--nx-tone-*) */
+  --nx-tone: var(--neox-fg-hint);
+}
+
+/* ── 容器 ───────────────────────────────────────────────── */
+:root[data-theme="light"] {
+  --nx-dock-line: rgba(36, 41, 47, 0.16);
+  --nx-dock-shadow: 0 1px 2px rgba(28, 25, 23, 0.06), 0 4px 12px -6px rgba(28, 25, 23, 0.10);
+}
+
+.nx-dock {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 4px;
+  min-width: 0;
+  padding-left: max(20px, calc((100% - var(--atl-content-max)) / 2));
+  padding-right: max(20px, calc((100% - var(--atl-content-max)) / 2));
+  box-sizing: border-box;
+}
+/* Code 空态: composer 走固定列宽, 药丸条必须跟它同宽同外缘 */
+.agent-timeline--empty-focus .nx-dock {
+  width: var(--atl-empty-col, 720px);
+  max-width: var(--atl-empty-col, 720px);
+  padding-left: 0;
+  padding-right: 0;
+  margin-inline: 0;
+}
+.agent-timeline--empty-focus .nx-dock__menu { right: 0; }
+
+.nx-dock__rail {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-dock-gap);
+  flex-wrap: nowrap;      /* 排不下走 ⋯, 绝不换行 —— 换行会把输入框顶下去 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 离屏镜像: 只用来量每颗药丸的自然宽度 */
+.nx-dock__mirror {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  gap: var(--nx-dock-gap);
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ── 药丸 ───────────────────────────────────────────────── */
+.nx-dock__pill {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;          /* 宽度只由内容决定, 永不 stretch */
+  max-width: 100%;
+  height: var(--nx-dock-h);
+  padding: 0 3px 0 2px;
+  background-color: var(--nx-dock-bg-solid, var(--neox-bg-card, #fff));
+  background-image: linear-gradient(var(--nx-dock-bg), var(--nx-dock-bg));
+  backdrop-filter: blur(var(--glass-blur, 10px)) saturate(var(--glass-saturate, 110%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 10px)) saturate(var(--glass-saturate, 110%));
+  border: 1px solid var(--nx-dock-line);
+  border-radius: var(--nx-dock-radius);
+  box-shadow: var(--nx-dock-shadow);
+  color: var(--nx-dock-fg);
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  line-height: 1.4;
+  transition:
+    background var(--neox-dur-fast, .12s) var(--neox-ease-out, ease),
+    border-color var(--neox-dur-fast, .12s) var(--neox-ease-out, ease),
+    box-shadow .18s var(--neox-ease-out, ease);
+}
+/* 关玻璃 / 纯色壁纸档: 药丸不该还糊着 —— 那两档 canvas 是实色, 基底本来就挡得住,
+ * 留着模糊只是白烧一层合成。跟 composer 在 theme-packs.css 里的同款处理对齐。 */
+:root[data-glass-off] .nx-dock__pill,
+:root[data-theme-wallpaper="none"] .nx-dock__pill {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 用 background-image 覆盖, 不用 background 简写 —— 简写会把上面那层实底一起重置掉 */
+.nx-dock__pill:hover { background-image: linear-gradient(var(--nx-dock-bg-hover), var(--nx-dock-bg-hover)); }
+.nx-dock__pill.is-open {
+  /* 展开态用底色加深表达, 不再描边 —— 见上方去边框注释 */
+  background-image: linear-gradient(var(--nx-dock-bg-hover), var(--nx-dock-bg-hover));
+}
+
+.nx-dock__pill-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  height: 100%;
+  padding: 0 4px 0 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  border-radius: inherit;
+}
+.nx-dock__pill-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  color: var(--nx-tone);
+}
+.nx-dock__pill-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  color: var(--nx-dock-fg-strong);
+  font-weight: var(--neox-fw-medium, 500);
+}
+.nx-dock__pill-meta {
+  flex: 0 0 auto;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  line-height: 1.4;
+}
+.nx-dock__pill-detail {
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  color: var(--neox-fg-secondary);
+  padding-left: 6px;
+  margin-left: 2px;
+  border-left: 1px solid var(--nx-dock-line);
+}
+
+.nx-dock__pill-act,
+.nx-dock__more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast, .12s) ease, color var(--neox-dur-fast, .12s) ease;
+}
+/* Allow / Deny 等短英文 —— 比纯 icon 可辨, 宽度跟文案走 */
+.nx-dock__pill-act.is-text {
+  width: auto;
+  min-width: 0;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--nx-dock-fg-strong);
+}
+.nx-dock__pill-act.is-text.is-primary {
+  background: transparent;
+  color: var(--neox-ok-ink, #0F7A3A);
+  font-weight: 650;
+}
+.nx-dock__pill-act.is-text.is-primary:hover {
+  background: color-mix(in srgb, var(--neox-ok-ink, #0F7A3A) 12%, transparent);
+  color: var(--neox-ok-ink, #0F7A3A);
+}
+/* 破坏性动作默认安静 —— 中性字色, 不抢主动作的注意力 */
+.nx-dock__pill-act.is-text.is-danger {
+  color: var(--nx-dock-fg);
+  font-weight: 500;
+}
+.nx-dock__pill-act:hover {
+  background: var(--neox-bg-hover, rgba(0,0,0,.06));
+  color: var(--nx-dock-fg-strong);
+}
+/* 红只在指上去的那一刻出现 */
+.nx-dock__pill-act.is-danger:hover {
+  background: color-mix(in srgb, var(--neox-err-600, #dc2626) 14%, transparent);
+  color: var(--neox-err-600, #dc2626);
+}
+[data-theme='dark'] .nx-dock__pill-act.is-danger:hover {
+  background: color-mix(in srgb, #f87171 16%, transparent);
+  color: #fca5a5;
+}
+.nx-dock__pill-chev {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 5px;
+  color: var(--neox-fg-hint);
+}
+
+/* ── tone ───────────────────────────────────────────────── */
+.nx-dock__pill.is-running,
+.nx-dock__menu-item.is-running { --nx-tone: var(--neox-primary-600, #2563eb); }
+.nx-dock__pill.is-attention,
+.nx-dock__menu-item.is-attention { --nx-tone: var(--neox-warning-600, #d97706); }
+.nx-dock__pill.is-ok,
+.nx-dock__menu-item.is-ok {
+  --nx-tone: color-mix(in srgb, var(--neox-ok-600, #16a34a) 58%, var(--neox-fg-secondary));
+}
+[data-theme='dark'] .nx-dock__pill.is-ok,
+[data-theme='dark'] .nx-dock__menu-item.is-ok {
+  --nx-tone: color-mix(in srgb, #86efac 38%, var(--neox-fg-secondary));
+}
+.nx-dock__pill.is-warn,
+.nx-dock__menu-item.is-warn { --nx-tone: var(--neox-warning-600, #d97706); }
+.nx-dock__pill.is-err,
+.nx-dock__menu-item.is-err { --nx-tone: var(--neox-err-600, #dc2626); }
+.nx-dock__pill.is-muted,
+.nx-dock__menu-item.is-muted { --nx-tone: var(--neox-fg-hint); }
+
+
+/* attention: 只染背景, **不染边框** (见上方分工说明 —— 边框只表达结构)。
+ * 展开 detail 的"变长"由 React 控制 (几秒后缩回)。 */
+.nx-dock__pill.is-attention,
+.nx-dock__pill.is-err {
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--nx-tone) 9%, var(--nx-dock-bg)),
+      color-mix(in srgb, var(--nx-tone) 9%, var(--nx-dock-bg))
+    );
+}
+.nx-dock__pill.is-attn {
+  animation: nx-dock-attn 1.4s ease-out 2;
+}
+@keyframes nx-dock-attn {
+  0%   { box-shadow: var(--nx-dock-shadow), 0 0 0 0 color-mix(in srgb, var(--nx-tone) 40%, transparent); }
+  70%  { box-shadow: var(--nx-dock-shadow), 0 0 0 6px color-mix(in srgb, var(--nx-tone) 0%, transparent); }
+  100% { box-shadow: var(--nx-dock-shadow), 0 0 0 0 color-mix(in srgb, var(--nx-tone) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-dock__pill.is-attn { animation: none; }
+}
+
+/* ── ⋯ 溢出 ─────────────────────────────────────────────── */
+.nx-dock__more {
+  width: auto;
+  min-width: 30px;
+  height: var(--nx-dock-h);
+  gap: 3px;
+  padding: 0 7px;
+  background: var(--nx-dock-bg);
+  border: 1px solid var(--nx-dock-line);
+  box-shadow: var(--nx-dock-shadow);
+}
+.nx-dock__more:hover,
+.nx-dock__more.is-open { color: var(--nx-dock-fg-strong); background: var(--nx-dock-bg-hover); }
+.nx-dock__more.is-attn {
+  border-color: color-mix(in srgb, var(--neox-warning-600, #d97706) 45%, transparent);
+  color: var(--neox-warning-600, #d97706);
+}
+.nx-dock__more-count {
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-variant-numeric: tabular-nums;
+}
+
+.nx-dock__menu {
+  position: absolute;
+  /* 跟 rail 右外缘对齐 —— .nx-dock 带着居中限宽 padding, right:0 会跑到 padding 外面 */
+  right: max(20px, calc((100% - var(--atl-content-max)) / 2));
+  bottom: calc(100% + 6px);
+  z-index: 40;
+  min-width: 240px;
+  max-width: min(420px, 90vw);
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--neox-bg-elevated, #fff);
+  border: 1px solid var(--nx-dock-line);
+  border-radius: var(--nx-dock-card-radius);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--neox-shadow-color, #000) 16%, transparent);
+}
+.nx-dock__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  border-radius: 9px;
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  text-align: left;
+  cursor: pointer;
+}
+.nx-dock__menu-item:hover { background: var(--neox-bg-hover, rgba(0,0,0,.05)); }
+.nx-dock__menu-icon { display: inline-flex; width: 13px; color: var(--nx-tone); flex: 0 0 auto; }
+.nx-dock__menu-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 auto; }
+.nx-dock__menu-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nx-dock__menu-detail {
+  color: var(--neox-fg-hint);
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.nx-dock__menu-meta {
+  flex: 0 0 auto;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+}
+
+/* ── 展开面板 (药丸下方) ────────────────────────────────── */
+.nx-dock__panel {
+  margin-top: var(--nx-dock-gap);
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: var(--nx-dock-bg-solid, var(--neox-bg-card, #fff));
+  background-image: linear-gradient(var(--nx-dock-bg), var(--nx-dock-bg));
+  border: 1px solid var(--nx-dock-line);
+  border-radius: var(--nx-dock-card-radius);
+  box-shadow: var(--nx-dock-shadow);
+  animation: nx-dock-panel-in .16s var(--neox-ease-out, ease) both;
+}
+@keyframes nx-dock-panel-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: none; }
+}
+/* 计划清单在药丸面板里: 面板自己已经有边框, 清单那条 border-top 就是多的 */
+.nx-dock__panel > .atl-planbar__list--dock {
+  border-top: 0;
+  padding: 8px 12px;
+  max-height: none;
+  --atl-planbar-bg: var(--nx-dock-bg);   /* 行尾悬停按钮的渐隐底色要跟面板一致 */
+}
+
+/* 待审改动面板 — 对齐「本轮改动」行: brand 文件 icon + hover/选中态 */
+.nx-dock-review {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nx-dock-review__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 5px 10px 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--neox-dur-fast, .12s) ease,
+    border-color var(--neox-dur-fast, .12s) ease,
+    box-shadow var(--neox-dur-fast, .12s) ease;
+}
+.nx-dock-review__row:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #000) 5%, transparent);
+}
+.nx-dock-review__row:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--neox-warning-600, #d97706) 45%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--neox-warning-600, #d97706) 18%, transparent);
+}
+.nx-dock-review__row.is-active {
+  background: color-mix(in srgb, var(--neox-warning-600, #d97706) 12%, transparent);
+  border-color: color-mix(in srgb, var(--neox-warning-600, #d97706) 28%, transparent);
+}
+.nx-dock-review__row.is-active:hover {
+  background: color-mix(in srgb, var(--neox-warning-600, #d97706) 16%, transparent);
+}
+.nx-dock-review__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+.nx-dock-review__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--neox-fw-medium, 500);
+}
+.nx-dock-review__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  color: var(--neox-fg-hint);
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.nx-dock-review__hunks {
+  opacity: 0.85;
+}
+.nx-dock-review__diffstat {
+  display: inline-flex;
+  gap: 4px;
+  font-weight: 600;
+}
+.nx-dock-review__add { color: var(--neox-ok-600, #16a34a); }
+.nx-dock-review__del { color: var(--neox-err-600, #dc2626); }
+[data-theme='dark'] .nx-dock-review__add { color: #4ade80; }
+[data-theme='dark'] .nx-dock-review__del { color: #f87171; }
+
+/* ── 卡片形态: 审批 / askUser / 错误 —— 跟药丸同材质, 只是整宽 ── */
+.nx-dock-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  background: var(--nx-dock-bg);
+  border: 1px solid var(--nx-dock-line);
+  border-radius: var(--nx-dock-card-radius);
+  box-shadow: var(--nx-dock-shadow);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+  backdrop-filter: blur(14px) saturate(125%);
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  color: var(--nx-dock-fg-strong);
+}
+.nx-dock-card.is-attention { border-color: color-mix(in srgb, var(--neox-warning-600, #d97706) 40%, transparent); }
+.nx-dock-card.is-err       { border-color: color-mix(in srgb, var(--neox-err-600, #dc2626) 40%, transparent); }
+
+.atl-approve-dock > .atl-error-banner,
+.atl-approve-dock > .atl-readonly-banner,
+.atl-ask-dock-wrap > .atl-ask-dock,
+.atl-approve-dock > .atl-approve {
+  border-radius: var(--nx-dock-card-radius) !important;
+  box-shadow: var(--nx-dock-shadow) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(125%) !important;
+  backdrop-filter: blur(14px) saturate(125%) !important;
+}
+/* 收起态的 askUser 是"一句话+一个按钮", 那就该长得跟药丸一模一样 */
+.atl-ask-dock-wrap > .atl-ask-dock.is-collapsed {
+  border-radius: var(--nx-dock-radius) !important;
+}
+
+/* 暗色: 玻璃要压深, 否则药丸在深底上像一排白条 */
+:root[data-theme='dark'],
+[data-theme='dark'] .nx-dock,
+[data-theme='dark'] .nx-dock-card,
+:root[data-theme='dark'] .nx-dock,
+:root[data-theme='dark'] .nx-dock-card {
+  /* 背景/边框已经跟着 composer 那条 var 链走了, 暗色只需要把 hover 的提亮方向调过来 */
+  --nx-dock-bg-hover: color-mix(in srgb, var(--nx-dock-bg) 88%, #fff 12%);
+  /* 暗色实底: 真中性灰, 不是"把白色调到几个百分点"那种约等于透明的写法 */
+  --nx-dock-bg-solid: var(--neox-bg-card, #1c1e22);
+}
+
+
+.atl-composer--minimal {
+  /* 40px 窄条: 对照物是一根长条, 不是胖胶囊 */
+  --nx-mini-h: 42px;
+  --nx-mini-pad: 6px;
+  --nx-mini-btn: calc(var(--nx-mini-h) - var(--nx-mini-pad) * 2); /* 30px */
+  --nx-mini-fill: 7%;
+  --nx-mini-fill-focus: 10%;
+}
+:root[data-theme="light"] .atl-composer--minimal {
+  --nx-mini-fill: 13%;
+  --nx-mini-fill-focus: 17%;
+}
+
+/* ── 选择器别名: 非 IDE + IDE 两条路径, 全部 0,9+/0,10+ ───────── */
+/* box 永远是长条; panel 叠在 stack 上方, 不再把 box morph 掉 */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__box,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode]:not(.is-expanded) .atl-composer__box,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__box {
+  display: flex !important;
+  flex-flow: row nowrap !important;          /* 绝不换行 —— 换行就是"位置乱"的根 */
+  align-items: center !important;
+  height: var(--nx-mini-h) !important;
+  min-height: var(--nx-mini-h) !important;
+  max-height: var(--nx-mini-h) !important;
+  padding: var(--nx-mini-pad) !important;    /* 四边同一个数 → 圆内切 */
+  gap: 0 !important;
+  border-radius: 999px !important;
+  border-color: var(--neox-line) !important;
+  box-shadow: var(--neox-shadow-composer) !important;
+  background: var(--neox-bg-card) !important;
+  background-image: none !important;         /* 干掉 anye 的 sheen 渐变 */
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  /* 不写 overflow:hidden —— 加号菜单 / 模型下拉都从条内向上弹, 会被裁掉 */
+}
+
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__box:focus-within,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode]:not(.is-expanded) .atl-composer__box:focus-within,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__box:focus-within,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal.is-drag-over:not(.is-expanded) .atl-composer__box {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 30%, transparent) !important;
+  box-shadow: var(--neox-shadow-composer-focus) !important;
+  background: var(--neox-bg-card) !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal.is-expanded .atl-composer__box,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode].is-expanded .atl-composer__box,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal.is-expanded .atl-composer__box {
+  display: flex !important;
+  flex-flow: row wrap !important;
+  align-items: center !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  padding: 12px 12px 10px !important;
+  gap: 0 !important;
+  row-gap: 10px !important;
+  border-radius: 16px !important;
+  border-color: var(--neox-line) !important;
+  box-shadow: var(--neox-shadow-composer) !important;
+  background: var(--neox-bg-card) !important;
+  background-image: none !important;
+  box-sizing: border-box !important;
+}
+
+/* stack: 默认长条在上、面板在下; 贴底时 is-panel-above 反转为向上弹 */
+.atl-composer__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 0;
+}
+.atl-composer__stack.is-panel {
+  gap: 2px;
+}
+.atl-composer__stack.is-panel-above {
+  flex-direction: column-reverse;
+}
+
+/* 单行态子元素顺序锁死: + → 输入 → 右侧动作。展开态输入独自占满一行。 */
+.atl-composer--minimal .atl-composer__plus-wrap { order: 1; flex: 0 0 auto; margin: 0; }
+.atl-composer--minimal .atl-composer__input-wrap { order: 2; flex: 1 1 auto; min-width: 0; padding-left: 8px; }
+.atl-composer--minimal .atl-composer__actions {
+  order: 3;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  gap: 0;
+  justify-content: flex-end;
+  margin: 0;
+  min-width: 0;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__actions,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__actions,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__actions {
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 0 !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__input-wrap {
+  padding: 0 4px 0 8px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+/* 单行态: wrap 拉满条高, textarea 自己用 line-height=高度 做垂直居中
+ * (比「矮盒子 + flex 居中」稳 — 后者一被主题 min-height/JS adjust 撑高就沉底). */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode]:not(.is-expanded) .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .neox-shell__right.rc-panel .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input-wrap {
+  display: flex !important;
+  align-items: stretch !important;
+  align-self: stretch !important;
+  height: var(--nx-mini-btn) !important;
+  min-height: var(--nx-mini-btn) !important;
+  max-height: var(--nx-mini-btn) !important;
+}
+/* 展开态 · Cursor: 输入独占第一行全宽; + 与 actions 落第二行工具条 */
+.atl-composer--minimal.is-expanded .atl-composer__input-wrap {
+  flex: 1 0 100% !important;
+  order: 1 !important;
+  padding-left: 2px !important;
+}
+.atl-composer--minimal.is-expanded .atl-composer__plus-wrap {
+  order: 2 !important;
+  flex: 0 0 auto !important;
+  align-self: center !important;
+}
+.atl-composer--minimal.is-expanded .atl-composer__actions {
+  order: 3 !important;
+  flex: 1 1 auto !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  align-self: center !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal.is-expanded .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode].is-expanded .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal.is-expanded .atl-composer__input-wrap,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .neox-shell__right.rc-panel .ide-aipanel__composer .atl-composer.atl-composer--minimal.is-expanded .atl-composer__input-wrap {
+  display: block !important;
+  height: auto !important;
+  min-height: 44px !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  padding: 0 2px !important;
+}
+.atl-composer--minimal .atl-composer__err,
+
+/* 顶栏 / 工具排 / 权限 / 运行位置 / 独立上下文 chip —— 简约态全部退场。
+ * 用量环融进发送钮; 详情走加号「上下文」; 技能/MCP/权限/运行位置走 panel。 */
+.atl-composer--minimal .atl-composer__top { display: none !important; }
+.atl-composer--minimal .atl-composer__tools,
+.atl-composer--minimal .atl-approval,
+.atl-composer--minimal .atl-rundest { display: none !important; }
+.atl-composer--minimal .atl-ctx-btn { display: none !important; }
+
+/* 细条比方块矮一截, 底部略抬一点别贴死; 别留过大空洞 */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode],
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal {
+  padding-top: 6px !important;
+  padding-bottom: 10px !important;
+}
+
+/* 输入垂直居中: 高度 = 行高 = 条内可用高 (--nx-mini-btn=32), 单行字落在几何中线。
+ * 特异性必须压过 ide-workspace 的 min-height:58px 与 anye 的 padding/min-height. */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode]:not(.is-expanded) .atl-composer__input,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .neox-shell__right.rc-panel .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel .ide-aipanel__composer .atl-composer.atl-composer--minimal:not(.is-expanded) .atl-composer__input {
+  height: var(--nx-mini-btn) !important;
+  min-height: var(--nx-mini-btn) !important;
+  max-height: var(--nx-mini-btn) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: var(--nx-mini-btn) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  outline: none !important;
+  overflow: hidden !important;
+  resize: none !important;
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  vertical-align: middle !important;
+}
+/* 展开态 · Cursor: 输入区舒适行高 + 内边距, 高度由 JS 按 scrollHeight 夹取,
+ * 超出 maxH 内部滚动. 工具条在下一行, 不跟文字抢垂直空间. */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal.is-expanded .atl-composer__input,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode].is-expanded .atl-composer__input,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal.is-expanded .atl-composer__input,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .neox-shell__right.rc-panel .ide-aipanel__composer .atl-composer.atl-composer--minimal.is-expanded .atl-composer__input {
+  min-height: 44px !important;
+  max-height: min(50vh, 480px) !important;
+  /* 不能 height:auto !important —— 会把 JS inline 盖掉, textarea 塌回 rows=1 */
+  height: auto;
+  padding: 2px 2px 4px !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  resize: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__model,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__model,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__model {
+  background: var(--nx-model-bg, transparent) !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: var(--nx-model-ring, none) !important;
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  height: var(--nx-model-h, var(--nx-mini-btn)) !important;
+  max-width: 200px;
+  padding: var(--nx-model-pad, 0 6px) !important;
+  border-radius: var(--nx-model-radius, 8px) !important;
+  color: var(--neox-fg-secondary) !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__model:hover,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__model:hover,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__model:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+.atl-composer--minimal .atl-composer__right {
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* ── 加号: 裸图标, 几何中心落在胶囊圆头正中 ─────────────────
+ * 圆头半径 = 条高/2 = 20px, 圆心距左缘 20px。
+ * 按钮 32px 宽、左边距 pad 4px → 按钮中心 = 4+16 = 20px, 正好压在圆头圆心上。
+ * 打开态**不旋转** —— rotate(45°) 会让笔画视觉中心漂移, 圆头里看起来就歪。 */
+.atl-composer__plus-wrap {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--nx-mini-btn, 32px);
+  height: var(--nx-mini-btn, 32px);
+}
+.atl-composer__plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+}
+.atl-composer__plus > svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.atl-composer__plus:hover,
+.atl-composer__plus.is-open {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+}
+.atl-composer__plus-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--neox-primary-600, #2563eb);
+  color: var(--neox-fg-invert, #fff);
+  font-size: 9px;
+  line-height: 13px;
+  text-align: center;
+  pointer-events: none;
+}
+
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__plus,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__plus,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__plus {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__plus:hover,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__plus.is-open,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__plus:hover,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__plus.is-open,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__plus:hover,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__plus.is-open {
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+/* ── 上下文用量环: 围在加号上 (不是发送键) ─────────────────
+ * 发送键保持干净实心圆; 用量/告警/运行指示都在 + 外圈。 */
+.atl-composer__ctxring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--nx-mini-btn, 32px);
+  height: var(--nx-mini-btn, 32px);
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: transparent;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background .3s ease, padding .12s ease;
+}
+.atl-composer__ctxring.is-idle,
+.atl-composer__ctxring.is-warn,
+.atl-composer__ctxring.is-full,
+.atl-composer__ctxring.is-running,
+.atl-composer__ctxring.is-busy {
+  padding: 2px;
+  background: conic-gradient(
+    var(--nx-ring-color, var(--neox-primary-500, #3b82f6)) calc(var(--nx-ring-pct, 0) * 1%),
+    color-mix(in srgb, var(--neox-fg-primary) 10%, transparent) 0
+  );
+}
+.atl-composer__ctxring.is-idle {
+  --nx-ring-color: color-mix(in srgb, var(--neox-fg-primary) 35%, transparent);
+}
+.atl-composer__ctxring.is-warn { --nx-ring-color: var(--neox-warning-600, #d97706); }
+.atl-composer__ctxring.is-full { --nx-ring-color: var(--neox-err-600, #dc2626); }
+.atl-composer__ctxring.is-running {
+  background: transparent;
+  animation: none;
+  isolation: isolate;
+}
+.atl-composer__ctxring.is-running::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--neox-primary-600, #2563eb) 0%, transparent),
+    var(--neox-primary-600, #2563eb)
+  );
+  animation: nx-ring-spin 1.1s linear infinite;
+}
+.atl-composer__ctxring.is-running > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes nx-ring-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .atl-composer__ctxring.is-running::before { animation: none; }
+}
+
+/* 环内加号: 铺满内圆, 背景盖住 conic 中心 */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__ctxring > .atl-composer__plus,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__ctxring > .atl-composer__plus,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__ctxring > .atl-composer__plus {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--neox-fg-primary) var(--nx-mini-fill), var(--neox-bg-canvas)) !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__ctxring > .atl-composer__plus:hover,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__ctxring > .atl-composer__plus.is-open,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__ctxring > .atl-composer__plus:hover,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__ctxring > .atl-composer__plus.is-open,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__ctxring > .atl-composer__plus:hover,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__ctxring > .atl-composer__plus.is-open {
+  background: color-mix(in srgb, var(--neox-fg-primary) 14%, var(--neox-bg-canvas)) !important;
+}
+
+/* 发送/停止/重试: 干净实心圆, 不套用量环 */
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__send,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__stop,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__retry,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__send,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__stop,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__retry,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__send,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__stop,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__retry {
+  width: var(--nx-mini-btn) !important;
+  height: var(--nx-mini-btn) !important;
+  min-width: var(--nx-mini-btn) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* --nx-send-*: 陶土外壳只给发送键设成钴蓝 (停止 / 重试仍是墨色), 见 shell/clay-studio.css */
+  background: var(--nx-send-bg, var(--neox-fg-primary)) !important;
+  background-image: none !important;
+  color: var(--nx-send-fg, var(--neox-bg-canvas)) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  flex: 0 0 auto !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__stop:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__retry:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__stop:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__retry:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__stop:hover:not(:disabled),
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__retry:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--nx-send-bg, var(--neox-fg-primary)) 86%, var(--neox-bg-canvas)) !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal .atl-composer__send:disabled,
+:root[data-theme-pack][data-theme] .atl-composer.atl-composer--minimal[data-mode] .atl-composer__send:disabled,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer.atl-composer--minimal .atl-composer__send:disabled {
+  /* --nx-send-disabled-*: 陶土外壳按稿, 空着时发送键也是钴蓝 (见 shell/clay-studio.css) */
+  background: var(--nx-send-disabled-bg, color-mix(in srgb, var(--neox-fg-primary) 20%, var(--neox-bg-canvas))) !important;
+  color: var(--nx-send-disabled-fg, color-mix(in srgb, var(--neox-fg-primary) 45%, var(--neox-bg-canvas))) !important;
+  opacity: 1 !important;
+}
+.atl-composer--minimal .atl-composer__send > svg,
+.atl-composer--minimal .atl-composer__stop > svg,
+.atl-composer--minimal .atl-composer__retry > svg { width: 16px; height: 16px; }
+
+/* 加号菜单在长条上方弹出: 略上移淡入, 别往下蹭进输入条 */
+@keyframes nx-plusmenu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* 向下弹: 原点在顶边 (贴长条), 向下外扩 */
+@keyframes nx-mini-panel-in-below {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+/* 向上弹: 原点在底边 (贴长条), 向上外扩 */
+@keyframes nx-mini-panel-in-above {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scaleY(.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+@keyframes nx-mini-stagger-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── 叠在长条旁的 panel (技能 / MCP / 权限 / 运行位置) ─────
+ * 方向由 .is-panel-below / .is-panel-above 决定。 */
+.atl-mini-panel {
+  --nx-panel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 0;
+  height: 220px;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, var(--neox-bg-canvas));
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--neox-shadow-color, #000) 16%, transparent);
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--neox-fg-primary);
+  will-change: transform, opacity;
+}
+.atl-composer__stack.is-panel-below .atl-mini-panel {
+  transform-origin: top center;
+  animation: nx-mini-panel-in-below .26s var(--nx-panel-ease) both;
+}
+.atl-composer__stack.is-panel-above .atl-mini-panel {
+  transform-origin: bottom center;
+  animation: nx-mini-panel-in-above .26s var(--nx-panel-ease) both;
+}
+.atl-mini-panel__head {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-height: 28px;
+  margin-bottom: 6px;
+}
+.atl-mini-panel__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.atl-mini-panel__back:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  color: var(--neox-fg-primary);
+}
+.atl-mini-panel__search {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.atl-mini-panel__search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: inherit;
+}
+.atl-mini-panel__search input::placeholder { color: var(--neox-fg-hint); }
+.atl-mini-panel__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: inherit;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.atl-mini-panel__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.atl-mini-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.atl-mini-panel__list > li {
+  animation: nx-mini-stagger-in .2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--stagger, 0) * 18ms + 50ms);
+}
+.atl-mini-panel__item {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 26px;
+  margin: 0;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.atl-mini-panel__item:hover:not(:disabled),
+.atl-mini-panel__item.is-active {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+.atl-mini-panel__item:disabled,
+.atl-mini-panel__item.is-disabled,
+.atl-mini-panel__item.is-off { opacity: .45; cursor: not-allowed; }
+.atl-mini-panel__item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.atl-mini-panel__item-title {
+  font-size: inherit;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.atl-mini-panel__item-sub {
+  font-size: inherit;
+  color: var(--neox-fg-hint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.atl-mini-panel__hint {
+  padding: 4px 8px;
+  color: var(--neox-fg-hint);
+  font-size: inherit;
+}
+.atl-mini-panel__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 96px;
+  padding: 16px 12px;
+  text-align: center;
+  color: var(--neox-fg-hint);
+}
+.atl-mini-panel__empty--skills .atl-mini-panel__empty-icon {
+  color: color-mix(in srgb, #f59e0b 80%, var(--neox-fg-primary));
+}
+@media (prefers-reduced-motion: reduce) {
+  .atl-mini-panel,
+  .atl-composer__stack.is-panel-below .atl-mini-panel,
+  .atl-composer__stack.is-panel-above .atl-mini-panel,
+  .atl-mini-panel__list > li,
+  .atl-plusmenu {
+    animation: none !important;
+  }
+}
+
+/* ── 加号菜单 ──────────────────────────────────────────────
+ * 几何契约 (跟加号按钮共用同一套数, portal 定位也按这套算):
+ *   --nx-pm-pad        菜单外圈内边距
+ *   --nx-pm-item-pl    行左内边距
+ *   --nx-pm-icon       图标槽边长 (所有图标强制居中塞进这个槽)
+ *   图标中心距菜单左边 = pad + item-pl + icon/2
+ *                      = 3 + 5 + 8 = 16  ← JS 定位用这个数把菜单图标列对到加号中心
+ *
+ * 弧度: 胶囊是 999px, 菜单用 14px (不是 10 的硬直角, 也不是跟胶囊抢戏的大圆),
+ * 行内圆角 7px = 菜单圆角的一半, 形成一档过渡。
+ */
+.atl-plusmenu {
+  --nx-pm-pad: 6px;
+  --nx-pm-item-pl: 8px;
+  --nx-pm-item-pr: 10px;
+  --nx-pm-icon: 16px;
+  --nx-pm-row: 32px;
+  --nx-pm-gap: 10px;
+  --nx-pm-radius: var(--nx-menu-radius, 16px);
+  --nx-pm-item-radius: var(--nx-menu-item-radius, 10px);
+  /* 供 JS 读取: 图标中心距菜单左缘 */
+  --nx-pm-icon-center: calc(var(--nx-pm-pad) + var(--nx-pm-item-pl) + var(--nx-pm-icon) / 2);
+
+  min-width: 260px;
+  max-width: min(340px, 90vw);
+  padding: var(--nx-pm-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--nx-menu-bg, var(--neox-bg-elevated, #fff));
+  border: 1px solid var(--nx-menu-border, var(--nx-dock-line));
+  border-radius: var(--nx-pm-radius);
+  box-shadow: var(--nx-menu-shadow, 0 12px 32px color-mix(in srgb, var(--neox-shadow-color, #000) 22%, transparent));
+  transform-origin: bottom left;
+  animation: nx-plusmenu-in .2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* 13px regular (全局菜单同档), 不许加粗撑大 */
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--neox-fg-primary);
+  box-sizing: border-box;
+}
+.atl-plusmenu__sep {
+  height: 1px;
+  margin: 2px 6px;
+  background: var(--nx-dock-line);
+  flex: 0 0 auto;
+}
+.atl-plusmenu__item {
+  display: grid;
+  grid-template-columns: var(--nx-pm-icon) minmax(0, 1fr);
+  column-gap: var(--nx-pm-gap);
+  align-items: center;
+  width: 100%;
+  height: var(--nx-pm-row);
+  min-height: var(--nx-pm-row);
+  max-height: var(--nx-pm-row);
+  padding: 0 var(--nx-pm-item-pr) 0 var(--nx-pm-item-pl);
+  border: 0;
+  background: transparent;
+  border-radius: var(--nx-pm-item-radius);
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.atl-plusmenu__item:hover:not(:disabled),
+.atl-plusmenu__item.is-on { background: var(--neox-bg-hover, rgba(127,127,127,.12)); }
+.atl-plusmenu__item:disabled { opacity: .45; cursor: not-allowed; }
+
+/* 图标槽: 固定 16×16, 任何 SVG/字形都居中塞进去 —— 这是"对齐"的唯一真源 */
+.atl-plusmenu__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--nx-pm-icon);
+  height: var(--nx-pm-icon);
+  margin: 0;
+  padding: 0;
+  color: var(--neox-fg-secondary);
+  line-height: 0;
+}
+.atl-plusmenu__icon svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+/* 单行: 标题 + 说明并排, 垂直居中对齐图标槽中线 */
+.atl-plusmenu__body {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+.atl-plusmenu__label {
+  flex: 0 0 auto;
+  font-size: inherit;
+  font-weight: 400;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+}
+.atl-plusmenu__hint {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: inherit;
+  font-weight: 400;
+  color: var(--neox-fg-hint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 药丸: 压暗动作按钮, 别跟输入条抢戏 */
+.nx-dock__pill { height: 28px; }
+.nx-dock__pill-label { font-size: calc(12px * var(--nx-fs-scale, 1)); }
+.nx-dock__pill-act { opacity: .72; transition: opacity .12s ease, background .12s ease, color .12s ease; }
+.nx-dock__pill:hover .nx-dock__pill-act,
+.nx-dock__pill:focus-within .nx-dock__pill-act { opacity: 1; }
+
+.atl-composer__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin: 0 0 6px 2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.4;
+  user-select: none;
+}
+.atl-composer__pill--block {
+  background: color-mix(in srgb, var(--neox-danger, #e5484d) 12%, transparent);
+  color: var(--neox-danger, #e5484d);
+}
+.atl-composer__pill--warn {
+  background: color-mix(in srgb, var(--neox-warning, #d9a53c) 14%, transparent);
+  color: var(--neox-warning, #d9a53c);
+}
+.atl-composer__pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.atl-composer__pill-text { font-weight: 600; }
+.atl-composer__pill-act {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.atl-composer__pill-act:hover { opacity: .8; }
+.atl-composer__pill-x {
+  order: 99;
+  margin-left: 2px;
+  margin-right: -4px;
+  padding: 5px;
+  background: none;
+  border: 0;
+  color: inherit;
+  opacity: .55;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: opacity var(--neox-dur-fast, .12s) ease, background var(--neox-dur-fast, .12s) ease;
+}
+.atl-composer__pill-x:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* 品牌那颗蓝 —— 不用 --neox-primary-600: 浅色陶土主题下它是近黑色, 蓝点和按钮全成了黑的 (首版截图) */
+.nx-dock__ask,
+.nx-dock__pill[data-pill-id^="ask:"] { --ask-blue: #2f6bff; }
+:root[data-theme="dark"] .nx-dock__ask,
+:root[data-theme="dark"] .nx-dock__pill[data-pill-id^="ask:"] { --ask-blue: #6b95ff; }
+.nx-dock__ask {
+  padding: 12px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nx-dock__ask-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  letter-spacing: .02em;
+  color: var(--nx-dock-fg);
+}
+.nx-dock__ask-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ask-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ask-blue) 18%, transparent);
+}
+.nx-dock__ask-count {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--nx-dock-fg);
+}
+.nx-dock__ask-q {
+  font-size: calc(13.5px * var(--nx-fs-scale, 1));
+  font-weight: var(--neox-fw-semibold, 600);
+  line-height: calc(1.45 * var(--nx-lh-scale, 1));
+  color: var(--nx-dock-fg-strong);
+  letter-spacing: -.005em;
+}
+.nx-dock__ask-opts {
+  display: flex;
+  flex-direction: column;
+  margin: 0 -8px;
+}
+.nx-dock__ask-opt {
+  appearance: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: var(--nx-dock-fg-strong);
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+/* 行间细线: 画在相邻两行之间, 悬停那行和它上面那条一起隐掉, 不出现「线压着高亮」 */
+.nx-dock__ask-opt + .nx-dock__ask-opt { box-shadow: inset 0 1px 0 color-mix(in srgb, var(--nx-dock-fg-strong) 7%, transparent); }
+.nx-dock__ask-opt:hover,
+.nx-dock__ask-opt:hover + .nx-dock__ask-opt { box-shadow: none; }
+.nx-dock__ask-opt:hover { background: color-mix(in srgb, var(--ask-blue) 8%, transparent); }
+.nx-dock__ask-opt:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ask-blue) 55%, transparent);
+  outline-offset: -2px;
+}
+.nx-dock__ask-radio {
+  flex: 0 0 auto;
+  width: 14px; height: 14px; margin-top: 2px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--nx-dock-fg-strong) 28%, transparent);
+  transition: border-color var(--neox-dur-fast, 120ms) ease, box-shadow var(--neox-dur-fast, 120ms) ease;
+}
+.nx-dock__ask-opt:hover .nx-dock__ask-radio {
+  border-color: var(--ask-blue);
+  box-shadow: inset 0 0 0 3px var(--nx-dock-bg-solid, #fff), inset 0 0 0 7px var(--ask-blue);
+}
+.nx-dock__ask-opt-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.nx-dock__ask-opt-label {
+  font-size: calc(12.5px * var(--nx-fs-scale, 1));
+  line-height: 1.4;
+}
+.nx-dock__ask-opt-desc {
+  font-size: var(--neox-fs-xxs, 11.5px);
+  line-height: 1.45;
+  color: var(--nx-dock-fg);
+}
+.nx-dock__ask-freebox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 3px 3px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--nx-dock-fg-strong) 4.5%, transparent);
+  transition: background var(--neox-dur-fast, 120ms) ease, box-shadow var(--neox-dur-fast, 120ms) ease;
+}
+.nx-dock__ask-freebox:focus-within {
+  background: color-mix(in srgb, var(--nx-dock-fg-strong) 2%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ask-blue) 40%, transparent);
+}
+.nx-dock__ask-free {
+  appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: calc(12.5px * var(--nx-fs-scale, 1));
+  color: var(--nx-dock-fg-strong);
+}
+.nx-dock__ask-free::placeholder { color: var(--nx-dock-fg); }
+.nx-dock__ask-free:focus { outline: none; }
+.nx-dock__ask-send {
+  appearance: none;
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border: 0; border-radius: 9px;
+  background: var(--ask-blue);
+  color: #fff;
+  cursor: pointer;
+  opacity: .35;
+  transition: opacity var(--neox-dur-fast, 120ms) ease;
+}
+.nx-dock__ask-freebox:focus-within .nx-dock__ask-send { opacity: 1; }
+.nx-dock__ask-acts {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 -6px;
+}
+.nx-dock__ask-spacer { flex: 1 1 auto; }
+.nx-dock__ask-btn {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--ask-blue);
+  cursor: pointer;
+}
+.nx-dock__ask-btn:hover { background: color-mix(in srgb, var(--ask-blue) 8%, transparent); }
+.nx-dock__ask-btn.is-quiet { color: var(--nx-dock-fg); }
+.nx-dock__ask-btn.is-quiet:hover { background: color-mix(in srgb, var(--nx-dock-fg-strong) 7%, transparent); color: var(--nx-dock-fg-strong); }
+
+/* 提问药丸: 品牌蓝, 不用警示橙 (橙色读起来像出错了); 问题原文就是标签 */
+.nx-dock__pill[data-pill-id^="ask:"] {
+  --nx-tone: var(--ask-blue);
+}
+.nx-dock__pill[data-pill-id^="ask:"] .nx-dock__pill-label {
+  font-weight: var(--neox-fw-medium, 500);
+}
+/* 提问的面板不限高到 300 —— 选项多时宁可长一点, 不在小框里再滚 */
+.nx-dock__panel:has(> .nx-dock__ask) { max-height: min(60vh, 520px); }
+
+/* 目标 / 团队药丸的面板 —— 顶部一行目标原文, 下面才是块清单。
+ * 原文从药丸 detail 挪进来的: 留在药丸上会被 attention 展开撑满整条 rail。 */
+.nx-dock__goal { display: block; }
+.nx-dock__goal-text {
+  padding: 10px 12px 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: calc(1.5 * var(--nx-lh-scale, 1));
+  color: var(--nx-dock-fg-strong);
+}
+.nx-dock__goal-text + .atl-planbar__list--dock { padding-top: 0; }
+.nx-dock__goal-open {
+  appearance: none;
+  border: 0;
+  background: none;
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0 12px 8px;
+  font: inherit;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-primary-600);
+  cursor: pointer;
+}
+.nx-dock__goal-open:hover { text-decoration: underline; }
+
+.nx-team-panel { display: flex; flex-direction: column; width: 100%; }
+.nx-team-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 8px;
+}
+.nx-team-panel__stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: color-mix(in srgb, var(--neox-info, #3B82F6) 18%, transparent);
+  color: color-mix(in srgb, var(--neox-info, #3B82F6) 50%, var(--nx-dock-fg-strong));
+}
+.nx-team-panel__stage.is-ready {
+  background: color-mix(in srgb, var(--neox-ok, #5fb46a) 20%, transparent);
+  color: var(--neox-ok-ink, #a3e0ad);
+}
+.nx-team-panel__dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: currentColor;
+  animation: nx-team-breathe 1.8s ease-in-out infinite;
+}
+.nx-team-panel__stage.is-ready .nx-team-panel__dot { animation: none; }
+@keyframes nx-team-breathe { 0%,100% { opacity: .45 } 50% { opacity: 1 } }
+.nx-team-panel__counts {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--nx-dock-fg);
+  font-variant-numeric: tabular-nums;
+}
+.nx-team-panel__goal {
+  padding: 0 12px 10px;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.55;
+  color: var(--nx-dock-fg-strong);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.nx-team-panel__prog {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 10px;
+}
+.nx-team-panel__bar {
+  flex: 1 1 auto;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--nx-dock-fg-strong) 12%, transparent);
+  overflow: hidden;
+}
+.nx-team-panel__bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--neox-info, #3B82F6);
+  transition: width .3s var(--neox-ease-out, ease);
+}
+.nx-team-panel__prog-txt { flex: none; font-size: 10px; color: var(--nx-dock-fg); font-variant-numeric: tabular-nums; }
+.nx-team-panel__open {
+  appearance: none;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--nx-dock-fg-strong) 10%, transparent);
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--nx-dock-fg-strong);
+  cursor: pointer;
+  border-radius: 0 0 var(--nx-dock-card-radius, 10px) var(--nx-dock-card-radius, 10px);
+}
+.nx-team-panel__open:hover { background: color-mix(in srgb, var(--nx-dock-fg-strong) 8%, transparent); }
+
+
+:root[data-theme-pack][data-theme] .atl-composer .atl-mode-pill,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer .atl-mode-pill {
+  border-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+}
+:root[data-theme-pack][data-theme] .atl-composer .atl-mode-pill:hover,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode] .ide-aipanel__composer .atl-composer .atl-mode-pill:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent) !important;
+}
+
+
+:root[data-theme-pack][data-theme] .nx-dock {
+  --nx-cap-bg: var(--neox-bg-card, #fbfaf7);
+  --nx-cap-line: color-mix(in srgb, var(--neox-fg-primary) 11%, transparent);
+  --nx-cap-line-hover: color-mix(in srgb, var(--neox-fg-primary) 20%, transparent);
+  --nx-cap-shadow: 0 1px 2px rgba(60, 45, 25, .06);
+  --nx-cap-shadow-hover: 0 1px 2px rgba(60, 45, 25, .06), 0 6px 16px rgba(60, 45, 25, .08);
+  --nx-cobalt: #4f84ff;
+  padding-top: 12px;
+  margin-bottom: 8px;
+  pointer-events: none;
+}
+:root[data-theme-pack][data-theme] .nx-dock__rail > *,
+:root[data-theme-pack][data-theme] .nx-dock__menu,
+:root[data-theme-pack][data-theme] .nx-dock__panel,
+:root[data-theme-pack][data-theme] .nx-dock__pop { pointer-events: auto; }
+:root[data-theme-pack][data-theme='dark'] .nx-dock {
+  --nx-cap-line: color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+  --nx-cap-line-hover: color-mix(in srgb, var(--neox-fg-primary) 24%, transparent);
+  --nx-cap-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+  --nx-cap-shadow-hover: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 20px rgba(0, 0, 0, .35);
+  --nx-cobalt: #6b97ff;
+}
+:root[data-theme-pack][data-theme] .nx-dock__rail { gap: 8px; }
+:root[data-theme-pack][data-theme] .nx-dock__mirror { gap: 8px; }
+
+/* 状态色: 只给状态点和浮层里失败那行用 */
+:root[data-theme-pack][data-theme] .nx-dock :is(.nx-dock__pill, .nx-pop__row, .nx-dock__pop, .nx-dock__menu-item) {
+  --nx-dot: color-mix(in srgb, var(--neox-fg-primary) 30%, transparent);
+}
+:root[data-theme-pack][data-theme] .nx-dock :is(.nx-dock__pill, .nx-pop__row, .nx-dock__pop, .nx-dock__menu-item).is-running { --nx-dot: var(--nx-cobalt); }
+:root[data-theme-pack][data-theme] .nx-dock :is(.nx-dock__pill, .nx-pop__row, .nx-dock__pop, .nx-dock__menu-item):is(.is-attention, .is-warn) { --nx-dot: #e8a23a; }
+:root[data-theme-pack][data-theme] .nx-dock :is(.nx-dock__pill, .nx-pop__row, .nx-dock__pop, .nx-dock__menu-item).is-err { --nx-dot: #d9534f; }
+:root[data-theme-pack][data-theme] .nx-dock :is(.nx-dock__pill, .nx-pop__row, .nx-dock__pop, .nx-dock__menu-item).is-ok { --nx-dot: #3fa36b; }
+
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill {
+  height: 28px;
+  padding: 0 4px 0 0;
+  /* 不加 !important (renderer 有 !important 棘轮): 这条选择器 (0,4,1) 已经压过上面所有药丸规则 */
+  background: var(--nx-cap-bg);
+  background-image: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--nx-cap-line);
+  box-shadow: var(--nx-cap-shadow);
+  border-radius: 999px;
+  animation: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill:hover {
+  border-color: var(--nx-cap-line-hover);
+  box-shadow: var(--nx-cap-shadow-hover);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill.is-open {
+  border-color: color-mix(in srgb, var(--nx-cobalt) 45%, var(--nx-cap-line));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nx-cobalt) 12%, transparent), var(--nx-cap-shadow);
+}
+/* 失败 / 等你: 边也带一点那个颜色, 一排胶囊里一眼找得到 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill:is(.is-err, .is-attention):not(.is-open) {
+  border-color: color-mix(in srgb, var(--nx-dot) 40%, var(--nx-cap-line));
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-main { gap: 7px; padding: 0 4px 0 9px; height: 26px; border-radius: 999px; outline: none; }
+/* 焦点圈画在整颗胶囊上, 不让里面的按钮自己再套一圈 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill:has(.nx-dock__pill-main:focus-visible) {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--nx-cobalt) 22%, transparent), var(--nx-cap-shadow);
+}
+
+/* 类别图标 + 右下角状态点 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 0;
+  background: none;
+  border: 0;
+  color: var(--neox-fg-secondary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-icon > * { display: block; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-icon::after,
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__dot,
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-icon::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--nx-dot);
+  box-shadow: 0 0 0 1.5px var(--nx-cap-bg);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill.is-running .nx-dock__pill-icon::after,
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop.is-running .nx-dock__pop-icon::after,
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-item.is-running .nx-dock__menu-icon::after,
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row.is-running .nx-pop__dot {
+  background: var(--nx-cap-bg);
+  border: 1.6px solid var(--nx-dot);
+  box-sizing: border-box;
+}
+/* 中性 (没有状态可说) 的胶囊不挂点 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill.is-muted .nx-dock__pill-icon::after { display: none; }
+
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-label {
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+  font-size: calc(12.5px * var(--nx-fs-scale, 1));
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-meta {
+  color: var(--neox-fg-hint);
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  font-variant-numeric: tabular-nums;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-detail {
+  border-left: 0;
+  padding-left: 0;
+  color: var(--neox-fg-hint);
+}
+
+/* 胶囊里的动作 (本轮改动的 一屏审阅 / 接受 / 回退): 一道细竖线隔开的文字链 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-act {
+  height: 22px;
+  border-radius: 999px;
+  color: var(--neox-fg-secondary);
+  opacity: 1;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-act:first-of-type { margin-left: 2px; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-main + .nx-dock__pill-act {
+  position: relative;
+  margin-left: 6px;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-main + .nx-dock__pill-act::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: var(--nx-cap-line);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-act.is-text { padding: 0 7px; font-weight: 500; font-size: calc(12px * var(--nx-fs-scale, 1)); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-act.is-text:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--neox-fg-primary); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-act.is-text.is-primary { color: var(--neox-ok-ink, #0F7A3A); font-weight: 600; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-act:not(.is-text) { opacity: .45; width: 20px; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill:hover .nx-dock__pill-act:not(.is-text),
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill:focus-within .nx-dock__pill-act:not(.is-text) { opacity: 1; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-chev { padding: 0 6px 0 0; color: var(--neox-fg-hint); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-chev svg { transform: rotate(180deg); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill.is-open .nx-dock__pill-chev svg { transform: none; }
+
+/* 子 Agent 胶囊: 几个模型 logo 叠成一摞 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__logo-stack { display: inline-flex; align-items: center; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__logo-chip {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--nx-cap-bg);
+  box-shadow: 0 0 0 1.5px var(--nx-cap-bg), 0 0 0 2.5px var(--nx-cap-line);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__logo-chip + .nx-dock__logo-chip { margin-left: -5px; }
+/* 一摞 logo 比单个图标宽, 状态点仍挂在整摞的右下角 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pill-icon:has(.nx-dock__logo-stack) { width: auto; }
+
+/* 「还有 N 项」: 也是一颗胶囊, 只是没有图标 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__more {
+  height: 28px;
+  padding: 0 10px 0 12px;
+  gap: 5px;
+  border: 1px dashed var(--nx-cap-line-hover);
+  background: transparent;
+  box-shadow: none;
+  border-radius: 999px;
+  color: var(--neox-fg-secondary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__more:hover,
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__more.is-open {
+  border-style: solid;
+  background: var(--nx-cap-bg);
+  color: var(--neox-fg-primary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__more.is-attn { color: #c9821c; border-color: color-mix(in srgb, #e8a23a 50%, transparent); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__more-count { font-size: calc(12px * var(--nx-fs-scale, 1)); }
+
+/* ── 胶囊浮层 ─────────────────────────────────────────────────────── */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop,
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu {
+  position: absolute;
+  bottom: calc(100% - 6px);
+  z-index: 30;
+  width: 340px;
+  max-width: calc(100% - 8px);
+  padding: 6px;
+  box-sizing: border-box;
+  background: var(--nx-cap-bg);
+  border: 1px solid var(--nx-cap-line);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(60, 45, 25, .06), 0 14px 36px rgba(60, 45, 25, .14);
+  animation: nx-pop-in 160ms cubic-bezier(.2, .8, .2, 1) both;
+}
+:root[data-theme-pack][data-theme='dark'] .nx-dock :is(.nx-dock__pop, .nx-dock__menu) {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 14px 36px rgba(0, 0, 0, .45);
+}
+@keyframes nx-pop-in {
+  from { opacity: 0; translate: 0 4px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme-pack][data-theme] .nx-dock :is(.nx-dock__pop, .nx-dock__menu) { animation: none; }
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu { left: auto; right: max(20px, calc((100% - var(--atl-content-max)) / 2)); top: auto; width: 300px; }
+
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 4px 0 10px;
+  margin-bottom: 2px;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-icon {
+  position: relative;
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  color: var(--neox-fg-secondary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-icon:has(.nx-dock__logo-stack) { width: auto; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop.is-muted .nx-dock__pop-icon::after { display: none; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-title {
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-meta {
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-hint);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-close {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neox-fg-hint);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-close:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--neox-fg-primary); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-body {
+  max-height: min(52vh, 420px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* 老面板 (计划清单 / 本轮改动 / 团队) 放进浮层: 去掉它们自带的外框 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__pop-body > :not(.nx-pop__list):not(.nx-pop__foot) {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* 浮层里的一行 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 6px 8px 10px;
+  border-radius: 10px;
+  outline: none;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row:hover,
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row:focus-visible { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row.is-link { cursor: pointer; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__top { display: flex; align-items: center; gap: 10px; min-height: 24px; }
+/* 第二、三行从名字那一列起 (头 16 + 间距 10), 铺到右边 */
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__sub { display: flex; flex-direction: column; gap: 1px; padding: 0 4px 0 26px; min-width: 0; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__lead {
+  position: relative;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neox-fg-secondary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__line { flex: 1 1 auto; display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__title {
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* 名字优先: 不跟灰字一起缩, 最多占这一行的六成五; 灰字 (模型 / pid) 先省略 */
+  flex: 0 0 auto;
+  max-width: 65%;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row.is-err .nx-pop__title { color: #c0413d; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__note {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-hint);
+  white-space: nowrap;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__desc {
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  line-height: 18px;
+  color: var(--neox-fg-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__mono {
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: calc(11.5px * var(--nx-fs-scale, 1));
+  line-height: 18px;
+  color: var(--neox-fg-hint);
+  background: none;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__meta {
+  flex: 0 0 auto;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  line-height: 20px;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__acts { flex: 0 0 auto; display: inline-flex; gap: 2px; opacity: .6; transition: opacity 120ms ease; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row:hover .nx-pop__acts,
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__row:focus-within .nx-pop__acts { opacity: 1; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__act {
+  height: 24px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  font-weight: 500;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__act:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--neox-fg-primary); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__act.is-danger:hover { background: color-mix(in srgb, #d9534f 10%, transparent); color: #c0413d; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  margin-top: 4px;
+  padding: 6px 2px 0;
+  border-top: 1px solid var(--nx-cap-line);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__hint { margin-right: auto; padding-left: 8px; font-size: calc(12px * var(--nx-fs-scale, 1)); color: var(--neox-fg-hint); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__empty { padding: 14px 10px; font-size: 12px; color: var(--neox-fg-hint); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-pop__logo { display: block; }
+
+/* 「还有 N 项」点开的菜单: 一行一颗胶囊的样子 (图标 + 点 + 名字 + 计时) */
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-item:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neox-fg-secondary);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-icon:has(.nx-dock__logo-stack) { width: auto; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-icon::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--nx-dot);
+  box-shadow: 0 0 0 1.5px var(--nx-cap-bg);
+}
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-item.is-muted .nx-dock__menu-icon::after { display: none; }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-label { font-size: 13px; font-weight: 500; color: var(--neox-fg-primary); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-detail { font-size: 12px; color: var(--neox-fg-hint); }
+:root[data-theme-pack][data-theme] .nx-dock .nx-dock__menu-meta { margin-left: auto; font-size: 12px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+
+/* 「已停止」那一行跟上面同一种说话方式: 圆点 + 一行字 + 文字动作, 不铺灰底 */
+:root[data-theme-pack][data-theme] .atl-anomaly__row.is-stopped {
+  background: transparent;
+  border-radius: 8px;
+}
+:root[data-theme-pack][data-theme] .atl-anomaly__row.is-stopped .atl-anomaly__line {
+  min-height: 26px;
+  padding: 0 4px 0 6px;
+  gap: 6px;
+}
+:root[data-theme-pack][data-theme] .atl-anomaly__row.is-stopped .atl-anomaly__icon {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--neox-fg-primary) 30%, transparent);
+  opacity: 1;
+}
+:root[data-theme-pack][data-theme] .atl-anomaly__row.is-stopped .atl-anomaly__icon > * { display: none; }
+:root[data-theme-pack][data-theme] .atl-anomaly__row.is-stopped .atl-anomaly__text { color: var(--neox-fg-secondary); }

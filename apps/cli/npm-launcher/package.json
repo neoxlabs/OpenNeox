@@ -1,0 +1,28 @@
+{
+  "name": "@neoxlabs/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Neox CLI — AI agent in your terminal",
+  "license": "AGPL-3.0-only",
+  "bin": {
+    "neox": "bin/neox.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "postinstall.js",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "homepage": "https://neox-dev.com",
+  "keywords": [
+    "cli",
+    "ai",
+    "agent"
+  ]
+}

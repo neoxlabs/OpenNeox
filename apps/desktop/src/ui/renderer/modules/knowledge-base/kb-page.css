@@ -1,0 +1,196 @@
+/* 知识库换成工具页的框 (设计稿 E8jf「工具页 · 知识库」): 整页一起滚, 内容宽 1040 */
+.neox-knowledge.kb-page {
+  overflow: auto;
+  gap: 0;
+  padding: 26px max(56px, calc((100% - 1040px) / 2)) 40px;
+}
+.neox-knowledge.kb-page > * { flex: none; }
+.neox-knowledge.kb-page .neox-knowledge__notice { margin-top: 14px; }
+
+/* ── 琥珀提示条: 有待确认时才出 ── */
+.kb-review-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 10px 12px 10px 18px;
+  border-radius: 14px;
+  background: color-mix(in srgb, #e9a23b 9%, var(--neox-bg-card));
+  box-shadow: 0 0 0 1px color-mix(in srgb, #e9a23b 22%, transparent);
+}
+.kb-review-bar__dot { width: 8px; height: 8px; flex: none; border-radius: 50%; background: #d98a1c; }
+.kb-review-bar__text { flex: 1; min-width: 0; font-size: 14px; color: var(--neox-fg-primary); }
+.kb-review-bar__text b { font-weight: 600; }
+.kb-review-bar__link {
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+.kb-review-bar__link:hover { color: var(--neox-fg-primary); background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); }
+
+/* ── 工具条: 分段 + 搜索 ── */
+.kb-toolbar { display: flex; align-items: center; gap: 10px; margin-top: 24px; }
+.kb-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+.kb-seg__item {
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.kb-seg__item:hover { color: var(--neox-fg-primary); }
+.kb-seg__item.is-active {
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(60, 45, 25, 0.1);
+}
+.neox-knowledge.kb-page .kb-toolbar .neox-knowledge__search {
+  flex: 0 1 300px;
+  min-width: 180px;
+  height: 36px;
+  margin-left: auto;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+
+/* ── 条目: 左目录 + 两列卡片 ── */
+.kb-cards-layout { display: flex; align-items: flex-start; gap: 20px; margin-top: 16px; }
+.kb-dirs { display: flex; flex-direction: column; gap: 2px; width: 196px; flex: none; position: sticky; top: 0; }
+.kb-dirs__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+}
+.kb-dirs__item em { font-style: normal; font-size: 12.5px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.kb-dirs__item:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05)); }
+.kb-dirs__item.is-active { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); font-weight: 500; }
+.kb-cards-main { flex: 1; min-width: 0; }
+.neox-knowledge.kb-page .neox-knowledge__cards-grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  overflow: visible;
+  padding: 1px;
+}
+
+.neox-knowledge.kb-page .kb-card {
+  gap: 8px;
+  padding: 16px 18px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--neox-bg-card);
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1));
+}
+.neox-knowledge.kb-page .kb-card:hover { box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.14)), 0 4px 14px rgba(60, 45, 25, 0.07); }
+.kb-card__head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.kb-card__title {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.neox-knowledge.kb-page .neox-knowledge__badge {
+  height: 20px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 6px;
+  font-size: 11.5px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.neox-knowledge.kb-page .neox-knowledge__badge.is-draft { background: color-mix(in srgb, #e9a23b 14%, transparent); color: #b8700f; }
+.kb-card__hover { display: flex; gap: 2px; margin-left: auto; flex: none; opacity: 0; transition: opacity 120ms ease; }
+.kb-card:hover .kb-card__hover, .kb-card:focus-within .kb-card__hover { opacity: 1; }
+.kb-card__hover button {
+  height: 24px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+}
+.kb-card__hover button:hover { color: var(--neox-fg-primary); background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); }
+.kb-card__hover button.is-danger:hover { color: #c0432b; }
+.neox-knowledge.kb-page .kb-card .neox-knowledge__card-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--neox-fg-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  padding-left: 0;
+}
+.neox-knowledge.kb-page .kb-card .neox-knowledge__card-edit,
+.neox-knowledge.kb-page .kb-card .neox-knowledge__card-body { margin-left: 0; padding-left: 0; }
+.kb-card__foot { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+.kb-card__meta { display: flex; min-width: 0; font-size: 12.5px; color: var(--neox-fg-hint); white-space: nowrap; overflow: hidden; }
+.kb-card__meta > span + span::before { content: '·'; margin: 0 6px; }
+.kb-card__review { display: flex; align-items: center; gap: 4px; margin-left: auto; flex: none; }
+.kb-card__reject {
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+.kb-card__reject:hover { color: #c0432b; background: color-mix(in srgb, #c0432b 7%, transparent); }
+
+/* 资料文件 / 整理两个视图: 不再自己滚, 跟整页一起滚 */
+.neox-knowledge.kb-page .neox-knowledge__body { margin-top: 16px; overflow: visible; }
+.neox-knowledge.kb-page .neox-knowledge__doc-list { overflow: visible; }
+
+/* 按主区实际宽度断 (主区会被右栏 / 侧栏挤窄, 视口媒体查询管不到); 容器自己的内边距用百分比跟着收 */
+.neox-knowledge.kb-page { container-type: inline-size; padding-left: max(24px, calc((100% - 1040px) / 2)); padding-right: max(24px, calc((100% - 1040px) / 2)); }
+@container (max-width: 760px) {
+  .kb-cards-layout { flex-direction: column; }
+  .kb-dirs { position: static; flex-direction: row; flex-wrap: wrap; width: auto; }
+  .kb-review-bar { flex-wrap: wrap; }
+  .kb-toolbar { flex-wrap: wrap; }
+  .neox-knowledge.kb-page .kb-toolbar .neox-knowledge__search { flex: 1 1 100%; margin-left: 0; }
+}

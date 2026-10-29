@@ -1,0 +1,155 @@
+/* ==================== 基础暗色主题变量 — JetBrains New UI ==================== */
+:root,
+:root[data-theme="dark"] {
+  /* 背景色系 - JB 中性深灰 (无蓝紫倾向) */
+  --bg-void: #1e1f22;        /* 编辑器底 */
+  --bg-primary: #1e1f22;     /* 主区域底 */
+  --bg-secondary: #2b2d30;   /* 工具窗 / sidebar / NEOX 面板 */
+  --bg-tertiary: #393b40;    /* 卡片 / hover */
+  --bg-elevated: #43454a;    /* 弹层 */
+  --bg-hover: #393b40;
+  --bg-code: #1e1f22;
+
+  /* 文字色 - JB 灰阶 */
+  --text-primary: #dfe1e5;
+  --text-secondary: #b4b8bf;
+  --text-tertiary: #9da0a8;
+  --text-muted: #6c707e;
+
+  /* 边框 - 实色细线 */
+  --border-subtle: #1e1f22;
+  --border-default: #393b40;
+
+  /* 阴影 - 平淡 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 14px 36px -12px rgba(0, 0, 0, 0.6);
+
+  /* 轻盈玻璃/卡片 */
+  --glass-bg: rgba(43, 45, 48, 0.96);
+  --glass-border: #393b40;
+  --card-bg: #2b2d30;
+  --card-border: #393b40;
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* 字体 — 与 --neox-font-* 对齐: UI 用打包 Inter, 代码用打包 Meslo (Cursor 系观感) */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', system-ui, sans-serif;
+  /* 兜底栈也别 Windows-first —— 真正的按平台分家见 theme-tokens/neox.css 末尾 */
+  --font-mono: 'Menlo', 'Cascadia Mono', 'JetBrains Mono', 'Consolas', 'MesloLGS NF', monospace;
+
+  /* 尺寸 - 紧凑布局 */
+  --sidebar-width: 200px;
+  --titlebar-height: 8px;
+  --header-height: 56px;
+
+  --timeline-line: #393b40;
+
+  /* 动画 */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* 暗色主题强调色 — 暖灰金 (代替原来的蓝色) */
+  --text-accent: #c19a6b;
+  --border-accent: rgba(193, 154, 107, 0.42);
+  --border-accent-bright: rgba(193, 154, 107, 0.65);
+  --shadow-accent: 0 0 18px rgba(193, 154, 107, 0.28);
+  --gold-500: #c19a6b;
+  --gold-400: #d4b683;
+  --gold-500-rgb: 193, 154, 107;
+
+  /* JetBrains New UI 官方 accent blue (focus / selected indicator) */
+  --jb-accent-blue: #3574f0;
+  --jb-accent-blue-soft: rgba(53, 116, 240, 0.16);
+  --jb-selected-bg: #2e436e;          /* IDEA 选中行 (List.selectionBackground) */
+  --jb-selected-bg-inactive: #393b40; /* 焦点丢失时的灰色选中 */
+  --jb-run-green: #62b543;            /* IDEA Run 三角绿 */
+  --jb-debug-red: #d96253;            /* IDEA Debug 红 */
+}
+
+/* ==================== 基础浅色主题变量 ==================== */
+:root[data-theme="light"] {
+  /* 背景色系 - 温暖浅色 */
+  --bg-void: #f6f6f6;
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f8fafc;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f1f5f9;
+
+  /* 文字色 */
+  --text-primary: #1f2a37;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9aa3b2;
+  --text-muted: #c4c9d4;
+  --bg-code: #f1f3f5;
+
+  /* 边框 */
+  --border-subtle: #e5e7eb;
+  --border-default: #e2e8f0;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 50px -12px rgba(15, 23, 42, 0.15);
+
+  /* 轻盈玻璃/卡片 */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(15, 23, 42, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: rgba(15, 23, 42, 0.08);
+
+
+  --timeline-line: #e2e8f0;
+
+  /* 轻主题强调色统一为绿色 */
+  --text-accent: #10b981;
+  --border-accent: rgba(16, 185, 129, 0.3);
+  --border-accent-bright: rgba(16, 185, 129, 0.45);
+  --shadow-accent: 0 0 20px rgba(16, 185, 129, 0.15);
+  --gold-500: #10b981;
+  --gold-400: #22c55e;
+  --gold-500-rgb: 16, 185, 129;
+}
+
+/* ==================== Midnight 主题 ==================== */
+:root[data-darkmode="midnight"] {
+  --bg-void: #1F2126;
+  --bg-primary: #1F2126;
+  --bg-secondary: #252830;
+  --bg-tertiary: #2a2e38;
+  --bg-elevated: #2f3340;
+  --bg-hover: #363b48;
+
+  --text-primary: #e6e6e6;
+  --text-secondary: rgba(230, 230, 230, 0.6);
+  --text-tertiary: rgba(230, 230, 230, 0.35);
+  --text-muted: rgba(230, 230, 230, 0.2);
+  --bg-code: #1c1e28;
+
+  --border-subtle: #3a3f4b;
+  --border-default: #454b58;
+}
+
+/* ==================== High Contrast 主题 ==================== */
+:root[data-darkmode="high-contrast"] {
+  --bg-void: #0A0A0A;
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #0f0f0f;
+  --bg-tertiary: #141414;
+  --bg-elevated: #1a1a1a;
+  --bg-hover: #202020;
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  --bg-code: #0e0e0e;
+
+  --border-subtle: #2a2a2a;
+  --border-default: #404040;
+}
+

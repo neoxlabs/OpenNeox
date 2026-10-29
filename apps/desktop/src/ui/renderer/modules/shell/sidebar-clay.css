@@ -1,0 +1,288 @@
+
+.neox-sidebar {
+  --clay-face: #fbfaf8;
+  --clay-face-hover: #ffffff;
+  --clay-edge: rgba(120, 104, 88, 0.16);
+  --clay-shadow: 0 1px 1px rgba(60, 45, 30, 0.05), 0 3px 8px rgba(60, 45, 30, 0.07);
+  --clay-shadow-hover: 0 1px 1px rgba(60, 45, 30, 0.06), 0 6px 14px rgba(60, 45, 30, 0.10);
+  --clay-ink: #1d1c1a;
+  --clay-ink-soft: color-mix(in srgb, var(--neox-fg-primary) 70%, var(--neox-fg-muted));
+  --clay-blue: #2f6bff;
+}
+:root[data-theme="dark"] .neox-sidebar {
+  --clay-face: rgba(255, 255, 255, 0.055);
+  --clay-face-hover: rgba(255, 255, 255, 0.085);
+  --clay-edge: rgba(255, 255, 255, 0.07);
+  --clay-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 2px 6px rgba(0, 0, 0, 0.25);
+  --clay-shadow-hover: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 4px 12px rgba(0, 0, 0, 0.32);
+  --clay-ink: #f2efea;
+}
+
+/* sidebar-glass.css 定义这两个变量不带 !important, 最高 0,6,1 —— 叠 :root 抬到 0,8,1 压过, 不占 !important 棘轮 */
+/* 全程只改变量, 不写 !important (棘轮): 侧栏 / 主区真正上色的都是主题包里 `background: var(--…) !important`,
+ * 把它们读的变量换成暖白就够了。
+ *   · 毛玻璃开: --neox-sidebar-glass-* / --neox-main-glass-fill (sidebar-glass.css, 定义在 html 上, 最高 0,6,1)
+ *   · liulibasic 的「软白最终钉死纯白」: 改成读 --neox-shell-light-main-final (默认仍是 #fff)
+ * 实底不透桌面: 这两种底色都是不透明的, 主题包的 backdrop blur 透不出东西, 不用再关。 */
+html:root:root:root:root:root[data-theme="light"]:not([data-theme-wallpaper="image"]) {
+  --neox-sidebar-glass-wash: #efebe5;
+  --neox-sidebar-glass-rail-wash: #efebe5;
+  --neox-main-glass-fill: #f7f5f1;
+  --neox-shell-light-main-final: #f7f5f1;
+}
+/*   · 毛玻璃关: --neox-shell-flat-* 定义在 .neox-shell **元素**上 (shell.css, 最高 0,5,0) —— 写在 :root 上会被
+ *     就近的 .neox-shell 覆盖 (继承不看 !important), 所以这里也写在 .neox-shell 上, 叠到 0,6,1 压过。 */
+html:root:root[data-theme="light"]:not([data-theme-wallpaper="image"]) .neox-shell.neox-shell {
+  --neox-shell-flat-sidebar-bg: #efebe5;
+  --neox-shell-flat-rail-bg: #efebe5;
+  --neox-shell-flat-main-bg: #f7f5f1;
+  --neox-shell-flat-topbar-bg: #f7f5f1;
+}
+
+/* ── 新建会话 ── */
+.neox-sidebar .neox-sidebar__newchat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  /* 第五版: 行高到 48, 给右侧那幅陶土小插画 (气泡 + 纸飞机) 留位置; 上下仍不留外边距 */
+  height: 48px;
+  padding: 0 6px 0 10px;
+  margin: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--clay-ink);
+  font: inherit;
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: var(--neox-fw-semibold, 600);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition: box-shadow var(--neox-dur-fast, 120ms) var(--neox-ease-out), background var(--neox-dur-fast, 120ms) var(--neox-ease-out), transform var(--neox-dur-fast, 120ms) var(--neox-ease-out);
+}
+.neox-sidebar .neox-sidebar__quick { padding-bottom: 2px; }
+/* 第四版: 不再是一块卡片, 跟下面会话行同一种平行 (悬停才出底), 只靠右边那颗蓝「+」点题 */
+.neox-sidebar .neox-sidebar__newchat:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.neox-sidebar .neox-sidebar__newchat:active:not(:disabled) { transform: translateY(1px); }
+.neox-sidebar .neox-sidebar__newchat:disabled { opacity: 0.5; cursor: not-allowed; }
+.neox-sidebar__newchat-label { flex: 1; min-width: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.neox-sidebar__newchat-kbd {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-hint);
+  opacity: 0;
+  transition: opacity var(--neox-dur-fast, 120ms) var(--neox-ease-out);
+}
+.neox-sidebar__newchat:hover .neox-sidebar__newchat-kbd { opacity: 1; }
+/* 陶土插画: 慢慢上下浮; 悬停时整幅往右上一飘, 像纸飞机要起飞。窄侧栏放不下就藏起来 */
+.neox-sidebar__newchat-art {
+  flex: 0 1 auto;
+  min-width: 0;
+  height: 42px;
+  object-fit: contain;
+  object-position: right center;
+  user-select: none;
+  pointer-events: none;
+  animation: neox-newchat-float 5s ease-in-out infinite;
+  transition: transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.neox-sidebar__newchat:hover .neox-sidebar__newchat-art { animation-play-state: paused; transform: translate(3px, -3px); }
+@keyframes neox-newchat-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@media (prefers-reduced-motion: reduce) { .neox-sidebar__newchat-art { animation: none; } }
+@container (max-width: 200px) { .neox-sidebar__newchat-art { display: none; } }
+:root[data-theme="dark"] .neox-sidebar__newchat-art { opacity: 0.82; }
+.neox-sidebar__newchat-plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--clay-blue);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.neox-sidebar__newchat-plus svg { width: 14px; height: 14px; stroke-width: 2.4; }
+
+.neox-sidebar .neox-sidebar__list { row-gap: 0; }
+.neox-sidebar .neox-sidebar__group { margin-top: 1px; }
+.neox-sidebar .neox-sidebar__group:first-child { margin-top: 0; }
+.neox-sidebar .neox-sidebar__group-body:not(.is-collapsed) { margin-top: 1px; }
+.neox-sidebar .neox-sidebar__group-acts { display: inline-flex; align-items: center; gap: var(--neox-sidebar-row-gap, 8px); }
+.neox-sidebar .neox-sidebar__group-acts .neox-sidebar__group-editws { width: var(--neox-sidebar-icon-box, 18px); height: var(--neox-sidebar-icon-box, 18px); }
+/* 正在看文件树: 按钮常亮成钴蓝 */
+.neox-sidebar .neox-sidebar__group-files.is-on { opacity: 1; color: var(--clay-blue); background: color-mix(in srgb, var(--clay-blue) 10%, transparent); }
+
+/* 项目组下就地的文件树 (SidebarGroupFiles): 换掉这一组的会话行, 自己滚动 */
+.neox-sidebar .neox-sidebar__group-body__inner.is-files > :not(.neox-group-files) { display: none; }
+.neox-sidebar .neox-group-files {
+  display: flex;
+  flex-direction: column;
+  height: min(460px, 55vh);
+  margin: 2px 0 6px;
+  overflow: hidden;
+  border-radius: 10px;
+  animation: neox-wb-in 200ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.neox-sidebar .neox-group-files > * { flex: 1 1 auto; min-height: 0; }
+/* 树自己的根行 (「ordersys [scratchpad] /private/tmp…」) 跟上面的项目行重复, 藏掉 */
+.neox-sidebar .neox-group-files .root-node { display: none; }
+.neox-sidebar .neox-group-files .explorer-tree > .file-tree-children-wrap { margin-left: -19px; }
+/* 行距跟会话行一个节奏: 22px 太挤, 改 28px; 树顶的 4px 内边距去掉, 跟项目行贴着 */
+.neox-sidebar .neox-group-files .explorer-tree { padding-top: 0; }
+.neox-sidebar .neox-group-files .file-tree-item { height: 28px; min-height: 28px; font-size: 13px; border-radius: 7px; }
+.neox-sidebar .neox-group-files { margin-top: 0; }
+
+.neox-sidebar .neox-sidebar__dock {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  padding: 8px 0 4px;
+  margin: 0 8px;
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  -webkit-app-region: no-drag;
+}
+/* 托盘 + 账户行 = 一个底座: 只留托盘上面那一条线, 账户行自己的上分隔线去掉 */
+.neox-sidebar .neox-sidebar__dock + .neox-sidebar__acct { border-top-color: transparent; margin-top: 0; }
+.neox-sidebar .neox-sidebar__tool {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 0 1 44px;
+  min-width: 0;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: color-mix(in srgb, var(--neox-fg-primary) 72%, var(--neox-fg-muted));
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out), transform var(--neox-dur-fast, 120ms) var(--neox-ease-out);
+}
+.neox-sidebar .neox-sidebar__tool:hover:not(:disabled),
+.neox-sidebar .neox-sidebar__tool.is-active,
+.neox-sidebar .neox-sidebar__tool.is-peek { color: var(--clay-ink); }
+.neox-sidebar .neox-sidebar__tool:hover:not(:disabled) .neox-sidebar__tool-icon img,
+.neox-sidebar .neox-sidebar__tool.is-active .neox-sidebar__tool-icon img { transform: translateY(-1px); }
+/* 外面拖进来、这个工具接得住: 图标抬起 + 一圈钴蓝淡底, 名字换成「松手会干什么」 */
+.neox-sidebar .neox-sidebar__tool.is-catching {
+  background: color-mix(in srgb, var(--clay-blue) 10%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--clay-blue) 45%, transparent);
+  color: var(--clay-blue);
+}
+.neox-sidebar .neox-sidebar__tool.is-catching .neox-sidebar__tool-icon { transform: scale(1.18); }
+/* 选中: 底下一颗蓝点 (跟插画「只有一处蓝」同一个规矩) */
+.neox-sidebar .neox-sidebar__tool.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: var(--clay-blue);
+}
+.neox-sidebar .neox-sidebar__tool:disabled { cursor: not-allowed; }
+.neox-sidebar .neox-sidebar__tool.is-unavailable { opacity: 0.45; }
+.neox-sidebar .neox-sidebar__tool.is-dragging { opacity: 0.35; }
+/* 拖到谁身上: 左边亮一条蓝线, 表示放下后插在它前面 */
+.neox-sidebar .neox-sidebar__tool.is-drop::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--clay-blue);
+}
+/* 图标: 陶土图, 放大镜系数 --mag 由 SidebarToolDock 按指针距离写进来 (以底边为轴往上长, 不挤布局) */
+.neox-sidebar__tool-icon {
+  position: relative;
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  transform: scale(var(--mag, 1));
+  transition: transform 120ms var(--neox-ease-out);
+}
+.neox-sidebar__tool-icon > img {
+  display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  user-select: none;
+  filter: drop-shadow(0 1.5px 1.5px rgba(60, 45, 30, 0.14));
+  transition: transform 160ms var(--neox-ease-out);
+}
+/* 状态角标: 右上角一颗暖白小胶囊 (数字) / 一颗红点 (有连不上的) */
+.neox-sidebar__tool-badge {
+  position: absolute;
+  top: -4px;
+  right: -11px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 3px;
+  border-radius: 7px;
+  background: var(--clay-face);
+  box-shadow: 0 0 0 1px var(--clay-edge);
+  color: color-mix(in srgb, var(--clay-ink) 70%, transparent);
+  font-size: 8.5px;
+  font-weight: 600;
+  line-height: 13px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.neox-sidebar__tool-alert {
+  position: absolute;
+  top: -2px;
+  left: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--neox-err, #e5484d);
+  box-shadow: 0 0 0 1.5px var(--neox-shell-flat-sidebar-bg, #efebe5);
+}
+.neox-sidebar__tool-label {
+  max-width: 100%;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) { .neox-sidebar__tool-icon { transform: none; } }
+
+/* ── 底部账户条: 额度从裸百分比变成小圆环 + 数字, 更新从灰胶囊变成钴蓝淡底 ── */
+.neox-sidebar .neox-sidebar__acct-quota {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.neox-sidebar .neox-sidebar__acct-ring { flex: 0 0 auto; }
+.neox-sidebar .neox-sidebar__acct-ring circle { fill: none; stroke-width: 2.6; }
+.neox-sidebar .neox-sidebar__acct-ring .is-track { stroke: color-mix(in srgb, var(--neox-fg-primary) 12%, transparent); }
+.neox-sidebar .neox-sidebar__acct-ring .is-fill { stroke: var(--clay-blue); stroke-linecap: round; transition: stroke-dashoffset 400ms var(--neox-ease-out); }
+.neox-sidebar .neox-sidebar__acct-quota.is-warn .neox-sidebar__acct-ring .is-fill { stroke: var(--neox-warn, #d97706); }
+.neox-sidebar .neox-sidebar__acct-quota.is-danger .neox-sidebar__acct-ring .is-fill { stroke: var(--neox-err, #dc2626); }
+/* UI 3.0: 更新改成安静的灰底小字 —— 钴蓝一屏只留给发送键和进行中 */
+.neox-sidebar .neox-sidebar__acct-update:not(.is-err) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-secondary);
+  border-color: transparent;
+}
+.neox-sidebar .neox-sidebar__acct-update:not(.is-err):hover { background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent); color: var(--neox-fg-primary); }
+

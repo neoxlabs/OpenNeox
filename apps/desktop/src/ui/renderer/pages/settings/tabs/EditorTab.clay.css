@@ -1,0 +1,63 @@
+/* 编辑器设置 (UI 3.0 陶土, 稿 s2-B) —— 作用域 .ed3, 不用强制覆盖规则 */
+
+/* ---------- 行左边的软方块图标 (28px, 圆角 8, 线条 16px) ---------- */
+.ed3 .ed3-ico {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.ed3 .ed3-ico svg { width: 16px; height: 16px; }
+
+/* 行内的生效状态: 独占一行的小字, 警告色 */
+.ed3 .ed3-state {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--neox-fg-muted);
+}
+.ed3 .ed3-state.is-warn { color: var(--neox-warning-600, #b7791f); }
+
+/* 下拉框统一宽度, 靠右 */
+.ed3 .ed3-select { min-width: 220px; }
+
+/* Cmd+K 说明: 卡外小字 */
+.ed3 .ed-note {
+  margin: 8px 4px 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--neox-fg-muted);
+}
+
+/* ---------- 快捷键: 一张可展开的卡 ---------- */
+.ed3 .ed-keymap {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  overflow: hidden;
+}
+.ed3 .ed-keymap__summary {
+  min-height: 52px;
+  padding: 10px 16px;
+  gap: 12px;
+}
+.ed3 .ed-keymap__summary svg { color: var(--neox-fg-muted); }
+.ed3 .ed-keymap__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.ed3 .ed-keymap__hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.ed3 .ed-keymap[open] > :not(summary) {
+  padding: 0 16px 16px;
+  box-shadow: none;
+}

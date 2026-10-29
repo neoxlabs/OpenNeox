@@ -1,0 +1,82 @@
+corgi.png
+size: 1024,2048
+filter: MipMapLinearLinear,Linear
+pma: true
+lower-torso
+bounds: 0,0,612,696
+lower-arm-left
+bounds: 616,0,206,358
+lower-arm-right
+bounds: 0,700,206,358
+lower-tail
+bounds: 210,700,279,338
+body
+bounds: 493,700,267,312
+head
+bounds: 0,1062,267,241
+prop-mug
+bounds: 271,1062,198,220
+prop-pencil
+bounds: 473,1062,220,206
+prop-phone
+bounds: 697,1062,139,200
+prop-notebook
+bounds: 0,1307,220,141
+prop-laptop
+bounds: 224,1307,220,141
+shadow-left
+bounds: 448,1307,103,80
+shadow-right
+bounds: 555,1307,104,80
+paw-left
+bounds: 663,1307,90,74
+paw-right
+bounds: 757,1307,91,74
+tube-left
+bounds: 852,1307,38,71
+tube-right
+bounds: 894,1307,38,71
+eye
+bounds: 936,1307,58,58
+eye-happy
+bounds: 0,1452,58,58
+eye-closed
+bounds: 62,1452,58,58
+eye-half
+bounds: 124,1452,58,58
+eye-dot
+bounds: 186,1452,58,58
+eye-wide
+bounds: 248,1452,58,58
+eye-squeeze
+bounds: 310,1452,58,58
+eye-angry
+bounds: 372,1452,58,58
+ground
+bounds: 434,1452,220,48
+steam
+bounds: 658,1452,47,47
+vein
+bounds: 709,1452,40,40
+mouth-smile
+bounds: 753,1452,36,36
+mouth-o
+bounds: 793,1452,36,36
+mouth-open
+bounds: 833,1452,36,36
+mouth-yawn
+bounds: 873,1452,36,36
+mouth-flat
+bounds: 913,1452,36,36
+mouth-cat
+bounds: 953,1452,36,36
+mouth-wavy
+bounds: 0,1514,36,36
+dot
+bounds: 40,1514,24,24
+blush
+bounds: 68,1514,38,21
+cap-left
+bounds: 110,1514,4,4
+cap-right
+bounds: 118,1514,4,4

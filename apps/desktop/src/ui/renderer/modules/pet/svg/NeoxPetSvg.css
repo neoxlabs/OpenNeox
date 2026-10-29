@@ -1,0 +1,160 @@
+/* ══════════════════════════════════════════════════════════════
+   NeoxPetSvg — Neo 矢量桌宠样式
+   表情由根容器 class 驱动; 视线/头倾由 CSS 变量驱动
+   ══════════════════════════════════════════════════════════════ */
+
+.neox-pet {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.neox-pet-svg {
+  display: block;
+  will-change: transform;
+}
+
+/* ── 表情显隐: 默认全隐, 根 class 点亮对应组 ── */
+.neo-eyes > g,
+.neo-mouth > g,
+.neo-blush > g {
+  display: none;
+}
+.neox-pet--idle    .neo-eyes > .expression-idle,
+.neox-pet--idle    .neo-mouth > .expression-idle,
+.neox-pet--happy   .neo-eyes > .expression-happy,
+.neox-pet--happy   .neo-mouth > .expression-happy,
+.neox-pet--happy   .neo-blush > .expression-happy,
+.neox-pet--sleepy  .neo-eyes > .expression-sleepy,
+.neox-pet--sleepy  .neo-mouth > .expression-sleepy,
+.neox-pet--think   .neo-eyes > .expression-think,
+.neox-pet--think   .neo-mouth > .expression-think,
+.neox-pet--speak   .neo-eyes > .expression-speak,
+.neox-pet--speak   .neo-mouth > .expression-speak,
+.neox-pet--error   .neo-eyes > .expression-error,
+.neox-pet--error   .neo-mouth > .expression-error,
+.neox-pet--success .neo-eyes > .expression-success,
+.neox-pet--success .neo-mouth > .expression-success,
+.neox-pet--success .neo-blush > .expression-success {
+  display: block;
+}
+
+/* ── 视线 & 头倾 (JS 写 --gaze-x/y / --head-tilt) ── */
+.neo-eyes {
+  transform: translate(var(--gaze-x, 0px), var(--gaze-y, 0px));
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neo-head {
+  transform: rotate(var(--head-tilt, 0deg));
+  transform-origin: 100px 150px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   情绪动画 (作用在整只 .neox-pet-svg)
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes neoBreathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%      { transform: scale(1.025) translateY(-3px); }
+}
+.neox-pet--idle .neox-pet-svg { animation: neoBreathe var(--neox-loop-breathe) var(--neox-ease-out) infinite; }
+
+@keyframes neoBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30%      { transform: translateY(-12px) rotate(-2deg); }
+  60%      { transform: translateY(-6px) rotate(2deg); }
+}
+.neox-pet--happy .neox-pet-svg { animation: neoBounce var(--neox-loop-breathe) var(--neox-ease-out) infinite; }
+
+@keyframes neoSway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25%      { transform: rotate(-3deg) translateY(2px); }
+  75%      { transform: rotate(3deg) translateY(2px); }
+}
+.neox-pet--sleepy .neox-pet-svg { animation: neoSway var(--neox-loop-breathe) var(--neox-ease-out) infinite; filter: brightness(0.94); }
+
+@keyframes neoThink {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(2deg) translateY(-2px); }
+}
+.neox-pet--think .neox-pet-svg { animation: neoThink var(--neox-loop-breathe) var(--neox-ease-out) infinite; transform-origin: center bottom; }
+
+/* speak: 嘴一张一合 */
+@keyframes neoSpeakMouth {
+  0%, 100% { transform: scaleY(0.4); }
+  50%      { transform: scaleY(1.1); }
+}
+.neox-pet--speak .neo-speak-mouth {
+  animation: neoSpeakMouth var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes neoNod {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+.neox-pet--speak .neox-pet-svg { animation: neoNod var(--neox-loop-breathe) var(--neox-ease-out) infinite; }
+
+@keyframes neoShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20%      { transform: translateX(-4px) rotate(-3deg); }
+  40%      { transform: translateX(4px) rotate(3deg); }
+  60%      { transform: translateX(-3px) rotate(-2deg); }
+  80%      { transform: translateX(3px) rotate(2deg); }
+}
+.neox-pet--error .neox-pet-svg { animation: neoShake var(--neox-loop-breathe) var(--neox-ease-out) infinite; }
+
+@keyframes neoPop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.12) translateY(-6px); }
+  60%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+.neox-pet--success .neox-pet-svg { animation: neoPop var(--neox-loop-breathe) var(--neox-ease-out) infinite; }
+
+/* ── 触角光: 默认柔和呼吸, success/typing 时强发光 ── */
+@keyframes neoGlowSoft {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 0.85; }
+}
+.neo-antenna-tip { animation: neoGlowSoft var(--neox-loop-breathe) var(--neox-ease-out) infinite; transform-origin: center; }
+
+.neox-pet--success .neo-antenna-tip {
+  filter: drop-shadow(0 0 6px currentColor);
+  animation: neoGlowSoft var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   打字反应 — typing=true 时: 触角发光脉冲 + 身体轻点 (陪你写代码)
+   ══════════════════════════════════════════════════════════════ */
+@keyframes neoTypingTip {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.25); }
+}
+@keyframes neoTypingBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2.5px); }
+}
+.neox-pet--typing .neo-antenna-tip {
+  animation: neoTypingTip var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+  filter: drop-shadow(0 0 5px currentColor);
+}
+/* typing 时身体轻点 — 不覆盖 error/success 的强动画 (优先级低) */
+.neox-pet--typing.neox-pet--idle .neox-pet-svg,
+.neox-pet--typing.neox-pet--think .neox-pet-svg {
+  animation: neoTypingBob var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+/* 减少动态偏好: 停所有 */
+@media (prefers-reduced-motion: reduce) {
+  .neox-pet-svg,
+  .neo-antenna-tip,
+  .neo-speak-mouth {
+    animation: none !important;
+  }
+}

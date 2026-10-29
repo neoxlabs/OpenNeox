@@ -1,0 +1,246 @@
+/* Diff 变更导航 */
+.change-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.change-nav .nav-btn {
+  padding: 4px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.change-nav .nav-btn:hover:not(:disabled) {
+  border-color: var(--gold-500);
+  color: var(--gold-400);
+}
+
+.change-nav .nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.change-nav .nav-counter {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* 当前变更高亮 */
+.diff-line.current-change {
+  outline: 2px solid var(--gold-500);
+  outline-offset: -2px;
+  background: rgba(201, 162, 39, 0.2) !important;
+}
+
+/* 智能代码树视图切换 */
+.sct-view-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sct-view-toggle button {
+  padding: 6px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.sct-view-toggle button:hover {
+  border-color: var(--gold-500);
+  color: var(--gold-400);
+}
+
+.sct-view-toggle button.active {
+  background: rgba(201, 162, 39, 0.15);
+  border-color: var(--gold-500);
+  color: var(--gold-400);
+}
+
+/* 依赖关系图 */
+.dependency-graph {
+  padding: 12px;
+}
+
+.graph-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+}
+
+.dep-node {
+  margin-bottom: 12px;
+  padding: 10px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.dep-node.selected {
+  border-left: 2px solid var(--gold-500);
+}
+
+.dep-source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.dep-targets {
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+.dep-target {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  padding: 2px 0;
+}
+
+.dep-arrow {
+  color: var(--text-muted);
+}
+
+/* 调用关系图 */
+.call-graph {
+  padding: 12px;
+}
+
+.call-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.call-center {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.callers,
+.callees {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.caller,
+.callee {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 2px 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  color: var(--text-secondary);
+}
+
+.call-arrow {
+  color: var(--text-muted);
+}
+
+/* 热力图 */
+.heatmap-view {
+  padding: 12px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.heatmap-cell {
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid var(--border-subtle);
+}
+
+.heatmap-cell:hover {
+  border-color: var(--gold-500);
+}
+
+.cell-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-primary);
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-count {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* 实时协作光标和选区 */
+.rp-cursors {
+  padding: 12px;
+}
+
+.rp-cursors h4 {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  margin: 12px 0 8px;
+}
+
+.rp-cursors h4:first-child {
+  margin-top: 0;
+}
+
+.cursor-list,
+.selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cursor-item,
+.selection-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  border-left: 3px solid var(--gold-500);
+}
+
+.cursor-user,
+.sel-user {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cursor-pos,
+.sel-range {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  word-break: break-all;
+}
+

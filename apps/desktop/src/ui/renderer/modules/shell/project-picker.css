@@ -1,0 +1,193 @@
+.nx-projpick {
+  --pp-face: #fffefc;
+  --pp-edge: rgba(120, 104, 88, 0.14);
+  --pp-ink: #1d1c1a;
+  --pp-muted: rgba(29, 28, 26, 0.46);
+  --pp-hover: rgba(120, 104, 88, 0.08);
+  --pp-current: rgba(47, 107, 255, 0.07);
+  --pp-field: rgba(120, 104, 88, 0.07);
+  --pp-blue: #2f6bff;
+  position: fixed;
+  z-index: 10050;
+  box-sizing: border-box;
+  padding: 10px 8px 6px;
+  max-height: min(72vh, 560px);
+  overflow-y: auto;
+  border-radius: 16px;
+  border: 1px solid var(--pp-edge);
+  background: var(--pp-face);
+  color: var(--pp-ink);
+  box-shadow: 0 1px 2px rgba(60, 45, 30, 0.06), 0 12px 32px rgba(60, 45, 30, 0.14);
+  transform-origin: top left;
+  animation: nx-projpick-in 140ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  -webkit-app-region: no-drag;
+}
+.nx-projpick.is-up { transform-origin: bottom left; }
+@keyframes nx-projpick-in { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .nx-projpick { animation: none; } }
+
+:root[data-theme="dark"] .nx-projpick {
+  --pp-face: #26241f;
+  --pp-edge: rgba(255, 255, 255, 0.08);
+  --pp-ink: #f2efea;
+  --pp-muted: rgba(242, 239, 234, 0.45);
+  --pp-hover: rgba(255, 255, 255, 0.06);
+  --pp-current: rgba(107, 149, 255, 0.12);
+  --pp-field: rgba(255, 255, 255, 0.06);
+  --pp-blue: #6b95ff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* 标题: 墨色一行, 说清这是在干什么 */
+.nx-projpick__title {
+  padding: 2px 8px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pp-ink);
+}
+
+/* 搜项目 */
+.nx-projpick__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  margin: 0 2px 6px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: var(--pp-field);
+  color: var(--pp-muted);
+  cursor: text;
+}
+.nx-projpick__search svg { width: 14px; height: 14px; flex: none; }
+.nx-projpick__search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--pp-ink);
+}
+.nx-projpick__search input::placeholder { color: var(--pp-muted); }
+
+.nx-projpick__group {
+  padding: 6px 8px 4px;
+  font-size: 11.5px;
+  color: var(--pp-muted);
+}
+.nx-projpick__empty {
+  padding: 14px 8px;
+  font-size: 12.5px;
+  color: var(--pp-muted);
+}
+
+.nx-projpick__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 5px 10px 5px 6px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.nx-projpick__row.is-active { background: var(--pp-hover); }
+/* 当前项目一直是淡钴蓝底 (稿里的选中行), 键盘停在它上面时再深一点 */
+/* (主题包给 [aria-selected="true"] 钉了灰底, 它读 --nx-selected-bg —— 两处都设) */
+.nx-projpick__row.is-current { --nx-selected-bg: var(--pp-current); background: var(--pp-current); }
+.nx-projpick__row.is-current.is-active {
+  --nx-selected-bg: color-mix(in srgb, var(--pp-blue) 11%, transparent);
+  background: color-mix(in srgb, var(--pp-blue) 11%, transparent);
+}
+.nx-projpick__row--open,
+.nx-projpick__row--temp { min-height: 36px; }
+
+/* 陶土文件夹: 两层 (后片深一档 + 前片) + 一道高光, 颜色按项目名稳定挑 */
+.nx-projpick__folder {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 30px;
+  height: 26px;
+  filter: drop-shadow(0 1px 1px rgba(60, 45, 30, 0.12));
+}
+.nx-projpick__folder svg { width: 100%; height: 100%; }
+.nx-projpick__folder .back { fill: var(--f-back); }
+.nx-projpick__folder .front { fill: var(--f-front); }
+.nx-projpick__folder .lip { stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.2; stroke-linecap: round; fill: none; }
+.nx-projpick__folder.is-amber { --f-back: #E5BE7E; --f-front: #F2D29B; }
+.nx-projpick__folder.is-lilac { --f-back: #B9A6E8; --f-front: #CEC0F2; }
+.nx-projpick__folder.is-mint  { --f-back: #8FCDB4; --f-front: #AEDDC9; }
+.nx-projpick__folder.is-clay  { --f-back: #DDA58A; --f-front: #EBBDA6; }
+.nx-projpick__folder.is-sky   { --f-back: #95B9E6; --f-front: #B3CDEF; }
+.nx-projpick__folder.is-grey  { --f-back: #CFC8BE; --f-front: #E0DAD2; }
+:root[data-theme="dark"] .nx-projpick__folder { filter: none; opacity: 0.9; }
+
+/* 临时文件夹 / 打开其他: 线条小图标, 跟项目行文字对齐 */
+.nx-projpick__ico {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  color: var(--pp-muted);
+}
+.nx-projpick__ico svg { width: 16px; height: 16px; }
+
+.nx-projpick__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.nx-projpick__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nx-projpick__row.is-temp .nx-projpick__name { font-weight: 400; }
+.nx-projpick__row--open .nx-projpick__name,
+.nx-projpick__row--temp .nx-projpick__name { font-size: 13px; font-weight: 400; }
+.nx-projpick__row--temp em { font-style: normal; color: var(--pp-muted); }
+.nx-projpick__path {
+  font-size: 11.5px;
+  color: var(--pp-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nx-projpick__chev { display: inline-flex; color: var(--pp-muted); }
+.nx-projpick__chev svg { width: 14px; height: 14px; transition: transform 120ms ease; }
+.nx-projpick__kbd {
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--pp-muted);
+}
+.nx-projpick__check { flex: 0 0 auto; display: inline-flex; color: var(--pp-blue); }
+.nx-projpick__check svg { stroke-width: 2.4; }
+
+.nx-projpick__sep { height: 1px; margin: 4px 8px; background: var(--pp-edge); }
+
+.nx-projpick { padding: 8px 6px 4px; border-radius: 12px; }
+.nx-projpick__title { padding: 0 8px 6px; font-size: 12px; }
+.nx-projpick__search { height: 28px; margin: 0 2px 4px; padding: 0 8px; border-radius: 8px; }
+.nx-projpick__search input { font-size: 12.5px; }
+.nx-projpick__group { padding: 4px 8px 2px; font-size: 11px; }
+.nx-projpick__row { min-height: 32px; gap: 8px; padding: 0 8px 0 6px; border-radius: 8px; }
+.nx-projpick__row--open,
+.nx-projpick__row--temp { min-height: 30px; }
+.nx-projpick__folder { width: 20px; height: 17px; }
+.nx-projpick__ico { width: 20px; }
+.nx-projpick__ico svg { width: 14px; height: 14px; }
+.nx-projpick__text { flex-direction: row; align-items: baseline; gap: 6px; }
+.nx-projpick__name { flex: 0 1 auto; font-size: 13px; }
+.nx-projpick__path { flex: 1 1 0; min-width: 0; font-size: 11px; }
+.nx-projpick__row--open .nx-projpick__name,
+.nx-projpick__row--temp .nx-projpick__name { font-size: 12.5px; }
+.nx-projpick__check svg { width: 13px; height: 13px; }

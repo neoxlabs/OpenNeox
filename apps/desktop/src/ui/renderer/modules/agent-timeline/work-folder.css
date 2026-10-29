@@ -1,0 +1,48 @@
+/* Work 任务文件夹胶囊 (WorkFolderPill.tsx) —— 设计稿 E8jf「会话与文件夹 · Work」 */
+.nx-wf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  padding: 16px 16px 14px;
+  /* 泥板色渐隐细栏: 时间线从它下面滚过, 到胶囊下沿就看不出边 */
+  background: linear-gradient(var(--neox-bg-card) 60%, transparent);
+  pointer-events: none;
+}
+.nx-wf__pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: min(640px, 100%);
+  height: 34px;
+  padding: 0 4px 0 14px;
+  border: 1px solid var(--neox-line, rgba(60, 45, 25, 0.1));
+  border-radius: 999px;
+  background: var(--neox-bg-card, #fbfaf7);
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--neox-fg-primary);
+}
+.nx-wf__icon { flex: none; color: var(--neox-fg-secondary); }
+.nx-wf__parent { flex: none; color: var(--neox-fg-hint); }
+.nx-wf__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.nx-wf__count { flex: none; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.nx-wf__open {
+  flex: none;
+  height: 26px;
+  margin-left: 8px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--neox-bg-hover, rgba(60, 45, 25, 0.06));
+  font: inherit;
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+}
+.nx-wf__open:hover { background: var(--neox-bg-active, rgba(60, 45, 25, 0.1)); }
+/* 胶囊盖着时间线顶部: 首条消息往下让出胶囊的高度 */
+.agent-timeline.has-work-folder .atl-feed { padding-top: 64px; }

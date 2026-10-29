@@ -1,0 +1,868 @@
+/* ==================== Timeline 紧凑模式样式 ==================== */
+
+/* Timeline Entry 紧凑 */
+.editor-timeline-content .timeline-entry {
+  padding: 3px 0;
+  margin-bottom: 3px;
+  gap: 8px;
+  width: 100%;
+}
+
+.editor-timeline-content .timeline-entry.card {
+  padding: 3px 0;
+}
+
+.editor-timeline-content .timeline-body {
+  padding: 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  width: 100%;
+  max-width: none;
+}
+
+.editor-timeline-content .timeline-node {
+  margin-right: 0;
+  width: 22px;
+}
+
+.editor-timeline-content .node-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.editor-timeline-content .node-dot svg {
+  width: 11px;
+  height: 11px;
+  color: var(--text-muted);
+}
+
+.editor-timeline-content .node-line {
+  display: none;
+}
+
+.editor-timeline-content .timeline-entry.simple .node-dot {
+  width: 8px;
+  height: 8px;
+  border: none;
+  background: var(--text-muted);
+}
+
+.editor-timeline-content .timeline-entry.simple .node-dot svg {
+  display: none;
+}
+
+.editor-timeline-content .chat-messages .node-line {
+  display: none;
+}
+
+.editor-timeline-content .timeline-list {
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.editor-timeline-content .conversation-list {
+  padding: 0 8px;
+}
+
+.editor-timeline-content .conversation-list::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 6px;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom,
+      var(--border-subtle) 0,
+      var(--border-subtle) 4px,
+      transparent 4px,
+      transparent 8px);
+  z-index: 0;
+}
+
+/* 用户/助手消息紧凑 */
+.editor-timeline-content .user-message-header,
+.editor-timeline-content .assistant-message-header {
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.editor-timeline-content .user-avatar,
+.editor-timeline-content .assistant-avatar {
+  width: 18px;
+  height: 18px;
+}
+
+.editor-timeline-content .user-avatar svg,
+.editor-timeline-content .assistant-avatar svg {
+  width: 10px;
+  height: 10px;
+}
+
+.editor-timeline-content .user-name,
+.editor-timeline-content .assistant-name {
+  font-size: 10px;
+}
+
+.editor-timeline-content .timeline-time-inline {
+  font-size: 8px;
+}
+
+.editor-timeline-content .user-message-content,
+.editor-timeline-content .assistant-message-content {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.45;
+  width: 100%;
+  max-width: 100%;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+/* 保持和主聊天视图一致：无气泡，透明背景 */
+.editor-timeline-content .user-message-content {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  color: var(--text-secondary);
+  max-width: 100%;
+}
+
+.editor-timeline-content .assistant-message-content {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  color: var(--text-primary);
+  max-width: 100%;
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.5;
+}
+
+.editor-timeline-content .timeline-entry.thinking .timeline-body {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.editor-timeline-content .user-message-content p,
+.editor-timeline-content .assistant-message-content p {
+  margin: 4px 0;
+}
+
+/* Markdown 内容 */
+.editor-timeline-content .user-message-content ul,
+.editor-timeline-content .user-message-content ol,
+.editor-timeline-content .assistant-message-content ul,
+.editor-timeline-content .assistant-message-content ol {
+  padding-left: 18px;
+  margin: 4px 0;
+}
+
+.editor-timeline-content .user-message-content li,
+.editor-timeline-content .assistant-message-content li {
+  margin: 2px 0;
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+/* 操作按钮紧凑 */
+.editor-timeline-content .user-action-btn {
+  padding: 1px 4px;
+  font-size: 8px;
+}
+
+/* Timeline Meta 紧凑 */
+.editor-timeline-content .timeline-meta {
+  font-size: 8px;
+  gap: 4px;
+}
+
+.editor-timeline-content .timeline-type {
+  font-size: 8px;
+  padding: 1px 3px;
+}
+
+.editor-timeline-content .timeline-time {
+  font-size: 8px;
+}
+
+.editor-timeline-content .timeline-title {
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+
+.editor-timeline-content .timeline-title-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.editor-timeline-content .timeline-title-icon svg {
+  width: 9px;
+  height: 9px;
+}
+
+/* 代码块紧凑 */
+.editor-timeline-content .timeline-code-block,
+.editor-timeline-content .timeline-code {
+  font-size: 9px;
+  padding: 3px 5px;
+  max-height: 60px;
+}
+
+.editor-timeline-content pre,
+.editor-timeline-content code {
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-line {
+  font-size: 9px;
+  padding: 0;
+  line-height: 1.3;
+}
+
+.editor-timeline-content .code-line-num {
+  font-size: 8px;
+  min-width: 20px;
+}
+
+/* Tool Card 紧凑 */
+.editor-timeline-content .tool-card {
+  padding: 10px 12px;
+  margin: 4px 0;
+  border-radius: 14px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  box-shadow: none;
+  width: 100%;
+}
+
+.editor-timeline-content .tool-card-header {
+  gap: 6px;
+  padding: 0 0 6px;
+}
+
+.editor-timeline-content .tool-card-title {
+  font-size: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.editor-timeline-content .tool-name {
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-timeline-content .tool-description {
+  font-size: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-timeline-content .tool-card-meta {
+  font-size: 8px;
+}
+
+.editor-timeline-content .tool-duration {
+  font-size: 8px;
+}
+
+.editor-timeline-content .tool-card-content {
+  font-size: 10px;
+  padding: 0;
+}
+
+.editor-timeline-content .smart-tree-card {
+  background: rgba(139, 92, 246, 0.06);
+  border-color: rgba(139, 92, 246, 0.15);
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor-timeline-content .smart-tree-header,
+.editor-timeline-content .smart-tree-action {
+  color: var(--text-accent);
+}
+
+.editor-timeline-content .grep-file-card {
+  background: rgba(14, 165, 233, 0.06);
+  border-color: rgba(14, 165, 233, 0.15);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Edit/Read/Write File Card 紧凑 */
+.editor-timeline-content .edit-file-diff-card,
+.editor-timeline-content .read-file-card,
+.editor-timeline-content .write-file-card {
+  padding: 4px 6px;
+  margin: 2px 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor-timeline-content .read-file-card {
+  padding: 2px 4px;
+  margin: 1px 0;
+}
+
+.editor-timeline-content .edit-file-diff-header,
+.editor-timeline-content .read-file-card-header,
+.editor-timeline-content .write-file-card-header {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 6px 8px;
+}
+
+/* READ 卡片保持单行头部，避免纵向堆叠导致高度异常 */
+.editor-timeline-content .read-file-card-header {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 4px 6px;
+}
+
+.editor-timeline-content .read-file-card-grid {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.editor-timeline-content .read-file-card-info {
+  width: auto;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-timeline-content .read-file-card-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-timeline-content .read-file-card-stat,
+.editor-timeline-content .read-file-card-actions {
+  flex-shrink: 0;
+  white-space: nowrap;
+  gap: 4px;
+}
+
+.editor-timeline-content .edit-file-diff-icon,
+.editor-timeline-content .read-file-card-icon,
+.editor-timeline-content .write-file-card-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.editor-timeline-content .edit-file-diff-icon svg,
+.editor-timeline-content .read-file-card-icon svg,
+.editor-timeline-content .write-file-card-icon svg {
+  width: 10px;
+  height: 10px;
+}
+
+.editor-timeline-content .edit-file-diff-info,
+.editor-timeline-content .read-file-card-info,
+.editor-timeline-content .write-file-card-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+}
+
+.editor-timeline-content .edit-file-diff-text,
+.editor-timeline-content .read-file-card-text,
+.editor-timeline-content .write-file-card-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.editor-timeline-content .read-file-card-action,
+.editor-timeline-content .write-file-card-action,
+.editor-timeline-content .edit-file-diff-action {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.editor-timeline-content .read-file-card-name,
+.editor-timeline-content .write-file-card-name,
+.editor-timeline-content .edit-file-diff-name {
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-timeline-content .read-file-card-path,
+.editor-timeline-content .write-file-card-path,
+.editor-timeline-content .edit-file-diff-path {
+  display: none;
+}
+
+.editor-timeline-content .edit-file-diff-meta,
+.editor-timeline-content .read-file-card-meta,
+.editor-timeline-content .write-file-card-meta {
+  display: flex;
+  align-items: center;
+  font-size: 8px;
+  gap: 6px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.editor-timeline-content .write-file-card {
+  padding: 0;
+}
+
+.editor-timeline-content .write-file-card-header {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+}
+
+.editor-timeline-content .write-file-card-header-left svg {
+  width: 12px;
+  height: 12px;
+}
+
+.editor-timeline-content .write-file-card-path {
+  font-size: 10px;
+}
+
+.editor-timeline-content .write-file-card-diff-label {
+  font-size: 8px;
+}
+
+.editor-timeline-content .write-file-code-block {
+  max-height: 200px;
+}
+
+.editor-timeline-content .read-file-card-body,
+.editor-timeline-content .write-file-card-body {
+  font-size: 9px;
+  max-height: 80px;
+}
+
+.editor-timeline-content .edit-file-diff-body {
+  font-size: 9px;
+  max-height: none;
+  overflow: visible;
+}
+
+/* Code Diff 紧凑 */
+.editor-timeline-content .code-diff-block {
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-diff-header {
+  padding: 3px 6px;
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-diff-filename {
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-diff-stats {
+  font-size: 8px;
+}
+
+.editor-timeline-content .code-diff-split-header {
+  font-size: 8px;
+  padding: 2px 4px;
+}
+
+.editor-timeline-content .code-diff-split {
+  display: none;
+}
+
+.editor-timeline-content .code-diff-split-line {
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-diff-split-num {
+  font-size: 8px;
+  min-width: 18px;
+}
+
+.editor-timeline-content .code-diff-paired {
+  display: block;
+  max-height: 220px;
+}
+
+.editor-timeline-content .code-diff-paired-role {
+  width: 30px;
+  font-size: 8px;
+}
+
+.editor-timeline-content .code-diff-paired-line {
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-diff-paired-num {
+  width: 30px;
+  padding: 2px 4px;
+  font-size: 8px;
+}
+
+.editor-timeline-content .code-diff-paired-sign {
+  width: 14px;
+  padding: 2px 2px;
+  font-size: 8px;
+}
+
+/* Grep/Search Card 紧凑 */
+.editor-timeline-content .grep-file-card {
+  padding: 4px 6px;
+}
+
+.editor-timeline-content .grep-file-header {
+  gap: 4px;
+}
+
+.editor-timeline-content .grep-file-action {
+  font-size: 9px;
+}
+
+.editor-timeline-content .grep-file-name {
+  font-size: 10px;
+}
+
+.editor-timeline-content .grep-file-meta {
+  font-size: 8px;
+}
+
+.editor-timeline-content .grep-match-line {
+  font-size: 9px;
+  padding: 1px 3px;
+}
+
+.editor-timeline-content .grep-line-num {
+  font-size: 8px;
+  min-width: 18px;
+}
+
+/* Code Exec Card 紧凑 */
+.editor-timeline-content .code-exec-card {
+  padding: 4px 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor-timeline-content .code-exec-header {
+  gap: 4px;
+}
+
+.editor-timeline-content .code-exec-action {
+  font-size: 9px;
+}
+
+.editor-timeline-content .code-exec-title {
+  font-size: 10px;
+}
+
+.editor-timeline-content .code-exec-meta {
+  font-size: 8px;
+}
+
+.editor-timeline-content .code-exec-code,
+.editor-timeline-content .code-exec-command,
+.editor-timeline-content .code-exec-output {
+  font-size: 9px;
+  padding: 3px 5px;
+  max-height: 60px;
+}
+
+/* Command Card 紧凑 */
+.editor-timeline-content .command-card {
+  padding: 4px 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor-timeline-content .command-card-header {
+  gap: 4px;
+}
+
+.editor-timeline-content .command-card-label {
+  font-size: 10px;
+}
+
+.editor-timeline-content .command-card-duration {
+  font-size: 8px;
+}
+
+.editor-timeline-content .command-code-block {
+  font-size: 9px;
+  padding: 3px 5px;
+}
+
+.editor-timeline-content .command-result {
+  font-size: 9px;
+  max-height: 60px;
+}
+
+/* Web Search/Fetch Card 紧凑 */
+.editor-timeline-content .web-search-card,
+.editor-timeline-content .web-fetch-card {
+  padding: 4px 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor-timeline-content .web-search-header,
+.editor-timeline-content .web-fetch-header {
+  gap: 4px;
+}
+
+.editor-timeline-content .web-search-action,
+.editor-timeline-content .web-fetch-action {
+  font-size: 9px;
+}
+
+.editor-timeline-content .web-search-query,
+.editor-timeline-content .web-fetch-hostname {
+  font-size: 10px;
+}
+
+.editor-timeline-content .web-search-meta,
+.editor-timeline-content .web-fetch-meta {
+  font-size: 8px;
+}
+
+.editor-timeline-content .web-search-result-item {
+  padding: 3px 5px;
+  font-size: 9px;
+}
+
+.editor-timeline-content .web-search-result-title {
+  font-size: 10px;
+}
+
+.editor-timeline-content .web-search-result-desc {
+  font-size: 9px;
+}
+
+/* Show Tree Card 紧凑 */
+.editor-timeline-content .show-tree-card,
+.editor-timeline-content .smart-tree-card {
+  padding: 4px 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor-timeline-content .show-tree-header,
+.editor-timeline-content .smart-tree-header {
+  gap: 4px;
+}
+
+.editor-timeline-content .show-tree-action,
+.editor-timeline-content .smart-tree-action {
+  font-size: 9px;
+}
+
+.editor-timeline-content .show-tree-name,
+.editor-timeline-content .smart-tree-name {
+  font-size: 10px;
+}
+
+.editor-timeline-content .show-tree-meta,
+.editor-timeline-content .smart-tree-meta {
+  font-size: 8px;
+}
+
+.editor-timeline-content .show-tree-item,
+.editor-timeline-content .smart-tree-item {
+  font-size: 9px;
+  padding: 1px 3px;
+}
+
+/* Status Log 紧凑 */
+.editor-timeline-content .timeline-status-log {
+  font-size: 9px;
+}
+
+.editor-timeline-content .timeline-status-entry {
+  padding: 1px 4px;
+  font-size: 9px;
+}
+
+.editor-timeline-content .timeline-status-time {
+  font-size: 8px;
+}
+
+.editor-timeline-content .timeline-status-text {
+  font-size: 9px;
+}
+
+/* 折叠按钮紧凑 */
+.editor-timeline-content .timeline-collapse-btn,
+.editor-timeline-content .edit-collapse-btn,
+.editor-timeline-content .tool-collapse-btn,
+.editor-timeline-content .read-file-collapse-btn,
+.editor-timeline-content .write-file-collapse-btn,
+.editor-timeline-content .grep-file-collapse-btn,
+.editor-timeline-content .code-exec-collapse-btn,
+.editor-timeline-content .show-tree-collapse-btn,
+.editor-timeline-content .smart-tree-collapse-btn,
+.editor-timeline-content .web-search-collapse-btn,
+.editor-timeline-content .web-fetch-collapse-btn,
+.editor-timeline-content .command-collapse-btn {
+  width: 16px;
+  height: 16px;
+}
+
+.editor-timeline-content .timeline-collapse-btn svg,
+.editor-timeline-content [class*="-collapse-btn"] svg {
+  width: 8px;
+  height: 8px;
+}
+
+/* Diff 指示器紧凑 */
+.editor-timeline-content .timeline-diff-indicator {
+  font-size: 8px;
+}
+
+.editor-timeline-content .diff-add,
+.editor-timeline-content .diff-remove {
+  font-size: 8px;
+  padding: 0 2px;
+}
+
+/* Elapsed Time 紧凑 */
+.editor-timeline-content .assistant-elapsed-time {
+  font-size: 8px;
+}
+
+/* Timeline 内的 Composer 自适应 */
+
+/* IDE 模式统一密度（全卡片） */
+.editor-timeline-content .conversation-list {
+  padding: 0 6px;
+}
+
+.editor-timeline-content .user-message-content p,
+.editor-timeline-content .assistant-message-content p {
+  margin: 2px 0;
+}
+
+.editor-timeline-content .tool-card,
+.editor-timeline-content .search-tool-card,
+.editor-timeline-content .network-card,
+.editor-timeline-content .worker-status-card,
+.editor-timeline-content .dag-execution-card,
+.editor-timeline-content .search-files-card,
+.editor-timeline-content .agent-bid-card,
+.editor-timeline-content .bidding-card,
+.editor-timeline-content .negotiation-card,
+.editor-timeline-content .negotiation-message-card {
+  margin: 1px 0;
+  border-radius: 10px;
+}
+
+.editor-timeline-content .tool-card {
+  padding: 6px 8px;
+}
+
+.editor-timeline-content .search-tool-header,
+.editor-timeline-content .tool-card-header,
+.editor-timeline-content .command-card-header,
+.editor-timeline-content .code-exec-header,
+.editor-timeline-content .show-tree-header,
+.editor-timeline-content .smart-tree-header,
+.editor-timeline-content .web-search-header,
+.editor-timeline-content .web-fetch-header {
+  gap: 4px;
+  padding: 4px 6px;
+}
+
+.editor-timeline-content .search-tool-actions,
+.editor-timeline-content .read-file-card-actions,
+.editor-timeline-content .write-file-card-actions {
+  gap: 4px;
+}
+
+.editor-timeline-content .search-tool-details,
+.editor-timeline-content .explore-card-body,
+.editor-timeline-content .agent-delegation-body,
+.editor-timeline-content .plan-v2-body {
+  padding: 4px 8px 6px;
+  gap: 6px;
+}
+
+.editor-timeline-content .ask-user-details {
+  padding: 6px 8px 8px 28px;
+  gap: 8px;
+}
+
+.editor-timeline-content .plan-v2-wrap {
+  gap: 2px;
+}
+
+.editor-timeline-content .plan-v2-header {
+  gap: 5px !important;
+  padding: 5px 8px !important;
+}
+
+.editor-timeline-content .plan-v2-step {
+  padding: 2px 0;
+  gap: 5px;
+}
+
+.editor-timeline-content .network-card,
+.editor-timeline-content .worker-status-card,
+.editor-timeline-content .dag-execution-card {
+  padding: 8px 10px;
+  margin: 2px 0;
+  border-radius: 8px;
+}
+
+.editor-timeline-content .worker-header,
+.editor-timeline-content .dag-header,
+.editor-timeline-content .replan-header {
+  gap: 6px;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+}
+
+.editor-timeline-content .worker-task,
+.editor-timeline-content .worker-summary,
+.editor-timeline-content .worker-error,
+.editor-timeline-content .agent-delegation-summary,
+.editor-timeline-content .agent-delegation-error {
+  padding: 6px 8px;
+  margin-bottom: 6px;
+}
+
+.editor-timeline-content .search-files-header {
+  gap: 6px;
+  padding: 4px 6px;
+}
+
+.editor-timeline-content .search-files-path-row,
+.editor-timeline-content .search-files-command-row {
+  padding: 4px 8px;
+}
+
+.editor-timeline-content .search-files-list {
+  padding: 4px 0;
+}

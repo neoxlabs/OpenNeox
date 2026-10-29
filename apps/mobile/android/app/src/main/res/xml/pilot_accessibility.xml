@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pilot 代你操作手机 (NeoxAccessibilityService): 读屏幕上的控件、点、输入、滑、截图。
+     只在 Pilot 被要求办事时才动; 平时不读任何界面。
+     eventTypes 必须 typeAllMask: Chrome / WebView 看服务订了哪些事件来决定推不推网页树的更新,
+     只订窗口变化时, 点完「立即购买」画面已是「下单成功」, 读到的永远是旧购买页 (模型会再点一次 = 第二单)。
+     服务收到事件只记个时间戳, 不读内容。 -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/pilot_accessibility_description"
+    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds|flagRetrieveInteractiveWindows|flagIncludeNotImportantViews"
+    android:canRetrieveWindowContent="true"
+    android:canPerformGestures="true"
+    android:canTakeScreenshot="true"
+    android:notificationTimeout="100" />

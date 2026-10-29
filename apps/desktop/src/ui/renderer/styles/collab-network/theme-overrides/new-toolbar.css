@@ -1,0 +1,103 @@
+/* ==================== 新工具栏样式 ==================== */
+.composer-toolbar-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.toolbar-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.toolbar-tab svg {
+  width: 14px;
+  height: 14px;
+}
+
+.toolbar-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.toolbar-tab.active {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.tab-badge {
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--bg-tertiary);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.toolbar-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-status .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.toolbar-status .status-dot.active {
+  background: #22c55e;
+}
+
+.toolbar-status .status-text {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toolbar-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.toolbar-icon-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.toolbar-icon-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+

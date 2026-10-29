@@ -1,0 +1,64 @@
+/* 团队页换成工具页的框 (设计稿 E8jf「工具页 · 团队」): 顶上对齐不再垂直居中, 内容宽 1040 */
+.team-dash.tp-page { justify-content: flex-start; align-items: stretch; padding: 26px 56px 40px; }
+.team-dash.tp-page .team-dash__inner { width: min(1040px, 100%); gap: 0; }
+.team-dash.tp-page .team-dash__launcher {
+  margin-top: 24px;
+  padding: 16px 18px 12px;
+  border-radius: 18px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1)), 0 4px 16px rgba(60, 45, 25, 0.06);
+}
+.team-dash.tp-page .team-dash__gate { margin-top: 18px; }
+/* 编排开关在工具条里: 一颗小胶囊 */
+.team-dash.tp-page .team-dash__footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  margin: 0;
+  padding: 0 6px 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+/* 窄了工具条换行, 开关文字不折成两行, 启动按钮靠右 */
+.team-dash.tp-page .team-dash__toolbar { flex-wrap: wrap; row-gap: 8px; }
+.team-dash.tp-page .team-dash__footer-title { white-space: nowrap; }
+.team-dash.tp-page { padding-left: max(24px, min(56px, 5%)); padding-right: max(24px, min(56px, 5%)); }
+.team-dash.tp-page .team-dash__footer-title { font-size: 12.5px; font-weight: 400; color: var(--neox-fg-secondary); }
+.team-dash.tp-page .team-dash__launch-btn { background: var(--clay-blue, #2f6bff); color: #fff; border-radius: 10px; }
+.team-dash.tp-page .team-dash__launch-btn:disabled { opacity: 0.45; }
+.team-dash.tp-page .team-dash__section { margin-top: 26px; }
+
+/* 按主区实际宽度排 (右栏开着时主区窄, 视口媒体查询管不到) */
+.tp-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top: 22px; }
+.tp-step { padding: 16px; border-radius: 14px; background: color-mix(in srgb, var(--neox-fg-primary) 3%, var(--neox-bg-card)); }
+.tp-step__head { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--neox-fg-hint); }
+.tp-step__head img { width: 36px; height: 36px; object-fit: contain; }
+.tp-step__title { margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--neox-fg-primary); }
+.tp-step__desc { margin-top: 4px; font-size: 12.5px; line-height: 1.55; color: var(--neox-fg-muted); }
+
+.tp-list-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; padding: 0 6px; }
+.tp-list-head b { font-size: 15px; color: var(--neox-fg-primary); }
+.tp-list-head span { font-size: 12px; color: var(--neox-fg-hint); }
+.tp-team-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 10px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tp-team-row:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05)); }
+.tp-team-row img { width: 40px; height: 40px; object-fit: contain; flex: none; }
+.tp-team-row__text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.tp-team-row__title { font-size: 14px; font-weight: 500; color: var(--neox-fg-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tp-team-row__sub { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--neox-fg-hint); }
+.tp-team-row__time { flex: none; font-size: 12.5px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.tp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neox-fg-hint); }
+.tp-dot.is-running { background: var(--clay-blue, #2f6bff); }

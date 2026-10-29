@@ -1,0 +1,52 @@
+/* ==================== 响应式调整 ==================== */
+@media (max-width: 1100px) {
+  :root {
+    --sidebar-width: 180px;
+  }
+
+  .token-metrics {
+    display: none;
+  }
+
+  .project-info {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --sidebar-width: 160px;
+  }
+
+  .header-btn span {
+    display: none;
+  }
+
+  .header-btn {
+    padding: 4px;
+  }
+
+  .status-indicator {
+    display: none;
+  }
+
+  .mode-switcher {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .composer-hint {
+    display: none;
+  }
+
+  .conversation-title {
+    padding: 10px 10px;
+    min-height: 48px;
+  }
+
+  .conversation-title-text {
+    font-size: 10px;
+  }
+}
+

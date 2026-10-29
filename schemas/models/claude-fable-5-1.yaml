@@ -1,0 +1,53 @@
+# Claude Fable 5.1
+#
+# 推理档 2026-09-28 实测 (同一道题, 比 reasoning token; claude-sonnet-5 代表整个 Claude 5 系):
+#   · OpenRouter: 认 thinking:adaptive + output_config.effort (low 73 → high 149 → max 6000 到顶);
+#     关思考要 reasoning:{enabled:false} —— 光 thinking:disabled 照样在想。
+#   · relay-c (Claude 第一档): 只认 reasoning_effort; thinking / output_config 原样被忽略。
+#     reasoning_effort:"none" 反而会触发思考, 所以 off 档不用它。
+#   · relay-a 两个号: 所有推理参数都被吞, 从不返回推理 —— 档位在那两家不生效 (只是兜底档)。
+#   三种字段一起发, 两家互不干扰 (都 200)。原生 Anthropic (BYOK 直连) 的适配器会剔掉
+#   reasoning_effort / reasoning 这两个 OpenAI 系字段, 官方接口不认它们。
+id: claude-fable-5-1
+display_name: Claude Fable 5.1
+family: claude
+released: 2026-09
+availability: ga
+
+context_window: 1000000
+max_output_tokens: 128000
+
+upstream_slugs:
+  prov_openrouter: anthropic/claude-fable-5.1
+  prov_anthropic_direct: claude-fable-5-1
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    default_level: high
+  reasoning_effort:
+    supported: false
+  prompt_cache:
+    supported: true
+    type: ephemeral
+    max_breakpoints: 4
+    breakpoint_targets:
+      - tools_last
+      - system_first
+      - last_user_or_tool
+
+#   · Fable 只有一档, 界面不给任何推理控件 (2026-09-28 经网关端到端实测): 它的前三条路由
+#     (relay-c / relay-a ×2) off / low / max 一律 0 推理、输出 ~220 token —— 开关和档位全是假的。
+#     只有排在最后的 OpenRouter 认档位。这一档照发 high 的字段, 落到 OpenRouter 时照样思考。
+effort_map:
+  high: { thinking: { type: adaptive }, output_config: { effort: high }, reasoning_effort: high }
+
+pricing:
+  input_per_mtok: 10.00
+  cached_input_per_mtok: 0.25
+  output_per_mtok: 50.00
+  currency: USD

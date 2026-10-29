@@ -1,0 +1,37 @@
+/* docx 快速文字首屏 (S-05) —— 只属于 DocxSurfaceViewer 的临时层。
+ * docx-preview 第一页出现后由 JSX 撤掉, 不留痕。 */
+
+.sfc-docx-peek {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: auto;
+  padding: 24px 28px;
+  background: var(--neox-bg-canvas, #181818);
+}
+
+.sfc-docx-peek__inner {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--neox-fg-primary, #ddd);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.sfc-docx-peek__inner > p {
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+
+.sfc-docx-peek__more {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--neox-fg-muted, #999);
+  animation: sfc-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sfc-docx-peek__more {
+    animation: none;
+  }
+}

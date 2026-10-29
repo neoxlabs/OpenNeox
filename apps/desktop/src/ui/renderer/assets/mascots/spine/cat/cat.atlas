@@ -1,0 +1,82 @@
+cat.png
+size: 1024,2048
+filter: MipMapLinearLinear,Linear
+pma: true
+lower-torso
+bounds: 0,0,543,639
+lower-tail
+bounds: 547,0,250,365
+lower-arm-left
+bounds: 801,0,219,363
+lower-arm-right
+bounds: 0,643,218,362
+body
+bounds: 222,643,268,291
+head
+bounds: 494,643,268,223
+prop-mug
+bounds: 766,643,198,220
+prop-pencil
+bounds: 0,1009,220,206
+prop-phone
+bounds: 224,1009,139,200
+prop-notebook
+bounds: 367,1009,220,141
+prop-laptop
+bounds: 591,1009,220,141
+shadow-left
+bounds: 815,1009,107,100
+shadow-right
+bounds: 0,1219,108,100
+paw-right
+bounds: 112,1219,104,98
+paw-left
+bounds: 220,1219,104,95
+tube-left
+bounds: 328,1219,40,64
+tube-right
+bounds: 372,1219,40,64
+eye
+bounds: 416,1219,60,60
+eye-happy
+bounds: 480,1219,60,60
+eye-closed
+bounds: 544,1219,60,60
+eye-half
+bounds: 608,1219,60,60
+eye-dot
+bounds: 672,1219,60,60
+eye-wide
+bounds: 736,1219,60,60
+eye-squeeze
+bounds: 800,1219,60,60
+eye-angry
+bounds: 864,1219,60,60
+ground
+bounds: 0,1323,220,48
+steam
+bounds: 224,1323,48,48
+vein
+bounds: 276,1323,41,41
+mouth-smile
+bounds: 321,1323,37,37
+mouth-o
+bounds: 362,1323,37,37
+mouth-open
+bounds: 403,1323,37,37
+mouth-yawn
+bounds: 444,1323,37,37
+mouth-flat
+bounds: 485,1323,37,37
+mouth-cat
+bounds: 526,1323,37,37
+mouth-wavy
+bounds: 567,1323,37,37
+dot
+bounds: 608,1323,25,25
+blush
+bounds: 637,1323,39,21
+cap-left
+bounds: 680,1323,16,16
+cap-right
+bounds: 700,1323,19,14

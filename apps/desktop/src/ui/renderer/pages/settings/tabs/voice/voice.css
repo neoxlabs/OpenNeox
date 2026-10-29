@@ -1,0 +1,68 @@
+
+/* 本地 / 云端二选一: 跟开关卡、配置卡之间留出节奏 */
+.vc-kind { margin: 10px 0; }
+.vc-kind .ws-engine:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* 一个 Section 里几张卡上下叠: 卡与卡之间留缝 */
+.settings-panel-content .nx-card + .nx-card,
+.settings-panel-content .nx-card + .vc-kind + .nx-card { margin-top: 10px; }
+
+/* Key 框 (SecretField): 已配置 = 只读一条 ••••尾号 + 眼睛 / 复制 / 改; 输入态 = 输入框里嵌一个眼睛 */
+.vc-secret {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 36px;
+  padding: 0 4px 0 12px;
+  border-radius: 10px;
+  background: var(--neox-bg-muted, rgba(127, 127, 127, 0.08));
+  box-sizing: border-box;
+}
+.vc-secret__value {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: text;
+}
+.vc-secret__value.is-plain { color: var(--neox-fg-primary); letter-spacing: 0; }
+.vc-secret__btn {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.vc-secret__btn:hover { background: var(--neox-bg-hover, rgba(127, 127, 127, 0.12)); color: var(--neox-fg-primary); }
+.vc-secret__btn.is-done { color: var(--neox-ok, #10b981); }
+/* 编辑态: 输入框 + 右边一个「显示」按钮并排。按钮不叠进框里 —— 叠进去要给框右侧让位,
+ * 而设置页老规则 `input[type=password] { padding: 6px 10px !important }` 只能用 !important 压, 全仓 !important 有棘轮 */
+.vc-secret--edit { gap: 4px; padding: 0; background: none; }
+.vc-secret--edit > :first-child { flex: 1; min-width: 0; }
+.vc-secret.vc-secret--edit .nx-input { width: 100%; text-overflow: ellipsis; }
+
+/* 词库 / 专名纠正: 标题 + 一句说明, 下面整宽的多行框 */
+.vc-lexicon { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; }
+.vc-lexicon + .vc-lexicon { border-top: 1px solid var(--border-color, rgba(127, 127, 127, 0.16)); }
+.vc-lexicon__head { display: flex; flex-direction: column; gap: 2px; }
+.vc-lexicon__head b { font-size: var(--nx-fs-row-title, 14px); font-weight: 600; color: var(--text-primary); }
+.vc-lexicon__head span { font-size: var(--nx-fs-row-desc, 12px); color: var(--text-secondary); line-height: 1.5; }
+.vc-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 72px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+}

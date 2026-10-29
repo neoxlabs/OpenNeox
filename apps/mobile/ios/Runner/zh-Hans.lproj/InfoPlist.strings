@@ -1,0 +1,8 @@
+/* 中文版权限说明 —— 英文底稿在 Info.plist, 两边要一起改 */
+"NSCameraUsageDescription" = "扫描电脑上显示的二维码来连接你的电脑；也用于拍照作为对话附件。";
+"NSPhotoLibraryUsageDescription" = "从相册选择图片，作为对话附件发给 Neox 或用 AI 修改。";
+"NSPhotoLibraryAddUsageDescription" = "点「保存到相册」时，把生成的图片存进你的相册。";
+"NSMicrophoneUsageDescription" = "用麦克风跟 Neox 说话，不用打字。";
+"NSSpeechRecognitionUsageDescription" = "把你说的话转成文字发给 Neox。";
+"NSFaceIDUsageDescription" = "用面容 ID 解锁 Neox，避免别人拿到手机就能看到你的会话。";
+"NSLocalNetworkUsageDescription" = "在同一 Wi-Fi 下发现并直连你的电脑，对话内容不经过服务器。";

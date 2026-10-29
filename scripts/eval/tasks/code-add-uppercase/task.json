@@ -1,0 +1,6 @@
+{
+  "title": "给格式化工具加 --upper 选项",
+  "kind": "code",
+    "quick": true,
+  "timeoutSec": 600
+}

@@ -1,0 +1,276 @@
+
+.cw {
+  --cw-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .24 0 0 0 0 .12 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.cw-group { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.cw-group--promo { flex: 1 1 240px; max-width: 340px; }
+.cw-group--reset { flex: 2 1 440px; }
+.cw-group__label { font-size: 12px; font-weight: 500; color: var(--sv-text-mute); padding-left: 2px; }
+
+/* ── 活动金: 礼品卡 ─────────────────────────────────────────── */
+.cw-gift {
+  position: relative;
+  height: 140px;
+  padding: 18px 20px 16px;
+  border: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  font: inherit;
+  color: #6B4410;
+  cursor: pointer;
+  background:
+    var(--cw-grain),
+    radial-gradient(110% 90% at 88% 10%, rgba(255, 246, 224, .9) 0%, transparent 55%),
+    linear-gradient(140deg, #F8E7C6 0%, #F1D095 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .75),
+    inset 0 -1px 0 rgba(150, 95, 20, .12),
+    0 1px 2px rgba(120, 80, 20, .08),
+    0 10px 24px -12px rgba(170, 110, 30, .45);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+/* 礼品卡内框 */
+.cw-gift::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .5);
+  pointer-events: none;
+}
+.cw-gift__art {
+  position: absolute;
+  right: -14px;
+  bottom: -20px;
+  width: 136px;
+  transform: rotate(-8deg);
+  filter: drop-shadow(0 10px 14px rgba(120, 70, 10, .25));
+  pointer-events: none;
+  transition: transform .25s ease;
+}
+.cw-gift__amt {
+  position: relative;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.cw-gift__foot { position: relative; display: flex; align-items: center; gap: 8px; }
+.cw-chip {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5);
+}
+.cw-gift__go {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.cw-gift:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), inset 0 -1px 0 rgba(150, 95, 20, .12), 0 2px 4px rgba(120, 80, 20, .08), 0 16px 30px -12px rgba(170, 110, 30, .5); }
+.cw-gift:hover .cw-gift__art { transform: rotate(-3deg) scale(1.05); }
+.cw-gift:hover .cw-gift__go,
+.cw-gift:focus-visible .cw-gift__go { opacity: 1; transform: none; }
+
+/* ── 重置券: 一叠票 ─────────────────────────────────────────── */
+.cw-tickets { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.cw-ticket {
+  --stub: 64px;
+  position: relative;
+  height: 140px;
+  color: var(--tk-ink);
+  filter: drop-shadow(0 1px 1px rgba(30, 40, 70, .06)) drop-shadow(0 8px 14px rgba(30, 40, 70, .1));
+}
+.cw-ticket--5h     { --tk-a: #E6ECFF; --tk-b: #C8D5FF; --tk-ink: #2346B5; }
+.cw-ticket--weekly { --tk-a: #EAF1E1; --tk-b: #CDDFBE; --tk-ink: #3E6035; }
+.cw-ticket[data-stack="2"] { margin-bottom: 6px; }
+.cw-ticket[data-stack="3"] { margin-bottom: 12px; }
+
+/* 叠在底下的纸边: 只有张数 >1 才露出来 */
+.cw-ticket__sheet {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(150deg, var(--tk-a), var(--tk-b));
+  opacity: 0;
+}
+.cw-ticket__sheet:nth-child(1) { transform: translateY(12px) scaleX(.9); }
+.cw-ticket__sheet:nth-child(2) { transform: translateY(6px) scaleX(.95); }
+.cw-ticket[data-stack="2"] .cw-ticket__sheet:nth-child(2),
+.cw-ticket[data-stack="3"] .cw-ticket__sheet { opacity: .7; }
+.cw-ticket[data-stack="3"] .cw-ticket__sheet:nth-child(1) { opacity: .45; }
+
+.cw-ticket__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    var(--cw-grain),
+    radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, .6), transparent 55%),
+    linear-gradient(150deg, var(--tk-a), var(--tk-b));
+  -webkit-mask:
+    radial-gradient(circle 9px at var(--stub) 0, transparent 96%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 9px at var(--stub) 100%, transparent 96%, #000) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(circle 9px at var(--stub) 0, transparent 96%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 9px at var(--stub) 100%, transparent 96%, #000) bottom / 100% 51% no-repeat;
+  transition: transform .2s ease;
+}
+.cw-ticket__stub {
+  position: relative;
+  z-index: 1;
+  width: var(--stub);
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 14px 0;
+  border-right: 1.5px dashed color-mix(in srgb, var(--tk-ink) 32%, transparent);
+}
+.cw-ticket__days { font-size: 20px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cw-ticket__unit { font-size: 12px; opacity: .7; }
+
+.cw-ticket__art {
+  position: absolute;
+  right: -16px;
+  bottom: -18px;
+  width: 128px;
+  transform: rotate(8deg);
+  filter: drop-shadow(0 8px 12px rgba(30, 40, 80, .18));
+  pointer-events: none;
+  transition: transform .25s ease, opacity .2s ease;
+}
+
+.cw-ticket__body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 14px 14px 14px 18px;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+.cw-ticket__hit { cursor: pointer; }
+.cw-ticket__n { font-size: 28px; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.cw-ticket__name { font-size: 14px; font-weight: 600; }
+.cw-ticket__use {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .6);
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.cw-ticket:hover .cw-ticket__face { transform: translateY(-2px); }
+.cw-ticket:hover .cw-ticket__art { transform: rotate(3deg) scale(1.05); }
+.cw-ticket:hover .cw-ticket__use,
+.cw-ticket__hit:focus-visible .cw-ticket__use { opacity: 1; transform: none; }
+
+/* 确认态: 插画退成底纹, 券面换成一问一答 */
+.cw-ticket.is-confirm .cw-ticket__art,
+.cw-ticket.is-done .cw-ticket__art { opacity: .22; transform: rotate(8deg) scale(1.1); }
+.cw-ticket__q { font-size: 14px; font-weight: 600; }
+.cw-ticket__sub { font-size: 12px; opacity: .8; }
+.cw-ticket__acts { display: flex; gap: 8px; margin-top: 10px; }
+.cw-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: inherit;
+  background: rgba(255, 255, 255, .65);
+  cursor: pointer;
+}
+.cw-btn:hover:not(:disabled) { background: rgba(255, 255, 255, .9); }
+.cw-btn--go { background: var(--tk-ink); color: #fff; }
+.cw-btn--go:hover:not(:disabled) { background: color-mix(in srgb, var(--tk-ink) 86%, #000); }
+.cw-btn:disabled { opacity: .55; cursor: default; }
+.cw-ticket.is-done .cw-ticket__face { animation: cw-pop .45s ease; }
+@keyframes cw-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* ── 空券包 ─────────────────────────────────────────────────── */
+.cw-empty {
+  width: 100%;
+  min-height: 112px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  align-content: center;
+  column-gap: 18px;
+  padding: 16px 20px;
+  border: 1.5px dashed var(--sv-border-strong);
+  border-radius: 18px;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cw-empty:hover:not(:disabled) { background: var(--sv-soft); }
+.cw-empty__arts { grid-row: 1 / span 2; display: flex; align-items: center; }
+.cw-empty__arts img { width: 52px; filter: saturate(.7); opacity: .9; }
+.cw-empty__arts img + img { margin-left: -14px; }
+.cw-empty__title { align-self: end; font-size: 14px; font-weight: 600; color: var(--sv-text); }
+.cw-empty__hint { align-self: start; font-size: 12px; color: var(--sv-text-mute); }
+
+/* ── 深色 ───────────────────────────────────────────────────── */
+:root[data-theme="dark"] .cw-gift {
+  color: #F2D7A2;
+  background:
+    var(--cw-grain),
+    radial-gradient(110% 90% at 88% 10%, rgba(255, 210, 140, .14) 0%, transparent 55%),
+    linear-gradient(140deg, #4B3819 0%, #362812 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 230, 180, .12), 0 10px 24px -12px rgba(0, 0, 0, .6);
+}
+:root[data-theme="dark"] .cw-gift::after { border-color: rgba(255, 220, 160, .14); }
+:root[data-theme="dark"] .cw-chip { background: rgba(255, 220, 160, .12); box-shadow: none; }
+:root[data-theme="dark"] .cw-ticket--5h     { --tk-a: #27324F; --tk-b: #1D2640; --tk-ink: #B3C6FF; }
+:root[data-theme="dark"] .cw-ticket--weekly { --tk-a: #2B3826; --tk-b: #212B1C; --tk-ink: #C0DAB2; }
+:root[data-theme="dark"] .cw-ticket { filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .35)); }
+:root[data-theme="dark"] .cw-ticket__face {
+  background:
+    var(--cw-grain),
+    radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, .06), transparent 55%),
+    linear-gradient(150deg, var(--tk-a), var(--tk-b));
+}
+:root[data-theme="dark"] .cw-ticket__use,
+:root[data-theme="dark"] .cw-btn { background: rgba(255, 255, 255, .1); }
+:root[data-theme="dark"] .cw-btn:hover:not(:disabled) { background: rgba(255, 255, 255, .18); }
+:root[data-theme="dark"] .cw-btn--go { background: var(--tk-ink); color: #141414; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-gift, .cw-gift__art, .cw-gift__go, .cw-ticket__face, .cw-ticket__art, .cw-ticket__use { transition: none; }
+  .cw-ticket.is-done .cw-ticket__face { animation: none; }
+}

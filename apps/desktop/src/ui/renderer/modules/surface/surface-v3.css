@@ -1,0 +1,415 @@
+
+/* ── 外框: 标签栏 ── */
+/* 标签上的小图标统一灰线条 (原来 Git 橙菱形、Word 蓝方块各一套颜色, 一排看着花); 当前页图标墨色 */
+.neox-shell .sfc-chrome__tab .sfc-chrome__tab-icon { filter: grayscale(1); opacity: 0.62; }
+.neox-shell .sfc-chrome__tab.is-active .sfc-chrome__tab-icon { opacity: 0.95; }
+/* 标签 (10-15 用户圈出「tab 样式优化」): 选中不再是带描边阴影的白卡 (一块方盒子压在栏上, 比别的标签高一截),
+ * 换成跟面板里分段/选中行同一种浅底; 未选中透明、悬停才出底; 叉号只在选中和悬停时出现, 标题最多 168 宽 */
+.neox-shell .sfc-chrome__tab {
+  height: 30px; max-width: 200px; padding: 0 8px 0 10px; gap: 7px; border-radius: 9px; font-size: 13px;
+  background: transparent; color: var(--neox-fg-muted, var(--neox-fg-secondary));
+}
+.neox-shell .sfc-chrome__tab:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4.5%, transparent); }
+.neox-shell .sfc-chrome__tab.is-active {
+  --pack-tint-strong: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  --nx-selected-bg: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  box-shadow: none; color: var(--neox-fg-primary); font-weight: 500;
+}
+.neox-shell .sfc-chrome__tab-title { max-width: 150px; }
+/* 未选中的叉号不占位 (占着透明位一排标签字后面全是空), 悬停时叠在右端、标题尾巴渐隐让出位置 */
+.neox-shell .sfc-chrome__tab:not(.is-active) { padding-right: 10px; }
+.neox-shell .sfc-chrome__tab:not(.is-active) .sfc-chrome__tab-close { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); opacity: 0; }
+.neox-shell .sfc-chrome__tab:not(.is-active):hover .sfc-chrome__tab-close { opacity: 0.7; }
+.neox-shell .sfc-chrome__tab:not(.is-active):hover:has(.sfc-chrome__tab-close) .sfc-chrome__tab-title { mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent calc(100% - 10px)); }
+.neox-shell .sfc-chrome__tab-close { width: 16px; height: 16px; margin-left: 0; border-radius: 5px; }
+.neox-shell .sfc-chrome__tab-close:hover { background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent) !important; opacity: 1; }
+/* 拖标签: 跟手的小标签影子; 拖出标签栏后变蓝并提示「松手悬浮」 */
+.is-sfc-tab-dragging, .is-sfc-tab-dragging * { cursor: grabbing !important; user-select: none !important; }
+.is-sfc-tab-dragging webview, .is-sfc-tab-dragging iframe { pointer-events: none; }
+.sfc-tab-ghost {
+  position: fixed; left: 0; top: 0; z-index: 2147483000; pointer-events: none;
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 9px;
+  background: var(--neox-bg-card); color: var(--neox-fg-primary); font-size: 13px; font-weight: 500; white-space: nowrap;
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.09)), 0 8px 24px rgba(60, 45, 25, 0.16);
+  transition: background 120ms ease, color 120ms ease;
+}
+.sfc-tab-ghost__label { max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+.sfc-tab-ghost__hint { font-size: 12px; font-weight: 400; }
+.sfc-tab-ghost__hint:empty { display: none; }
+.sfc-tab-ghost[data-mode="tear"] { background: var(--clay-blue, #2f6bff); color: #fff; }
+.sfc-tab-ghost[data-mode="blocked"] .sfc-tab-ghost__hint { color: #b4542d; }
+/* 独立窗口拖回到这条标签栏上方: 描一圈蓝 + 淡蓝底, 停住就合并回来 */
+.sfc-chrome.is-merge-target {
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--clay-blue, #2f6bff) 8%, transparent) !important;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--clay-blue, #2f6bff) 70%, transparent);
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+/* 标签拖出来的独立窗口 (FloatingSurfaces): 整窗一块白泥板; 顶上 40 高标题栏 = 系统拖动区, 左边让出红绿灯 */
+html:has(> body.sfc-popwin-body), body.sfc-popwin-body { height: 100%; }
+body.sfc-popwin-body { margin: 0; overflow: hidden; background: var(--neox-bg-canvas, #fbf7f0); }
+.sfc-popwin-root { height: 100%; }
+/* 主题包那条是 :root[data-theme-pack] .sfc-panel { background: transparent !important } (0,3,0), 底色要更高 */
+html body .sfc-panel.sfc-popwin.sfc-popwin {
+  display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden;
+  background: var(--neox-bg-card, #fffdf9) !important;
+}
+.sfc-popwin__bar {
+  flex: none; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 8px 0 84px;
+  border-bottom: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09)); user-select: none;
+  -webkit-app-region: drag;
+}
+.sfc-popwin__title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--neox-fg-primary); }
+.sfc-popwin__btn {
+  -webkit-app-region: no-drag;
+  display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px;
+  border: 0; border-radius: 8px; background: transparent; color: var(--neox-fg-muted, var(--neox-fg-secondary));
+  font: inherit; font-size: 12.5px; cursor: pointer;
+}
+.sfc-popwin__btn:hover { background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent); color: var(--neox-fg-primary); }
+.sfc-popwin > .sfc-panel__body { flex: 1; min-height: 0; position: relative; }
+.sfc-popwin__btn--icon { width: 28px; padding: 0; justify-content: center; }
+.sfc-popwin__btn.is-on { color: var(--clay-blue, #2f6bff); background: color-mix(in srgb, var(--clay-blue, #2f6bff) 10%, transparent); }
+/* 收在屏幕边上的竖条: 整窗就是一根 46×176 的条, 顶栏和内容还挂着但藏起来 (实例不卸, 探出时直接显示) */
+.sfc-popwin.is-strip > .sfc-popwin__bar,
+.sfc-popwin.is-strip > .sfc-vhead,
+.sfc-popwin.is-strip > .sfc-panel__body { display: none; }
+/* 书签: 窗口有 10px 在屏幕外, 内容往屏幕里那侧收 10px (右边收就右侧留白, 左边收反过来) */
+.sfc-popwin__strip {
+  -webkit-app-region: no-drag;
+  position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 9px;
+  padding: 14px 10px 12px 0; border: 0; cursor: pointer; font: inherit; color: var(--neox-fg-primary);
+  background: var(--neox-bg-card, #fffdf9);
+  transition: background 140ms ease;
+}
+.is-side-left > .sfc-popwin__strip { padding: 14px 0 12px 10px; }
+.sfc-popwin__strip:hover { background: color-mix(in srgb, var(--clay-blue, #2f6bff) 7%, var(--neox-bg-card, #fffdf9)); }
+.sfc-popwin__strip-icon { flex: none; display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; }
+.sfc-popwin__strip-icon svg, .sfc-popwin__strip-icon img { width: 18px !important; height: 18px !important; }
+.sfc-popwin__strip-title {
+  flex: 1; min-height: 0; writing-mode: vertical-rl; text-orientation: mixed; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--neox-fg-secondary);
+}
+/* 靠屏幕内侧的一道把手线: 告诉人「这是从边上拉出来的」 */
+.sfc-popwin__strip-grip {
+  position: absolute; top: 50%; translate: 0 -50%; left: 6px; width: 3px; height: 26px; border-radius: 2px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 16%, transparent);
+}
+.is-side-left > .sfc-popwin__strip > .sfc-popwin__strip-grip { left: auto; right: 6px; }
+.sfc-popwin__strip:hover .sfc-popwin__strip-grip { background: var(--clay-blue, #2f6bff); }
+/* 探出时左边 (或右边) 留一道蓝边, 告诉你这是从边上探出来的、移开会缩回去 */
+.sfc-popwin.is-tucked:not(.is-strip) { box-shadow: inset 3px 0 0 var(--clay-blue, #2f6bff); }
+.sfc-popwin.is-side-left.is-tucked:not(.is-strip) { box-shadow: inset -3px 0 0 var(--clay-blue, #2f6bff); }
+/* 查看器顶栏里的按钮、内容区都不能被当成拖动区 */
+.sfc-popwin .sfc-vhead, .sfc-popwin > .sfc-panel__body { -webkit-app-region: no-drag; }
+/* 停靠 / 悬浮 / 展开: 三个小图标 */
+.neox-shell .sfc-chrome__layout { gap: 4px; padding: 3px; margin: 0 10px 0 6px; border-radius: 10px; }
+.neox-shell .sfc-chrome__layout-btn { min-width: 30px; width: 30px; height: 26px; padding: 0; }
+.neox-shell .sfc-chrome__layout-btn svg { width: 15px; height: 15px; }
+/* 暗色: bg-card 比底只亮一点, 再叠阴影选中态发糊; 改成前景色混一层, 跟浅色同样「当前那颗浮起」 */
+:root[data-theme="dark"] .neox-shell .sfc-chrome__layout { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); }
+:root[data-theme="dark"] .neox-shell .sfc-chrome__layout-btn.is-on {
+  background: color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+  box-shadow: none;
+}
+/* 新建: 只留四宫格, 不带字和数字角标 */
+.neox-shell .sfc-chrome__switch-btn { width: 30px; height: 30px; padding: 0; justify-content: center; }
+.neox-shell .sfc-chrome__switch-btn > svg { width: 15px; height: 15px; color: var(--neox-fg-secondary); }
+/* 新建菜单: 两行 (名字 + 什么时候用) */
+.sfc-chrome__switch-menu { min-width: 280px; padding: 6px; border-radius: 18px; }
+.sfc-chrome__switch-menu .sfc-chrome__switch-menu-item { height: auto; min-height: 46px; padding: 6px 10px; border-radius: 10px; gap: 11px; }
+.sfc-chrome__switch-menu .sfc-chrome__switch-menu-icon.is-clay { width: 30px; height: 30px; }
+.sfc-chrome__switch-menu .sfc-chrome__switch-menu-icon.is-clay img { width: 28px; height: 28px; }
+.sfc-chrome__switch-menu-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; text-align: left; }
+.sfc-chrome__switch-menu-label { font-size: 13.5px; font-weight: 500; color: var(--neox-fg-primary); }
+.sfc-chrome__switch-menu-hint { font-size: 12px; color: var(--neox-fg-hint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sfc-chrome__switch-menu .sfc-chrome__switch-menu-section { padding: 6px 10px 2px; letter-spacing: 0.04em; }
+
+/* ── 通用查看器顶栏 ── */
+.sfc-vhead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 12px 8px 16px;
+  border-bottom: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09));
+  background: var(--neox-bg-card);
+}
+.sfc-vhead__tag {
+  flex: none;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 4px;
+  border-radius: 7px;
+  font: 700 10px/26px ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+.sfc-vhead__text { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.sfc-vhead__name { font-size: 13px; font-weight: 500; color: var(--neox-fg-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sfc-vhead__sub { font-size: 11.5px; color: var(--neox-fg-hint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sfc-vhead__actions { flex: none; display: inline-flex; align-items: center; gap: 6px; }
+.sfc-vhead .sfc-export-btn,
+.sfc-vhead .sfc-open-ext-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  width: auto;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.sfc-vhead .sfc-export-btn:hover,
+.sfc-vhead .sfc-open-ext-btn:hover { background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent); color: var(--neox-fg-primary); }
+.sfc-vhead .sfc-export-btn__label,
+.sfc-vhead .sfc-open-ext-btn__label { display: inline !important; }
+
+/* ── Git (GitCard 在 Surface 里的样子; IDE 里那份不动, 全部限定在 .sfc-panel 下) ── */
+.sfc-panel .gc { --v3-chip: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); background: var(--neox-bg-card); }
+.sfc-panel .gc__toolbar { gap: 8px; padding: 14px 16px 4px; min-height: 0; border-bottom: 0; }
+.sfc-panel .gc__branch-btn {
+  height: 32px; padding: 0 10px 0 9px; gap: 7px; border: 0; border-radius: 9px;
+  background: var(--v3-chip); font-size: 13px; font-weight: 500; color: var(--neox-fg-primary);
+}
+.sfc-panel .gc__toolbar-right { gap: 6px; }
+.sfc-panel .gc__tbtn, .sfc-panel .gc__sync-btn {
+  height: 30px; min-width: 30px; padding: 0 10px; gap: 6px; border: 0; border-radius: 9px;
+  background: var(--v3-chip); color: var(--neox-fg-secondary); font-size: 12.5px;
+}
+.sfc-panel .gc__tbtn:hover, .sfc-panel .gc__sync-btn:hover { background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent); color: var(--neox-fg-primary); }
+.sfc-panel .gc__sync { gap: 6px; background: transparent; border: 0; padding: 0; box-shadow: none; }
+.sfc-panel .gc__sync-div { display: none; }
+/* 主题包对这两样钉了白底 !important, 只能同样 !important 盖回来 (限定在 Surface 里) */
+.sfc-panel .gc .gc__toolbar-right .gc__tbtn { background: var(--v3-chip) !important; border: 0 !important; box-shadow: none !important; }
+.sfc-panel .gc .gc__sync-label { display: inline; }
+.sfc-panel .gc .gc__tabs { border: 0 !important; box-shadow: none !important; background: var(--v3-chip) !important; }
+/* 有待推的提交: 推送那颗变成淡蓝 (一屏只这一处蓝, 提交按钮在没东西可推时才是主色) */
+.sfc-panel .gc__sync-btn:has(.gc__sync-n) { background: rgba(47, 107, 255, 0.09); color: var(--clay-blue, #2f6bff); font-weight: 500; }
+.sfc-panel .gc__sync-n { font-variant-numeric: tabular-nums; }
+.sfc-panel .gc__tbtn-n { position: static; min-width: 0; height: auto; padding: 0; background: none; color: inherit; font-size: 12.5px; box-shadow: none; }
+/* 改动 / 历史 + 过滤 */
+.sfc-panel .gc__tabrow { gap: 8px; padding: 10px 16px 6px; border-bottom: 0; }
+.sfc-panel .gc__tabs { gap: 2px; padding: 3px; border-radius: 10px; background: var(--v3-chip); }
+.sfc-panel .gc__tab { height: 26px; padding: 0 11px; border: 0; border-radius: 7px; font-size: 12.5px; color: var(--neox-fg-secondary); background: transparent; }
+.sfc-panel .gc__tab.is-active, .sfc-panel .gc__tab[aria-selected="true"] { background: var(--neox-bg-card); color: var(--neox-fg-primary); font-weight: 500; box-shadow: 0 1px 2px rgba(60, 45, 25, 0.1); }
+.sfc-panel .gc__tab-count { background: none; padding: 0 0 0 4px; color: inherit; font-weight: inherit; }
+.sfc-panel .gc__search { height: 30px; border: 0; border-radius: 9px; background: var(--v3-chip); }
+/* 文件分组 + 行 */
+.sfc-panel .gc__scroll { padding: 0 16px; }
+.sfc-panel .gc__fgroup-head { height: 30px; padding: 0; font-size: 12px; font-weight: 500; color: var(--neox-fg-secondary); text-transform: none; letter-spacing: 0; background: transparent; }
+.sfc-panel .gc__fgroup-count { color: var(--neox-fg-hint); font-weight: 400; background: none; }
+.sfc-panel .gc__frow { height: 34px; margin: 0 -10px; padding: 0 10px; gap: 10px; border-radius: 9px; }
+.sfc-panel .gc__frow:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4.5%, transparent); }
+.sfc-panel .gc__fname { font-size: 13px; color: var(--neox-fg-primary); }
+.sfc-panel .gc__fpath { font-size: 12px; color: var(--neox-fg-hint); }
+.sfc-panel .gc__hfile-add { color: #2e9d57; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.sfc-panel .gc__hfile-del { color: #c8553d; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.sfc-panel .gc__fbtn { width: 26px; height: 26px; border-radius: 7px; }
+/* 提交卡 */
+.sfc-panel .gc__commit {
+  margin: 8px 12px 12px; padding: 12px 12px 10px 14px; border: 0; border-radius: 14px;
+  background: var(--neox-bg-card); box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.09)), 0 2px 8px rgba(60, 45, 25, 0.05);
+}
+.sfc-panel .gc__commit-input { border: 0; background: transparent; padding: 0; min-height: 40px; font-size: 13px; box-shadow: none; }
+.sfc-panel .gc__commit-foot { gap: 8px; }
+.sfc-panel .gc__commit-status, .sfc-panel .gc__commit-amend { height: 28px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--v3-chip); font-size: 12px; color: var(--neox-fg-secondary); }
+.sfc-panel .gc__commit-split { border-radius: 10px; overflow: hidden; }
+.sfc-panel .gc__commit-btn { height: 32px; border: 0; background: var(--clay-blue, #2f6bff); color: #fff; font-size: 13px; font-weight: 500; }
+.sfc-panel .gc__commit-btn:first-child { padding: 0 16px; }
+.sfc-panel .gc__commit-btn--more { padding: 0 8px; border-left: 1px solid rgba(255, 255, 255, 0.28); }
+.sfc-panel .gc__commit-btn:disabled { opacity: 0.45; }
+
+/* ── 文件: 左树 + 右预览 ── */
+.sfc-files.sfc-files--v3 { display: flex; flex-direction: row; container-type: inline-size; background: var(--neox-bg-card); }
+.sfc-files--v3 > .sfc-files__preview { flex: 1; min-width: 0; }
+.sfc-files__tree { width: 220px; flex: none; display: flex; flex-direction: column; min-height: 0; padding: 10px 6px 0 8px; border-right: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09)); }
+.sfc-files__tree-search {
+  display: flex; align-items: center; gap: 7px; height: 30px; margin: 0 2px 6px; padding: 0 9px; flex: none;
+  border: 0; border-radius: 9px; background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-hint); font: inherit; font-size: 12.5px; cursor: pointer; text-align: left;
+}
+.sfc-files__tree-search span { flex: 1; }
+.sfc-files__tree-search kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--neox-fg-hint); background: none; border: 0; }
+.sfc-files__tree-search:hover { color: var(--neox-fg-secondary); }
+.sfc-files__tree-body { flex: 1; min-height: 0; background: transparent !important; }
+/* 面板窄了 (< 520) 树先让位, 代码保持可读宽度; 用 ⌘P / 搜文件 找 */
+@container (max-width: 520px) { .sfc-files__tree { display: none; } }
+.sfc-files--v3 .sfc-files__empty-desc { max-width: 280px; }
+.sfc-files--v3 .sfc-files__empty-btn { height: 32px; padding: 0 13px; border: 0; border-radius: 9px; background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); color: var(--neox-fg-secondary); font-size: 12.5px; box-shadow: none; }
+.sfc-files--v3 .sfc-files__empty-btn--primary { background: var(--clay-blue, #2f6bff); color: #fff; font-weight: 500; }
+
+/* ── 终端: 内层标签条换成跟外框一样的浮起泥块, 不要下划线 ── */
+.sfc-terminal .tm-tabbar { height: 44px; padding: 0 10px 0 12px; gap: 6px; border-bottom: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09)); background: var(--neox-bg-card); }
+.sfc-terminal .tm-tabbar-left { align-items: center; }
+.sfc-terminal .tm-tab { height: 28px; padding: 0 8px 0 10px; border: 0; border-radius: 8px; font-size: 12.5px; color: var(--neox-fg-secondary); box-shadow: none; }
+.sfc-terminal .tm-tab::after, .sfc-terminal .tm-tab.active::after { display: none; }
+.sfc-terminal .tm-tab.active { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--neox-fg-primary); font-weight: 500; border-bottom: 0; }
+.sfc-terminal .tm-add-btn { width: 28px; height: 28px; padding: 0; justify-content: center; border-radius: 8px; color: var(--neox-fg-muted); transition: background-color .15s ease, color .15s ease; }
+.sfc-terminal .tm-add-btn svg { width: 15px; height: 15px; }
+.sfc-terminal .tm-add-btn:hover { color: var(--neox-fg-primary); background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); }
+.sfc-terminal .tm-action-btn { height: 28px; padding: 0 9px; border-radius: 8px; font-size: 12px; }
+.sfc-terminal .terminal-container { padding: 10px 6px 0 14px; }
+/* xterm 的竖滚动条底槽不要那条灰带 */
+.sfc-terminal .xterm .scrollbar.vertical { background: transparent !important; }
+
+/* ── 空态 / 出错: 标题墨色不用红, 说明灰色 (红色大字像程序崩了, 其实多半只是文件被挪走) ── */
+.sfc-panel .sfc-empty--error .sfc-empty__title { color: var(--neox-fg-primary); font-size: 15px; font-weight: 600; }
+.sfc-panel .sfc-empty--error .sfc-empty__msg { max-width: 320px; font-family: inherit; font-size: 12.5px; line-height: 1.6; color: var(--neox-fg-muted); white-space: normal; }
+
+/* ── 审阅: 浅灰桌面上每个文件一张卡; 全部接受=蓝色主按钮, 全部回退=浅胶囊 (原来绿/红描边两颗一样重) ── */
+.sfc-panel .sfc-review { --v3-chip: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); background: color-mix(in srgb, var(--neox-fg-primary) 3%, var(--neox-bg-card)); }
+.sfc-panel .sfc-review__head { padding: 14px 16px 10px; border-bottom: 0; background: transparent; }
+.sfc-panel .sfc-review__summary { align-items: center; gap: 10px; }
+.sfc-panel .sfc-review__title { font-size: 15px; font-weight: 600; }
+.sfc-panel .sfc-review__stat { font-size: 12px; }
+.sfc-panel .sfc-review__stat--add { color: #2e9d57; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.sfc-panel .sfc-review__stat--del { color: #c8553d; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.sfc-panel .sfc-review__stat.is-pending { padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, #d98a1c 14%, transparent); color: #a8650f; font-weight: 500; }
+.sfc-panel .sfc-review__bulk { gap: 6px; }
+.sfc-panel .sfc-review__bulk-btn { height: 30px; padding: 0 13px; border: 0; border-radius: 9px; font-size: 12.5px; font-weight: 500; }
+.sfc-panel .sfc-review__bulk-btn.is-accept { background: var(--clay-blue, #2f6bff); color: #fff; }
+.sfc-panel .sfc-review__bulk-btn.is-accept:hover { filter: brightness(1.05); background: var(--clay-blue, #2f6bff); }
+.sfc-panel .sfc-review__bulk-btn.is-revert { background: var(--v3-chip); color: var(--neox-fg-secondary); }
+.sfc-panel .sfc-review__bulk-btn.is-revert:hover { background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent); color: var(--neox-fg-primary); }
+.sfc-panel .sfc-review__toc { gap: 6px; margin-top: 10px; }
+.sfc-panel .sfc-review__toc-item { height: 26px; padding: 0 9px; gap: 6px; border: 0; border-radius: 8px; background: var(--v3-chip); font-size: 12px; color: var(--neox-fg-primary); }
+.sfc-panel .sfc-review__toc-item:hover { background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent); }
+.sfc-panel .sfc-review__toc-item.is-done { color: var(--neox-fg-hint); }
+.sfc-panel .sfc-review__toc-badge { min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: color-mix(in srgb, #d98a1c 16%, transparent); color: #a8650f; font-size: 10.5px; font-weight: 600; }
+.sfc-panel .sfc-review__body { padding: 2px 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.sfc-panel .sfc-review__file {
+  flex: none; border: 0; border-radius: 12px; overflow: hidden; background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.09)), 0 2px 8px rgba(60, 45, 25, 0.04);
+}
+.sfc-panel .sfc-review__file-head { height: 40px; padding: 0 12px; gap: 8px; align-items: center; background: transparent; border-bottom: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09)); }
+.sfc-panel .sfc-review__file-path { display: flex; align-items: baseline; gap: 8px; min-width: 0; flex: 1; overflow: hidden; font-family: inherit; }
+.sfc-review__file-name { flex: none; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--neox-fg-primary); }
+.sfc-review__file-dir { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--neox-fg-hint); }
+
+/* ── 清单: 大数 "2 / 5" + 细蓝线; 行 40 高, 进行中那行淡蓝圆角底 (原来黑色竖条 + 灰底) ── */
+.sfc-panel .sfc-todo { background: var(--neox-bg-card); }
+.sfc-panel .sfc-todo__hdr { padding: 16px 18px 10px; }
+.sfc-panel .sfc-todo__progress { gap: 10px; }
+.sfc-panel .sfc-todo__progress-meta { align-items: baseline; gap: 8px; font-size: 12.5px; letter-spacing: 0; color: var(--neox-fg-muted, var(--neox-fg-secondary)); }
+.sfc-panel .sfc-todo__progress-pct { font-size: 22px; font-weight: 600; line-height: 1; }
+.sfc-panel .sfc-todo__progress-pct em { font-style: normal; font-size: 15px; font-weight: 500; color: var(--neox-fg-hint); }
+.sfc-panel .sfc-todo__readonly { margin-left: auto; padding: 0; border: 0; background: none; font-size: 11.5px; color: var(--neox-fg-hint); }
+.sfc-panel .sfc-todo__bar { height: 4px; border-radius: 999px; background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent); }
+.sfc-panel .sfc-todo__bar-fill { border-radius: 999px; background: var(--clay-blue, #2f6bff); }
+.sfc-panel .sfc-todo__list { padding: 4px 10px 14px; }
+.sfc-panel .sfc-todo__item {
+  grid-template-columns: 18px 1fr auto; gap: 11px; min-height: 40px; padding: 8px 10px;
+  border-left: 0; border-radius: 10px; font-size: 13px; color: var(--neox-fg-primary);
+}
+.sfc-panel .sfc-todo__item:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.sfc-panel .sfc-todo__icon { width: 18px; height: 18px; color: color-mix(in srgb, var(--neox-fg-primary) 26%, transparent); }
+.sfc-panel .sfc-todo__status { font-variant: normal; letter-spacing: 0; font-size: 11.5px; opacity: 1; }
+/* 只有进行中这条挂状态字 (蓝色小胶囊), 完成/待办看图标就够 */
+.sfc-panel .sfc-todo__item:not(.is-in_progress) .sfc-todo__status { display: none; }
+.sfc-panel .sfc-todo__item.is-in_progress { background: color-mix(in srgb, var(--clay-blue, #2f6bff) 7%, transparent); }
+.sfc-panel .sfc-todo__item.is-in_progress .sfc-todo__icon { color: var(--clay-blue, #2f6bff); }
+.sfc-panel .sfc-todo__item.is-in_progress .sfc-todo__text { font-weight: 500; }
+.sfc-panel .sfc-todo__item.is-in_progress .sfc-todo__status { padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--clay-blue, #2f6bff) 12%, transparent); color: var(--clay-blue, #2f6bff); font-weight: 500; }
+.sfc-panel .sfc-todo__item.is-done { opacity: 1; color: var(--neox-fg-muted, var(--neox-fg-secondary)); }
+.sfc-panel .sfc-todo__item.is-done .sfc-todo__icon { color: #2e9d57; }
+.sfc-panel .sfc-todo__item.is-done .sfc-todo__text { text-decoration: none; }
+.sfc-panel .sfc-todo__item.is-skipped { opacity: 1; color: var(--neox-fg-hint); }
+.sfc-panel .sfc-todo__item.is-skipped .sfc-todo__icon { color: var(--neox-fg-hint); }
+
+/* 容器查询量的是外层 .sfc-panel (它本身就是 inline-size 容器), 别给 .sfc-plan 再设 —— 容器改不了自己的列 */
+.sfc-panel .sfc-plan { grid-template-columns: 200px minmax(0, 1fr); background: var(--neox-bg-card); }
+.sfc-panel .sfc-plan__nav { padding: 14px 0; border-right: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09)); background: transparent; }
+.sfc-panel .sfc-plan__progress { padding: 0 14px 12px; margin-bottom: 4px; }
+.sfc-panel .sfc-plan__progress-bar { height: 4px; border-radius: 999px; background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent); }
+.sfc-panel .sfc-plan__progress-fill { border-radius: 999px; background: var(--clay-blue, #2f6bff); }
+.sfc-panel .sfc-plan__progress-label { margin-top: 8px; font-size: 12px; color: var(--neox-fg-muted, var(--neox-fg-secondary)); }
+.sfc-panel .sfc-plan__navbtn { gap: 9px; width: calc(100% - 16px); margin: 1px 8px; min-height: 32px; padding: 6px 8px !important; border-radius: 8px; font-size: 12.5px; color: var(--neox-fg-primary); }
+.sfc-panel .sfc-plan__navbtn:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4.5%, transparent); }
+.sfc-panel .sfc-plan__navitem.is-active .sfc-plan__navbtn { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); box-shadow: none; font-weight: 500; }
+/* 文档大标题已经在正文第一行, 左栏不再重复一条 */
+.sfc-panel .sfc-plan__navitem--l1 { display: none; }
+.sfc-panel .sfc-plan__navitem--l3 .sfc-plan__navbtn,
+.sfc-panel .sfc-plan__navitem--l4 .sfc-plan__navbtn { padding-left: 33px !important; font-size: 12px; color: var(--neox-fg-hint); }
+.sfc-panel .sfc-plan__body { padding: 22px 26px; }
+.sfc-panel .plan-badge {
+  width: 16px; height: 16px; margin-left: 6px; border: 0; border-radius: 50%; animation: none;
+  background: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--neox-fg-primary) 26%, transparent);
+}
+.sfc-panel .sfc-plan__navbtn .plan-badge { margin-left: 0; }
+.sfc-panel .plan-badge--done {
+  box-shadow: none;
+  background: #2e9d57 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.8 8.2 L7 10.3 L11.2 6' fill='none' stroke='%23fff' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
+}
+.sfc-panel .plan-badge--in_progress {
+  background: radial-gradient(circle, var(--clay-blue, #2f6bff) 0 3.2px, transparent 3.7px);
+  box-shadow: inset 0 0 0 1.5px var(--clay-blue, #2f6bff);
+}
+.sfc-panel .sfc-plan__navbtn .plan-badge--none { opacity: 1; box-shadow: none; width: 16px; background: radial-gradient(circle, color-mix(in srgb, var(--neox-fg-primary) 22%, transparent) 0 2px, transparent 2.5px); }
+.sfc-panel .sfc-plan__navitem:has(.plan-badge--in_progress) .sfc-plan__navbtn { background: color-mix(in srgb, var(--clay-blue, #2f6bff) 7%, transparent); font-weight: 500; }
+.sfc-panel .sfc-plan__navitem:has(.plan-badge--done) .sfc-plan__navtitle { color: var(--neox-fg-muted, var(--neox-fg-secondary)); }
+.sfc-panel .sfc-plan__body .plan-badge { width: 14px; height: 14px; vertical-align: -2px; }
+@container (max-width: 560px) {
+  .sfc-panel .sfc-plan { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .sfc-panel .sfc-plan__nav { padding: 12px 0 10px; border-right: 0; border-bottom: 1px solid var(--neox-line, rgba(60, 45, 25, 0.09)); overflow: visible; }
+  .sfc-panel .sfc-plan__navlist { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px; }
+  .sfc-panel .sfc-plan__navitem--l3, .sfc-panel .sfc-plan__navitem--l4 { display: none; }
+  .sfc-panel .sfc-plan__navbtn { width: auto; margin: 0; min-height: 28px; padding: 4px 10px 4px 7px !important; gap: 6px; background: color-mix(in srgb, var(--neox-fg-primary) 4.5%, transparent); }
+  .sfc-panel .sfc-plan__body { padding: 18px 20px; }
+}
+
+/* ── 团队看板 ── */
+.tpb-ov__step-dot { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 600; }
+.tpb-ov__step.is-done .tpb-ov__step-dot { background: #2e9d57; color: #fff; }
+.tpb-ov__step.is-current .tpb-ov__step-dot { background: var(--clay-blue, #2f6bff); color: #fff; }
+/* 数字: 一条白卡里排开 (跟工具页数字条同一种), 不再是一格一块灰底 */
+.tpb-ov__kpis {
+  grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); gap: 4px 12px; padding: 12px 16px;
+  border-radius: 14px; background: var(--neox-bg-card); box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.09));
+}
+.tpb-ov__kpi { padding: 2px 0; background: transparent; border-radius: 0; }
+.tpb-ov__kpi-k { order: 2; font-size: 12px; color: var(--neox-fg-secondary); }
+.tpb-ov__kpi-n { order: 1; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* 细节 (233 节点 · 3 层) 收进悬停提示那一层不占行: 条里只留 数 + 名字 */
+.tpb-ov__kpi-sub { display: none; }
+.tpb-ov__stage { border-radius: 12px; background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); border: 0; }
+.tpb-ov__go {
+  flex: none; height: 32px; padding: 0 16px; border: 0; border-radius: 10px;
+  background: var(--clay-blue, #2f6bff); color: #fff; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.tpb-ov__go:hover { filter: brightness(1.05); }
+/* 成员头像: 浅色底 + 同色字 (原来深色实心圆, 一列看着很重) */
+.tpb-av { background: hsl(var(--tpb-av-h, 220) 70% 94%) !important; color: hsl(var(--tpb-av-h, 220) 55% 42%) !important; box-shadow: none !important; }
+
+/* ── Word: 浅灰桌面上一张白纸, 面板窄了整页缩小 (不再撑满、字号跟 A4 实际大小一样大) ── */
+.sfc-docx { background: color-mix(in srgb, var(--neox-fg-primary) 4%, var(--neox-bg-card)); container-type: inline-size; }
+.sfc-docx__scroll { padding: 22px 24px; }
+/* 表格按纸宽排后, 长串 (路径 / 网址) 在格子里折行, 不再撑出纸外 */
+.sfc-docx__scroll section td, .sfc-docx__scroll section th { overflow-wrap: anywhere; }
+.sfc-docx__scroll .sfc-docx-page-wrapper > section,
+.sfc-docx__scroll [class$="-wrapper"] > section {
+  box-shadow: 0 1px 3px rgba(60, 45, 25, 0.12), 0 10px 28px rgba(60, 45, 25, 0.08) !important;
+}
+@container (max-width: 760px) {
+  .sfc-docx__scroll .sfc-docx-page-wrapper > section,
+  .sfc-docx__scroll [class$="-wrapper"] > section { zoom: 0.82; }
+}
+@container (max-width: 520px) {
+  .sfc-docx__scroll .sfc-docx-page-wrapper > section,
+  .sfc-docx__scroll [class$="-wrapper"] > section { zoom: 0.7; }
+}
+.sfc-docx__scroll .nx-docx-bullet-tab { word-spacing: var(--nx-hang, 6pt) !important; }
+/* 目录行: 标题 ···· 页码 一行排下, 点线铺满中间 (类名由 DocxSurfaceViewer 渲染后打上) */
+.sfc-docx__scroll p.nx-docx-toc-line { display: flex; align-items: baseline; }
+.sfc-docx__scroll .nx-docx-toc-tail { display: flex; flex: 1 1 auto; align-items: baseline; min-width: 2.5em; }
+.sfc-docx__scroll .nx-docx-toc-leader {
+  flex: 1 1 auto; word-spacing: 0 !important; text-decoration: none !important;
+  margin: 0 4px; border-bottom: 1px dotted currentColor; opacity: .55; transform: translateY(-0.25em);
+}

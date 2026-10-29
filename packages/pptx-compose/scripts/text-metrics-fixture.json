@@ -1,0 +1,411 @@
+{
+ "_meta": {
+  "什么": "LibreOffice 实测的 ink 宽度基准 (px @96DPI, 20pt)。verify-render 第 7 节拿它守着 measureText 的精度。",
+  "为什么": "断行预测偏窄会真溢出, 偏宽会提前折行+把 titleSizeForBox 反解的字号压小。两个方向都要守, 但只有偏窄是危险的。",
+  "怎么重新生成": "scratchpad 里渲染同样的字符串, soffice --convert-to pdf → pdftoppm -r 96 → 逐行量 ink 像素范围。字体或烘焙 metrics 变了才需要重生成。",
+  "注意": "ink 宽度不含首尾字形的 side bearing, 所以预测天然比它大 1~2px —— 这是下界不取 0 的原因。",
+  "覆盖": "四套风格实际用到的 5 组中英字体配对 × 10 类脚本组合"
+ },
+ "cases": [
+  {
+   "id": "cjk",
+   "text": "算力数据场景试点复制推广落地",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 370.7
+  },
+  {
+   "id": "latin-lower",
+   "text": "the quick brown fox jumps over",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 374.7
+  },
+  {
+   "id": "latin-upper",
+   "text": "GPU RAG ROI API SLA KPI CDN",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 388.7
+  },
+  {
+   "id": "latin-kern",
+   "text": "AV To Ta We Yo PA LT AW Va",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 342.7
+  },
+  {
+   "id": "mixed-space",
+   "text": "部署 8 卡 GPU 私有化算力, ROI 5.2×",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 396.7
+  },
+  {
+   "id": "mixed-tight",
+   "text": "算力gpu数据rag场景roi试点api",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 343.7
+  },
+  {
+   "id": "cjk-punct",
+   "text": "试点先挑\"错了也不致命\"的场景: 运维问答、质检初筛。",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 635.5
+  },
+  {
+   "id": "fullwidth",
+   "text": "准确率（92%）已达标, 下一步是多厂复制",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 491.6
+  },
+  {
+   "id": "currency",
+   "text": "年化成本节省 ¥680万 (约 $940K)",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 356.7
+  },
+  {
+   "id": "digits",
+   "text": "1234567890 45min → 8min 96.1% → 98.4%",
+   "fontLatin": "Helvetica Neue",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 500.6
+  },
+  {
+   "id": "cjk",
+   "text": "算力数据场景试点复制推广落地",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 370.7
+  },
+  {
+   "id": "latin-lower",
+   "text": "the quick brown fox jumps over",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 380.7
+  },
+  {
+   "id": "latin-upper",
+   "text": "GPU RAG ROI API SLA KPI CDN",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 377.7
+  },
+  {
+   "id": "latin-kern",
+   "text": "AV To Ta We Yo PA LT AW Va",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 338.7
+  },
+  {
+   "id": "mixed-space",
+   "text": "部署 8 卡 GPU 私有化算力, ROI 5.2×",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 392.7
+  },
+  {
+   "id": "mixed-tight",
+   "text": "算力gpu数据rag场景roi试点api",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 351.7
+  },
+  {
+   "id": "cjk-punct",
+   "text": "试点先挑\"错了也不致命\"的场景: 运维问答、质检初筛。",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 633.5
+  },
+  {
+   "id": "fullwidth",
+   "text": "准确率（92%）已达标, 下一步是多厂复制",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 486.6
+  },
+  {
+   "id": "currency",
+   "text": "年化成本节省 ¥680万 (约 $940K)",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 361.7
+  },
+  {
+   "id": "digits",
+   "text": "1234567890 45min → 8min 96.1% → 98.4%",
+   "fontLatin": "Avenir Next",
+   "fontEast": "PingFang SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 503.6
+  },
+  {
+   "id": "cjk",
+   "text": "算力数据场景试点复制推广落地",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 370.7
+  },
+  {
+   "id": "latin-lower",
+   "text": "the quick brown fox jumps over",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 379.7
+  },
+  {
+   "id": "latin-upper",
+   "text": "GPU RAG ROI API SLA KPI CDN",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 420.7
+  },
+  {
+   "id": "latin-kern",
+   "text": "AV To Ta We Yo PA LT AW Va",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 352.7
+  },
+  {
+   "id": "mixed-space",
+   "text": "部署 8 卡 GPU 私有化算力, ROI 5.2×",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 395.7
+  },
+  {
+   "id": "mixed-tight",
+   "text": "算力gpu数据rag场景roi试点api",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 346.7
+  },
+  {
+   "id": "cjk-punct",
+   "text": "试点先挑\"错了也不致命\"的场景: 运维问答、质检初筛。",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 635.5
+  },
+  {
+   "id": "fullwidth",
+   "text": "准确率（92%）已达标, 下一步是多厂复制",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 482.6
+  },
+  {
+   "id": "currency",
+   "text": "年化成本节省 ¥680万 (约 $940K)",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 350.7
+  },
+  {
+   "id": "digits",
+   "text": "1234567890 45min → 8min 96.1% → 98.4%",
+   "fontLatin": "Didot",
+   "fontEast": "Songti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 431.7
+  },
+  {
+   "id": "cjk",
+   "text": "算力数据场景试点复制推广落地",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 371.7
+  },
+  {
+   "id": "latin-lower",
+   "text": "the quick brown fox jumps over",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 379.7
+  },
+  {
+   "id": "latin-upper",
+   "text": "GPU RAG ROI API SLA KPI CDN",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 420.7
+  },
+  {
+   "id": "latin-kern",
+   "text": "AV To Ta We Yo PA LT AW Va",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 352.7
+  },
+  {
+   "id": "mixed-space",
+   "text": "部署 8 卡 GPU 私有化算力, ROI 5.2×",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 396.7
+  },
+  {
+   "id": "mixed-tight",
+   "text": "算力gpu数据rag场景roi试点api",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 347.7
+  },
+  {
+   "id": "cjk-punct",
+   "text": "试点先挑\"错了也不致命\"的场景: 运维问答、质检初筛。",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 635.5
+  },
+  {
+   "id": "fullwidth",
+   "text": "准确率（92%）已达标, 下一步是多厂复制",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 483.6
+  },
+  {
+   "id": "currency",
+   "text": "年化成本节省 ¥680万 (约 $940K)",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 351.7
+  },
+  {
+   "id": "digits",
+   "text": "1234567890 45min → 8min 96.1% → 98.4%",
+   "fontLatin": "Didot",
+   "fontEast": "Yuanti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 431.7
+  },
+  {
+   "id": "cjk",
+   "text": "算力数据场景试点复制推广落地",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 368.7
+  },
+  {
+   "id": "latin-lower",
+   "text": "the quick brown fox jumps over",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 369.7
+  },
+  {
+   "id": "latin-upper",
+   "text": "GPU RAG ROI API SLA KPI CDN",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 393.7
+  },
+  {
+   "id": "latin-kern",
+   "text": "AV To Ta We Yo PA LT AW Va",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 359.7
+  },
+  {
+   "id": "mixed-space",
+   "text": "部署 8 卡 GPU 私有化算力, ROI 5.2×",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 391.7
+  },
+  {
+   "id": "mixed-tight",
+   "text": "算力gpu数据rag场景roi试点api",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 345.7
+  },
+  {
+   "id": "cjk-punct",
+   "text": "试点先挑\"错了也不致命\"的场景: 运维问答、质检初筛。",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 633.5
+  },
+  {
+   "id": "fullwidth",
+   "text": "准确率（92%）已达标, 下一步是多厂复制",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 483.6
+  },
+  {
+   "id": "currency",
+   "text": "年化成本节省 ¥680万 (约 $940K)",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 361.7
+  },
+  {
+   "id": "digits",
+   "text": "1234567890 45min → 8min 96.1% → 98.4%",
+   "fontLatin": "Georgia",
+   "fontEast": "Kaiti SC",
+   "fontSizePt": 20,
+   "inkWidthPx": 491.6
+  }
+ ]
+}

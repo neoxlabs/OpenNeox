@@ -1,0 +1,5 @@
+{"role":"meta","type":"system.version","version":"2.1.1"}
+{"role":"assistant","tool_calls":[{"type":"function","id":"call_00_tl64je7fb58ke33md3ih3wxj","function":{"name":"Read","arguments":"{\"path\":\"math.js\"}"}}]}
+{"role":"tool","tool_call_id":"call_00_tl64je7fb58ke33md3ih3wxj","content":"1\texport function add(a,b){return a+b}"}
+{"role":"assistant","content":"`math.js` exports a single named function, `add(a, b)`, which returns the sum of its two arguments."}
+{"role":"meta","type":"session.resume_hint","session_id":"session_b0cd6788-2e3c-4b21-86c8-8a68c0550860","command":"kimi -r session_b0cd6788-2e3c-4b21-86c8-8a68c0550860","content":"To resume this session: kimi -r session_b0cd6788-2e3c-4b21-86c8-8a68c0550860"}

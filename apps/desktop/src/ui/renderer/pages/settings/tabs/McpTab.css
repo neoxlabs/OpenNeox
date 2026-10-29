@@ -1,0 +1,554 @@
+
+.mcp3 {
+  --mcp3-ink: var(--neox-fg-primary);
+  --mcp3-muted: var(--neox-fg-muted);
+  --mcp3-line: var(--neox-line-subtle);
+  --mcp3-card: var(--nx-soft-card-bg, var(--neox-bg-card));
+  --mcp3-green: #3F9D63;
+  --mcp3-red: #C2492F;
+  --mcp3-amber: #B7791F;
+  --mcp3-cobalt: var(--clay-blue, #2F6BFF);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--mcp3-ink);
+}
+
+@keyframes mcp3-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- 状态卡 ---------- */
+.mcp3 .mcp3-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--mcp3-line);
+  background: var(--mcp3-card);
+}
+
+.mcp3 .mcp3-status__stats {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 28px;
+  min-width: 0;
+}
+
+.mcp3 .mcp3-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mcp3 .mcp3-stat b {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--mcp3-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.mcp3 .mcp3-stat span {
+  font-size: 12px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-status.is-off .mcp3-stat b {
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-status__off {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-status__action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.mcp3 .mcp3-status__toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--mcp3-ink);
+}
+
+.mcp3 .mcp3-status__pills {
+  display: flex;
+  gap: 8px;
+}
+
+/* 暖白药丸按钮 (不是实心蓝) */
+.mcp3 .mcp3-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--mcp3-line);
+  background: var(--neox-bg-card);
+  color: var(--mcp3-ink);
+  font: inherit;
+  font-size: 12.5px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mcp3 .mcp3-pill:hover {
+  border-color: color-mix(in srgb, var(--mcp3-ink) 28%, transparent);
+}
+
+.mcp3 .mcp3-pill svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ---------- 列表卡 ---------- */
+.mcp3 .mcp3-list {
+  border-radius: 16px;
+  border: 1px solid var(--mcp3-line);
+  background: var(--mcp3-card);
+  overflow: hidden;
+}
+
+.mcp3 .mcp3-rows {
+  transition: opacity 0.15s;
+}
+
+.mcp3 .mcp3-rows.is-off {
+  opacity: 0.55;
+}
+
+.mcp3 .mcp3-row + .mcp3-row {
+  border-top: 1px solid var(--mcp3-line);
+}
+
+.mcp3 .mcp3-row__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px 0 14px;
+}
+
+/* 整行可点 (展开); 右侧开关不在这个按钮里, 不会误触 */
+.mcp3 .mcp3-row__main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mcp3 .mcp3-row__main:focus-visible {
+  outline: 2px solid var(--mcp3-cobalt);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.mcp3 .mcp3-row__main .mcp-server-mark {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.mcp3 .mcp3-row__main .mcp-server-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mcp3 .mcp3-row__id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.mcp3 .mcp3-row__name {
+  font-size: 14px;
+  color: var(--mcp3-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mcp3 .mcp3-row__meta {
+  font-size: 12px;
+  color: var(--mcp3-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mcp3 .mcp3-row.is-disabled .mcp3-row__name {
+  color: var(--mcp3-muted);
+}
+
+/* 状态 chip: 浅色底 + 同色字 */
+.mcp3 .mcp3-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.mcp3 .mcp3-chip.is-ok {
+  color: var(--mcp3-green);
+  background: color-mix(in srgb, var(--mcp3-green) 12%, transparent);
+}
+
+.mcp3 .mcp3-chip.is-bad {
+  color: var(--mcp3-red);
+  background: color-mix(in srgb, var(--mcp3-red) 11%, transparent);
+}
+
+.mcp3 .mcp3-chip.is-warn {
+  color: var(--mcp3-amber);
+  background: color-mix(in srgb, var(--mcp3-amber) 13%, transparent);
+}
+
+.mcp3 .mcp3-chip.is-idle {
+  color: var(--mcp3-muted);
+  background: color-mix(in srgb, var(--mcp3-ink) 6%, transparent);
+}
+
+.mcp3 .mcp3-spin {
+  display: inline-flex;
+  animation: mcp3-spin 1s linear infinite;
+}
+
+.mcp3 .mcp3-spin svg {
+  width: 12px;
+  height: 12px;
+}
+
+.mcp3 .mcp3-row__count {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--mcp3-muted);
+  white-space: nowrap;
+}
+
+.mcp3 .mcp3-row__chev {
+  flex: 0 0 auto;
+  color: var(--mcp3-muted);
+  transition: transform 0.15s;
+}
+
+.mcp3 .mcp3-row.is-open .mcp3-row__chev {
+  transform: rotate(180deg);
+}
+
+.mcp3 .mcp3-row__side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+/* 文字链接 (重试) */
+.mcp3 .mcp3-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--mcp3-cobalt);
+  cursor: pointer;
+}
+
+/* 钴蓝描边小按钮 (批准) */
+.mcp3 .mcp3-outline {
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--mcp3-cobalt);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: var(--mcp3-cobalt);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* ---------- 展开区 ---------- */
+.mcp3 .mcp3-row__detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 16px 14px 54px;
+  background: color-mix(in srgb, var(--mcp3-ink) 3%, transparent);
+  border-top: 1px solid var(--mcp3-line);
+}
+
+.mcp3 .mcp3-row__tools {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.mcp3 .mcp3-row__err {
+  margin: 0;
+  font-size: 12px;
+  color: var(--mcp3-red);
+  word-break: break-word;
+}
+
+.mcp3 .mcp3-row__label {
+  font-size: 12px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-row__hint {
+  font-size: 12px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mcp3 .mcp3-chips code {
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--mcp3-line);
+  background: var(--neox-bg-card);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-chips__more {
+  font-size: 12px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp3-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.mcp3 .mcp3-row__actions button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--mcp3-ink);
+  cursor: pointer;
+}
+
+.mcp3 .mcp3-row__actions button:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mcp3 .mcp3-row__actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+  text-decoration: none;
+}
+
+.mcp3 .mcp3-row__actions button.is-danger {
+  color: var(--mcp3-red);
+}
+
+/* ---------- 底部虚线添加行 ---------- */
+.mcp3 .mcp3-foot {
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--mcp3-line);
+}
+
+.mcp3 .mcp3-add {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px dashed color-mix(in srgb, var(--mcp3-ink) 20%, transparent);
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--mcp3-muted);
+  text-align: left;
+  cursor: pointer;
+}
+
+.mcp3 .mcp3-add:hover {
+  border-color: color-mix(in srgb, var(--mcp3-ink) 36%, transparent);
+}
+
+.mcp3 .mcp3-add svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.mcp3 .mcp3-add b {
+  font-weight: 500;
+  color: var(--mcp3-ink);
+}
+
+/* ---------- 空态 / 加载 (沿用原 class, 只换样式) ---------- */
+.mcp3 .mcp2-empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px dashed color-mix(in srgb, var(--mcp3-ink) 20%, transparent);
+  background: transparent;
+  font: inherit;
+  color: var(--mcp3-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.mcp3 .mcp2-empty svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.mcp3 .mcp2-empty > span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mcp3 .mcp2-empty b {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mcp3 .mcp2-empty em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--mcp3-muted);
+}
+
+.mcp3 .mcp2-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 4px;
+  font-size: 13px;
+  color: var(--mcp3-muted);
+}
+
+/* 窄窗: 状态卡竖排, 隐藏工具数文字 (展开后仍能看到) */
+@media (max-width: 640px) {
+  .mcp3 .mcp3-status__action {
+    align-items: flex-start;
+    margin-left: 0;
+  }
+
+  .mcp3 .mcp3-row__count {
+    display: none;
+  }
+
+  .mcp3 .mcp3-row__detail {
+    padding-left: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcp3 .mcp3-spin {
+    animation-duration: 3s;
+  }
+}
+
+/* ── 常用服务 (10-21): 两列卡片, logo 28 + 名字 + 一句说明 + 右边动作字 ── */
+.mcp3 .mcp3-presets { margin-top: 16px; }
+.mcp3 .mcp3-presets__head { display: flex; align-items: baseline; gap: 10px; margin: 0 4px 10px; }
+.mcp3 .mcp3-presets__head b { font-size: 14px; font-weight: 600; color: var(--neox-fg-primary); }
+.mcp3 .mcp3-presets__head span { font-size: 12px; color: var(--neox-fg-hint); }
+.mcp3 .mcp3-presets__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+.mcp3 .mcp3-preset {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 10px 14px 10px 12px;
+  border: 1px solid var(--mcp3-line);
+  border-radius: 14px;
+  background: var(--mcp3-card);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, translate 160ms ease;
+}
+.mcp3 .mcp3-preset:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+  box-shadow: 0 1px 2px rgba(60, 45, 25, .05), 0 8px 20px rgba(60, 45, 25, .08);
+  translate: 0 -1px;
+}
+.mcp3 .mcp3-preset:active:not(:disabled) { translate: 0 0; transition-duration: 80ms; }
+.mcp3 .mcp3-preset:disabled { cursor: default; }
+.mcp3 .mcp3-preset.is-installed { opacity: .6; }
+.mcp3 .mcp3-preset__logo, .mcp3 .mcp-server-mark--preset { flex: 0 0 auto; width: 32px; height: 32px; display: inline-flex; }
+.mcp3 .mcp3-row__main .mcp-server-mark--preset { width: 28px; height: 28px; background: none; }
+.mcp3 .mcp3-preset__img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+.mcp3 .mcp3-preset__tile {
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+.mcp3 .mcp3-preset__body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mcp3 .mcp3-preset__name { display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--neox-fg-primary); }
+.mcp3 .mcp3-preset__tag { font-style: normal; font-size: 11px; font-weight: 500; padding: 0 6px; border-radius: 6px; color: #c0413d; background: color-mix(in srgb, #d9534f 10%, transparent); }
+.mcp3 .mcp3-preset__desc { font-size: 12px; line-height: 17px; color: var(--neox-fg-hint); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mcp3 .mcp3-preset__act { flex: 0 0 auto; font-size: 12px; font-weight: 500; color: var(--neox-fg-secondary); padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); }
+.mcp3 .mcp3-preset__act.is-key { color: #b7791f; background: color-mix(in srgb, #e8a23a 12%, transparent); }
+.mcp3 .mcp3-preset:hover:not(:disabled) .mcp3-preset__act:not(.is-key) { color: #fff; background: #2f6bff; }

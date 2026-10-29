@@ -1,0 +1,806 @@
+/* ==================== 统一顶部导航栏 - 全宽一行贯通 ==================== */
+/* IDEA 2026 New UI 三层灰阶:
+ *   header (最浅) #3c3f41
+ *   panel/rail   #2b2d30
+ *   editor (最深) #1e1f22
+ * 上一档浅灰让顶栏从 panel/editor 中"浮出来"，而不是平贴 */
+.workspace-header {
+  height: 44px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+}
+
+.workspace-shell.editor-mode .workspace-header.editor-header {
+  height: 44px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+/* Light 模式:非 editor-mode 的顶栏 (agent / plugins mode) */
+:root[data-theme="light"] .workspace-header:not(.editor-header) {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03) inset;
+}
+
+/* Windows: reserve native caption buttons area on the right (min/max/close) */
+:root[data-platform="win32"] .workspace-header {
+  padding-right: var(--neox-win-caption-inset, 152px);
+}
+
+/* macOS: leave space for native traffic lights */
+:root[data-platform="darwin"] .workspace-header {
+  padding-left: 78px;
+}
+
+/* Light editor header uses custom shorthand padding; keep the same right safe area on Windows */
+:root[data-platform="win32"][data-theme="light"] .workspace-header.editor-header {
+  padding-right: var(--neox-win-caption-inset, 152px);
+}
+
+/* Sidebar brand group inside unified header */
+.header-sidebar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+}
+
+/* Vertical divider between groups (JB style) */
+.header-divider {
+  width: 1px;
+  height: 18px;
+  background: #525558;
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+:root[data-theme="light"] .header-divider {
+  background: #e2e8f0;
+}
+
+/* ==================== JB-style header pill group ==================== */
+.header-pill-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* JB-style action pill button (icon-only or icon+label) */
+.header-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #c4c8d0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+}
+
+.header-pill-btn svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.header-pill-btn:hover {
+  background: #4e5054;
+  color: #ffffff;
+}
+
+.header-pill-btn.active {
+  background: #4e5054;
+  color: #ffffff;
+}
+
+/* Light: pill button 灰底深字, hover 深一档 */
+:root[data-theme="light"] .header-pill-btn {
+  color: #475569;
+}
+:root[data-theme="light"] .header-pill-btn:hover,
+:root[data-theme="light"] .header-pill-btn.active {
+  background: rgba(15, 23, 42, 0.06);
+  color: #0f172a;
+}
+
+/* ==================== Mode toggle slider (Agent ⇄ IDE) ==================== */
+/* IDEA segmented control: two equal-width buttons + sliding highlight */
+.view-mode-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 26px;
+  padding: 1px;
+  border-radius: 7px;
+  background: #2b2d30;
+  border: 1px solid #1e1f22;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+}
+.view-mode-toggle-btn {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 64px;          /* equal width per button */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* center content within each half */
+  gap: 5px;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0 10px;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  color: #a0a4ab;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out);
+  -webkit-app-region: no-drag;
+  white-space: nowrap;
+}
+.view-mode-toggle-btn svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.view-mode-toggle-btn.active {
+  color: #ffffff;
+}
+.view-mode-toggle-btn:not(.active):hover {
+  color: #d4d7dc;
+}
+/* Sliding highlight */
+.view-mode-toggle-thumb {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  height: calc(100% - 2px);
+  width: calc(50% - 1px);
+  border-radius: 6px;
+  background: linear-gradient(180deg, #4a6ee0 0%, #3574f0 100%);
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.12) inset, 0 0 8px rgba(53, 116, 240, 0.16);
+  transition: transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+.view-mode-toggle.view-mode-agent .view-mode-toggle-thumb {
+  transform: translateX(0);
+}
+.view-mode-toggle.view-mode-editor .view-mode-toggle-thumb {
+  transform: translateX(100%);
+}
+
+/* Light theme: 灰白 pill, 深字 */
+:root[data-theme="light"] .view-mode-toggle {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+:root[data-theme="light"] .view-mode-toggle-btn {
+  color: #64748b;
+}
+:root[data-theme="light"] .view-mode-toggle-btn.active {
+  color: #ffffff;
+}
+:root[data-theme="light"] .view-mode-toggle-btn:not(.active):hover {
+  color: #334155;
+}
+:root[data-theme="light"] .view-mode-toggle-thumb {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25);
+}
+
+/* ==================== Header "More" dropdown ==================== */
+.header-more-wrap {
+  position: relative;
+  display: inline-flex;
+  -webkit-app-region: no-drag;
+}
+.header-more-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  padding: 6px;
+  background: #2b2d30;
+  border: 1px solid #393b40;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  animation: header-more-in 0.16s cubic-bezier(0.32, 0.72, 0, 1);
+  -webkit-app-region: no-drag;
+}
+@keyframes header-more-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.header-more-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  color: #d4d7dc;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.header-more-item:hover {
+  background: #3574f0;
+  color: #ffffff;
+}
+.header-more-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: inherit;
+}
+.header-more-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.header-more-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header-more-divider {
+  height: 1px;
+  margin: 4px 2px;
+  background: #393b40;
+}
+
+/* Branch pill (header-pill = label pill with icon + chevron) */
+.header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #ffffff;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+  max-width: 220px;
+  min-width: 0;
+}
+
+.header-pill:hover {
+  background: #4e5054;
+}
+
+.header-pill .header-pill-icon {
+  display: inline-flex;
+  align-items: center;
+  color: #b4b8bf;
+  flex-shrink: 0;
+}
+
+.header-pill .header-pill-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.header-pill .header-pill-label {
+  font-size: var(--neox-fs-sm, 13px);
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.header-pill .header-pill-chevron {
+  display: inline-flex;
+  align-items: center;
+  color: #6c707e;
+  flex-shrink: 0;
+  margin-left: -2px;
+}
+
+.header-pill .header-pill-chevron svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Branch pill 限宽，避免长 branch name 撑满 */
+.branch-pill {
+  max-width: 180px;
+}
+
+/* ==================== Run Config 组 (Neox · 无边框单行) ====================
+ *   ▷  config name  ⌄
+ *   - 全透明无边框, hover 才出 subtle bg
+ *   - indigo 只在 running pulse + stop 图标点缀
+ *   - 跟 topbar 其他 icon-btn / Agent-IDE 切换同款空气感
+ * ===================================================================== */
+.run-config-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* 主操作按钮 — icon-only, 透明 */
+.run-config-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--neox-radius-sm, 6px);
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out),
+              transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+.run-config-action svg { width: 12px; height: 12px; }
+.run-config-action:hover:not(:disabled) {
+  background: var(--neox-bg-hover);
+  color: var(--neox-primary-600);
+}
+.run-config-action:active:not(:disabled) { transform: scale(0.94); }
+.run-config-action:focus-visible {
+  outline: 2px solid var(--neox-primary-400);
+  outline-offset: 1px;
+}
+.run-config-action:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+/* 运行中: stop 图标跟随主题主色, 不画底色不画边, 还是空气感 */
+.run-config-action.is-running { color: var(--neox-primary-600); }
+.run-config-action.is-running:hover {
+  background: var(--neox-primary-50, rgba(255, 255, 255, 0.08));
+  color: var(--neox-primary-700, #565d66);
+}
+
+/* 配置选择单行 — 无边框, 透明底 */
+.run-config-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 8px 0 6px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--neox-radius-sm, 6px);
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  max-width: 220px;
+  min-width: 0;
+  font-family: var(--neox-font-sans, inherit);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-medium, 500);
+  text-align: left;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.run-config-select:hover { background: var(--neox-bg-hover); }
+.run-config-select:focus-visible {
+  outline: 2px solid var(--neox-primary-400);
+  outline-offset: 1px;
+}
+.run-config-select.is-running { color: var(--neox-primary-700, #565d66); }
+.run-config-select.is-empty .run-config-select__name {
+  color: var(--neox-fg-hint);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.run-config-select__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+.run-config-select__name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.run-config-select__chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neox-fg-hint);
+  flex-shrink: 0;
+  opacity: .7;
+}
+.run-config-select__chev svg { width: 10px; height: 10px; }
+.run-config-select:hover .run-config-select__chev { opacity: 1; }
+
+/* ── pulse dot — running 信号. 静态 indigo core + 慢呼吸光环, 跟 bgtasks 同款 ── */
+.run-config-pulse {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+}
+.run-config-pulse__core {
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  background: var(--neox-primary-500);
+}
+.run-config-pulse__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--neox-primary-500);
+  opacity: .35;
+  animation: run-config-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+@keyframes run-config-pulse {
+  0%   { transform: scale(.6); opacity: .55; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ── 下拉菜单 ── */
+.run-config-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 280px;
+  max-width: 360px;
+  background: var(--neox-bg-elev, #ffffff);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-md, 10px);
+  box-shadow: var(--neox-shadow-2, 0 8px 24px rgba(0, 0, 0, 0.08));
+  z-index: 5000;
+  padding: 6px;
+  animation: run-config-menu-in 140ms var(--neox-ease-out, ease);
+}
+@keyframes run-config-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.run-config-menu__section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 2px;
+}
+.run-config-menu__section-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.run-config-menu__section-count {
+  font-size: 10px;
+  color: var(--neox-fg-hint);
+  padding: 0 5px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  background: var(--neox-bg-muted);
+  border-radius: var(--neox-radius-pill, 999px);
+  font-variant-numeric: tabular-nums;
+}
+
+.run-config-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.run-config-menu__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--neox-radius-sm, 6px);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.run-config-menu__row:hover { background: var(--neox-bg-hover); }
+.run-config-menu__row.is-selected {
+  background: var(--neox-primary-50, rgba(255, 255, 255, 0.06));
+  color: var(--neox-primary-700, #565d66);
+}
+.run-config-menu__row.is-running,
+.run-config-menu__row.is-running-bg {
+  /* 运行中那段单独区分 — 跟随主题浅底色 */
+  background: var(--neox-primary-50, rgba(255, 255, 255, 0.04));
+}
+.run-config-menu__row.is-running:hover,
+.run-config-menu__row.is-running-bg:hover {
+  background: var(--neox-primary-100, rgba(255, 255, 255, 0.10));
+}
+
+.run-config-menu__row-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.run-config-menu__row-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  background: var(--neox-bg-muted);
+  color: var(--neox-fg-secondary);
+  flex-shrink: 0;
+}
+.run-config-menu__row.is-selected .run-config-menu__row-tag {
+  background: var(--neox-primary-100, rgba(255, 255, 255, 0.12));
+  color: var(--neox-primary-700, #565d66);
+}
+.run-config-menu__row-name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.run-config-menu__row-type {
+  font-size: 10px;
+  color: var(--neox-fg-hint);
+  flex-shrink: 0;
+}
+
+/* 行内 action — 默认隐藏, hover 整行才显. 跟 macOS Finder / Cursor 一致 */
+.run-config-menu__row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+}
+.run-config-menu__row:hover .run-config-menu__row-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+.run-config-menu__row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.run-config-menu__row-action svg { width: 12px; height: 12px; }
+.run-config-menu__row-action:hover {
+  background: var(--neox-bg-card, #fff);
+  color: var(--neox-primary-600);
+}
+.run-config-menu__row-action.stop {
+  opacity: 1;
+  pointer-events: auto;
+  color: var(--neox-primary-600);
+}
+.run-config-menu__row-action.stop:hover {
+  background: var(--neox-primary-100, rgba(255, 255, 255, 0.12));
+  color: var(--neox-primary-700, #565d66);
+}
+
+.run-config-menu__empty {
+  padding: 10px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  text-align: center;
+}
+
+.run-config-menu__divider {
+  height: 1px;
+  background: var(--neox-line);
+  margin: 4px 4px;
+}
+
+.run-config-menu__footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--neox-radius-sm, 6px);
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.run-config-menu__footer:hover {
+  background: var(--neox-bg-hover);
+  color: var(--neox-primary-700, #565d66);
+}
+.run-config-menu__footer svg { width: 12px; height: 12px; }
+
+/* 老版 .run-config-dropdown / .rcd-* 类已废弃 — 新版用 .run-config-menu / __row.
+ * 这里保留空注释占位; 如需老类回归直接 git revert 这一段. */
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Draggable spacer — fills the gap between left and right for window dragging */
+.header-drag-spacer {
+  flex: 1;
+  min-width: 20px;
+  height: 100%;
+  /* inherits -webkit-app-region: drag from .workspace-header */
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+}
+
+.composer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+}
+
+/* 面板切换按钮组 */
+.panel-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+}
+
+.panel-toggle {
+  opacity: 1;
+}
+
+.panel-toggle.active {
+  color: var(--text-accent);
+}
+
+.panel-toggle:hover {
+  opacity: 1;
+}
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.header-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.header-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.header-btn.icon-btn {
+  padding: 0;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-btn.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+}

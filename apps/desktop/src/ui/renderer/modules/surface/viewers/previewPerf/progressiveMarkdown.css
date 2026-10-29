@@ -1,0 +1,14 @@
+/* 分块渲染的间距修正 (S-05)。
+ *
+ * 单次渲染时 `.md-heading:first-child { margin-top: 0 }` 只作用于全文第一个标题;
+ * 分块后每个 chunk 的第一个标题都会碰到这条规则, 块边界处会少 24px 的章节间距。
+ * 这里把“不是全文第一个块”的边界间距补回来, 渲染结果与不分块一致。
+ */
+.sfc-doc__chunk + .sfc-doc__chunk .markdown-content > .md-heading:first-child {
+  margin-top: 24px;
+}
+
+/* chunk 包装层不参与布局 —— 宽度/居中仍由里面的 .markdown-content 决定。 */
+.sfc-doc__chunk {
+  display: block;
+}

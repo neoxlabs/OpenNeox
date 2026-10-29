@@ -1,0 +1,3583 @@
+
+/* Final dark-night override loaded after component CSS.
+ * Anye keeps VS Code-like matte surfaces while colors come from ThemePack tokens.
+ */
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  --neox-glass-margin: 4px !important;
+  --neox-glass-radius: 10px !important;
+  --neox-accent: var(--neox-primary-600) !important;
+  --neox-bg-elevated: var(--neox-bg-muted) !important;
+  --neox-glass-card-bg: var(--neox-bg-card) !important;
+  --neox-glass-card-filter: none !important;
+  --neox-glass-card-border: 1px solid var(--neox-line-soft) !important;
+  --neox-glass-card-shadow: var(--neox-shadow-2) !important;
+  --shadow-accent: 0 0 0 1px var(--neox-primary-200) !important;
+  --shadow-gold: 0 0 0 1px var(--neox-primary-100) !important;
+  --pack-tint: var(--neox-bg-card) !important;
+  --pack-tint-card: var(--neox-bg-muted) !important;
+  --pack-tint-strong: color-mix(in srgb, var(--neox-bg-muted) 86%, var(--neox-bg-card)) !important;
+  --pack-edge: var(--neox-line) !important;
+  --pack-edge-strong: var(--neox-line-strong) !important;
+  --shell-tray-bg: var(--neox-bg-canvas) !important;
+  --atl-tool-card-bg: var(--neox-bg-card) !important;
+  --atl-tool-card-shadow: none !important;
+  --atl-tool-card-border: var(--neox-line) !important;
+  --atl-code-line-bg: color-mix(in srgb, var(--neox-bg-sunken) 78%, var(--neox-bg-card)) !important;
+  --plan-accent: var(--neox-primary-600) !important;
+  --plan-accent-soft: var(--neox-primary-100) !important;
+  --plan-accent-fg: var(--neox-fg-invert) !important;
+  --plan-shell-bg: var(--neox-bg-muted) !important;
+  --plan-shell-fg: var(--neox-fg-primary) !important;
+  --plan-shell-fg-muted: var(--neox-fg-muted) !important;
+  --anye-shell-card-bg: color-mix(in srgb, var(--neox-bg-card) 94%, var(--neox-bg-panel)) !important;
+  --anye-shell-card-border: color-mix(in srgb, var(--neox-line-strong) 52%, var(--neox-bg-canvas)) !important;
+  --anye-shell-card-shadow: 0 18px 44px color-mix(in srgb, var(--neox-bg-sunken) 64%, transparent) !important;
+  --anye-panel-bg: var(--neox-bg-panel) !important;
+  --anye-content-bg: var(--neox-bg-card) !important;
+  --anye-composer-bg: var(--neox-bg-card) !important;
+  --anye-composer-box-bg: var(--neox-bg-muted) !important;
+  --anye-control-bg: var(--neox-bg-muted) !important;
+  --anye-popover-bg: var(--neox-bg-muted) !important;
+  --anye-inline-bg: var(--neox-bg-sunken) !important;
+  --anye-glass-filter: none !important;
+  --anye-surface-filter: none !important;
+  --anye-switch-bg: color-mix(in srgb, var(--neox-bg-muted) 78%, var(--neox-bg-card)) !important;
+  --anye-switch-border: color-mix(in srgb, var(--neox-line-strong) 76%, var(--neox-bg-panel)) !important;
+  --anye-switch-active-bg: var(--anye-row-active, color-mix(in srgb, var(--neox-bg-muted) 82%, white 8%)) !important;
+  --anye-switch-active-border: transparent !important;
+  --anye-switch-active-fg: var(--neox-fg-primary) !important;
+  --anye-scrim-bg: color-mix(in srgb, var(--neox-bg-sunken) 72%, transparent) !important;
+  --neox-mat-thin-bg: color-mix(in srgb, var(--neox-bg-muted) 72%, transparent) !important;
+  --neox-mat-regular-bg: color-mix(in srgb, var(--neox-bg-muted) 64%, transparent) !important;
+  --neox-mat-thick-bg: color-mix(in srgb, var(--neox-bg-card) 82%, var(--neox-bg-panel)) !important;
+  --neox-mat-thin-blur: none !important;
+  --neox-mat-regular-blur: none !important;
+  --neox-mat-thick-blur: none !important;
+  --neox-mat-hairline-top: inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+  --neox-mat-hairline-bottom: inset 0 -1px 0 rgba(0, 0, 0, 0.18) !important;
+  --neox-mat-shadow-regular: none !important;
+  --neox-mat-shadow-thick: 0 20px 64px rgba(0, 0, 0, 0.36) !important;
+  --neox-mat-row-hover: color-mix(in srgb, white 6%, transparent) !important;
+  --neox-mat-row-selected: color-mix(in srgb, white 10%, transparent) !important;
+  --neox-mat-row-divider: color-mix(in srgb, white 7%, transparent) !important;
+  color-scheme: dark;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] body,
+:root[data-theme-pack="anye"][data-theme="dark"] #root,
+:root[data-theme-pack="anye"][data-theme="dark"] .app-root,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-page,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-shell,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell-host {
+  background: var(--neox-bg-canvas) !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  --neox-glass-margin: 0px !important;
+  --neox-glass-radius: 0px !important;
+  background: var(--neox-bg-canvas) !important;
+  background-image: none !important;
+  isolation: isolate;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::before {
+  background: var(--neox-bg-canvas) !important;
+  background-image: none !important;
+  background-blend-mode: normal !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"] .chat-messages,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightpanel {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__glass-card,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-rail,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .chat-messages,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-rightpanel {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card {
+  margin: 0 var(--neox-glass-margin, 0px) var(--neox-glass-margin, 0px) !important;
+  border: 1px solid var(--anye-shell-card-border) !important;
+  border-radius: var(--neox-glass-radius, 10px) !important;
+  background: var(--anye-shell-card-bg) !important;
+  box-shadow: var(--anye-shell-card-shadow) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter, none) !important;
+  backdrop-filter: var(--neox-glass-card-filter, none) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-surface-style="flat"] .neox-shell__glass-card {
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--neox-bg-card) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar {
+  background: var(--anye-panel-bg) !important;
+  border-color: transparent !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"] .chat-messages,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightpanel {
+  background: var(--anye-content-bg) !important;
+  border-color: var(--neox-line-soft) !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo {
+  filter: grayscale(1) saturate(0) contrast(1.08) brightness(1.12) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle {
+  min-width: 132px !important;
+  height: 30px !important;
+  background: var(--anye-switch-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--anye-switch-border) !important;
+  border-radius: 8px !important;
+  padding: 2px !important;
+  gap: 0 !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-thumb {
+  display: block !important;
+  top: 2px !important;
+  height: 24px !important;
+  background: var(--anye-switch-active-bg) !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-thumb {
+  left: 2px !important;
+  width: calc(50% - 2px) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn {
+  min-width: 62px !important;
+  height: 24px !important;
+  padding: 0 14px !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-muted) !important;
+  font-size: var(--neox-fs-xs) !important;
+  line-height: 24px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn:hover {
+  background: transparent !important;
+  background-image: none !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn.active {
+  color: var(--anye-switch-active-fg) !important;
+  font-weight: 650 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode {
+  background: var(--neox-bg-muted) !important;
+  background-image: none !important;
+  border: 1px solid var(--neox-line) !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn.is-active {
+  background: color-mix(in srgb, var(--neox-bg-card) 82%, var(--neox-primary-50)) !important;
+  background-image: none !important;
+  color: var(--neox-fg-primary) !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn {
+  background: transparent !important;
+  background-image: none !important;
+  color: var(--neox-fg-secondary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active {
+  background: var(--neox-bg-hover) !important;
+  background-image: none !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active::after {
+  content: none !important;
+  display: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search {
+  height: 30px !important;
+  background: var(--anye-control-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--neox-line) !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search:focus-within {
+  background: color-mix(in srgb, var(--neox-bg-muted) 88%, var(--neox-bg-card)) !important;
+  background-image: none !important;
+  border-color: var(--neox-line-strong) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input:focus {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-primary) !important;
+  outline: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input::placeholder {
+  color: var(--neox-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search__kbd {
+  background: var(--neox-bg-card) !important;
+  border: 1px solid var(--neox-line) !important;
+  border-radius: 3px !important;
+  color: var(--neox-fg-muted) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item {
+  border-radius: 6px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item:hover:not(.selected),
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row:hover {
+  background: var(--neox-bg-hover) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item.selected,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab.active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row.is-active {
+  background: color-mix(in srgb, var(--neox-bg-muted) 78%, var(--neox-primary-100)) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"]::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__title {
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__subtitle,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__subtitle,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__time {
+  color: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__composer {
+  background: var(--anye-composer-bg) !important;
+  background-image: none !important;
+  padding-top: 4px !important;
+  padding-bottom: 8px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__composer .atl-composer .atl-composer__box {
+  background: var(--anye-composer-box-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--neox-line) !important;
+  border-radius: 10px !important;
+  padding: 5px 8px 6px !important;
+  gap: 3px !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-primary) !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background: var(--anye-composer-box-bg) !important;
+  background-image: none !important;
+  border-color: var(--neox-primary-600) !important;
+  box-shadow: 0 0 0 1px var(--neox-primary-100) !important;
+  outline: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  padding: 0 2px 4px !important;
+  margin-bottom: 4px !important;
+  border-bottom: 1px solid var(--neox-line-soft) !important;
+  row-gap: 3px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top::after {
+  content: none !important;
+  display: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input-wrap {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  min-height: 28px !important;
+  max-height: 92px !important;
+  padding: 2px 2px 3px !important;
+  background: transparent !important;
+  color: var(--neox-fg-primary) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.5 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input::placeholder {
+  color: var(--neox-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__actions {
+  padding-top: 1px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-mode-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: var(--anye-control-bg) !important;
+  background-image: none !important;
+  border-color: var(--neox-line) !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action:hover {
+  background: var(--neox-bg-hover) !important;
+  background-image: none !important;
+  border-color: var(--neox-line-strong) !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  color: var(--neox-fg-muted) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn.is-active {
+  background: var(--neox-bg-hover) !important;
+  background-image: none !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send {
+  background: var(--neox-primary-600) !important;
+  background-image: none !important;
+  color: var(--neox-fg-invert) !important;
+  height: 24px !important;
+  min-width: 28px !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send:hover:not(:disabled) {
+  background: var(--neox-primary-500) !important;
+  background-image: none !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: var(--neox-bg-hover) !important;
+  background-image: none !important;
+  color: var(--neox-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__brand img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item-brand img,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2__card-icon--brand img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2-free__provider-badge img {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__brand--openai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__brand--kimi img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__brand--mimo img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__brand--xai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item-brand--openai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item-brand--kimi img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item-brand--mimo img,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item-brand--xai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon--openai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon--kimi img,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon--mimo img,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon--xai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2__card-icon--brand.apiv2__card-icon--openai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2__card-icon--brand.apiv2__card-icon--kimi img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2__card-icon--brand.apiv2__card-icon--mimo img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2__card-icon--brand.apiv2__card-icon--xai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2-free__provider-badge--openai img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2-free__provider-badge--kimi img,
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2-free__provider-badge--xai img {
+  filter: brightness(0) invert(1) !important;
+  opacity: 1 !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .apiv2-free__provider-badge--mimo img {
+  filter: brightness(0) invert(1) !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__caret,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn__ring,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__pct,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__nums,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery__text {
+  color: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__track-fill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery__fill {
+  background: var(--neox-primary-600) !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge--plan-pro,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge--plan-pro-plus,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge--plan-ultra,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge--plan-elite,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge--plan-vip {
+  border-color: var(--neox-line) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--pro,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--pro-plus,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--ultra,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--elite,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--vip {
+  background: var(--neox-primary-600) !important;
+  background-image: none !important;
+  color: var(--neox-fg-invert) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__bubble,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-code-block,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-inline-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .md-inline-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-term,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__content,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__content-shell,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__content-shell-inner {
+  background: var(--anye-inline-bg) !important;
+  background-image: none !important;
+  border-color: var(--neox-line) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity__head,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__row {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool.is-running .atl-tool__icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__icon:has(.atl-tool__spinner),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-cluster__icon:has(.atl-tool__spinner),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity-child__icon:has(.atl-tool__spinner) {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__icon:has(.atl-tool__spinner)::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__icon:has(.atl-tool__spinner)::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-cluster__icon:has(.atl-tool__spinner)::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-cluster__icon:has(.atl-tool__spinner)::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity-child__icon:has(.atl-tool__spinner)::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity-child__icon:has(.atl-tool__spinner)::after {
+  content: none !important;
+  display: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__spinner {
+  background: transparent !important;
+  border-color: var(--neox-primary-100) !important;
+  border-top-color: var(--neox-primary-600) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch-backdrop {
+  background: var(--anye-scrim-bg) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__menu {
+  /* 实色软面 — 叠在大字空态上不能透底, 否则 Auto/本地 文案糊成一团 */
+  background: #252525 !important;
+  background-image: none !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.28) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Model picker: still solid (no glass), slightly lifted graphite */
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__menu {
+  background: #252525 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.034) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__tabs {
+  background: color-mix(in srgb, var(--anye-graphite-4, var(--neox-bg-muted)) 88%, transparent) !important;
+  border-color: color-mix(in srgb, var(--anye-line-strong, var(--neox-line-strong)) 82%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__input-wrap {
+  border-bottom-color: var(--neox-line) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__role--user,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row-snippet mark,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__item.is-active {
+  background: color-mix(in srgb, var(--neox-bg-hover) 82%, var(--neox-primary-100)) !important;
+  background-image: none !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item:hover {
+  background: color-mix(in srgb, var(--anye-graphite-5, var(--neox-bg-elevated)) 70%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item.is-active {
+  background: rgba(255, 255, 255, 0.072) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+/* 分段控件滑块 — 同样只有一层提亮, 无渐变无内高光 */
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__tab-thumb {
+  background: rgba(255, 255, 255, 0.088) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-overlay,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page {
+  --st-bg: var(--neox-bg-card) !important;
+  --st-card: color-mix(in srgb, var(--neox-bg-muted) 58%, transparent) !important;
+  --st-card-2: color-mix(in srgb, var(--neox-bg-muted) 74%, transparent) !important;
+  --st-border: rgba(255, 255, 255, 0.10) !important;
+  --st-border-strong: rgba(255, 255, 255, 0.16) !important;
+  /* 暗夜无彩强调: 选中/chevron 用浅灰实色, 不跟 primary 蓝跑 */
+  --st-accent: #c8c8c8 !important;
+  --st-accent-strong: #ffffff !important;
+  --st-accent-soft: rgba(255, 255, 255, 0.06) !important;
+  --st-accent-tint: rgba(255, 255, 255, 0.10) !important;
+  --st-text: var(--neox-fg-primary) !important;
+  --st-text-soft: var(--neox-fg-secondary) !important;
+  --st-text-mute: var(--neox-fg-muted) !important;
+  --settings-button-primary-bg: color-mix(in srgb, var(--neox-bg-hover) 76%, var(--neox-primary-50)) !important;
+  --settings-button-primary-bg-hover: color-mix(in srgb, var(--neox-bg-hover) 64%, var(--neox-primary-100)) !important;
+  --settings-button-primary-border: color-mix(in srgb, var(--neox-primary-600) 32%, var(--neox-line)) !important;
+  --settings-button-primary-border-hover: color-mix(in srgb, var(--neox-primary-500) 42%, var(--neox-line-strong)) !important;
+  --settings-button-primary-fg: color-mix(in srgb, var(--neox-fg-primary) 88%, var(--neox-primary-400)) !important;
+  --settings-button-secondary-bg: color-mix(in srgb, var(--neox-bg-muted) 56%, transparent) !important;
+  --settings-button-secondary-bg-hover: var(--neox-bg-hover) !important;
+  --settings-button-secondary-border: var(--neox-line) !important;
+  --settings-button-secondary-fg: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2 {
+  --av-accent: var(--neox-primary-400) !important;
+  --av-accent-strong: var(--neox-primary-300) !important;
+  --av-accent-soft: color-mix(in srgb, var(--neox-bg-hover) 84%, var(--neox-primary-50)) !important;
+  --av-card: color-mix(in srgb, var(--neox-bg-muted) 72%, var(--neox-bg-card)) !important;
+  --av-border: var(--neox-line) !important;
+  --av-border-strong: var(--neox-line-strong) !important;
+  --av-text: var(--neox-fg-primary) !important;
+  --av-text-soft: var(--neox-fg-secondary) !important;
+  --av-text-mute: var(--neox-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .nav-item.active {
+  background: color-mix(in srgb, var(--neox-bg-hover) 82%, var(--neox-primary-50)) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  color: color-mix(in srgb, var(--neox-fg-primary) 84%, var(--neox-primary-400)) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .nav-item.active svg,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .nav-item.active .nav-item__pet-mark {
+  color: var(--neox-primary-400) !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .nav-item:hover {
+  background: var(--neox-bg-hover) !important;
+  background-image: none !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__btn--primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .btn-primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .sub-plan__cta,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .subv2__btn--primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .secv2__btn--primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-overview__primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-btn--primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .add-provider-btn:not(.secondary),
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .settings-hero__cta-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .sub-topup-card__cta {
+  background: var(--settings-button-primary-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--settings-button-primary-border) !important;
+  color: var(--settings-button-primary-fg) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__btn--primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .btn-primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .sub-plan__cta:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .subv2__btn--primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .secv2__btn--primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-overview__primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-btn--primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .add-provider-btn:not(.secondary):hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .settings-hero__cta-pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .sub-topup-card__cta:hover {
+  background: var(--settings-button-primary-bg-hover) !important;
+  border-color: var(--settings-button-primary-border-hover) !important;
+  color: var(--settings-button-primary-fg) !important;
+  transform: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__chip.is-on,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__popover-opt.is-on,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__popover-opt:hover {
+  background: color-mix(in srgb, var(--neox-bg-hover) 82%, var(--neox-primary-50)) !important;
+  border-color: color-mix(in srgb, var(--neox-primary-600) 28%, var(--neox-line)) !important;
+  color: var(--neox-primary-400) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__pin-tag:not(.apiv2__pin-tag--toggle) {
+  background: color-mix(in srgb, var(--neox-bg-hover) 80%, var(--neox-primary-50)) !important;
+  border-color: color-mix(in srgb, var(--neox-primary-600) 30%, var(--neox-line)) !important;
+  color: var(--neox-primary-400) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__card-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2-free__provider-badge {
+  background: color-mix(in srgb, var(--neox-bg-hover) 72%, transparent) !important;
+  border-color: var(--neox-line) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .btn-secondary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__btn:not(.apiv2__btn--primary),
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .subv2__btn:not(.subv2__btn--primary),
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .secv2__btn:not(.secv2__btn--primary),
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-btn:not(.account-btn--primary),
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-overview__secondary,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .add-provider-btn.secondary {
+  background: var(--settings-button-secondary-bg) !important;
+  background-image: none !important;
+  border-color: var(--settings-button-secondary-border) !important;
+  color: var(--settings-button-secondary-fg) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .btn-secondary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__btn:not(.apiv2__btn--primary):hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .subv2__btn:not(.subv2__btn--primary):hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .secv2__btn:not(.secv2__btn--primary):hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-btn:not(.account-btn--primary):hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .account-overview__secondary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .add-provider-btn.secondary:hover {
+  background: var(--settings-button-secondary-bg-hover) !important;
+  border-color: var(--neox-line-strong) !important;
+  color: var(--neox-fg-primary) !important;
+  transform: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .toggle-btn.active,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .nx-segmented__btn[data-on="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .mp-tool-chip.active,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .mp-selected-chip,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .memory-browser-compact .filter-chip.active,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .pet-card.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .theme-card.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__chip.is-on,
+:root[data-theme-pack="anye"][data-theme="dark"] .settings-page .apiv2__popover-opt.is-on {
+  background: rgba(255, 255, 255, 0.12) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"],
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-workspace,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-workspace__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .editor-content,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .editor-pane:not(.media-viewer),
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .editor-view-container,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .code-editor-container,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .monaco-editor,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .monaco-editor-background,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .monaco-editor .margin,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .monaco-diff-editor {
+  background: var(--neox-bg-card) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .editor-tabs-bar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-statusbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .terminal-header,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .rc-panel__tabs,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__head {
+  background: var(--neox-bg-muted) !important;
+  background-image: none !important;
+  border-color: var(--neox-line) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Final Anye surface pass: region dividers and tool result cards.
+ * Tool expansion wrappers stay transparent; only the actual result view gets a
+ * subtle card surface. This removes the black block behind Readfile/Code/etc.
+ */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-region-divider: color-mix(in srgb, var(--neox-line-soft) 76%, transparent) !important;
+  --anye-region-divider-strong: color-mix(in srgb, var(--neox-line) 82%, transparent) !important;
+  --atl-tool-card-bg: color-mix(in srgb, var(--neox-bg-card) 78%, var(--neox-bg-muted)) !important;
+  --atl-tool-card-border: color-mix(in srgb, var(--neox-line) 68%, transparent) !important;
+  --atl-tool-card-shadow: none !important;
+  --atl-code-line-bg: color-mix(in srgb, var(--neox-bg-muted) 68%, transparent) !important;
+  --atl-code-line-border: color-mix(in srgb, var(--neox-line-soft) 72%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__head,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .editor-tabs-bar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .terminal-header {
+  border-bottom-color: var(--anye-region-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header {
+  z-index: 4 !important;
+  background: var(--neox-bg-card) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header__progress,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header__progress::before {
+  display: none !important;
+  animation: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] :is(
+  .atl-header__livedot,
+  .atl-running > svg,
+  .atl-bgtasks__head-pulse,
+  .atl-bgtasks__row--running .atl-bgtasks__row-icon,
+  .atl-subagents__header-icon,
+  .atl-subagents__row.is-running .atl-subagents__row-icon
+) {
+  animation: none !important;
+  opacity: .78 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-subagents {
+  justify-self: stretch !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  background: color-mix(in srgb, var(--neox-bg-card) 76%, var(--neox-bg-canvas)) !important;
+  border-color: var(--anye-region-divider) !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-subagents__header {
+  background: transparent !important;
+  color: var(--neox-fg-secondary) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-subagents__header:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-subagents__row:hover {
+  background: color-mix(in srgb, var(--neox-bg-hover) 34%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-subagents__list {
+  max-height: min(220px, 28vh) !important;
+  overflow: auto !important;
+  background: color-mix(in srgb, var(--neox-bg-muted) 24%, transparent) !important;
+  border-top-color: var(--anye-region-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-subagents__row {
+  border-top-color: var(--anye-region-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main {
+  position: relative;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 1px !important;
+  background: var(--anye-region-divider) !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell.has-surface .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell.has-surface .neox-rightpanel {
+  border-left: 0 !important;
+  box-shadow: inset 1px 0 0 var(--anye-region-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__content-shell,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__content-shell-inner,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-tool__content,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-collapse,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-collapse__inner,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity-child__details .atl-tool__content-shell,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity-child__details .atl-tool__content-shell-inner,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-activity-child__details .atl-tool__content {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile,
+  .atl-search,
+  .atl-plan,
+  .atl-web,
+  .atl-thinking,
+  .atl-ask,
+  .atl-compact,
+  .atl-explore,
+  .atl-dag,
+  .atl-filelist,
+  .atl-net,
+  .atl-term,
+  .read-file-card,
+  .write-file-card,
+  .grep-file-card,
+  .search-files-card,
+  .search-tool-card,
+  .command-card,
+  .code-exec-card,
+  .tool-card
+),
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-code:not(:has(.atl-code__img)),
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-timeline-content :is(
+  .read-file-card,
+  .write-file-card,
+  .grep-file-card,
+  .search-files-card,
+  .search-tool-card,
+  .command-card,
+  .code-exec-card,
+  .tool-card
+) {
+  background: var(--atl-tool-card-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--atl-tool-card-border) !important;
+  box-shadow: var(--atl-tool-card-shadow) !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__head,
+  .atl-search__list,
+  .atl-explore__summary,
+  .tool-card-content,
+  .read-file-card-body,
+  .write-file-card-body
+) {
+  border-color: var(--anye-region-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__preview,
+  .atl-code__lines,
+  .atl-code__lines > span,
+  .read-file-code-preview,
+  .command-code-block
+) {
+  background: transparent !important;
+  background-image: none !important;
+  border-color: var(--anye-region-divider) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__chip,
+  .atl-readfile__range,
+  .atl-explore__chip,
+  .atl-explore__count,
+  .command-card-badge,
+  .file-card-type-badge,
+  .search-tool-tag
+) {
+  background: color-mix(in srgb, var(--neox-bg-hover) 56%, transparent) !important;
+  border-color: var(--anye-region-divider) !important;
+}
+
+/* Shell result polish: one visible shell surface, tighter geometry, smaller icons. */
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline {
+  --atl-tool-icon-size: 18px !important;
+  --atl-tool-icon-radius: 6px !important;
+  --atl-tool-row-h: 28px !important;
+  --atl-tool-row-pad-x: 6px !important;
+  --atl-tool-gap: 6px !important;
+  --atl-tool-content-indent: 30px !important;
+  --atl-action-child-icon: 16px !important;
+  --atl-action-child-gap: 6px !important;
+  --atl-action-child-pad-x: 6px !important;
+  --atl-shell-surface-bg: rgb(35, 36, 37) !important;
+  --atl-shell-surface-border: transparent !important;
+  --atl-shell-surface-rim: transparent !important;
+  --atl-shell-footer-bg: transparent !important;
+  --atl-shell-footer-border: transparent !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__icon,
+  .atl-cluster__icon,
+  .atl-activity-child__icon
+) {
+  width: var(--atl-tool-icon-size) !important;
+  height: var(--atl-tool-icon-size) !important;
+  min-width: var(--atl-tool-icon-size) !important;
+  border-radius: var(--atl-tool-icon-radius) !important;
+  box-shadow: none !important;
+}
+
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__spinner {
+  width: 9.5px !important;
+  height: 9.5px !important;
+  border-width: 1.25px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__row,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-cluster__row {
+  min-height: var(--atl-tool-row-h) !important;
+  padding: 2px var(--atl-tool-row-pad-x) !important;
+  gap: var(--atl-tool-gap) !important;
+  border-radius: 9px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content {
+  margin: 2px 0 7px !important;
+  padding: 3px var(--atl-tool-content-pad-r, 8px) 5px var(--atl-tool-content-indent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content:has(> .atl-term) {
+  padding-top: 2px !important;
+  padding-right: var(--atl-tool-content-pad-r, 10px) !important;
+  padding-bottom: 6px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term {
+  --xterm-bg: var(--atl-shell-surface-bg) !important;
+  --xterm-cursor-accent: var(--atl-shell-surface-bg) !important;
+  margin: 1px 0 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--atl-shell-surface-border) !important;
+  border-radius: 9px !important;
+  background: var(--atl-shell-surface-bg) !important;
+  background-image: none !important;
+  box-shadow: inset 0 0 0 1px var(--atl-shell-surface-rim) !important;
+  overflow: hidden !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm {
+  max-height: var(--atl-term-xterm-max-height, 202px) !important;
+  min-height: 32px !important;
+  padding: 8px 10px 7px !important;
+  border-radius: 0 !important;
+  background: var(--atl-shell-surface-bg) !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  contain: layout paint !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-viewport,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-screen,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-rows {
+  background: var(--atl-shell-surface-bg) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-rows > div {
+  background: transparent !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__foot {
+  margin: 0 !important;
+  padding: 5px 10px 7px !important;
+  min-height: 23px !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-top: 1px solid var(--atl-shell-footer-border) !important;
+  background: var(--atl-shell-footer-bg) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__chip {
+  height: 17px !important;
+  padding: 0 7px !important;
+  border-radius: 5px !important;
+  font-size: calc(10px * var(--nx-fs-scale, 1)) !important;
+  line-height: 17px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__chip--pid {
+  margin-left: auto !important;
+  background: color-mix(in srgb, var(--neox-bg-hover) 52%, transparent) !important;
+  color: var(--neox-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__ctrl {
+  width: 19px !important;
+  height: 19px !important;
+  border-radius: 5px !important;
+  background: color-mix(in srgb, var(--neox-bg-hover) 52%, transparent) !important;
+  color: var(--neox-fg-muted) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__ctrl:hover {
+  background: color-mix(in srgb, var(--neox-bg-hover) 78%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__chip.is-ok {
+  background: color-mix(in srgb, var(--shell-status-completed, #5fd07a) 18%, transparent) !important;
+  color: color-mix(in srgb, var(--shell-status-completed, #5fd07a) 88%, var(--neox-fg-primary)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__chip.is-fail {
+  background: color-mix(in srgb, var(--shell-status-error, #f87171) 18%, transparent) !important;
+  color: color-mix(in srgb, var(--shell-status-error, #f87171) 88%, var(--neox-fg-primary)) !important;
+}
+
+/* Plan cards use the same matte result surface as shell/read cards. */
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content:has(.atl-plan) {
+  margin: 2px 0 7px !important;
+  padding: 4px 8px 6px var(--atl-tool-content-indent) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan {
+  margin: 0 !important;
+  padding: 10px 12px 11px !important;
+  border-radius: var(--atl-tool-card-radius, 13px) !important;
+  background: var(--atl-tool-card-bg) !important;
+  background-image: none !important;
+  border: 1px solid var(--atl-tool-card-border) !important;
+  box-shadow: var(--atl-tool-card-shadow) !important;
+  -webkit-backdrop-filter: var(--anye-surface-filter) !important;
+  backdrop-filter: var(--anye-surface-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__list {
+  padding: 2px 0 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row {
+  min-height: 29px !important;
+  padding: 3px 8px 3px 2px !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row.is-running {
+  background: color-mix(in srgb, var(--neox-bg-hover) 64%, transparent) !important;
+}
+
+/* Anye dark typography pass.
+ * The previous pass was structurally correct, but too many labels lived in the
+ * same muted gray range. These tokens separate "ink" from hierarchy without
+ * reintroducing purple accents or raised/3D controls. */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-fg-strong: #eeeeee;
+  --anye-fg-title: #e1e1e1;
+  --anye-fg-body: #c6c6c6;
+  --anye-fg-secondary: #a6a6a6;
+  --anye-fg-muted: #898989;
+  --anye-fg-faint: #707070;
+  --anye-row-hover: color-mix(in srgb, var(--neox-bg-hover) 82%, white 4%);
+  --anye-row-active: color-mix(in srgb, var(--neox-bg-muted) 82%, white 8%);
+  --neox-fg-primary: var(--anye-fg-title) !important;
+  --neox-fg-secondary: var(--anye-fg-body) !important;
+  --neox-fg-muted: var(--anye-fg-secondary) !important;
+  --neox-fg-hint: var(--anye-fg-faint) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header__title {
+  color: var(--anye-fg-title) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 590 !important;
+  letter-spacing: -0.01em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header__workspace {
+  color: var(--anye-fg-muted) !important;
+  font-weight: 470 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action {
+  color: var(--anye-fg-body) !important;
+  font-weight: 490 !important;
+  letter-spacing: -0.004em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary {
+  color: var(--anye-fg-title) !important;
+  font-weight: 520 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary:hover {
+  background: var(--anye-row-hover) !important;
+  color: var(--anye-fg-strong) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-icon {
+  color: var(--anye-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary .neox-sidebar__quick-action-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action:hover .neox-sidebar__quick-action-icon {
+  color: var(--anye-fg-title) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-caret {
+  color: var(--anye-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__section-head__title {
+  color: var(--anye-fg-muted) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__icobtn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-newchat,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-more {
+  color: var(--anye-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__icobtn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-newchat:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-more:hover {
+  background: var(--anye-row-hover) !important;
+  color: var(--anye-fg-title) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group {
+  border-radius: 7px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group:hover {
+  background: var(--anye-row-hover) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-icon {
+  color: var(--anye-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-name {
+  color: var(--anye-fg-body) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.002em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item {
+  border-radius: 7px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover {
+  background: var(--anye-row-hover) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] {
+  background: var(--anye-row-active) !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__title {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__time {
+  color: var(--neox-fg-secondary) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 450 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__title {
+  color: var(--anye-fg-strong) !important;
+  font-weight: 570 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__time {
+  color: var(--anye-fg-body) !important;
+  font-weight: 480 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-overflow-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-empty,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-empty-switch {
+  color: var(--anye-fg-muted) !important;
+  font-weight: 460 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__viewall {
+  color: var(--anye-fg-secondary) !important;
+  font-weight: 500 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__viewall:hover {
+  background: var(--anye-row-hover) !important;
+  color: var(--anye-fg-title) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-empty__h {
+  color: var(--anye-fg-title) !important;
+  font-size: calc(20px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 620 !important;
+  letter-spacing: -0.012em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-empty__p {
+  color: var(--anye-fg-secondary) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.68 !important;
+  font-weight: 400 !important;
+}
+
+/* Glass-off workstation layout material.
+ * Glass-on keeps the QQ fog card. When the fog switch is off, the shell uses
+ * a left-right structure with full-height sidebar and tokenized graphite
+ * surfaces instead of a white veil. */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --neox-shell-flat-rail-bg: color-mix(in srgb, var(--neox-bg-canvas) 92%, var(--neox-bg-sunken) 8%) !important;
+  --neox-shell-flat-sidebar-bg: color-mix(in srgb, var(--neox-bg-panel) 90%, var(--neox-bg-canvas)) !important;
+  --neox-shell-flat-topbar-bg: color-mix(in srgb, var(--neox-bg-canvas) 88%, var(--neox-bg-panel)) !important;
+  --neox-shell-flat-main-bg: color-mix(in srgb, var(--neox-bg-canvas) 72%, var(--neox-bg-card)) !important;
+  --neox-shell-flat-right-bg: var(--neox-shell-flat-main-bg) !important;
+  --neox-shell-flat-divider: color-mix(in srgb, var(--anye-fg-strong) 8%, transparent) !important;
+  --neox-shell-flat-header-bg: transparent !important;
+  --neox-shell-flat-composer-bg: transparent !important;
+  --neox-shell-flat-composer-box-bg: var(--anye-row-active) !important;
+  --neox-shell-flat-composer-border: color-mix(in srgb, var(--anye-row-active) 76%, var(--anye-fg-strong) 8%) !important;
+  --neox-shell-flat-composer-radius: 18px !important;
+  --neox-shell-flat-composer-shadow: none !important;
+  --neox-shell-flat-composer-focus-border: color-mix(in srgb, var(--anye-row-active) 64%, var(--anye-fg-strong) 16%) !important;
+  --neox-shell-flat-composer-focus-shadow: none !important;
+  --neox-shell-flat-rail-shadow: inset -1px 0 0 color-mix(in srgb, var(--anye-fg-strong) 3%, transparent) !important;
+  --neox-shell-flat-topbar-shadow: inset 0 -1px 0 color-mix(in srgb, var(--anye-fg-strong) 6%, transparent) !important;
+  --neox-shell-flat-sidebar-shadow: inset -1px 0 0 color-mix(in srgb, var(--anye-fg-strong) 3%, transparent) !important;
+  --neox-shell-flat-main-shadow: none !important;
+  --neox-shell-flat-right-shadow: inset 1px 0 0 color-mix(in srgb, var(--anye-fg-strong) 3%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell {
+  background: var(--neox-bg-canvas) !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__glass-card {
+  display: contents !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-topbar {
+  background: var(--neox-shell-flat-topbar-bg) !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: var(--neox-shell-flat-topbar-shadow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-rail {
+  background: var(--neox-shell-flat-rail-bg) !important;
+  background-image: none !important;
+  border-right: 1px solid var(--neox-shell-flat-divider) !important;
+  box-shadow: var(--neox-shell-flat-rail-shadow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-sidebar {
+  background: var(--neox-shell-flat-sidebar-bg) !important;
+  background-image: none !important;
+  border-right: 1px solid var(--neox-shell-flat-divider) !important;
+  box-shadow: var(--neox-shell-flat-sidebar-shadow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__main {
+  background: var(--neox-shell-flat-main-bg) !important;
+  background-image: none !important;
+  box-shadow: var(--neox-shell-flat-main-shadow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .chat-messages {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-header {
+  background: var(--neox-shell-flat-header-bg) !important;
+  background-image: none !important;
+  border-bottom-color: var(--neox-shell-flat-divider) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer {
+  background: var(--neox-shell-flat-composer-bg) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off][data-plan-skin] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer[data-mode="ask"] .atl-composer__box {
+  background: var(--neox-shell-flat-composer-box-bg) !important;
+  background-image: none !important;
+  border-color: var(--neox-shell-flat-composer-border) !important;
+  border-radius: var(--neox-shell-flat-composer-radius) !important;
+  padding: 8px 10px 7px !important;
+  box-shadow: var(--neox-shell-flat-composer-shadow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off][data-plan-skin] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background: var(--neox-shell-flat-composer-box-bg) !important;
+  border-color: var(--neox-shell-flat-composer-focus-border) !important;
+  border-radius: var(--neox-shell-flat-composer-radius) !important;
+  box-shadow: var(--neox-shell-flat-composer-focus-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .atl-composer__top {
+  border-bottom-color: var(--neox-shell-flat-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell.has-surface .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell.has-surface .neox-rightpanel {
+  background: var(--neox-shell-flat-right-bg) !important;
+  background-image: none !important;
+  border-left: 1px solid var(--neox-shell-flat-divider) !important;
+  box-shadow: var(--neox-shell-flat-right-shadow) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__right--surface-slot {
+  background: var(--neox-shell-flat-right-bg) !important;
+  background-image: none !important;
+}
+
+/* Anye graphite material final pass.
+ * This is the last override layer for the current dark workstation look:
+ * neutral graphite, one visible surface per component, soft dividers, no 3D.
+ */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-graphite-0: #151716;
+  --anye-graphite-1: #181a19;
+  --anye-graphite-2: #1d201f;
+  --anye-graphite-3: #232625;
+  --anye-graphite-4: #292d2b;
+  --anye-graphite-5: #303432;
+  --anye-line-soft: rgba(255, 255, 255, 0.052);
+  --anye-line: rgba(255, 255, 255, 0.076);
+  --anye-line-strong: rgba(255, 255, 255, 0.118);
+  --anye-ink-0: #eeeeea;
+  --anye-ink-1: #d8dad5;
+  --anye-ink-2: #b7bbb6;
+  --anye-ink-3: #8e938f;
+  --anye-ink-4: #676d69;
+  --anye-row-hover: rgba(255, 255, 255, 0.056) !important;
+  --anye-row-active: rgba(255, 255, 255, 0.104) !important;
+  --anye-control-bg: rgba(255, 255, 255, 0.054) !important;
+  --anye-control-hover: rgba(255, 255, 255, 0.086) !important;
+  --anye-control-active: rgba(255, 255, 255, 0.118) !important;
+  --anye-composer-box-bg: var(--anye-graphite-4) !important;
+  --anye-tool-bg: var(--anye-graphite-2) !important;
+  --anye-tool-bg-soft: color-mix(in srgb, var(--anye-graphite-2) 88%, white 3%) !important;
+  --anye-switch-bg: rgba(255, 255, 255, 0.054) !important;
+  --anye-switch-border: rgba(255, 255, 255, 0.082) !important;
+  --anye-switch-active-bg: rgba(255, 255, 255, 0.126) !important;
+  --anye-switch-active-fg: var(--anye-ink-0) !important;
+
+  --neox-bg-canvas: var(--anye-graphite-0) !important;
+  --neox-bg-panel: var(--anye-graphite-2) !important;
+  --neox-bg-card: var(--anye-graphite-2) !important;
+  --neox-bg-muted: var(--anye-graphite-3) !important;
+  --neox-bg-hover: var(--anye-row-hover) !important;
+  --neox-bg-elevated: var(--anye-graphite-3) !important;
+  --neox-bg-sunken: #111312 !important;
+  --neox-line-soft: var(--anye-line-soft) !important;
+  --neox-line: var(--anye-line) !important;
+  --neox-line-strong: var(--anye-line-strong) !important;
+  --neox-line-subtle: rgba(255, 255, 255, 0.036) !important;
+  --neox-fg-primary: var(--anye-ink-1) !important;
+  --neox-fg-secondary: var(--anye-ink-2) !important;
+  --neox-fg-muted: var(--anye-ink-3) !important;
+  --neox-fg-hint: var(--anye-ink-4) !important;
+  --neox-fg-invert: #111312 !important;
+  --neox-primary-700: #d9ddd8 !important;
+  --neox-primary-600: #a5aca6 !important;
+  --neox-primary-500: #7e8580 !important;
+  --neox-primary-400: #686f6a !important;
+  --neox-primary-300: rgba(255, 255, 255, 0.22) !important;
+  --neox-primary-200: rgba(255, 255, 255, 0.16) !important;
+  --neox-primary-100: rgba(255, 255, 255, 0.10) !important;
+  --neox-primary-50: rgba(255, 255, 255, 0.064) !important;
+  --neox-primary-ring: rgba(255, 255, 255, 0.14) !important;
+  --pack-tint: var(--anye-graphite-2) !important;
+  --pack-tint-card: var(--anye-graphite-3) !important;
+  --pack-tint-strong: var(--anye-graphite-4) !important;
+  --pack-edge: var(--anye-line) !important;
+  --pack-edge-strong: var(--anye-line-strong) !important;
+  --pack-shadow: none !important;
+  --bg-primary: var(--anye-graphite-0) !important;
+  --bg-secondary: var(--anye-graphite-2) !important;
+  --bg-card: var(--anye-graphite-2) !important;
+  --bg-muted: var(--anye-graphite-3) !important;
+  --bg-hover: var(--anye-row-hover) !important;
+  --bg-elevated: var(--anye-graphite-3) !important;
+  --bg-tertiary: #111312 !important;
+
+  --atl-tool-card-radius: 12px !important;
+  --atl-tool-card-bg: var(--anye-tool-bg) !important;
+  --atl-tool-card-border: var(--anye-line-soft) !important;
+  --atl-tool-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.026) !important;
+  --atl-code-line-bg: color-mix(in srgb, var(--anye-tool-bg) 86%, white 3%) !important;
+  --atl-code-line-border: var(--anye-line-soft) !important;
+  --atl-shell-surface-bg: var(--anye-tool-bg-soft) !important;
+  --atl-shell-surface-border: rgba(255, 255, 255, 0.034) !important;
+  --atl-shell-surface-rim: rgba(255, 255, 255, 0.018) !important;
+  --atl-shell-footer-bg: transparent !important;
+  --atl-shell-footer-border: rgba(255, 255, 255, 0.042) !important;
+  --atl-plan-row-active-bg: rgba(255, 255, 255, 0.058) !important;
+  --atl-plan-row-hover-bg: rgba(255, 255, 255, 0.042) !important;
+  --atl-plan-check-bg: rgba(255, 255, 255, 0.034) !important;
+  --atl-plan-check-border: rgba(255, 255, 255, 0.14) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  --neox-shell-flat-divider: var(--anye-line-soft) !important;
+  --neox-shell-flat-rail-bg: var(--anye-graphite-1) !important;
+  --neox-shell-flat-sidebar-bg: var(--anye-graphite-2) !important;
+  --neox-shell-flat-topbar-bg: var(--anye-graphite-0) !important;
+  --neox-shell-flat-main-bg: var(--anye-graphite-0) !important;
+  --neox-shell-flat-right-bg: var(--anye-graphite-0) !important;
+  --neox-shell-flat-header-bg: transparent !important;
+  --neox-shell-flat-composer-bg: transparent !important;
+  --neox-shell-flat-composer-box-bg: var(--anye-composer-box-bg) !important;
+  --neox-shell-flat-composer-border: var(--anye-line) !important;
+  --neox-shell-flat-composer-focus-border: var(--anye-line-strong) !important;
+  --neox-shell-flat-composer-radius: 19px !important;
+  --neox-shell-flat-composer-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.032) !important;
+  --neox-shell-flat-composer-focus-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  --neox-shell-flat-topbar-shadow: inset 0 -1px 0 var(--anye-line-soft) !important;
+  --neox-shell-flat-rail-shadow: none !important;
+  --neox-shell-flat-sidebar-shadow: inset -1px 0 0 var(--anye-line-soft) !important;
+  --neox-shell-flat-main-shadow: none !important;
+  --neox-shell-flat-right-shadow: inset 1px 0 0 var(--anye-line-soft) !important;
+  background: var(--anye-graphite-0) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off]:not([data-frosted-effect="clear"]) .neox-shell::before {
+  background: var(--anye-graphite-0) !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar {
+  color: var(--anye-ink-2) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo--lockup {
+  height: 17px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__work-title {
+  color: var(--anye-ink-1) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 560 !important;
+  letter-spacing: -0.012em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle {
+  height: 30px !important;
+  min-width: 128px !important;
+  border-radius: 10px !important;
+  border-color: var(--anye-line) !important;
+  background: rgba(255, 255, 255, 0.052) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.026) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-thumb {
+  border-radius: 8px !important;
+  background: var(--anye-switch-active-bg) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.032) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn {
+  color: var(--anye-ink-3) !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn.active {
+  color: var(--anye-ink-0) !important;
+  font-weight: 580 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn {
+  color: var(--anye-ink-3) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active {
+  background: var(--anye-row-hover) !important;
+  color: var(--anye-ink-1) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action {
+  min-height: 34px !important;
+  border-radius: 9px !important;
+  color: var(--anye-ink-2) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.006em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary {
+  color: var(--anye-ink-1) !important;
+  font-weight: 540 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__viewall:hover {
+  background: var(--anye-row-hover) !important;
+  color: var(--anye-ink-1) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-icon {
+  color: var(--anye-ink-3) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-icon svg,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__section-head__title {
+  color: var(--neox-fg-secondary) !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 540 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item {
+  min-height: 34px !important;
+  border-radius: 9px !important;
+  /* 勿用 padding-inline 对称 — 会打掉左列 icon 与 group folder 的垂直对齐 */
+  padding-left: var(--neox-sidebar-row-pad-x, 8px) !important;
+  padding-right: 8px !important;
+  color: var(--anye-ink-3) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover {
+  background: var(--anye-row-hover) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] {
+  background: var(--anye-row-active) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__title {
+  color: var(--neox-fg-primary) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.004em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__time {
+  color: var(--neox-fg-secondary) !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 450 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__title {
+  color: var(--anye-ink-0) !important;
+  font-weight: 560 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__time {
+  color: var(--anye-ink-2) !important;
+  font-weight: 470 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__composer {
+  padding-top: 6px !important;
+  padding-bottom: 12px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__composer .atl-composer .atl-composer__box {
+  background: var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) !important;
+  border-color: var(--neox-shell-flat-composer-border, var(--anye-line)) !important;
+  border-radius: var(--neox-shell-flat-composer-radius, 19px) !important;
+  padding: 8px 11px 9px !important;
+  gap: 5px !important;
+  box-shadow: var(--neox-shell-flat-composer-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.032)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background: color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 94%, white 4%) !important;
+  border-color: var(--neox-shell-flat-composer-focus-border, var(--anye-line-strong)) !important;
+  box-shadow: var(--neox-shell-flat-composer-focus-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.04)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  padding: 0 2px 6px !important;
+  margin-bottom: 6px !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  min-height: 36px !important;
+  padding: 3px 2px 4px !important;
+  color: var(--anye-ink-1) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.55 !important;
+  font-weight: 420 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input::placeholder {
+  color: color-mix(in srgb, var(--anye-ink-3) 78%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-mode-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: var(--anye-control-bg) !important;
+  border-color: rgba(255, 255, 255, 0.066) !important;
+  color: var(--anye-ink-2) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action:hover {
+  background: var(--anye-control-hover) !important;
+  border-color: var(--anye-line) !important;
+  color: var(--anye-ink-1) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn {
+  border-radius: 7px !important;
+  color: var(--anye-ink-3) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn.is-active {
+  background: var(--anye-control-hover) !important;
+  color: var(--anye-ink-1) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send {
+  min-width: 30px !important;
+  height: 28px !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, 0.112) !important;
+  color: var(--anye-ink-0) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.036) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.16) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: rgba(255, 255, 255, 0.052) !important;
+  color: var(--anye-ink-4) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline {
+  --atl-tool-icon-size: 18px !important;
+  --atl-tool-icon-radius: 7px !important;
+  --atl-tool-row-h: 29px !important;
+  --atl-tool-row-pad-x: 6px !important;
+  --atl-tool-gap: 7px !important;
+  --atl-tool-content-indent: 30px !important;
+  color: var(--anye-ink-2) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__title,
+  .atl-cluster__title,
+  .atl-activity-child__title
+) {
+  color: var(--anye-ink-1) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 560 !important;
+  letter-spacing: -0.004em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__desc,
+  .atl-tool__meta,
+  .atl-tool__time,
+  .atl-cluster__chips,
+  .atl-activity-child__meta,
+  .atl-msg__time,
+  .atl-msg__role
+) {
+  color: var(--anye-ink-4) !important;
+  font-weight: 460 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__icon,
+  .atl-cluster__icon,
+  .atl-activity-child__icon
+) {
+  background: rgba(255, 255, 255, 0.072) !important;
+  color: var(--anye-ink-1) !important;
+  box-shadow: none !important;
+}
+
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile,
+  .atl-search,
+  .atl-plan,
+  .atl-web,
+  .atl-thinking,
+  .atl-ask,
+  .atl-compact,
+  .atl-explore,
+  .atl-dag,
+  .atl-filelist,
+  .atl-net,
+  .atl-term,
+  .read-file-card,
+  .write-file-card,
+  .grep-file-card,
+  .search-files-card,
+  .search-tool-card,
+  .command-card,
+  .code-exec-card,
+  .tool-card
+),
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-code:not(:has(.atl-code__img)),
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-timeline-content :is(
+  .read-file-card,
+  .write-file-card,
+  .grep-file-card,
+  .search-files-card,
+  .search-tool-card,
+  .command-card,
+  .code-exec-card,
+  .tool-card
+) {
+  background: var(--atl-tool-card-bg) !important;
+  border-color: var(--atl-tool-card-border) !important;
+  border-radius: var(--atl-tool-card-radius) !important;
+  box-shadow: var(--atl-tool-card-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan {
+  padding: 11px 12px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__goal {
+  color: var(--anye-ink-1) !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 560 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__meta {
+  color: var(--anye-ink-4) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content .atl-plan__row {
+  min-height: 29px !important;
+  color: var(--anye-ink-3) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row:hover {
+  background: var(--atl-plan-row-hover-bg) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row.is-running {
+  background: var(--atl-plan-row-active-bg) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row.is-running .atl-plan__text {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 560 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content .atl-plan__box {
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 4px !important;
+  background: var(--atl-plan-check-bg) !important;
+  border-color: var(--atl-plan-check-border) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term {
+  background: var(--atl-shell-surface-bg) !important;
+  border-color: var(--atl-shell-surface-border) !important;
+  border-radius: 11px !important;
+  box-shadow: inset 0 1px 0 var(--atl-shell-surface-rim) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-viewport,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-screen,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term__xterm .xterm-rows {
+  background: var(--atl-shell-surface-bg) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__head,
+  .atl-search__list,
+  .atl-explore__summary,
+  .atl-composer__top,
+  .tool-card-content,
+  .read-file-card-body,
+  .write-file-card-body
+) {
+  border-color: var(--anye-line-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__preview,
+  .atl-code__lines,
+  .atl-code__lines > span,
+  .read-file-code-preview,
+  .command-code-block
+) {
+  background: transparent !important;
+  border-color: var(--anye-line-soft) !important;
+  color: color-mix(in srgb, var(--anye-ink-1) 82%, var(--anye-ink-2)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__chip,
+  .atl-readfile__range,
+  .atl-explore__chip,
+  .atl-explore__count,
+  .command-card-badge,
+  .file-card-type-badge,
+  .search-tool-tag
+) {
+  background: rgba(255, 255, 255, 0.052) !important;
+  border-color: var(--anye-line-soft) !important;
+  color: var(--anye-ink-3) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock {
+  background: var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) !important;
+  border-color: var(--neox-shell-flat-composer-border, var(--anye-line)) !important;
+  border-radius: 15px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.032) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock:hover {
+  background: color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 94%, white 4%) !important;
+  border-color: var(--anye-line-strong) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__label,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__question {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 560 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__meta {
+  color: var(--anye-ink-4) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__cta,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__deny {
+  background: rgba(255, 255, 255, 0.072) !important;
+  border-color: rgba(255, 255, 255, 0.078) !important;
+  color: var(--anye-ink-2) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__cta:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__deny:hover {
+  background: rgba(255, 255, 255, 0.108) !important;
+  color: var(--anye-ink-0) !important;
+}
+
+/* Anye graphite quality pass.
+ * The previous pass made the layout correct; this one adds material discipline:
+ * tighter gray ramp, subtle internal rims, calmer typography and one-layer cards.
+ */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-graphite-0: #121413 !important;
+  --anye-graphite-1: #171918 !important;
+  --anye-graphite-2: #1b1e1d !important;
+  --anye-graphite-3: #222523 !important;
+  --anye-graphite-4: #272b29 !important;
+  --anye-graphite-5: #303431 !important;
+  --anye-graphite-6: #3a3f3b !important;
+  --anye-line-soft: rgba(238, 242, 236, 0.044) !important;
+  --anye-line: rgba(238, 242, 236, 0.068) !important;
+  --anye-line-strong: rgba(238, 242, 236, 0.112) !important;
+  --anye-ink-0: #f0f1ed !important;
+  --anye-ink-1: #dedfda !important;
+  --anye-ink-2: #bfc3bd !important;
+  --anye-ink-3: #969c96 !important;
+  --anye-ink-4: #6f766f !important;
+  --anye-ink-5: #555b56 !important;
+  --anye-row-hover: rgba(238, 242, 236, 0.052) !important;
+  --anye-row-active: rgba(238, 242, 236, 0.122) !important;
+  --anye-control-bg: rgba(238, 242, 236, 0.052) !important;
+  --anye-control-hover: rgba(238, 242, 236, 0.082) !important;
+  --anye-control-active: rgba(238, 242, 236, 0.118) !important;
+  --anye-composer-box-bg: color-mix(in srgb, var(--anye-graphite-3) 88%, white 3%) !important;
+  --anye-tool-bg: color-mix(in srgb, var(--anye-graphite-2) 94%, white 2%) !important;
+  --anye-tool-bg-soft: color-mix(in srgb, var(--anye-graphite-2) 86%, white 4%) !important;
+  --anye-material-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0) 46%) !important;
+  --anye-material-rim: inset 0 1px 0 rgba(255, 255, 255, 0.032), inset 0 -1px 0 rgba(0, 0, 0, 0.16) !important;
+  --anye-material-rim-soft: inset 0 1px 0 rgba(255, 255, 255, 0.022) !important;
+
+  --neox-bg-canvas: var(--anye-graphite-0) !important;
+  --neox-bg-panel: var(--anye-graphite-2) !important;
+  --neox-bg-card: var(--anye-graphite-2) !important;
+  --neox-bg-muted: var(--anye-graphite-3) !important;
+  --neox-bg-elevated: var(--anye-graphite-4) !important;
+  --neox-bg-sunken: #101211 !important;
+  --neox-fg-primary: var(--anye-ink-1) !important;
+  --neox-fg-secondary: var(--anye-ink-2) !important;
+  --neox-fg-muted: var(--anye-ink-3) !important;
+  --neox-fg-hint: var(--anye-ink-4) !important;
+  --neox-line-soft: var(--anye-line-soft) !important;
+  --neox-line: var(--anye-line) !important;
+  --neox-line-strong: var(--anye-line-strong) !important;
+  --neox-primary-700: var(--anye-ink-0) !important;
+  --neox-primary-600: #b9beb8 !important;
+  --neox-primary-500: #8d958d !important;
+  --neox-primary-400: #767e76 !important;
+  --neox-primary-300: rgba(238, 242, 236, 0.22) !important;
+  --neox-primary-200: rgba(238, 242, 236, 0.16) !important;
+  --neox-primary-100: rgba(238, 242, 236, 0.095) !important;
+  --neox-primary-50: rgba(238, 242, 236, 0.056) !important;
+  --neox-primary-ring: rgba(238, 242, 236, 0.13) !important;
+
+  --neox-tool-file-bg: rgba(130, 164, 214, 0.145) !important;
+  --neox-tool-file-fg: #9fb8da !important;
+  --neox-tool-term-bg: rgba(139, 180, 154, 0.13) !important;
+  --neox-tool-term-fg: #a4c4ad !important;
+  --neox-tool-search-bg: rgba(203, 178, 118, 0.13) !important;
+  --neox-tool-search-fg: #c9b47d !important;
+  --neox-tool-db-bg: rgba(174, 150, 208, 0.115) !important;
+  --neox-tool-db-fg: #b9a9cf !important;
+  --neox-tool-doc-bg: rgba(149, 179, 190, 0.12) !important;
+  --neox-tool-doc-fg: #aac2c8 !important;
+
+  --atl-tool-card-bg: var(--anye-tool-bg) !important;
+  --atl-tool-card-border: var(--anye-line-soft) !important;
+  --atl-tool-card-shadow: var(--anye-material-rim-soft) !important;
+  --atl-code-line-bg: color-mix(in srgb, var(--anye-graphite-1) 84%, white 2%) !important;
+  --atl-shell-surface-bg: color-mix(in srgb, var(--anye-graphite-1) 86%, white 3%) !important;
+  --atl-shell-surface-border: rgba(238, 242, 236, 0.04) !important;
+  --atl-plan-row-active-bg: rgba(238, 242, 236, 0.072) !important;
+  --atl-plan-row-hover-bg: rgba(238, 242, 236, 0.046) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  --neox-shell-flat-divider: var(--anye-line-soft) !important;
+  --neox-shell-flat-rail-bg: var(--anye-graphite-1) !important;
+  --neox-shell-flat-sidebar-bg: rgba(18, 18, 20, 0.14) !important;
+  --neox-shell-flat-topbar-bg: #191919 !important;
+  --neox-shell-flat-main-bg: #191919 !important;
+  --neox-shell-flat-right-bg: #191919 !important;
+  --neox-shell-flat-composer-box-bg: var(--anye-composer-box-bg) !important;
+  --neox-shell-flat-composer-border: rgba(238, 242, 236, 0.078) !important;
+  --neox-shell-flat-composer-focus-border: rgba(238, 242, 236, 0.15) !important;
+  --neox-shell-flat-composer-radius: 20px !important;
+  --neox-shell-flat-composer-shadow: var(--anye-material-rim) !important;
+  --neox-shell-flat-composer-focus-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.042), 0 0 0 1px rgba(238, 242, 236, 0.035) !important;
+  --neox-shell-flat-topbar-shadow: none !important;
+  --neox-shell-flat-sidebar-shadow: inset -1px 0 0 rgba(238, 242, 236, 0.046) !important;
+  --neox-shell-flat-right-shadow: inset 1px 0 0 rgba(238, 242, 236, 0.046) !important;
+  --neox-topbar-material-bg: #191919 !important;
+  --neox-topbar-material-filter: none !important;
+  --neox-topbar-control-bg: rgba(238, 242, 236, 0.05) !important;
+  --neox-topbar-control-hover: rgba(238, 242, 236, 0.078) !important;
+  --neox-topbar-control-active: rgba(238, 242, 236, 0.118) !important;
+  --neox-topbar-control-border: rgba(238, 242, 236, 0.082) !important;
+  --neox-topbar-pop-bg: color-mix(in srgb, var(--anye-graphite-4) 88%, transparent) !important;
+  --neox-topbar-hairline: transparent !important;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card {
+  background: var(--anye-graphite-0) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__glass-card {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__work-title {
+  color: color-mix(in srgb, var(--anye-ink-1) 92%, white 8%) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 540 !important;
+  letter-spacing: -0.016em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo--lockup {
+  height: 16px !important;
+  opacity: 0.92 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle {
+  height: 30px !important;
+  padding: 2px !important;
+  background: color-mix(in srgb, var(--anye-graphite-4) 74%, transparent) !important;
+  border-color: rgba(238, 242, 236, 0.09) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.028), inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-thumb {
+  background: color-mix(in srgb, var(--anye-graphite-6) 82%, white 5%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), inset 0 -1px 0 rgba(0, 0, 0, 0.14) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn {
+  color: color-mix(in srgb, var(--anye-ink-3) 86%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active {
+  background: rgba(238, 242, 236, 0.07) !important;
+  color: var(--anye-ink-0) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick {
+  gap: 3px !important;
+  padding-bottom: 6px !important; /* 与下方项目区留一点间隔, 别 0 也别 14 */
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group {
+  border-radius: 8px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action {
+  color: color-mix(in srgb, var(--anye-ink-2) 78%, var(--anye-ink-4)) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 480 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action.is-active {
+  color: var(--anye-ink-1) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group:hover {
+  background: var(--anye-row-hover) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] {
+  background: var(--anye-row-active) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.028) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__bubble {
+  color: color-mix(in srgb, var(--anye-ink-3) 84%, var(--anye-ink-5)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__section-head__title {
+  color: color-mix(in srgb, var(--anye-ink-3) 78%, var(--anye-ink-4)) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 540 !important;
+  letter-spacing: 0.01em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-name {
+  color: var(--neox-fg-primary) !important;
+  font-size: calc(14px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 560 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-count,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-overflow-btn {
+  color: var(--neox-fg-secondary) !important;
+  font-weight: 450 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline {
+  --atl-content-max: min(1680px, 100% - 40px) !important;
+  color: var(--anye-ink-2) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-feed > .atl-row-clamp:first-child {
+  margin-top: 18px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header {
+  height: 42px !important;
+  background: transparent !important;
+  border-bottom-color: rgba(238, 242, 236, 0.044) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__text {
+  color: color-mix(in srgb, var(--anye-ink-1) 90%, var(--anye-ink-2)) !important;
+  font-size: calc(13.25px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.72 !important;
+  font-weight: 430 !important;
+  letter-spacing: -0.006em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__role {
+  color: var(--anye-ink-5) !important;
+  font-size: calc(11px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 620 !important;
+  letter-spacing: 0.045em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__time {
+  color: var(--anye-ink-5) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__icode,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-inline-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .md-inline-code {
+  background: rgba(238, 242, 236, 0.064) !important;
+  border-color: rgba(238, 242, 236, 0.055) !important;
+  color: color-mix(in srgb, var(--anye-ink-0) 88%, var(--anye-ink-2)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile,
+  .atl-search,
+  .atl-plan,
+  .atl-web,
+  .atl-thinking,
+  .atl-ask,
+  .atl-compact,
+  .atl-explore,
+  .atl-dag,
+  .atl-filelist,
+  .atl-net,
+  .atl-term,
+  .read-file-card,
+  .write-file-card,
+  .grep-file-card,
+  .search-files-card,
+  .search-tool-card,
+  .command-card,
+  .code-exec-card,
+  .tool-card
+),
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-code:not(:has(.atl-code__img)) {
+  background:
+    var(--anye-material-sheen),
+    var(--atl-tool-card-bg) !important;
+  border-color: var(--atl-tool-card-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--atl-tool-card-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__title,
+  .atl-cluster__title,
+  .atl-activity-child__title
+) {
+  color: color-mix(in srgb, var(--anye-ink-1) 88%, var(--anye-ink-2)) !important;
+  font-weight: 540 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__icon,
+  .atl-cluster__icon,
+  .atl-activity-child__icon
+) {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan {
+  padding: 10px 12px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__goal {
+  color: var(--anye-ink-1) !important;
+  font-size: calc(11.75px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 540 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content .atl-plan__row {
+  min-height: 28px !important;
+  color: color-mix(in srgb, var(--anye-ink-3) 86%, var(--anye-ink-4)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row.is-running .atl-plan__text {
+  color: var(--anye-ink-1) !important;
+  font-weight: 540 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-term {
+  background:
+    var(--anye-material-sheen),
+    var(--atl-shell-surface-bg) !important;
+  border-color: var(--atl-shell-surface-border) !important;
+  box-shadow: var(--anye-material-rim-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer {
+  padding-top: 8px !important;
+  padding-bottom: 14px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box {
+  background:
+    var(--anye-material-sheen),
+    var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) !important;
+  border-color: var(--neox-shell-flat-composer-border, var(--anye-line)) !important;
+  border-radius: var(--neox-shell-flat-composer-radius, 20px) !important;
+  box-shadow: var(--neox-shell-flat-composer-shadow, var(--anye-material-rim)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0) 46%),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 94%, white 3%) !important;
+  border-color: var(--neox-shell-flat-composer-focus-border, var(--anye-line-strong)) !important;
+  box-shadow: var(--neox-shell-flat-composer-focus-shadow, var(--anye-material-rim)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  border-bottom-color: rgba(238, 242, 236, 0.042) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  color: color-mix(in srgb, var(--anye-ink-1) 90%, var(--anye-ink-2)) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.56 !important;
+  font-weight: 410 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-mode-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: rgba(238, 242, 236, 0.052) !important;
+  border-color: rgba(238, 242, 236, 0.058) !important;
+  color: var(--anye-ink-2) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send {
+  background: color-mix(in srgb, var(--anye-ink-0) 15%, transparent) !important;
+  color: var(--anye-ink-0) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--anye-ink-0) 21%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock {
+  background:
+    var(--anye-material-sheen),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 94%, black 4%) !important;
+  border-color: rgba(238, 242, 236, 0.064) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--anye-material-rim-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0) 48%),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 92%, white 4%) !important;
+  border-color: rgba(238, 242, 236, 0.096) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__label,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__question {
+  color: color-mix(in srgb, var(--anye-ink-1) 92%, var(--anye-ink-2)) !important;
+  font-weight: 540 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__pulse {
+  background: color-mix(in srgb, var(--anye-ink-2) 56%, transparent) !important;
+  box-shadow: 0 0 0 4px rgba(238, 242, 236, 0.06) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__view-menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__new-menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__project-menu {
+  background:
+    var(--anye-material-sheen),
+    color-mix(in srgb, var(--anye-graphite-4) 88%, transparent) !important;
+  border-color: rgba(238, 242, 236, 0.084) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), var(--anye-material-rim-soft) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(126%) brightness(1.02) !important;
+  backdrop-filter: blur(26px) saturate(126%) brightness(1.02) !important;
+}
+
+/* Anye graphite editorial pass.
+ * Keep the flat left-right structure, but make the hierarchy feel designed:
+ * clearer gray steps, softer selection, quieter chrome, and one-layer content.
+ */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-graphite-0: #151515 !important;
+  --anye-graphite-1: #191919 !important;
+  --anye-graphite-2: #1e1e1e !important;
+  --anye-graphite-3: #242424 !important;
+  --anye-graphite-4: #2b2b2b !important;
+  --anye-graphite-5: #343434 !important;
+  --anye-graphite-6: #3f3f3f !important;
+  --anye-line-soft: rgba(245, 245, 245, 0.044) !important;
+  --anye-line: rgba(245, 245, 245, 0.07) !important;
+  --anye-line-strong: rgba(245, 245, 245, 0.12) !important;
+  --anye-row-hover: rgba(245, 245, 245, 0.046) !important;
+  --anye-row-active: rgba(245, 245, 245, 0.092) !important;
+  --anye-control-bg: rgba(245, 245, 245, 0.044) !important;
+  --anye-control-hover: rgba(245, 245, 245, 0.072) !important;
+  --anye-control-active: rgba(245, 245, 245, 0.104) !important;
+  --anye-composer-box-bg: #292929 !important;
+  --anye-tool-bg: #1d1d1d !important;
+  --anye-tool-bg-soft: #222222 !important;
+  --anye-material-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0) 54%) !important;
+  --anye-material-rim: inset 0 1px 0 rgba(255, 255, 255, 0.028), inset 0 -1px 0 rgba(0, 0, 0, 0.14) !important;
+  --anye-material-rim-soft: inset 0 1px 0 rgba(255, 255, 255, 0.018) !important;
+
+  --neox-bg-canvas: var(--anye-graphite-0) !important;
+  --neox-bg-panel: var(--anye-graphite-2) !important;
+  --neox-bg-card: var(--anye-graphite-1) !important;
+  --neox-bg-muted: var(--anye-graphite-3) !important;
+  --neox-bg-elevated: var(--anye-graphite-4) !important;
+  --neox-bg-sunken: #111312 !important;
+  --neox-fg-primary: #e5e5e1 !important;
+  --neox-fg-secondary: #c3c3be !important;
+  --neox-fg-muted: #949490 !important;
+  --neox-fg-hint: #70706c !important;
+  --neox-line-soft: var(--anye-line-soft) !important;
+  --neox-line: var(--anye-line) !important;
+  --neox-line-strong: var(--anye-line-strong) !important;
+
+  --atl-tool-card-bg: var(--anye-tool-bg) !important;
+  --atl-tool-card-border: var(--anye-line-soft) !important;
+  --atl-tool-card-shadow: var(--anye-material-rim-soft) !important;
+  --atl-code-line-bg: color-mix(in srgb, var(--anye-graphite-0) 86%, white 2%) !important;
+  --atl-shell-surface-bg: color-mix(in srgb, var(--anye-graphite-0) 88%, white 2%) !important;
+  --atl-shell-surface-border: rgba(245, 245, 245, 0.036) !important;
+  --atl-plan-row-active-bg: rgba(245, 245, 245, 0.06) !important;
+  --atl-plan-row-hover-bg: rgba(245, 245, 245, 0.038) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  --neox-shell-flat-divider: rgba(245, 245, 245, 0.05) !important;
+  --neox-shell-flat-rail-bg: var(--anye-graphite-1) !important;
+  --neox-shell-flat-sidebar-bg: var(--anye-graphite-2) !important;
+  --neox-shell-flat-topbar-bg: var(--anye-graphite-0) !important;
+  --neox-shell-flat-main-bg: var(--anye-graphite-0) !important;
+  --neox-shell-flat-right-bg: var(--anye-graphite-0) !important;
+  --neox-shell-flat-composer-box-bg: var(--anye-composer-box-bg) !important;
+  --neox-shell-flat-composer-border: rgba(245, 245, 245, 0.082) !important;
+  --neox-shell-flat-composer-focus-border: rgba(245, 245, 245, 0.145) !important;
+  --neox-shell-flat-composer-radius: 18px !important;
+  --neox-shell-flat-composer-shadow: var(--anye-material-rim) !important;
+  --neox-shell-flat-composer-focus-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.034), 0 0 0 1px rgba(245, 245, 245, 0.026) !important;
+  --neox-shell-flat-topbar-shadow: inset 0 -1px 0 var(--neox-shell-flat-divider) !important;
+  --neox-shell-flat-sidebar-shadow: inset -1px 0 0 var(--neox-shell-flat-divider) !important;
+  --neox-shell-flat-main-shadow: none !important;
+  --neox-shell-flat-right-shadow: inset 1px 0 0 var(--neox-shell-flat-divider) !important;
+  --neox-topbar-control-bg: rgba(245, 245, 245, 0.038) !important;
+  --neox-topbar-control-hover: rgba(245, 245, 245, 0.068) !important;
+  --neox-topbar-control-active: rgba(245, 245, 245, 0.105) !important;
+  --neox-topbar-control-border: rgba(245, 245, 245, 0.082) !important;
+  --neox-topbar-hairline: var(--neox-shell-flat-divider) !important;
+}
+
+/* glass-off: 顶栏=主区同色, 关掉 chrome 分割线 */
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell {
+  --neox-shell-flat-divider: transparent !important;
+  --neox-shell-flat-topbar-bg: var(--neox-shell-flat-main-bg) !important;
+  --neox-shell-flat-topbar-shadow: none !important;
+  --neox-shell-flat-sidebar-shadow: none !important;
+  --neox-shell-flat-right-shadow: none !important;
+  --neox-topbar-hairline: transparent !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__glass-card {
+  background: var(--anye-graphite-0) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar {
+  box-shadow: inset 0 -1px 0 var(--neox-shell-flat-divider) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-topbar {
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__work-title {
+  color: color-mix(in srgb, var(--neox-fg-primary) 94%, white 6%) !important;
+  font-size: calc(13.25px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 520 !important;
+  letter-spacing: -0.018em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo--lockup {
+  height: 15px !important;
+  opacity: 0.9 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle {
+  height: 29px !important;
+  min-width: 126px !important;
+  border-radius: 10px !important;
+  background: rgba(238, 242, 236, 0.04) !important;
+  border-color: rgba(238, 242, 236, 0.082) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-thumb {
+  height: 23px !important;
+  border-radius: 8px !important;
+  background: rgba(238, 242, 236, 0.122) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn {
+  height: 23px !important;
+  min-width: 59px !important;
+  padding: 0 12px !important;
+  color: color-mix(in srgb, var(--neox-fg-secondary) 70%, var(--neox-fg-hint)) !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  line-height: 23px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-btn.active {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 570 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn {
+  color: var(--neox-fg-muted) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active {
+  background: var(--anye-control-hover) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick {
+  gap: 2px !important;
+  padding-bottom: 6px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group {
+  border-radius: 7px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action {
+  color: color-mix(in srgb, var(--neox-fg-secondary) 74%, var(--neox-fg-hint)) !important;
+  font-size: calc(13.25px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 470 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action--primary {
+  color: color-mix(in srgb, var(--neox-fg-primary) 92%, var(--neox-fg-secondary)) !important;
+  font-weight: 530 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-icon,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__bubble {
+  color: color-mix(in srgb, var(--neox-fg-muted) 82%, var(--neox-fg-hint)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action-icon > svg,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-icon > svg,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__type-icon > svg,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__kind-dd-icon > svg {
+  width: 16px !important;
+  height: 16px !important;
+  stroke-width: 1.5 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group:hover {
+  background: var(--anye-row-hover) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__quick-action.is-active {
+  background: var(--anye-row-active) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.018) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__title {
+  color: var(--neox-fg-primary) !important;
+  font-size: calc(13.25px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-name {
+  color: var(--neox-fg-primary) !important;
+  font-size: calc(13.25px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 450 !important;
+  letter-spacing: 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__title {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 545 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-count,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-overflow-btn {
+  color: var(--neox-fg-secondary) !important;
+  font-size: calc(12.25px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 450 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__section-head__title {
+  color: color-mix(in srgb, var(--neox-fg-muted) 78%, var(--neox-fg-hint)) !important;
+  font-size: calc(13.25px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 520 !important;
+  letter-spacing: 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline {
+  --atl-content-max: min(1680px, 100% - 40px) !important;
+  color: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header {
+  height: 41px !important;
+  background: transparent !important;
+  border-bottom-color: var(--anye-line-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-feed > .atl-row-clamp:first-child {
+  margin-top: 16px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__text {
+  color: color-mix(in srgb, var(--neox-fg-primary) 88%, var(--neox-fg-secondary)) !important;
+  font-size: calc(13.1px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.68 !important;
+  font-weight: 410 !important;
+  letter-spacing: -0.008em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__role {
+  color: color-mix(in srgb, var(--neox-fg-muted) 64%, var(--neox-fg-hint)) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__time {
+  color: color-mix(in srgb, var(--neox-fg-hint) 82%, transparent) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile,
+  .atl-search,
+  .atl-plan,
+  .atl-web,
+  .atl-thinking,
+  .atl-ask,
+  .atl-compact,
+  .atl-explore,
+  .atl-dag,
+  .atl-filelist,
+  .atl-net,
+  .atl-term,
+  .read-file-card,
+  .write-file-card,
+  .grep-file-card,
+  .search-files-card,
+  .search-tool-card,
+  .command-card,
+  .code-exec-card,
+  .tool-card
+),
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-code:not(:has(.atl-code__img)) {
+  background:
+    var(--anye-material-sheen),
+    var(--atl-tool-card-bg) !important;
+  border-color: var(--atl-tool-card-border) !important;
+  border-radius: 11px !important;
+  box-shadow: var(--atl-tool-card-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__title,
+  .atl-cluster__title,
+  .atl-activity-child__title
+) {
+  color: var(--neox-fg-secondary) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.006em !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__desc,
+  .atl-tool__meta,
+  .atl-tool__time,
+  .atl-cluster__chips,
+  .atl-activity-child__meta
+) {
+  color: color-mix(in srgb, var(--neox-fg-muted) 78%, var(--neox-fg-hint)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__icon,
+  .atl-cluster__icon,
+  .atl-activity-child__icon
+) {
+  background: rgba(238, 242, 236, 0.058) !important;
+  color: var(--neox-fg-muted) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.022) !important;
+}
+
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan {
+  padding: 10px 12px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__goal {
+  font-size: calc(11.6px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 530 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content .atl-plan__row {
+  min-height: 27px !important;
+  color: color-mix(in srgb, var(--neox-fg-muted) 88%, var(--neox-fg-hint)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row.is-running {
+  background: var(--atl-plan-row-active-bg) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__row.is-running .atl-plan__text {
+  color: color-mix(in srgb, var(--neox-fg-primary) 90%, var(--neox-fg-secondary)) !important;
+  font-weight: 530 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-plan__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-tool__content .atl-plan__box {
+  width: 11px !important;
+  height: 11px !important;
+  border-radius: 4px !important;
+  background: rgba(238, 242, 236, 0.034) !important;
+  border-color: rgba(238, 242, 236, 0.112) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__head,
+  .atl-search__list,
+  .atl-explore__summary,
+  .tool-card-content,
+  .read-file-card-body,
+  .write-file-card-body
+) {
+  border-color: var(--anye-line-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-readfile__preview,
+  .atl-code__lines,
+  .atl-code__lines > span,
+  .read-file-code-preview,
+  .command-code-block
+) {
+  background: transparent !important;
+  border-color: var(--anye-line-soft) !important;
+  color: color-mix(in srgb, var(--neox-fg-secondary) 92%, var(--neox-fg-primary)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer {
+  padding-top: 7px !important;
+  padding-bottom: 13px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__composer .atl-composer .atl-composer__box {
+  background:
+    var(--anye-material-sheen),
+    var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) !important;
+  border-color: var(--neox-shell-flat-composer-border, var(--anye-line)) !important;
+  border-radius: var(--neox-shell-flat-composer-radius, 18px) !important;
+  box-shadow: var(--neox-shell-flat-composer-shadow, var(--anye-material-rim)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0) 48%),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 94%, white 3%) !important;
+  border-color: var(--neox-shell-flat-composer-focus-border, var(--anye-line-strong)) !important;
+  box-shadow: var(--neox-shell-flat-composer-focus-shadow, var(--anye-material-rim)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  border-bottom-color: rgba(238, 242, 236, 0.03) !important;
+  margin-bottom: 3px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  color: color-mix(in srgb, var(--neox-fg-primary) 88%, var(--neox-fg-secondary)) !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.54 !important;
+  font-weight: 405 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input::placeholder {
+  color: color-mix(in srgb, var(--neox-fg-muted) 76%, var(--neox-fg-hint)) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-mode-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: rgba(238, 242, 236, 0.044) !important;
+  border-color: rgba(238, 242, 236, 0.055) !important;
+  color: color-mix(in srgb, var(--neox-fg-secondary) 88%, var(--neox-fg-primary)) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send {
+  background: rgba(238, 242, 236, 0.13) !important;
+  color: var(--neox-fg-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.034) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send:hover:not(:disabled) {
+  background: rgba(238, 242, 236, 0.18) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: rgba(238, 242, 236, 0.052) !important;
+  color: var(--neox-fg-hint) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock {
+  background:
+    var(--anye-material-sheen),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 92%, black 3%) !important;
+  border-color: rgba(238, 242, 236, 0.07) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--anye-material-rim-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__label,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock__question {
+  color: color-mix(in srgb, var(--neox-fg-primary) 88%, var(--neox-fg-secondary)) !important;
+  font-weight: 530 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__view-menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__new-menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__project-menu {
+  background:
+    var(--anye-material-sheen),
+    color-mix(in srgb, var(--anye-graphite-4) 94%, black 2%) !important;
+  border-color: rgba(238, 242, 236, 0.092) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24), var(--anye-material-rim-soft) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(118%) brightness(1.01) !important;
+  backdrop-filter: blur(24px) saturate(118%) brightness(1.01) !important;
+}
+
+/* Final neutral guard: prevent Anye dark surfaces from drifting into green/cyan. */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-graphite-0: #151515 !important;
+  --anye-graphite-1: #191919 !important;
+  --anye-graphite-2: #1e1e1e !important;
+  --anye-graphite-3: #242424 !important;
+  --anye-graphite-4: #2b2b2b !important;
+  --anye-graphite-5: #343434 !important;
+  --anye-graphite-6: #3f3f3f !important;
+  --anye-line-soft: rgba(245, 245, 245, 0.044) !important;
+  --anye-line: rgba(245, 245, 245, 0.07) !important;
+  --anye-line-strong: rgba(245, 245, 245, 0.12) !important;
+  --anye-ink-0: #f0f0f0 !important;
+  --anye-ink-1: #e2e2e2 !important;
+  --anye-ink-2: #c2c2c2 !important;
+  --anye-ink-3: #949494 !important;
+  --anye-ink-4: #707070 !important;
+  --anye-ink-5: #565656 !important;
+  --anye-row-hover: rgba(245, 245, 245, 0.046) !important;
+  --anye-row-active: rgba(245, 245, 245, 0.092) !important;
+  --anye-control-bg: rgba(245, 245, 245, 0.044) !important;
+  --anye-control-hover: rgba(245, 245, 245, 0.072) !important;
+  --anye-control-active: rgba(245, 245, 245, 0.104) !important;
+  --anye-composer-box-bg: #262626 !important;
+  --anye-tool-bg: #1d1d1d !important;
+  --anye-tool-bg-soft: #222222 !important;
+
+  --neox-bg-canvas: var(--anye-graphite-0) !important;
+  --neox-bg-panel: var(--anye-graphite-2) !important;
+  --neox-bg-card: var(--anye-graphite-1) !important;
+  --neox-bg-muted: var(--anye-graphite-3) !important;
+  --neox-bg-elevated: var(--anye-graphite-4) !important;
+  --neox-bg-sunken: #111111 !important;
+  --neox-fg-primary: var(--anye-ink-1) !important;
+  --neox-fg-secondary: var(--anye-ink-2) !important;
+  --neox-fg-muted: var(--anye-ink-3) !important;
+  --neox-fg-hint: var(--anye-ink-4) !important;
+  --neox-fg-invert: #111111 !important;
+  --neox-line-soft: var(--anye-line-soft) !important;
+  --neox-line: var(--anye-line) !important;
+  --neox-line-strong: var(--anye-line-strong) !important;
+  --neox-primary-700: #f0f0f0 !important;
+  --neox-primary-600: #b8b8b8 !important;
+  --neox-primary-500: #8f8f8f !important;
+  --neox-primary-400: #777777 !important;
+  --neox-primary-300: rgba(245, 245, 245, 0.22) !important;
+  --neox-primary-200: rgba(245, 245, 245, 0.16) !important;
+  --neox-primary-100: rgba(245, 245, 245, 0.095) !important;
+  --neox-primary-50: rgba(245, 245, 245, 0.056) !important;
+  --neox-primary-ring: rgba(245, 245, 245, 0.13) !important;
+
+  --atl-tool-card-bg: var(--anye-tool-bg) !important;
+  --atl-tool-card-border: var(--anye-line-soft) !important;
+  --atl-shell-surface-bg: #1a1a1a !important;
+  --atl-shell-surface-border: rgba(245, 245, 245, 0.036) !important;
+  --atl-plan-row-active-bg: rgba(245, 245, 245, 0.06) !important;
+  --atl-plan-row-hover-bg: rgba(245, 245, 245, 0.038) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  --neox-shell-flat-divider: rgba(245, 245, 245, 0.05) !important;
+  --neox-shell-flat-rail-bg: var(--neox-bg-canvas) !important;
+  --neox-shell-flat-sidebar-bg: var(--neox-bg-canvas) !important;
+  --neox-shell-flat-topbar-bg: var(--neox-bg-canvas) !important;
+  --neox-shell-flat-main-bg: var(--neox-bg-canvas) !important;
+  --neox-shell-flat-right-bg: var(--neox-bg-canvas) !important;
+  --neox-shell-flat-composer-box-bg: var(--anye-composer-box-bg) !important;
+  --neox-shell-flat-composer-border: rgba(245, 245, 245, 0.082) !important;
+  --neox-shell-flat-composer-focus-border: rgba(245, 245, 245, 0.145) !important;
+  --neox-shell-flat-composer-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.026) !important;
+  --neox-shell-flat-composer-focus-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.032) !important;
+  --neox-topbar-control-bg: rgba(245, 245, 245, 0.038) !important;
+  --neox-topbar-control-hover: rgba(245, 245, 245, 0.068) !important;
+  --neox-topbar-control-active: rgba(245, 245, 245, 0.105) !important;
+  --neox-topbar-control-border: rgba(245, 245, 245, 0.082) !important;
+  --neox-topbar-hairline: var(--neox-shell-flat-divider) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell[data-mode="ide"] .ide-aipanel__composer .atl-composer .atl-composer__box {
+  background:
+    var(--anye-material-sheen),
+    var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) !important;
+  border-color: var(--neox-shell-flat-composer-border, var(--anye-line)) !important;
+  box-shadow: var(--neox-shell-flat-composer-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0) 48%),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 96%, white 2%) !important;
+  border-color: var(--neox-shell-flat-composer-focus-border, var(--anye-line-strong)) !important;
+  box-shadow: var(--neox-shell-flat-composer-focus-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-mode-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: var(--anye-control-bg) !important;
+  border-color: var(--neox-topbar-control-border, var(--anye-line)) !important;
+  color: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .view-mode-toggle-thumb {
+  background: var(--anye-control-active) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.026) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send {
+  background: rgba(245, 245, 245, 0.13) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"][data-plan-skin] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send:hover:not(:disabled) {
+  background: rgba(245, 245, 245, 0.18) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: rgba(245, 245, 245, 0.052) !important;
+  color: var(--neox-fg-hint) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock {
+  border-color: rgba(245, 245, 245, 0.064) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ask-dock {
+  background:
+    var(--anye-material-sheen),
+    color-mix(in srgb, var(--neox-shell-flat-composer-box-bg, var(--anye-composer-box-bg)) 92%, black 3%) !important;
+  box-shadow: var(--anye-material-rim-soft) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__view-menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__new-menu,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__project-menu {
+  background:
+    var(--anye-material-sheen),
+    color-mix(in srgb, var(--anye-graphite-4) 94%, black 2%) !important;
+  border-color: rgba(245, 245, 245, 0.092) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline :is(
+  .atl-tool__icon,
+  .atl-cluster__icon,
+  .atl-activity-child__icon,
+  .atl-plan__box
+) {
+  background: rgba(245, 245, 245, 0.052) !important;
+  border-color: rgba(245, 245, 245, 0.108) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --anye-brand-lockup-height: 20px !important;
+  /* 必须与 --neox-sidebar-row-pad-x 同值 — 会话左列才能和 folder/项目下拉垂直对齐 */
+  --anye-sidebar-session-pad-x: var(--neox-sidebar-row-pad-x, 8px) !important;
+  --anye-sidebar-material-bg: rgba(18, 18, 20, 0.14) !important;
+  --anye-sidebar-material-border: rgba(245, 245, 245, 0.06) !important;
+  --anye-sidebar-material-filter: none !important;
+  --anye-sidebar-material-shadow: none !important;
+  /* glass-off 左栏也走透底, 不再用实色 graphite 墙 */
+  --neox-shell-flat-sidebar-bg: rgba(18, 18, 20, 0.14) !important;
+  --neox-shell-flat-sidebar-filter: none !important;
+  --neox-shell-flat-rail-bg: rgba(18, 18, 20, 0.08) !important;
+  --neox-shell-flat-rail-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] {
+  --anye-sidebar-material-bg: rgba(18, 18, 20, 0.14) !important;
+  --anye-sidebar-material-border: rgba(245, 245, 245, 0.06) !important;
+  --anye-sidebar-material-filter: none !important;
+  --neox-shell-flat-sidebar-bg: rgba(18, 18, 20, 0.14) !important;
+  --neox-shell-flat-sidebar-filter: none !important;
+  --neox-shell-flat-rail-bg: rgba(18, 18, 20, 0.08) !important;
+  --neox-shell-flat-rail-filter: none !important;
+}
+
+/* 打穿 html/body/shell — 否则左栏半透也只看到实色底 */
+:root[data-theme-pack="anye"][data-theme="dark"],
+:root[data-theme-pack="anye"][data-theme="dark"] body,
+:root[data-theme-pack="anye"][data-theme="dark"] #root,
+:root[data-theme-pack="anye"][data-theme="dark"] .app-root,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-page,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-shell,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell-host {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  --shell-tray-bg: transparent !important;
+  isolation: auto !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::before {
+  background: transparent !important;
+  background-image: none !important;
+  opacity: 0 !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__left {
+  justify-content: flex-start !important;
+  gap: 10px !important;
+}
+
+/* Win 展开侧栏: logo+字标靠左、开关靠右, 不能被上面这条 flex-start / 居中钉死. */
+:root[data-theme-pack="anye"][data-theme="dark"][data-platform="win32"] .neox-shell:not(.is-sidebar-collapsed) .neox-topbar__left {
+  justify-content: space-between !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__brand,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__brand--home {
+  padding: 2px 8px 2px 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo--lockup,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-topbar__logo--lockup {
+  height: var(--anye-brand-lockup-height) !important;
+  opacity: 0.96 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar {
+  background: var(--anye-sidebar-material-bg) !important;
+  background-image: none !important;
+  border-right: 0 !important;
+  box-shadow: none !important;
+  /* 绝不用 CSS blur 假糊 — 系统 vibrancy 才是真毛玻璃 */
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 主内容保持实色, 只有左栏透 vibrancy */
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main {
+  background: var(--neox-shell-flat-main-bg, var(--neox-bg-card, #1e1e1e)) !important;
+  background-image: none !important;
+}
+
+/* 顶栏与主内容同色 — 不要更深一截 / 半透加深 */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --neox-shell-flat-topbar-bg: var(--neox-shell-flat-main-bg, var(--neox-bg-card, #191919)) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__topbar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-topbar {
+  background: var(--neox-shell-flat-main-bg, var(--neox-bg-card, #191919)) !important;
+  background-color: var(--neox-shell-flat-main-bg, var(--neox-bg-card, #191919)) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item {
+  /* 只锁左垫, 右保持 8 — padding-inline 会把右也改成同值, 且曾经用 10 把 <> 顶出 icon 列 */
+  padding-left: var(--neox-sidebar-row-pad-x, 8px) !important;
+  padding-right: 8px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__group-overflow {
+  padding: 5px var(--anye-sidebar-session-pad-x) 7px var(--anye-sidebar-session-pad-x) !important;
+}
+
+/* Edit diff result card: single graphite surface with clear red/green rails. */
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-edit-diff-card {
+  --neox-edit-diff-card-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.01)),
+    rgba(31, 31, 31, 0.965);
+  --neox-edit-diff-card-border: rgba(245, 245, 245, 0.102);
+  --neox-edit-diff-card-head-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008)),
+    rgba(38, 38, 38, 0.82);
+  --neox-edit-diff-card-code-bg: rgba(16, 16, 16, 0.80);
+  --neox-edit-diff-card-row-border: rgba(245, 245, 245, 0.034);
+  --neox-edit-diff-icon-bg: rgba(245, 245, 245, 0.055);
+  --neox-edit-diff-icon-fg: rgba(238, 238, 234, 0.78);
+  --neox-edit-diff-gutter-bg: rgba(245, 245, 245, 0.042);
+  --neox-edit-diff-add-bg: rgba(41, 184, 97, 0.16);
+  --neox-edit-diff-del-bg: rgba(235, 74, 69, 0.19);
+  --neox-edit-diff-add-rail: #39d879;
+  --neox-edit-diff-del-rail: #ff4d49;
+  --neox-edit-diff-add-fg: #a8efbe;
+  --neox-edit-diff-del-fg: #ffb1ae;
+  --neox-edit-diff-add-gutter: #78eba2;
+  --neox-edit-diff-del-gutter: #ff7b76;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.048) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-edit-diff-card__action {
+  background: rgba(245, 245, 245, 0.052) !important;
+  border-color: rgba(245, 245, 245, 0.092) !important;
+  color: var(--neox-fg-secondary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-edit-diff-card__action:hover {
+  background: rgba(245, 245, 245, 0.082) !important;
+  border-color: rgba(245, 245, 245, 0.14) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-edit-diff-card__action--primary {
+  background: rgba(245, 245, 245, 0.11) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .neox-sidebar {
+  background: var(--neox-ide-plane, var(--neox-shell-flat-sidebar-bg)) !important;
+  background-image: none !important;
+  border-right: 1px solid var(--neox-ide-divider, transparent) !important;
+  box-shadow: var(--neox-shell-flat-sidebar-shadow) !important;
+  -webkit-backdrop-filter: var(--neox-shell-flat-sidebar-filter) !important;
+  backdrop-filter: var(--neox-shell-flat-sidebar-filter) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-workspace,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-workspace__main,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .editor-content,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .editor-pane:not(.media-viewer),
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .editor-view-container,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .code-editor-container,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .monaco-editor,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .monaco-editor-background,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .monaco-editor .margin,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .monaco-diff-editor {
+  background: var(--neox-shell-flat-main-bg) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-side__head,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-side__ws-bar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-welcome-host__tabs-row,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .editor-tabs-bar,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .editor-tabs-actions {
+  height: var(--neox-ide-chrome-height, 34px) !important;
+  min-height: var(--neox-ide-chrome-height, 34px) !important;
+  background: transparent !important;
+  background-image: none !important;
+  border-bottom: 1px solid var(--neox-ide-chrome-divider, var(--neox-shell-flat-divider)) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .editor-tabs-bar::after,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-side__head::after,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell[data-mode="ide"] .ide-side__ws-bar::after {
+  content: none !important;
+  display: none !important;
+}
+
+html[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar,
+html[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+html[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__topbar,
+html[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-topbar {
+  background: #191919 !important;
+  background-color: #191919 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main,
+html[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell__main {
+  background: #191919 !important;
+  background-color: #191919 !important;
+  background-image: none !important;
+}
+
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-ask,
+:root[data-theme-pack="anye"] .agent-timeline .atl-ask {
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 7%, var(--neox-bg-base, #1b1b1b)) !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-ask.is-waiting,
+:root[data-theme-pack="anye"] .agent-timeline .atl-ask.is-waiting {
+  border-radius: 11px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline .atl-ask.atl-ask--settled,
+:root[data-theme-pack="anye"][data-theme="light"] .agent-timeline .atl-ask.atl-ask--settled,
+:root[data-theme-pack="anye"] .agent-timeline .atl-ask.atl-ask--settled {
+  background: none !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-left: 10px !important;
+}

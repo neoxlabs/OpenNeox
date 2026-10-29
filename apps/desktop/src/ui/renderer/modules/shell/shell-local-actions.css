@@ -1,0 +1,78 @@
+/* 侧栏底缘 / 图标栏底部的本地入口行。
+ *
+ * 这里是"安静区": 平时不抢眼, 但永远在同一个位置找得到。所以是一条 30px 的行,
+ * 上方一道发丝线跟会话列表分开, 按钮全是 ghost 态, 只有悬停时才浮出底色。 */
+
+.neox-shell-local-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+
+/* 齿轮推到行尾。这一行两头各占一边, 理由见 LocalShellActions.tsx 顶上的说明 ——
+ * 简单说: 设置键的位置要跨发行版稳定在右下角, 挤在左端会读成装饰而不是按钮。 */
+.neox-shell-local-actions:not(.is-column) .neox-shell-local-action.is-trailing {
+  margin-left: auto;
+}
+
+/* 带文字的主入口: 不再是正方形图标键, 宽度跟着文字走。 */
+.neox-shell-local-action.is-labelled {
+  width: auto;
+  justify-items: center;
+  grid-auto-flow: column;
+  gap: 8px;
+  padding: 0 10px;
+  color: var(--neox-fg-secondary);
+}
+
+.neox-shell-local-action__label {
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* 折叠成图标栏时同一行改成一列, 宽度跟着栏走。
+ * 两个选择器都留着: 挂载点显式传 layout="column" 走 .is-column, 而图标栏内部
+ * 任何复用这套按钮的地方不传也能自动收窄。 */
+.neox-shell-local-actions.is-column,
+.neox-iconrail .neox-shell-local-actions {
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.neox-shell-local-action {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  /* 不用 fg-hint。hint 是给"读到了也不用管"的辅助信息的 (时间戳、计数),
+   * 而这一行是设置的唯一常驻入口 —— 淡到要找才看得见, 等于没有入口。
+   * secondary 比上面的导航项低一档, 安静区的克制还在, 但确实读得到。 */
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  transition: color var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease),
+              background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+
+.neox-shell-local-action:hover {
+  color: var(--neox-fg-primary);
+  background: var(--neox-bg-hover, color-mix(in srgb, var(--neox-fg-primary) 10%, transparent));
+}
+
+.neox-shell-local-action:focus-visible {
+  outline: 2px solid var(--neox-primary-500);
+  outline-offset: 1px;
+}
+
+.neox-shell-local-action svg {
+  width: 15px;
+  height: 15px;
+}

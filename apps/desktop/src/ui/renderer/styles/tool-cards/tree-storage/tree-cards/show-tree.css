@@ -1,0 +1,359 @@
+/* ==================== Show Tree Card ==================== */
+.show-tree-body {
+  padding: 0;
+}
+
+.show-tree-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.show-tree-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.show-tree-card.loading {
+  animation: none;
+}
+
+.show-tree-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.show-tree-header:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+}
+
+/* Folder icon color in tree card header */
+.show-tree-header>.search-tool-icon-box svg {
+  color: #f59e0b;
+}
+
+.show-tree-path-inline {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+/* 左侧橙色图标盒子 */
+.show-tree-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #fff4e5;
+  color: #f4b740;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.show-tree-icon-box svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 新增：网格布局 */
+.show-tree-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.show-tree-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.show-tree-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.show-tree-icon svg {
+  width: 11px;
+  height: 11px;
+  color: #3b82f6;
+}
+
+.show-tree-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.show-tree-path {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: #1f2937;
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 描述文字 */
+.show-tree-desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #a0a9b7;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.01em;
+}
+
+.show-tree-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-tree-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.show-tree-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.show-tree-stat .stat-value {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  color: #1f2937;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.show-tree-stat .stat-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #b0b8c6;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* 新增：操作按钮区域 */
+.show-tree-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.show-tree-stat.folders {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.show-tree-stat.files {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.show-tree-status-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.show-tree-status-badge.loading {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.show-tree-status-badge.completed {
+  color: #d18810;
+  background: #fff6e5;
+  border: 1px solid #f3deb7;
+}
+
+.show-tree-status-badge.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.show-tree-status {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.show-tree-status.loading {
+  color: var(--gold-600);
+  background: rgba(var(--gold-rgb), 0.1);
+}
+
+.show-tree-status.completed {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.show-tree-status.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.show-tree-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.show-tree-collapse-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.show-tree-collapse-btn:hover {
+  color: var(--text-primary);
+}
+
+.show-tree-collapse-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.show-tree-collapse-btn:not(.collapsed) svg {
+  transform: none;
+}
+
+.show-tree-body {
+  border-top: 1px solid var(--border-subtle);
+  padding: 12px;
+  background: var(--bg-code);
+}
+
+.show-tree-path-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.show-tree-path-row svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.show-tree-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.show-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.show-tree-item:hover {
+  background: var(--bg-hover);
+}
+
+.show-tree-item.folder {
+  color: #3b82f6;
+}
+
+.show-tree-item.file {
+  color: var(--text-secondary);
+}
+
+.show-tree-item-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.show-tree-item-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.show-tree-item-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-tree-item-size {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.show-tree-more {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 4px 8px;
+}
+
+/* ==================== Light Theme Overrides ==================== */
+:root[data-theme="light"] .show-tree-card {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+:root[data-theme="light"] .show-tree-header:hover {
+  background: rgba(15, 23, 42, 0.05);
+}

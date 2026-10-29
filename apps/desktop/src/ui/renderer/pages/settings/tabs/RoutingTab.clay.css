@@ -1,0 +1,208 @@
+
+/* 图标方块: 28px 软底 + 16px 线条 */
+.rt3 .rt3-ico {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.rt3 .rt3-ico svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.5;
+}
+
+/* 启用路由: 一张发丝边卡, 一行 */
+.rt3 .rt3-enable.nx-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+.rt3 .rt3-enable .nx-row {
+  min-height: 52px;
+  padding: 10px 16px;
+}
+.rt3 .rt3-state {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--neox-fg-muted);
+}
+
+/* 路由列表标题行 */
+.rt3 .rt-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 22px 2px 10px;
+}
+.rt3 .rt-list-head h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+/* 路由卡: 头一行 (图标 + 名字/策略·家数 + 编辑删除) + 下面一排服务商节点 */
+.rt3 .rt-card {
+  padding: 12px 16px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+.rt3 .rt-card + .rt-card {
+  margin-top: 10px;
+}
+.rt3 .rt-card.is-idle {
+  opacity: 0.6;
+}
+.rt3 .rt-card__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+}
+.rt3 .rt-card__info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rt3 .rt-card__alias {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rt3 .rt-card__sub {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.rt3 .rt-card__acts {
+  display: inline-flex;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+.rt3 .rt-card__acts button {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.rt3 .rt-card__acts button:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-primary);
+}
+.rt3 .rt-card__acts button.danger:hover {
+  color: #c2492f;
+}
+.rt3 .rt-card__acts svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.5;
+}
+
+/* 服务商节点: 一排胶囊, 上面一条线跟头部分开 */
+.rt3 .rt-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  box-shadow: inset 0 1px 0 var(--neox-line-subtle);
+}
+.rt3 .rt-flow__none {
+  font-size: 12px;
+  color: var(--neox-fg-hint);
+}
+.rt3 .rt-flow__arrow {
+  font-size: 12px;
+  color: var(--neox-fg-hint);
+}
+.rt3 .rt-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  font-size: 12px;
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+}
+.rt3 .rt-node > b {
+  font-weight: 600;
+  color: var(--neox-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.rt3 .rt-node__name {
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.rt3 .rt-node__model {
+  color: var(--neox-fg-muted);
+}
+.rt3 .rt-node > em {
+  font-style: normal;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+.rt3 .rt-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: 0 0 6px;
+  background: var(--neox-fg-hint);
+}
+.rt3 .rt-dot--ok { background: var(--neox-success, #3c9d6b); }
+.rt3 .rt-dot--warn { background: var(--neox-warning, #c98a1b); }
+.rt3 .rt-dot--bad { background: #c2492f; }
+
+/* 没有路由: 虚线卡, 整块可点 */
+.rt3 .rt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 24px 16px;
+  border: 1px dashed var(--neox-line-subtle);
+  border-radius: 16px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.rt3 .rt-empty img {
+  width: 96px;
+  height: auto;
+  pointer-events: none;
+}
+.rt3 .rt-empty__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.rt3 .rt-empty__desc {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}

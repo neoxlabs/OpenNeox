@@ -1,0 +1,129 @@
+/* 界面页 (UI 3.0 陶土, set-appearance3) —— 零 !important
+ * 作用域类 .th3 挂在页面根上; 选中态背景走 --nx-selected-bg (主题包里有 !important 钉住的灰底) */
+
+/* 分组标题: 卡外上方, 13px/600 */
+.th3 .th3-section-title {
+  margin: 24px 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+/* 分组卡: 圆角 16, 发丝边, 行间细分隔 */
+.th3 .th3-group {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+.th3 .th3-group .theme-surface-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 16px;
+  box-shadow: none;
+  text-align: left;
+}
+.th3 .th3-group .theme-surface-card__copy {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+.th3 .th3-group .theme-surface-card > :last-child:not(.theme-surface-card__copy) { margin-left: auto; flex: none; }
+.th3 .th3-group > .theme-surface-card + .theme-surface-card,
+.th3 .th3-group > .theme-perf-details,
+.th3 .th3-group .theme-perf-details > .theme-surface-card {
+  border-top: 1px solid var(--neox-line-subtle);
+}
+
+/* 行首软方块 + 线条图标 */
+.th3 .th3-ico {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-primary);
+}
+.th3 .th3-ico svg {
+  width: 16px;
+  height: 16px;
+}
+
+.th3 .theme-surface-card__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.th3 .theme-surface-card__desc {
+  color: var(--neox-fg-muted);
+}
+
+/* 分段控件: 灰底胶囊, 选中段是白色浮起块 (不用实心蓝) */
+.th3 .theme-surface-toggle {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.th3 .theme-surface-toggle__btn {
+  border-radius: 999px;
+  color: var(--neox-fg-muted);
+}
+.th3 .theme-surface-toggle__btn.is-active {
+  --nx-selected-bg: var(--neox-bg-card);
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 0 0 1px var(--neox-line-subtle);
+}
+
+/* 主题区标题 */
+.th3 .th3-head {
+  margin-top: 28px;
+}
+.th3 .th3-head .theme-appearance-head__copy h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+/* 「主题」标题到第一组「基础」原来 18 + 父级 gap 16 = 34, 两行标题像断开; 只留 gap */
+.th3 .th3-head + .theme-pack-category { margin-top: 0; }
+
+/* 主题卡: 大图 + 名字 + 一句话, 两列起 */
+.th3 .theme-pack-grid {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+.th3 .theme-pack-card {
+  padding: 8px 8px 12px;
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: 0 0 0 1px var(--neox-line-subtle);
+  transition: box-shadow 120ms ease;
+}
+.th3 .theme-pack-card:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--clay-blue, #2F6BFF) 35%, var(--neox-line-subtle)); }
+.th3 .theme-pack-card.is-active { box-shadow: 0 0 0 1.5px var(--clay-blue, #2F6BFF); border-radius: 16px; }
+.th3 .theme-pack-card__art,
+.th3 .theme-pack-card.is-active .theme-pack-card__art {
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--neox-line-subtle);
+}
+.th3 .theme-pack-card__name { margin-top: 10px; padding: 0 6px; font-size: 13px; font-weight: 600; }
+.th3 .theme-pack-card__tagline { margin-top: 2px; padding: 0 6px; font-size: 12px; color: var(--neox-fg-muted); }
+.th3 .theme-pack-card__badge {
+  top: 8px;
+  right: 8px;
+  padding: 2px 9px;
+  background: var(--clay-blue, #2F6BFF);
+  color: #fff;
+}
+
+.th3 .theme-perf-details__summary {
+  padding: 10px 16px;
+}

@@ -1,0 +1,152 @@
+/* 切模式提示 (s2-K) —— 零 !important */
+
+/* ---------- 胶囊: 顶部居中一条, 36 高 ---------- */
+.msn-pill {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 6px 0 14px;
+  border-radius: 999px;
+  background: var(--neox-bg-card, #FBF9F6);
+  box-shadow: 0 6px 20px rgba(60, 40, 20, 0.10), 0 0 0 1px var(--neox-line-subtle);
+  font-size: 13px;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  animation: msn-drop 180ms ease-out;
+}
+.msn-pill__spark {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--clay-blue, #2F6BFF);
+}
+.msn-pill__spark svg { width: 16px; height: 16px; }
+.msn-pill__undo {
+  height: 26px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.msn-pill__undo:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+
+/* ---------- 第一次: 模式条下面一张说明卡 ---------- */
+.msn-card {
+  position: fixed;
+  top: 52px;
+  left: 96px;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  padding: 16px 16px 14px 18px;
+  border-radius: 16px;
+  background: var(--neox-bg-card, #FBF9F6);
+  box-shadow: 0 12px 32px rgba(60, 40, 20, 0.12), 0 0 0 1px var(--neox-line-subtle);
+  animation: msn-drop 200ms ease-out;
+}
+.msn-card__chips {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: none;
+}
+/* 三块「泥签」: 软色底 + 一点厚度, 跟陶土模式标签同一个意思 */
+.msn-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 84px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #4A3B2C;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 2px 0 rgba(0, 0, 0, 0.07);
+}
+.msn-chip svg { width: 14px; height: 14px; flex: none; }
+.msn-chip.is-work { background: #F2DDB9; }
+.msn-chip.is-code { background: #DCD3F2; color: #3D3466; }
+.msn-chip.is-pilot { background: #CFE7DC; color: #2D4A3E; }
+
+.msn-card__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.msn-card__body strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.msn-card__body p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--neox-fg-muted);
+}
+.msn-card__acts {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 8px;
+}
+.msn-card__acts button {
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.msn-card__undo {
+  border: 0;
+  background: transparent;
+  color: var(--neox-fg-muted);
+}
+.msn-card__undo:hover { color: var(--neox-fg-primary); }
+.msn-card__ok {
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--neox-bg-card, #fff);
+  color: var(--neox-fg-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.msn-card__ok:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, var(--neox-bg-card, #fff));
+}
+
+@keyframes msn-drop {
+  from { opacity: 0; translate: 0 -6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* 「之后」: 新选中的那段短暂亮一下 —— 钴蓝淡圈呼一下就退 */
+.neox-mode-seg__btn.is-flash {
+  animation: msn-flash 900ms ease-out;
+}
+@keyframes msn-flash {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay-blue, #2F6BFF) 45%, transparent); }
+  100% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--clay-blue, #2F6BFF) 0%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msn-pill, .msn-card, .neox-mode-seg__btn.is-flash { animation: none; }
+}

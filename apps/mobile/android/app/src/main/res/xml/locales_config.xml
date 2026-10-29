@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 单应用语言 (Android 13+ 设置 → 应用 → 语言): 界面只有中文和英文两套 (core/i18n/tr.dart) -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="zh-CN" />
+    <locale android:name="en" />
+</locale-config>

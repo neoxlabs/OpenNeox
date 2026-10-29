@@ -1,0 +1,4349 @@
+/* 字号一律 calc(Npx * var(--nx-fs-scale, 1)) —— 死值 + !important 会顶掉设置里的
+ * 「字号」档位, 让对话正文不跟着放大, 层级倒过来。详见 anye-flat.css 顶部的说明。 */
+
+
+/* ============================================================
+ *  Tint level — 16 张包统一口径
+ * ============================================================ */
+:root[data-theme-pack][data-theme="dark"] {
+  --pack-tint:        rgba(255, 255, 255, 0.05);
+  --pack-tint-strong: rgba(255, 255, 255, 0.10);
+  --pack-tint-card:   rgba(255, 255, 255, 0.08);
+  --pack-edge:        rgba(255, 255, 255, 0.14);
+  --pack-edge-strong: rgba(255, 255, 255, 0.24);
+  --pack-shadow:      0 8px 24px rgba(0, 0, 0, 0.40);
+
+  --neox-bg-card:     rgba(255, 255, 255, 0.05) !important;
+  --neox-bg-muted:    rgba(255, 255, 255, 0.04) !important;
+  --neox-bg-hover:    rgba(255, 255, 255, 0.08) !important;
+  --neox-bg-elevated: rgba(255, 255, 255, 0.06) !important;
+  --neox-bg-sunken:   rgba(0, 0, 0, 0.20) !important;
+  /* legacy alias */
+  --bg-card:          rgba(255, 255, 255, 0.05) !important;
+  --bg-muted:         rgba(255, 255, 255, 0.04) !important;
+  --bg-hover:         rgba(255, 255, 255, 0.08) !important;
+  --bg-elevated:      rgba(255, 255, 255, 0.06) !important;
+  --bg-tertiary:      rgba(0, 0, 0, 0.20) !important;
+}
+:root[data-theme-pack][data-theme="light"] {
+  /* QQ 公式 v2: light 主题必须是“奶白雾”主导，而不是被壁纸染成蓝紫灰。
+   * 提高白 tint / 降低冷灰线条，让大浮卡和输入卡都更像 QQ 的浅色磨砂层。 */
+  --pack-tint:        rgba(255, 255, 255, 0.58);
+  --pack-tint-strong: rgba(255, 255, 255, 0.68);
+  --pack-tint-card:   rgba(255, 255, 255, 0.78);
+  --pack-edge:        rgba(15, 23, 42, 0.055);
+  --pack-edge-strong: rgba(15, 23, 42, 0.10);
+  --pack-shadow:      0 18px 48px rgba(36, 42, 70, 0.12), 0 2px 10px rgba(36, 42, 70, 0.05);
+
+  --neox-bg-card:     rgba(255, 255, 255, 0.72) !important;
+  --neox-bg-muted:    rgba(255, 255, 255, 0.42) !important;
+  --neox-bg-hover:    rgba(15, 23, 42, 0.045) !important;
+  --neox-bg-elevated: rgba(255, 255, 255, 0.82) !important;
+  --neox-bg-sunken:   rgba(15, 23, 42, 0.035) !important;
+  /* legacy alias */
+  --bg-card:          rgba(255, 255, 255, 0.72) !important;
+  --bg-muted:         rgba(255, 255, 255, 0.42) !important;
+  --bg-hover:         rgba(15, 23, 42, 0.045) !important;
+  --bg-elevated:      rgba(255, 255, 255, 0.82) !important;
+  --bg-tertiary:      rgba(15, 23, 42, 0.035) !important;
+}
+
+/* 主题包保留系统 antialiasing。全局 subpixel 会让中文在玻璃背景上发虚、边缘发彩。 */
+:root[data-theme-pack] .atl-msg__text,
+:root[data-theme-pack] .atl-msg__text .markdown-content,
+:root[data-theme-pack] .atl-msg__text .md-paragraph,
+:root[data-theme-pack] .atl-msg__text li,
+:root[data-theme-pack] .ide-aipanel__feed .atl-msg__text,
+:root[data-theme-pack] .ide-aipanel__feed .markdown-content {
+  font-weight: 400 !important;
+}
+/* timeline 副字 (Execute shell × N / 思考中 summary / 时长 / 时间戳) — 也微加 */
+:root[data-theme-pack] .atl-activity__summary,
+:root[data-theme-pack] .atl-activity__elapsed,
+:root[data-theme-pack] .atl-msg__role,
+:root[data-theme-pack] .atl-msg__time {
+  font-weight: 500 !important;
+}
+/* sidebar / 通用文本 — 微加重保持跟 timeline 一致 */
+:root[data-theme-pack] .markdown-content,
+:root[data-theme-pack] .md-paragraph,
+:root[data-theme-pack] .ide-sidebar .file-tree-item,
+:root[data-theme-pack] .atl-composer__input,
+:root[data-theme-pack] .chat-messages,
+:root[data-theme-pack] .neox-session-item,
+:root[data-theme-pack] .neox-sidebar {
+  font-weight: 400 !important;
+}
+/* 标题加重 — 700 → 700 保持但确保 (legacy 可能用 var(--neox-fw-semibold)=600 不够) */
+:root[data-theme-pack] .markdown-content h1,
+:root[data-theme-pack] .markdown-content h2,
+:root[data-theme-pack] .markdown-content h3,
+:root[data-theme-pack] .markdown-content .md-heading {
+  font-weight: 700 !important;
+}
+/* 副字 (Monday 时间戳 / Execute shell 等次级) — 400 → 500 */
+:root[data-theme-pack] .atl-msg__time,
+:root[data-theme-pack] .atl-msg__role,
+:root[data-theme-pack] .atl-msg__footer-time,
+:root[data-theme-pack] .atl-activity__summary,
+:root[data-theme-pack] .atl-activity__elapsed,
+:root[data-theme-pack] .atl-activity__label,
+:root[data-theme-pack] .atl-tool__time,
+:root[data-theme-pack] .ide-side__head-title,
+:root[data-theme-pack] .ide-side__ws-bar-name {
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+ *  根容器 — 大底卡承载 wallpaper + pattern
+ *  html / body / #root 必须 transparent, 让 .neox-shell 的 wallpaper 显出来
+ * ============================================================ */
+:root[data-theme-pack] body,
+:root[data-theme-pack] #root,
+:root[data-theme-pack] .app-root,
+:root[data-theme-pack] .workspace-page,
+:root[data-theme-pack] .workspace-shell,
+:root[data-theme-pack] .neox-shell-host {
+  background: transparent !important;
+}
+
+html:root[data-theme-pack][data-theme="light"][data-theme] .neox-shell.neox-shell .neox-shell__right.neox-shell__right--surface-slot.neox-shell__right--surface-slot {
+  background-color: var(--neox-bg-canvas) !important;
+}
+
+:root[data-theme-pack] .neox-shell {
+  background: transparent !important;
+  --shell-tray-bg: transparent;
+  position: relative;
+  isolation: isolate;
+}
+
+:root[data-theme-pack] .neox-shell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  z-index: 0;
+  pointer-events: none;
+  /* 上层 pattern (轻), 下层 wallpaper (重) — 顺序: 越前面越上 */
+  background-image:
+    var(--theme-pack-overlay, none),
+    var(--wallpaper-image, none);
+  background-size:
+    auto,
+    cover;
+  background-position:
+    0 0,
+    center;
+  background-repeat:
+    repeat,
+    no-repeat;
+  background-blend-mode:
+    screen,
+    normal;
+  opacity: 0.95;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell::before {
+  background-blend-mode:
+    multiply,
+    normal;
+  opacity: 0.95;
+}
+
+:root[data-theme-pack] .neox-shell {
+  --neox-glass-margin: 4px;
+  --neox-glass-radius: 8px;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+/* topbar 跟 shell 同宽, 不需要任何 width/margin trick */
+:root[data-theme-pack] .neox-shell__topbar,
+:root[data-theme-pack] .neox-topbar {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* wallpaper 层加圆角 — 让 macOS 窗口原生 round 不被它遮掉 */
+:root[data-theme-pack] .neox-shell::before {
+  border-radius: var(--neox-glass-radius, 10px);
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell {
+  /* 浅色主题给 wallpaper 补一层暖白/蓝白底，削弱底图对玻璃的染色。 */
+  --neox-glass-margin: 6px;
+  --neox-glass-radius: 12px;
+}
+
+/* ============================================================
+ *  Glass OFF — 顶栏开关一键关闭白磨砂浮卡 (直接显示 wallpaper)
+ *  用户痛点: 有时想看清壁纸图案 / 截图分享主题色, 不要那层雾.
+ *  顶栏 GlassToggle 写 :root[data-glass-off], 整层浮卡 + backdrop 立即消失.
+ * ============================================================ */
+:root[data-glass-off][data-theme-pack] .neox-shell::after {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22) !important;
+}
+:root[data-glass-off][data-theme-pack][data-theme="light"] .neox-shell::after {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(15, 23, 42, 0.05) !important;
+}
+
+/* 拖动 splitter 时关掉浮卡 backdrop-filter — blur+saturate+noise 整窗每帧重绘太贵,
+ * 是用户报"surface 拖不跟随鼠标"的真因. 拖完 .is-resizing 移除自动恢复. */
+:root[data-theme-pack] .neox-shell.is-resizing::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack] .neox-shell::after {
+  content: '';
+  position: absolute;
+  top: var(--neox-topbar-height, 44px);   /* 兜底必须 = token 值 44px */
+  left: var(--neox-glass-margin, 8px);
+  right: var(--neox-glass-margin, 8px);
+  bottom: var(--neox-glass-margin, 8px);
+  z-index: 1;
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: var(--neox-glass-radius, 10px);
+  -webkit-backdrop-filter: blur(12px) saturate(165%);
+  backdrop-filter: blur(12px) saturate(165%);
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell::after {
+  /* 关键改动: 大浮卡从“淡紫灰膜”改为“奶白磨砂卡”。 */
+  background-color: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  backdrop-filter: blur(22px) saturate(145%);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow:
+    0 18px 54px rgba(34, 40, 72, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+:root[data-theme-pack] .neox-shell::after {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px;
+  background-blend-mode: soft-light;
+}
+
+/* ============================================================
+ *  Variant 2: edge-to-edge — 无大浮卡, 3 块直接贴窗口边
+ *  body 加 data-glass-variant="edge-to-edge" 切换
+ * ============================================================ */
+body[data-glass-variant="edge-to-edge"] :root[data-theme-pack] .neox-shell,
+:root[data-glass-variant="edge-to-edge"] .neox-shell {
+  padding: 0 !important;
+}
+body[data-glass-variant="edge-to-edge"] :root[data-theme-pack] .neox-shell::after,
+:root[data-glass-variant="edge-to-edge"] .neox-shell::after {
+  display: none !important;
+}
+
+/* ============================================================
+ *  Variant 3: three-cards — 3 块各自圆角浮卡, 之间 gap 露 wallpaper
+ *  body 加 data-glass-variant="three-cards" 切换
+ * ============================================================ */
+:root[data-glass-variant="three-cards"] .neox-shell::after {
+  display: none !important;
+}
+:root[data-glass-variant="three-cards"] .neox-shell__sidebar,
+:root[data-glass-variant="three-cards"] .neox-sidebar,
+:root[data-glass-variant="three-cards"] .neox-shell__main,
+:root[data-glass-variant="three-cards"] .neox-shell__right,
+:root[data-glass-variant="three-cards"] .neox-rightpanel {
+  border-radius: var(--neox-glass-radius, 10px) !important;
+  margin: 0 calc(var(--neox-glass-margin, 8px) / 2) !important;
+  border: none !important;
+}
+:root[data-glass-variant="three-cards"] .neox-shell__sidebar,
+:root[data-glass-variant="three-cards"] .neox-sidebar {
+  margin-left: 0 !important;
+}
+:root[data-glass-variant="three-cards"] .neox-shell__right,
+:root[data-glass-variant="three-cards"] .neox-rightpanel {
+  margin-right: 0 !important;
+}
+
+:root[data-theme-pack] .neox-shell > *:not(.neox-shell__resizer) {
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+ *  Topbar — 底层大卡的一部分, 完全透明 (壁纸直接透出来)
+ *  无独立背景 / 无边框 / 无玻璃 — 是 wallpaper 视觉的延伸
+ * ============================================================ */
+:root[data-theme-pack] .neox-shell__topbar,
+:root[data-theme-pack] .neox-topbar {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack] .neox-shell__rail,
+:root[data-theme-pack] .neox-rail,
+:root[data-theme-pack] .agent-timeline,
+:root[data-theme-pack] .chat-messages,
+:root[data-theme-pack] .neox-shell__statusbar {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack] .neox-shell {
+  --neox-panel-divider: 1px;
+}
+:root[data-theme-pack] .neox-shell__sidebar,
+:root[data-theme-pack] .neox-sidebar,
+:root[data-theme-pack] .neox-shell__main,
+:root[data-theme-pack] .neox-shell__right,
+:root[data-theme-pack] .neox-rightpanel {
+  /* 默认 (single-bigcard variant): 面板透明, 让 ::after 浮卡的白雾透出来 */
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+:root[data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__sidebar,
+:root[data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-sidebar {
+  border-right: none !important;
+}
+:root[data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main {
+  position: relative;
+}
+:root[data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.10) !important;
+  pointer-events: none;
+  z-index: 1;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  /* Cursor 取向: 几乎看不见的色阶分割, 不靠硬线 */
+  background: rgba(28, 25, 23, 0.04) !important;
+  width: 1px;
+}
+
+:root[data-glass-off][data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+:root[data-glass-off][data-theme-pack][data-theme="light"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+/* right panel 左边 hairline 分割线 — 同款隐形 */
+:root[data-theme-pack] .neox-shell.has-surface .neox-shell__right,
+:root[data-theme-pack] .neox-shell.has-surface .neox-rightpanel {
+  border-left: var(--neox-panel-divider) solid rgba(255, 255, 255, 0.10) !important;
+  position: relative;
+  z-index: 2;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-shell__right,
+:root[data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-rightpanel {
+  border-left-color: rgba(15, 23, 42, 0.06) !important;
+}
+/* 关磨砂: right panel 也不要发丝分割线 */
+:root[data-glass-off][data-theme-pack] .neox-shell.has-surface .neox-shell__right,
+:root[data-glass-off][data-theme-pack] .neox-shell.has-surface .neox-rightpanel {
+  border-left: 0 !important;
+  border-left-color: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-glass-off][data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-shell__right,
+:root[data-glass-off][data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-rightpanel {
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-glass-off][data-theme-pack] .neox-shell.has-surface .neox-shell__right::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+/* 显式: 没 surface 时 right panel 不画 border (兜底, 防其他规则漏出) */
+:root[data-theme-pack] .neox-shell:not(.has-surface) .neox-shell__right,
+:root[data-theme-pack] .neox-shell:not(.has-surface) .neox-rightpanel {
+  border-left: none !important;
+}
+/* three-cards variant 才需要面板自己的 background tint (3 块各自圆角小卡) */
+:root[data-glass-variant="three-cards"] .neox-shell__sidebar,
+:root[data-glass-variant="three-cards"] .neox-sidebar,
+:root[data-glass-variant="three-cards"] .neox-shell__main,
+:root[data-glass-variant="three-cards"] .neox-shell__right,
+:root[data-glass-variant="three-cards"] .neox-rightpanel {
+  background: rgba(255, 255, 255, 0.10) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  border-right: none !important;
+  border-left: none !important;
+}
+:root[data-glass-variant="three-cards"][data-theme="light"] .neox-shell__sidebar,
+:root[data-glass-variant="three-cards"][data-theme="light"] .neox-sidebar,
+:root[data-glass-variant="three-cards"][data-theme="light"] .neox-shell__main,
+:root[data-glass-variant="three-cards"][data-theme="light"] .neox-shell__right,
+:root[data-glass-variant="three-cards"][data-theme="light"] .neox-rightpanel {
+  background: rgba(255, 255, 255, 0.50) !important;
+}
+
+:root[data-theme-pack] .neox-shell__rail,
+:root[data-theme-pack] .neox-rail,
+:root[data-theme-pack] .neox-shell__sidebar,
+:root[data-theme-pack] .neox-sidebar,
+:root[data-theme-pack] .neox-shell__main,
+:root[data-theme-pack] .agent-timeline,
+:root[data-theme-pack] .chat-messages,
+:root[data-theme-pack] .neox-shell__right,
+:root[data-theme-pack] .neox-rightpanel,
+:root[data-theme-pack] .neox-shell__statusbar {
+  border: none !important;
+}
+
+/* sidebar 实色 ::after (legacy 留下来) 也清掉 */
+:root[data-theme-pack] .neox-shell__sidebar::after {
+  background: transparent !important;
+  display: none !important;
+}
+
+/* ============================================================
+ *  Agent Timeline 内部子层 — 全部透明, 让悬浮卡背景透出来
+ *  例外: .atl-composer 给一点 tint (它在底部窄区, 纯透 wallpaper 显独立 cyan 块跟上方不一致),
+ *        .atl-composer__box 给中等 tint + blur 作为输入卡视觉
+ * ============================================================ */
+:root[data-theme-pack] .atl-header,
+:root[data-theme-pack] .atl-feed,
+:root[data-theme-pack] .atl-approve-dock,
+:root[data-theme-pack] .atl-running,
+:root[data-theme-pack] .atl-group,
+:root[data-theme-pack] .atl-msg,
+:root[data-theme-pack] .atl-row-clamp {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+:root[data-theme-pack][data-theme="dark"] .atl-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-header {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+:root[data-theme-pack] .ide-side__head,
+:root[data-theme-pack] .editor-tabs-bar {
+  border-bottom: 0 !important;
+}
+:root[data-theme-pack] .ide-side__head {
+  position: relative;
+}
+:root[data-theme-pack] .ide-side__head::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--neox-glass-margin, 4px);
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 5;
+}
+:root[data-theme-pack][data-theme="dark"] .ide-side__head::after {
+  background: rgba(255, 255, 255, 0.14);
+}
+:root[data-theme-pack][data-theme="light"] .ide-side__head::after {
+  background: rgba(15, 23, 42, 0.12);
+}
+/* editor-tabs-bar v4: 强制 overflow visible + border-bottom 直接挂回, 不再绕弯 */
+:root[data-theme-pack] .editor-tabs-bar {
+  overflow: visible !important;
+}
+:root[data-theme-pack][data-theme="dark"] .editor-tabs-bar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+:root[data-theme-pack][data-theme="light"] .editor-tabs-bar {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.14) !important;
+}
+/* editor-tabs-container 也强制 overflow visible 防止外层 clip */
+:root[data-theme-pack] .editor-tabs-container {
+  overflow: visible !important;
+}
+
+:root[data-theme-pack][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box,
+:root[data-theme-pack][data-surface-style="flat"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 58%, var(--neox-bg-elevated, #fff) 42%) !important;
+  border: 1px solid rgba(28, 25, 23, 0.08) !important;
+  border-radius: 16px !important;
+  --atl-chip-radius: 10px;
+  --atl-chip-h: 26px;
+  box-shadow:
+    0 1px 1px rgba(28, 25, 23, 0.03),
+    0 6px 20px rgba(28, 25, 23, 0.045) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  padding-bottom: 10px !important;
+  overflow: hidden !important;
+}
+:root[data-theme-pack][data-theme="light"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 58%, var(--neox-bg-elevated, #fff) 42%) !important;
+  border-color: rgba(28, 25, 23, 0.08) !important;
+  box-shadow:
+    0 1px 1px rgba(28, 25, 23, 0.03),
+    0 6px 20px rgba(28, 25, 23, 0.045) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme-pack][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box:focus-within,
+:root[data-theme-pack][data-theme="light"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box:focus-within {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 50%, var(--neox-bg-elevated, #fff) 50%) !important;
+  border-color: rgba(28, 25, 23, 0.12) !important;
+  box-shadow:
+    0 1px 2px rgba(28, 25, 23, 0.04),
+    0 10px 28px rgba(28, 25, 23, 0.07) !important;
+}
+
+:root[data-theme-pack] .ide-aipanel .atl-composer .atl-composer__box,
+:root[data-theme-pack] .ide-aipanel__composer .atl-composer .atl-composer__box {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme-pack] .ide-aipanel .atl-composer .atl-composer__box:focus-within,
+:root[data-theme-pack] .ide-aipanel__composer .atl-composer .atl-composer__box:focus-within {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* composer__top 跟 input 之间的分隔线 — 默认 var(--neox-line-soft) 在 dark 下 #2c2c2c 显黑,
+ * 改用 --pack-edge 透明白线跟其他分隔一致 */
+:root[data-theme-pack] .atl-composer__top {
+  border-bottom-color: var(--pack-edge) !important;
+}
+
+/* ============================================================
+ * neox-quota-badge — ghost 触发器 (跟 composer 右侧控件同语言)
+ * ============================================================ */
+:root[data-theme-pack] .neox-quota-badge {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(28, 25, 23, 0.08) !important;
+  border-radius: 10px !important;
+  height: 22px !important;
+  padding: 0 8px !important;
+  color: var(--neox-fg-secondary) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: calc(11px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+:root[data-theme-pack] .neox-quota-badge:hover {
+  background: #FFFFFF !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+/* pct 文字 — 跟主色一致 */
+:root[data-theme-pack] .neox-quota-badge__pct {
+  color: var(--neox-fg-primary) !important;
+  font-weight: 600 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* track — 底部发丝进度条 (ghost 语言, 不整块染色) */
+:root[data-theme-pack] .neox-quota-badge__track {
+  position: absolute !important;
+  left: 6px !important;
+  right: 6px !important;
+  bottom: 2px !important;
+  top: auto !important;
+  height: 2px !important;
+  background: color-mix(in srgb, var(--neox-line) 70%, transparent) !important;
+  border-radius: 1px !important;
+  overflow: hidden !important;
+  z-index: 0 !important;
+}
+:root[data-theme-pack] .neox-quota-badge__track-fill {
+  background: color-mix(in srgb, var(--neox-fg-hint) 70%, transparent) !important;
+  height: 100% !important;
+  transition: width 280ms ease !important;
+}
+
+/* > 80% 警告色 (用 warn 的橙) — 通过 width 判别在 JS 端, CSS 兜底:
+ * 如果 fill-style 是橙系, 让能量条整体偏暖色 */
+:root[data-theme-pack] .neox-quota-badge__track-fill[style*="--neox-warn"],
+:root[data-theme-pack] .neox-quota-badge__track-fill[style*="warn"] {
+  background: color-mix(in srgb, var(--neox-warn) 30%, transparent) !important;
+}
+
+/* nums/plan 文字 — IDE 窄宽下默认隐藏, 不动. 主面板宽时同样主题色 */
+:root[data-theme-pack] .neox-quota-badge__full,
+:root[data-theme-pack] .neox-quota-badge__nums,
+:root[data-theme-pack] .neox-quota-badge__plan {
+  color: var(--neox-fg-primary) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+:root[data-theme-pack] .neox-quota-badge__plan {
+  background: var(--neox-primary-600) !important;
+  color: var(--neox-fg-invert) !important;
+  padding: 0 5px !important;
+  border-radius: 999px !important;
+  font-size: calc(9px * var(--nx-fs-scale, 1)) !important;
+  margin-left: 4px !important;
+}
+
+/* composer 外层 .atl-composer — 透明就好 */
+:root[data-theme-pack] .atl-composer {
+  background: transparent !important;
+}
+
+/* ============================================================
+ * IDE composer 底部按钮行 — 统一对齐 + 圆形 + 同 bg
+ * Y审批 / 本地 / 上下文 / 模型 / 发送 全部 28×28 圆角 pill
+ * ============================================================ */
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-approval__btn,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-rundest__pill,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-ctx-btn,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__model,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__send {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--pack-edge) !important;
+  border: none !important;
+  color: var(--neox-fg-primary) !important;
+  gap: 0 !important;
+  flex-shrink: 0 !important;
+}
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-approval__btn:hover,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-rundest__pill:hover,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-ctx-btn:hover,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__model:hover {
+  background: var(--pack-edge-strong) !important;
+  color: var(--neox-fg-primary) !important;
+}
+/* send 按钮单独: 近黑实心圆 (Cursor 取向; Agent 状态色留给 mode pill) */
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__send {
+  background: var(--neox-cta, #1C1917) !important;
+  color: var(--neox-fg-invert) !important;
+}
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__send:hover {
+  background: var(--neox-cta-hover, #0C0A09) !important;
+}
+/* 按钮内 svg / 文字一律隐藏多余, 只保留 icon */
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__model__label,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-composer__model__caret,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-rundest__label,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-ctx-btn__label,
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions .atl-ctx-btn__pct {
+  display: none !important;
+}
+/* 按钮行水平 gap 统一 */
+:root[data-theme-pack] .ide-aipanel .atl-composer__right {
+  gap: 4px !important;
+  align-items: center !important;
+}
+:root[data-theme-pack] .ide-aipanel .atl-composer__actions {
+  align-items: center !important;
+}
+
+:root[data-theme-pack] .ide-aipanel__composer {
+  padding: 0 8px 8px !important;
+}
+
+/* ============================================================
+ * 主 Agent composer (非 IDE 窄宽) — 保持原 pill 玻璃 + accent 文字
+ * ============================================================ */
+:root[data-theme-pack] .atl-mode-pill {
+  background: rgba(28, 25, 23, 0.05) !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--neox-fg-secondary) !important;
+}
+:root[data-theme-pack] .atl-composer__model {
+  background: rgba(28, 25, 23, 0.05) !important;
+  color: var(--neox-fg-secondary) !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+}
+:root[data-theme-pack] .atl-composer__model:hover {
+  background: rgba(28, 25, 23, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .atl-rundest__pill {
+  background: rgba(28, 25, 23, 0.05) !important;
+  color: var(--neox-fg-secondary) !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+}
+:root[data-theme-pack] .atl-rundest__pill:hover,
+:root[data-theme-pack] .atl-rundest__pill[aria-expanded="true"] {
+  background: rgba(28, 25, 23, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .atl-rundest__pill.is-mobile-active {
+  background: rgba(28, 25, 23, 0.05) !important;
+  border-color: transparent !important;
+  color: color-mix(in srgb, #15803d 45%, var(--neox-fg-secondary)) !important;
+}
+:root[data-theme-pack] .atl-rundest__mobile-badge {
+  background: rgba(28, 25, 23, 0.06) !important;
+  color: inherit !important;
+  border-radius: 6px !important;
+}
+:root[data-theme-pack] .atl-ctx-btn {
+  background: rgba(28, 25, 23, 0.05) !important;
+  color: var(--neox-fg-secondary) !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+}
+:root[data-theme-pack] .atl-ctx-btn:hover {
+  background: rgba(28, 25, 23, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .atl-approval__btn {
+  background: rgba(28, 25, 23, 0.05) !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-secondary) !important;
+}
+:root[data-theme-pack] .atl-approval__btn:hover,
+:root[data-theme-pack] .atl-approval__btn.is-open {
+  background: rgba(28, 25, 23, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .atl-approval__btn.atl-approval--manual {
+  color: var(--neox-fg-primary) !important;
+  background: rgba(28, 25, 23, 0.05) !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack] .atl-approval__btn.atl-approval--dangerous {
+  color: #ffffff !important;
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+:root[data-theme-pack] .atl-composer__iconbtn:hover {
+  background: rgba(28, 25, 23, 0.05) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+/* Composer 外层 padding-bottom — 让原 12px 默认值生效, 不再 override 加大,
+ * 避免跟 .atl-composer__box 内 padding-bottom 双重叠加 (= "下面粗边距"真因) */
+
+/* 输入区本身默认更撑 — 原 min-height 26px 是单行高, 拉到 40px 让用户输入舒服,
+ * 但不至于 textarea 空白区域显得很大 (前一版 56px 太高, 看着像粗边距) */
+:root[data-theme-pack] .atl-composer__input {
+  min-height: 40px !important;
+}
+
+/* ============================================================
+ * IDE AI 助手窄宽适配 (容器宽 ~280-380px) — composer 按钮收纳
+ *
+ * 原 container query 最窄断点 420px, 在 AI 助手右栏 (300-380px) 触发不到位.
+ * 这里加 380px / 320px 两档极窄, 把 Y 审批 / 模型 / rundest label / send 文字
+ * 一步步藏掉, 让窄窗口下按钮行不溢出.
+ * ============================================================ */
+@container atl-composer (max-width: 380px) {
+  /* rundest "本地" label 藏 */
+  .atl-rundest__label { display: none !important; }
+  /* model brand label "gpt-5.5" 藏文字, 仅 icon */
+  .atl-composer__model__label { display: none !important; }
+  .atl-composer__model__caret { display: none !important; }
+  /* model 按钮变 icon-only 圆形, 不挤宽度 */
+  .atl-composer__model { padding: 4px !important; gap: 0 !important; }
+}
+@container atl-composer (max-width: 320px) {
+  /* Y 审批按钮藏 (功能可从右键/快捷键) */
+  .atl-approval { display: none !important; }
+  /* ctx 圆环 (ring 已经够说明上下文用量, 旁边的"上下文"label 也藏) */
+  .atl-ctx-btn__label { display: none !important; }
+  /* send 按钮内 svg 缩小 */
+  .atl-composer__send { padding: 6px !important; }
+  .atl-composer__send > svg { width: 14px !important; height: 14px !important; }
+}
+
+/* ============================================================
+ *  IDE 模式 — workspace / sidebar / editor 全套透明
+ *  跟 Agent 模式一样: 内容画在悬浮卡上, 无独立背景
+ * ============================================================ */
+:root[data-theme-pack] .ide-workspace,
+:root[data-theme-pack] .ide-welcome-host,
+:root[data-theme-pack] .ide-welcome-host__tabs,
+:root[data-theme-pack] .ide-workspace__bottom-restore,
+:root[data-theme-pack] .ide-workspace .editor-tabs-container,
+:root[data-theme-pack] .ide-workspace .editor-tabs-bar,
+:root[data-theme-pack] .ide-sidebar,
+:root[data-theme-pack] .ide-side,
+:root[data-theme-pack] .ide-side__head,
+:root[data-theme-pack] .ide-sidebar__bottom,
+:root[data-theme-pack] .ide-sidebar__top,
+:root[data-theme-pack] .ide-sidebar__tree,
+:root[data-theme-pack] .file-explorer,
+:root[data-theme-pack] .ide-statusbar {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  /* ↓ 见下方 "IDE = 一个平面" 覆盖: 这里的全透明在 IDE 模式会被同色平面盖掉 */
+  backdrop-filter: none !important;
+  border: none !important;
+}
+
+/* editor tab — VSCode 风格干净长方形 tab
+ * 全 tab 长方形无圆角无分隔线, active 顶 2px accent + bg tint, hover 微弱 edge.
+ * 用 padding 而非 border-right 区分 tab, 视觉连贯不割裂 */
+:root[data-theme-pack] .ide-workspace .editor-tab,
+:root[data-theme-pack] .ide-welcome-host__tab {
+  background: transparent !important;
+  border-right: none !important;            /* 无垂直分隔线, tab 间靠 padding 自然空 */
+  border-radius: 0 !important;              /* 完全长方形 */
+  color: var(--neox-fg-hint, color-mix(in srgb, var(--neox-fg-primary) 52%, transparent)) !important;
+  position: relative !important;
+  margin-top: 0 !important;
+  transition: background 160ms ease, color 160ms ease !important;
+}
+:root[data-theme-pack] .ide-workspace .editor-tab:hover,
+:root[data-theme-pack] .ide-welcome-host__tab:hover {
+  background: var(--pack-edge) !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .ide-workspace .editor-tab.active,
+:root[data-theme-pack] .ide-welcome-host__tab.is-active {
+  /* pack-tint-strong 在有的包里是一块很实的色, 选中 tab 因此比周围重一大截。
+     改成 fg 兑 5% —— 明暗两套主题下都只是"稍微亮/暗一点"。 */
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+  /* 色条删了, 选中态就全靠这两样 —— 字重再加一档拉开跟未选中的差。
+     不加 !important: 对手是 shell-files.css 的 `.editor-tab.active { font-weight: 400 }`
+     (0,2,0 无 !important), 这条选择器 0,4,0 本来就赢。 */
+  font-weight: 600;
+}
+:root[data-theme-pack] .ide-workspace .editor-tab.active::before,
+:root[data-theme-pack] .ide-welcome-host__tab.is-active::before {
+  content: none;
+}
+/* 隐藏原本的底部 ::after 指示 */
+:root[data-theme-pack] .ide-workspace .editor-tab.active::after,
+:root[data-theme-pack] .ide-welcome-host__tab.is-active::after {
+  display: none !important;
+}
+/* tab bar 底部一条极淡分隔, 跟内容区分清界 */
+:root[data-theme-pack] .ide-welcome-host__tabs-row,
+:root[data-theme-pack] .ide-workspace .editor-tabs-bar {
+  border-bottom: 1px solid var(--pack-edge) !important;
+}
+
+/* ============================================================
+ * Editor / Markdown 预览区 — 整链路透明, wallpaper 全程透过
+ * ============================================================ */
+:root[data-theme-pack] .ide-welcome-host,
+:root[data-theme-pack] .ide-welcome-host__body,
+:root[data-theme-pack] .markdown-preview-surface,
+:root[data-theme-pack] .markdown-preview-surface .markdown-content,
+:root[data-theme-pack] .markdown-content,
+:root[data-theme-pack] .markdown-content.timeline-detail,
+:root[data-theme-pack] .markdown-content.atl-msg__md,
+:root[data-theme-pack] .editor-view-container,
+:root[data-theme-pack] .editor-view-container > *,
+:root[data-theme-pack] .editor-pane-markdown-preview,
+:root[data-theme-pack] .markdown-preview-scroll,
+:root[data-theme-pack] .editor-pane,
+:root[data-theme-pack] .editor-pane-source,
+:root[data-theme-pack] .editor-pane-split {
+  background: transparent !important;
+}
+
+/* tab actions 区 (preview / split / chart 三个 icon) — 默认 sidebar header bg-secondary 灰底 */
+:root[data-theme-pack] .ide-welcome-host__tabs-actions,
+:root[data-theme-pack] .ide-welcome-host__tabs-actions .editor-tabs-actions,
+:root[data-theme-pack] .editor-tabs-actions,
+:root[data-theme-pack] .tab-action-group {
+  background: transparent !important;
+  border-left-color: var(--pack-edge) !important;
+}
+
+:root[data-theme-pack] .markdown-content table {
+  background: transparent !important;
+}
+:root[data-theme-pack] .markdown-content tr:nth-child(even) td {
+  background: transparent !important;
+}
+:root[data-theme-pack] .markdown-content th,
+:root[data-theme-pack] .markdown-content td {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+:root[data-theme-pack] .markdown-content thead th {
+  border-bottom: 1.5px solid var(--pack-edge-strong, var(--pack-edge)) !important;
+}
+:root[data-theme-pack] .markdown-content tbody tr + tr td {
+  border-top: 1px solid var(--pack-edge) !important;
+}
+:root[data-theme-pack] .markdown-content .md-table-wrapper {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+:root[data-theme-pack] .markdown-content .md-code-block {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111) 4%, var(--neox-bg-elevated, #fff)) !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+:root[data-theme-pack][data-theme="light"] .markdown-content .md-code-block {
+  background: #f4f4f2 !important;   /* GitHub light code bg: 温暖中性灰, 不带 primary hue */
+}
+:root[data-theme-pack][data-theme="dark"] .markdown-content .md-code-block {
+  background: #1c1d20 !important;   /* JetBrains/GH dark code bg */
+}
+:root[data-theme-pack] .markdown-content .md-code-block pre,
+:root[data-theme-pack] .markdown-content .md-code-block code {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack] .markdown-content .md-code-block .md-code-header {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  padding: 7px 12px 0 !important;
+  min-height: 0 !important;
+}
+/* 语言标签 — 纯文字水印, 不再套色块 */
+:root[data-theme-pack] .markdown-content .md-code-block .md-code-lang {
+  text-transform: lowercase !important;
+  font-size: calc(10.5px * var(--nx-fs-scale, 1)) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.03em !important;
+  color: color-mix(in srgb, var(--neox-fg-primary, #111) 42%, transparent) !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+/* Copy 按钮 — hover 才淡入的幽灵按钮 (常驻会跟代码抢注意力) */
+:root[data-theme-pack] .markdown-content .md-code-block .md-code-copy {
+  padding: 2px 9px !important;
+  border-radius: 5px !important;
+  border: 0 !important;
+  color: color-mix(in srgb, var(--neox-fg-primary, #111) 55%, transparent) !important;
+  font-size: calc(10.5px * var(--nx-fs-scale, 1)) !important;
+  font-family: var(--neox-font-sans, inherit) !important;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111) 7%, transparent) !important;
+  transition: opacity .14s ease, color .12s ease, background .12s ease !important;
+}
+:root[data-theme-pack] .markdown-content .md-code-block .md-code-copy:hover {
+  color: var(--neox-fg-primary) !important;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111) 13%, transparent) !important;
+}
+:root[data-theme-pack] .markdown-content .md-code-block .md-code-linenum {
+  opacity: 1 !important;
+  border-right: 0 !important;
+  color: color-mix(in srgb, var(--neox-fg-primary, #111) 45%, transparent) !important;
+}
+:root[data-theme-pack] .markdown-content > pre {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* mermaid 错误这种真·独立 pre 才走玻璃卡 */
+:root[data-theme-pack] .markdown-content pre.md-mermaid-error-msg,
+:root[data-theme-pack] .markdown-content pre.md-mermaid-error-src {
+  background: var(--pack-tint-card) !important;
+  border: 1px solid var(--pack-edge) !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.10) !important;
+}
+:root[data-theme-pack][data-theme="light"] .markdown-content pre.md-mermaid-error-msg,
+:root[data-theme-pack][data-theme="light"] .markdown-content pre.md-mermaid-error-src {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55) !important;
+}
+
+/* Markdown alert (note/tip/warning) — 走主题 accent + edge */
+:root[data-theme-pack] .markdown-content .md-alert,
+:root[data-theme-pack] .markdown-content blockquote {
+  background: var(--pack-edge) !important;
+  border-left-color: var(--neox-primary-600) !important;
+}
+
+/* ============================================================
+ * Timeline 工具结构 — 行不是卡片, 产出内容才是卡片
+ * ------------------------------------------------------------
+ * 不要再用 .atl-tool:has(.atl-term/.atl-code/.atl-diff) 把整个工具升级成卡片。
+ * 主题包只负责给轻量 row 提供 hover/readability token; 内容卡统一由
+ * agent-timeline.css 的 .atl-tool__content 绘制, 防止 header 被套进卡片里。
+ * ============================================================ */
+:root[data-theme-pack] .atl-tool {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+:root[data-theme-pack] .atl-tool__row {
+  background: transparent !important;
+  border-radius: 8px !important;
+}
+:root[data-theme-pack] .atl-tool__row:hover,
+:root[data-theme-pack] .atl-tool.is-running .atl-tool__row:hover,
+:root[data-theme-pack] .atl-tool.is-failed .atl-tool__row:hover {
+  background: color-mix(in srgb, var(--pack-edge) 72%, transparent) !important;
+}
+/* 终端等产出物嵌在 .atl-tool__content 里, 自身不再画第二层外卡。 */
+:root[data-theme-pack] .atl-term {
+  margin-top: 0 !important;
+  background: transparent !important;
+  --xterm-bg: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .atl-term.is-running,
+:root[data-theme-pack] .atl-term.is-ok,
+:root[data-theme-pack] .atl-term.is-failed {
+  border-color: transparent !important;
+}
+/* xterm 自己的 canvas / viewport 透明 */
+:root[data-theme-pack] .atl-term .xterm,
+:root[data-theme-pack] .atl-term .xterm-viewport,
+:root[data-theme-pack] .atl-term .xterm-screen {
+  background: transparent !important;
+}
+/* atl-tool__body 紧贴 row, 不再有 padding 创造缝 */
+:root[data-theme-pack] .atl-tool__body {
+  margin-top: 0 !important;
+}
+
+/* Activity 头 (Actions / Execute shell ×3 等) — 同样玻璃风格但去 hover bg */
+:root[data-theme-pack] .atl-activity__head {
+  background: transparent !important;
+  border-radius: 8px !important;
+}
+:root[data-theme-pack] .atl-activity__head:hover {
+  background: var(--pack-edge) !important;
+}
+
+/* ============================================================
+ * Surface 工作台 (.sfc-panel / .sfc-chrome) — 默认 var(--neox-bg-canvas) 实色,
+ * 在主题下显独立白块. 透明化跟悬浮卡融合.
+ * ============================================================ */
+:root[data-theme-pack] .sfc-panel,
+:root[data-theme-pack] .sfc-chrome {
+  background: transparent !important;
+}
+/* Surface tabs (.sfc-chrome__tab) — 全部去硬色, 跟主题 edge */
+:root[data-theme-pack] .sfc-chrome__tab {
+  background: transparent !important;
+  border: none !important;
+  color: var(--neox-fg-secondary) !important;
+  border-radius: 8px !important;
+}
+:root[data-theme-pack] .sfc-chrome__tab:hover {
+  background: var(--pack-edge) !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .sfc-chrome__tab.is-active {
+  background: var(--pack-tint-strong) !important;
+  color: var(--neox-fg-primary) !important;
+}
+/* Surface landing 工作台 title */
+:root[data-theme-pack] .sfc-landing__title,
+:root[data-theme-pack] .sfc-landing h2 {
+  color: var(--neox-fg-primary) !important;
+}
+
+/* ============================================================
+ *  IDE 内嵌容器全套透明 — 用户红框标的几个点
+ *  workspace bar / tabs-row / rc-panel / statusbar 等都画在悬浮卡上, 无独立 bg
+ * ============================================================ */
+
+/* 资源管理器顶部 "Neox" workspace 条 (.ide-side__ws-bar) — 默认有 bg-muted + border-bottom */
+:root[data-theme-pack] .ide-side__ws-bar {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 0 !important;
+}
+:root[data-theme-pack] .ide-side__ws-bar:hover {
+  background: var(--pack-edge) !important;
+}
+/* workspace 数量 badge */
+:root[data-theme-pack] .ide-side__ws-bar-count {
+  background: color-mix(in srgb, var(--neox-primary-600) 14%, transparent) !important;
+}
+
+:root[data-theme-pack] .ide-welcome-host__tabs-row,
+:root[data-theme-pack] .editor-tabs-bar,
+:root[data-theme-pack] .editor-tabs-container {
+  background: transparent !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  /* border-bottom 不清, 让上面的分割线规则 (line ~551) 生效 */
+}
+:root[data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main {
+  border-top-left-radius: 0 !important;
+}
+/*  ② sidebar 收起 — main 真圆角顶 (10px) 露出. 第一个 tab 顶左圆角 10px 贴合 main 圆角弧,
+ *     tab 从 x=0 顺着圆弧延伸到 main 左缘, 不再"少一块". active 顶 2px 紫条 (::before)
+ *     在圆弧上 left:0~10px 段会物理溢出 (浏览器对 absolute 子 + border-radius 父 clip 漏),
+ *     直接 display:none 干掉, 让 tab 圆角形状 + active 背景色 (pack-tint-strong) 自承担
+ *     激活标识. */
+:root[data-theme-pack] .neox-shell.is-sidebar-collapsed .ide-welcome-host__tabs-row .ide-welcome-host__tab:first-child,
+:root[data-theme-pack] .neox-shell.is-sidebar-collapsed .ide-workspace .editor-tabs-scroll .editor-tab:first-child {
+  border-top-left-radius: 10px !important;
+  overflow: hidden !important;
+}
+:root[data-theme-pack] .neox-shell.is-sidebar-collapsed .ide-welcome-host__tabs-row .ide-welcome-host__tab.is-active:first-child::before,
+:root[data-theme-pack] .neox-shell.is-sidebar-collapsed .ide-workspace .editor-tabs-scroll .editor-tab.active:first-child::before {
+  display: none !important;
+}
+/* 每个 tab 默认有 border-right 隔, 弱化 */
+:root[data-theme-pack] .ide-welcome-host__tab {
+  border-right-color: var(--pack-edge) !important;
+}
+/* tab 右上角 actions 区 (左侧有一条 border-left) — 弱化 */
+:root[data-theme-pack] .ide-welcome-host__tabs-actions .editor-tabs-actions {
+  border-left-color: var(--pack-edge) !important;
+}
+
+/* 右侧 AI / Terminal / Git 卡片面板 (.rc-panel) — 整面板透明 */
+:root[data-theme-pack] .rc-panel {
+  background: transparent !important;
+}
+:root[data-theme-pack] .rc-panel__tabs {
+  background: transparent !important;
+  border: none !important;
+}
+/* AI/Terminal/Git tab 默认 inactive 透明; active 走微弱 accent 高亮 */
+:root[data-theme-pack] .rc-panel__tab {
+  background: transparent !important;
+}
+:root[data-theme-pack] .rc-panel__tab:hover {
+  background: var(--pack-edge) !important;
+}
+:root[data-theme-pack] .rc-panel__tab.is-active {
+  background: var(--pack-tint-card) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--pack-edge) !important;
+}
+
+/* IDE 状态栏 (.ide-statusbar) — 默认 bg-canvas + border-top, 全清 */
+:root[data-theme-pack] .ide-statusbar {
+  background: transparent !important;
+  border: none !important;
+  border-top: 0 !important;
+}
+:root[data-theme-pack] .ide-statusbar__item:hover {
+  background: var(--pack-edge) !important;
+}
+
+/* 头部各种 sticky / sub-head 容器一并扫一下 */
+:root[data-theme-pack] .ide-side__head,
+:root[data-theme-pack] .ide-sidebar__bottom,
+:root[data-theme-pack] .ide-welcome-host__tabs {
+  background: transparent !important;
+  border-color: var(--pack-edge) !important;
+}
+
+/* ============================================================
+ *  IDE 欢迎页卡片 — 默认 --neox-bg-card 实色块, 在主题下显黑紫色不协调
+ *  改用 --pack-tint-card 透明玻璃 + blur, 跟主题融合
+ * ============================================================ */
+:root[data-theme-pack][data-theme="dark"] .ide-welcome__card,
+:root[data-theme-pack][data-theme="dark"] .ide-welcome__panel {
+  background: rgba(0, 0, 0, 0.28) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+}
+:root[data-theme-pack][data-theme="light"] .ide-welcome__card,
+:root[data-theme-pack][data-theme="light"] .ide-welcome__panel {
+  background: var(--pack-tint-card) !important;
+  border: 1px solid var(--pack-edge) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+}
+:root[data-theme-pack][data-theme="dark"] .ide-welcome__card:hover:not(:disabled) {
+  border-color: var(--neox-primary-400) !important;
+  background: rgba(0, 0, 0, 0.38) !important;
+  box-shadow: 0 4px 16px -8px color-mix(in srgb, var(--neox-primary-600) 30%, transparent) !important;
+}
+:root[data-theme-pack][data-theme="light"] .ide-welcome__card:hover:not(:disabled) {
+  border-color: var(--neox-primary-400) !important;
+  background: var(--pack-tint-strong) !important;
+  box-shadow: 0 4px 16px -8px color-mix(in srgb, var(--neox-primary-600) 30%, transparent) !important;
+}
+
+/* 卡片图标背景 — 默认 --neox-primary-50 在 dark 主题下太暗, 用 accent 弱化 */
+:root[data-theme-pack] .ide-welcome__card-icon {
+  background: color-mix(in srgb, var(--neox-primary-600) 20%, transparent) !important;
+  color: var(--neox-primary-600) !important;
+}
+
+/* ============================================================
+ *  弹窗 / popover 全主题化 — 不论 session history / 模型选择器 / overflow 菜单
+ *  默认是 var(--neox-bg-card) 实色, 在主题下显白块. 用 pack-tint-card 玻璃化
+ * ============================================================ */
+:root[data-theme-pack] .ide-aipanel__history,
+:root[data-theme-pack] .atl-overflow-menu,
+:root[data-theme-pack] .atl-model-picker,
+:root[data-theme-pack] .atl-ctx-popover,
+:root[data-theme-pack] .atl-mention,
+:root[data-theme-pack] [data-radix-popper-content-wrapper] > *,
+:root[data-theme-pack] .neox-panel,
+:root[data-theme-pack] .neox-popover {
+  background: var(--pack-tint-card) !important;
+  border: 1px solid var(--pack-edge-strong) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--pack-shadow, 0 8px 24px rgba(0, 0, 0, 0.20)) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+/* popover 内项目 hover — 用 pack-edge */
+:root[data-theme-pack] .ide-aipanel__history-item:hover {
+  background: var(--pack-edge) !important;
+}
+:root[data-theme-pack] .ide-aipanel__history-item.is-active {
+  background: color-mix(in srgb, var(--neox-primary-600) 18%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .ide-aipanel__history-time {
+  color: var(--neox-fg-muted) !important;
+}
+
+/* ============================================================
+ *  Activity 头 (Execute shell ×2 / 思考中 等) — hover 用 pack-edge
+ * ============================================================ */
+:root[data-theme-pack] .atl-activity__head:hover {
+  background: var(--pack-edge) !important;
+}
+
+/* ============================================================
+ *  Inline code (`aidistri` / `Up48 minutes` 等) — 默认 --bg-tertiary 实色,
+ *  在主题下显独立色块. 改 accent-mix 玻璃 + accent 文字, 跟主题融合
+ * ============================================================ */
+:root[data-theme-pack] .markdown-content .md-inline-code,
+:root[data-theme-pack] .md-inline-code {
+  background: color-mix(in srgb, var(--neox-primary-600) 12%, transparent);
+  color: var(--neox-fg-primary);
+  border: 0;
+}
+/* 表格单元格内不给底的规则统一放在文件末尾「最终裁决」段, 这里不再重复一份 */
+
+
+:root[data-theme-pack] .neox-session-item.is-active {
+  background: var(--neox-bg-hover) !important;
+  box-shadow: none !important;
+}
+
+/* --nx-user-bubble-shadow: UI 3.0 陶土外壳设成 none —— 用户消息是无描边暖色块 (设计稿 v5), 见 shell/clay-studio.css */
+:root[data-theme-pack] .atl-msg.is-user .atl-msg__text--user,
+:root[data-theme-pack] .atl-evcard {
+  box-shadow: var(--nx-user-bubble-shadow,
+    inset 0 0 0 1px var(--pack-edge-strong),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.08)) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-msg.is-user .atl-msg__text--user,
+:root[data-theme-pack][data-theme="light"] .atl-evcard {
+  box-shadow: var(--nx-user-bubble-shadow,
+    inset 0 0 0 1px var(--pack-edge-strong),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.50),
+    0 2px 8px rgba(60, 30, 80, 0.06)) !important;
+}
+
+/* 通用 tint-card 玻璃 (welcome card / popover) — inset 高光
+ * Composer 单独走浮层阴影, 不在这里清 shadow. */
+:root[data-theme-pack] .ide-welcome__card,
+:root[data-theme-pack] .ide-welcome__panel,
+:root[data-theme-pack] .ide-aipanel__history,
+:root[data-theme-pack] .atl-overflow-menu,
+:root[data-theme-pack] .atl-model-picker,
+:root[data-theme-pack] .atl-mention {
+  box-shadow:
+    var(--pack-shadow),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12) !important;
+}
+:root[data-theme-pack][data-theme="light"] .ide-welcome__card,
+:root[data-theme-pack][data-theme="light"] .ide-welcome__panel,
+:root[data-theme-pack][data-theme="light"] .ide-aipanel__history {
+  box-shadow:
+    var(--pack-shadow),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.60) !important;
+}
+
+/* Editor active tab — 玻璃片加重 */
+:root[data-theme-pack] .ide-workspace .editor-tab.active,
+:root[data-theme-pack] .ide-welcome-host__tab.is-active {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.15) !important;
+}
+:root[data-theme-pack][data-theme="light"] .ide-workspace .editor-tab.active,
+:root[data-theme-pack][data-theme="light"] .ide-welcome-host__tab.is-active {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.50) !important;
+}
+
+/* AI 助手 header (.ide-aipanel__head) — 原有 bg-canvas + border-bottom,
+ * 是独立卡片视觉. 透明化 + 弱化分隔, 跟悬浮卡风格一致 */
+:root[data-theme-pack] .ide-aipanel__head {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--pack-edge) !important;
+}
+:root[data-theme-pack] .ide-aipanel__head-btn:hover,
+:root[data-theme-pack] .ide-aipanel__head-btn.is-active {
+  background: var(--pack-edge) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack][data-theme="light"] .file-tree-item.root-node,
+:root[data-theme-pack][data-theme="dark"] .file-tree-item.root-node,
+:root[data-theme-pack] .file-tree-item.root-node {
+  background: transparent !important;
+  border-bottom: none !important;
+  border: none !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack][data-theme="light"] .file-tree-item.root-node:hover,
+:root[data-theme-pack][data-theme="dark"] .file-tree-item.root-node:hover {
+  background: var(--pack-edge) !important;
+}
+
+:root[data-theme-pack] .file-explorer,
+:root[data-theme-pack] .file-explorer .sidebar-header,
+:root[data-theme-pack] .sidebar-content .sidebar-header,
+:root[data-theme-pack] .workspace-sidebar,
+:root[data-theme-pack] .workspace-shell.editor-mode .file-explorer,
+:root[data-theme-pack] .workspace-shell.editor-mode .file-explorer .sidebar-header {
+  background: transparent !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme-pack] .workspace-sidebar::before {
+  display: none !important;
+}
+:root[data-theme-pack] .ide-side__head,
+:root[data-theme-pack] .ide-side__ws-bar {
+  border-bottom: none !important;
+}
+:root[data-theme-pack] .file-explorer .sidebar-title,
+:root[data-theme-pack] .workspace-shell.editor-mode .file-explorer .sidebar-title {
+  color: var(--neox-fg-primary) !important;
+}
+
+:root[data-theme-pack] .file-tree-item.root-node,
+:root[data-theme-pack] .file-tree-item.root-node.selected,
+:root[data-theme-pack] .workspace-shell.editor-mode .file-tree-item.root-node,
+:root[data-theme-pack] .workspace-shell.editor-mode .file-tree-item.root-node.selected,
+:root[data-theme-pack][data-theme="light"] .file-tree-item.root-node.selected,
+:root[data-theme-pack][data-theme="dark"] .file-tree-item.root-node.selected {
+  background: transparent !important;
+}
+:root[data-theme-pack] .file-tree-item.root-node .root-bracket,
+:root[data-theme-pack] .file-tree-item.root-node .root-path {
+  color: var(--neox-fg-muted) !important;
+}
+/* 仅在 hover 时给极淡 edge 反馈 */
+:root[data-theme-pack] .file-tree-item.root-node:hover {
+  background: var(--pack-edge) !important;
+}
+/* selected 时仅文字 accent 色, 不画 bg */
+:root[data-theme-pack] .file-tree-item.root-node.selected .root-name {
+  color: var(--neox-primary-600) !important;
+}
+
+:root[data-theme-pack] .workspace-shell.editor-mode .file-explorer,
+:root[data-theme-pack] .file-explorer {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme-pack] .workspace-shell.editor-mode .file-explorer .sidebar-header,
+:root[data-theme-pack] .file-explorer .sidebar-header {
+  background: transparent !important;
+  border-bottom-color: var(--pack-edge) !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .workspace-shell.editor-mode .file-explorer .sidebar-title {
+  color: var(--neox-fg-primary) !important;
+}
+
+/* ============================================================
+ *  内嵌卡片 / 消息气泡 / 弹窗 — 保证内容可读
+ *  Composer 不在此组: 走独立浮层白卡样式
+ * ============================================================ */
+:root[data-theme-pack] .neox-glass,
+:root[data-theme-pack] .tool-card,
+:root[data-theme-pack] .modal-content,
+:root[data-theme-pack] .ask-user-dialog {
+  background: var(--pack-tint-card) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-color: var(--pack-edge-strong) !important;
+}
+
+/* 代码块/diff 走 sunken 不透明 (保证代码字读得清) */
+:root[data-theme-pack][data-theme="dark"] .atl-code {
+  background: var(--neox-bg-sunken, rgba(0, 0, 0, 0.5)) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-code {
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+:root[data-theme-pack][data-theme="dark"] .atl-diff__row.is-add {
+  background: rgba(74, 222, 128, 0.10) !important;
+}
+:root[data-theme-pack][data-theme="dark"] .atl-diff__row.is-del {
+  background: rgba(248, 113, 113, 0.10) !important;
+}
+
+/* ============================================================
+ *  选中态 active — accent + alpha, 不大面积填充
+ * ============================================================ */
+:root[data-theme-pack] .nav-item.active,
+:root[data-theme-pack] [aria-selected="true"]:not(.neox-session-item) {
+  /* --nx-selected-bg: 个别控件 (Surface 选中标签浮起成泥块等) 换自己的选中底, 见 shell/clay-studio.css */
+  background: var(--nx-selected-bg, color-mix(in srgb, var(--neox-fg-primary) 9%, transparent)) !important;
+  color: var(--neox-fg-primary) !important;
+}
+
+/* session-item hover 用中性淡底 (跟 shell.css 原生一致), 不再用 pack-edge 强对比 */
+:root[data-theme-pack] .neox-session-item:hover {
+  background: var(--neox-bg-hover) !important;
+}
+:root[data-theme-pack] .nav-item:hover {
+  background: var(--pack-edge) !important;
+}
+
+/* 文件树选中 */
+:root[data-theme-pack] .file-tree-item.selected,
+:root[data-theme-pack] .file-tree-item.root-node.selected {
+  background: color-mix(in srgb, var(--neox-primary-600) 20%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .file-tree-item:hover:not(.selected) {
+  background: var(--pack-edge) !important;
+}
+
+/* Rail 当前 tab */
+:root[data-theme-pack] .neox-rail__btn.is-active {
+  background: color-mix(in srgb, var(--neox-primary-600) 14%, transparent) !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack] .neox-rail__btn.is-active::before {
+  background: var(--neox-primary-600) !important;
+}
+
+/* Composer focus — 加深浮影, 不用紫 ring */
+:root[data-theme-pack] .atl-composer__box:focus-within {
+  border-color: rgba(28, 25, 23, 0.14) !important;
+  box-shadow: var(--neox-shadow-composer-focus,
+    0 1px 2px rgba(28, 25, 23, .05),
+    0 16px 40px rgba(28, 25, 23, .10)) !important;
+}
+
+/* Trimode (Agentic/Assistant/Ask) active */
+:root[data-theme-pack] .atl-trimode__btn.is-active {
+  color: var(--neox-fg-primary) !important;
+  box-shadow: 0 1px 2px var(--pack-shadow), 0 0 0 1px var(--pack-edge-strong) !important;
+}
+
+/* ============================================================
+ *  消除内部硬分割线 / 圆角 padding
+ * ============================================================ */
+:root[data-theme-pack] .neox-rightpanel {
+  border-left: 1px solid var(--pack-edge) !important;
+}
+
+/* sidebar 子卡片右边线 用 edge 极淡 */
+:root[data-theme-pack] .neox-shell__main {
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack] .neox-shell__right {
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+ *  Settings 弹窗 — 透明叠在 wallpaper 上, 不破连贯
+ * ============================================================ */
+:root[data-theme-pack] .settings-overlay {
+  background: transparent !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+:root[data-theme-pack] .settings-page {
+  --st-accent:        var(--neox-primary-600);
+  --st-accent-strong: var(--neox-primary-700);
+  --st-accent-soft:   color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  --st-accent-tint:   color-mix(in srgb, var(--neox-primary-600) 18%, transparent);
+  --st-bg:            transparent;
+  --st-card:          var(--pack-tint-strong);
+  --st-border:        var(--pack-edge-strong);
+  --st-border-strong: var(--pack-edge-strong);
+  --st-text:          var(--neox-fg-primary);
+  --st-text-soft:     var(--neox-fg-secondary);
+  --st-text-mute:     var(--neox-fg-muted);
+}
+
+:root[data-theme-pack] .settings-sidebar,
+:root[data-theme-pack] .settings-main,
+:root[data-theme-pack] .settings-nav {
+  background: transparent !important;
+}
+:root[data-theme-pack] .settings-sidebar {
+  border-right: 1px solid var(--pack-edge) !important;
+}
+
+/* ============================================================
+ *  AccountOverview — 派生玻璃 token
+ * ============================================================ */
+:root[data-theme-pack] .account-overview {
+  --acco-bg:             transparent;
+  --acco-surface:        var(--pack-tint-card);
+  --acco-soft:           var(--pack-tint);
+  --acco-border:         var(--pack-edge);
+  --acco-border-2:       var(--pack-edge);
+  --acco-text:           var(--neox-fg-primary);
+  --acco-text-soft:      var(--neox-fg-secondary);
+  --acco-text-mute:      var(--neox-fg-muted);
+  --acco-accent:         var(--neox-primary-600);
+  --acco-accent-2:       var(--neox-primary-500);
+  --acco-violet:         var(--neox-primary-600);
+  --acco-violet-strong:  var(--neox-primary-700);
+  --acco-violet-light:   var(--neox-primary-300);
+  --acco-violet-soft:    color-mix(in srgb, var(--neox-primary-600) 14%, transparent);
+  --acco-soft-violet:    color-mix(in srgb, var(--neox-primary-600) 8%, transparent);
+  --acco-soft-violet-2:  color-mix(in srgb, var(--neox-primary-600) 4%, transparent);
+  --acco-primary:        var(--neox-primary-600);
+  --acco-primary-strong: var(--neox-primary-700);
+}
+
+/* ============================================================
+ * QQ 白雾细节修正 — 线条必须收在白雾悬浮卡内，避免越过圆角边界
+ * ============================================================ */
+:root[data-theme-pack] .atl-header,
+:root[data-theme-pack] .ide-side__head,
+:root[data-theme-pack] .editor-tabs-bar,
+:root[data-theme-pack] .atl-composer__top {
+  overflow: hidden;
+}
+
+:root[data-theme-pack] .atl-header {
+  position: relative;
+  border-bottom: 0 !important;
+}
+:root[data-theme-pack] .atl-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.10);
+}
+:root[data-theme-pack][data-theme="light"] .atl-header::after {
+  background: rgba(15, 23, 42, 0.055);
+}
+
+/* 左/右竖分割线从 topbar 下方白雾卡开始，到卡片底部结束，不再穿出圆角/边距。 */
+:root[data-theme-pack] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before,
+:root[data-theme-pack] .neox-shell.has-surface .neox-shell__right::before {
+  top: 0;
+  bottom: 0;
+}
+:root[data-theme-pack] .neox-shell.has-surface .neox-shell__right,
+:root[data-theme-pack] .neox-shell.has-surface .neox-rightpanel {
+  border-left: 0 !important;
+}
+:root[data-theme-pack] .neox-shell.has-surface .neox-shell__right::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 1px;
+  pointer-events: none;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.10);
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-shell__right::before {
+  background: rgba(15, 23, 42, 0.055);
+}
+
+/* 浅色主题额外暖白罩：降低背景彩度污染，让白卡更干净。 */
+:root[data-theme-pack][data-theme="light"] .neox-shell::before {
+  filter: saturate(0.82) brightness(1.06);
+}
+
+/* IDE tabs 的底部分割线也用内收伪元素，不再用跨满 panel 的 border。 */
+:root[data-theme-pack] .editor-tabs-bar {
+  position: relative;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack] .editor-tabs-bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.12);
+}
+:root[data-theme-pack][data-theme="light"] .editor-tabs-bar::after {
+  background: rgba(15, 23, 42, 0.075);
+}
+
+/* 输入卡内部的横线别贴到圆角边，收进 4px，避免“线比白卡宽”。 */
+:root[data-theme-pack] .atl-composer__top {
+  position: relative;
+  border-bottom: 0 !important;
+}
+:root[data-theme-pack] .atl-composer__top::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: var(--pack-edge);
+}
+
+/* QQ exact edge distance: 白雾大卡贴近窗口边，不要大内边距。 */
+:root[data-theme-pack] .neox-shell,
+:root[data-theme-pack][data-theme="light"] .neox-shell {
+  --neox-glass-margin: 2px;
+  --neox-glass-radius: 12px;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell::after {
+  /* 更接近 QQ 灰白主题: 颜色中性，少一点彩色透明感。 */
+  background-color: rgba(247, 247, 247, 0.84) !important;
+  border-color: rgba(255, 255, 255, 0.70) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(115%) !important;
+  backdrop-filter: blur(18px) saturate(115%) !important;
+}
+
+/* QQ edge fine-tune: inner card inset 4px, radius 10px，避免和窗口外圆角弧度打架。 */
+:root[data-theme-pack] .neox-shell,
+:root[data-theme-pack][data-theme="light"] .neox-shell {
+  --neox-glass-margin: 4px;
+  --neox-glass-radius: 10px;
+}
+
+/* Header separator must stay inside the rounded white fog card. */
+:root[data-theme-pack] .atl-header {
+  border-bottom: 0 !important;
+  position: relative;
+}
+:root[data-theme-pack] .atl-header::after {
+  left: max(12px, var(--neox-glass-radius, 10px)) !important;
+  right: max(12px, var(--neox-glass-radius, 10px)) !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-header::after {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* ============================================================
+ * Real glass card migration: disable the old fake ::after card.
+ * The visible white fog surface is .neox-shell__glass-card, a real grid
+ * container, so dividers and children are clipped by its radius naturally.
+ * ============================================================ */
+:root[data-theme-pack] .neox-shell {
+  --neox-glass-margin: 4px;
+  --neox-glass-radius: 10px;
+  --neox-glass-card-bg: rgba(247, 247, 247, 0.84);
+  --neox-glass-card-filter: blur(18px) saturate(115%);
+  --neox-glass-card-border: 1px solid rgba(255, 255, 255, 0.70);
+  --neox-glass-card-shadow: none;
+}
+:root[data-theme-pack] .neox-shell::after {
+  display: none !important;
+}
+:root[data-theme-pack] .neox-shell__glass-card {
+  background-color: var(--neox-glass-card-bg) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter) !important;
+  backdrop-filter: var(--neox-glass-card-filter) !important;
+  border: var(--neox-glass-card-border) !important;
+  box-shadow: var(--neox-glass-card-shadow) !important;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell__glass-card {
+  background-color: rgba(247, 247, 247, 0.84) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(115%) !important;
+  backdrop-filter: blur(18px) saturate(115%) !important;
+}
+:root[data-glass-off][data-theme-pack] .neox-shell__glass-card {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22) !important;
+}
+:root[data-glass-off][data-theme-pack][data-theme="light"] .neox-shell__glass-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  /* v4 light hairline: 顶部 55% 白高光 (像玻璃顶上折射阳光) + 底部 5% 黑细暗 */
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(15, 23, 42, 0.05) !important;
+}
+
+:root[data-glass-off][data-theme-pack][data-theme="dark"] .neox-shell__glass-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  /* v4 dark hairline: 顶部 8% 白细高光 + 底部 22% 黑暗 hairline (模拟"窗口边压在 wallpaper") */
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22) !important;
+}
+:root[data-glass-off][data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] .neox-shell__glass-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22) !important;
+}
+
+/* Keep overlay popovers fixed; the broad theme-pack child z-index rule above is
+ * only for shell regions and must not turn overlays into relative boxes. */
+:root[data-theme-pack] .neox-taskdetail-popover {
+  position: fixed !important;
+  z-index: 6000 !important;
+}
+
+/* ============================================================
+ * QQ warm-white calibration for wallpaper/theme-pack light mode.
+ * Use warm cream-white rgba instead of pure rgb(247,247,247), otherwise the
+ * acrylic reads blue/cold against QQ's rice-gray UI.
+ * ============================================================ */
+:root[data-theme-pack][data-theme="light"] {
+  --pack-tint:        rgba(246, 246, 243, 0.60);
+  --pack-tint-strong: rgba(246, 246, 243, 0.70);
+  --pack-tint-card:   rgba(246, 246, 243, 0.80);
+  --pack-edge:        rgba(45, 43, 38, 0.052);
+  --pack-edge-strong: rgba(45, 43, 38, 0.085);
+  --neox-bg-card:     rgba(246, 246, 243, 0.74) !important;
+  --neox-bg-muted:    rgba(232, 232, 229, 0.48) !important;
+  --neox-bg-elevated: rgba(246, 246, 243, 0.84) !important;
+  --bg-card:          rgba(246, 246, 243, 0.74) !important;
+  --bg-muted:         rgba(232, 232, 229, 0.48) !important;
+  --bg-elevated:      rgba(246, 246, 243, 0.84) !important;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(245, 245, 243, 0.86);
+  --neox-glass-card-border: 1px solid rgba(255, 255, 252, 0.70);
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell__glass-card {
+  background-color: rgba(245, 245, 243, 0.86) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(108%) !important;
+  backdrop-filter: blur(18px) saturate(108%) !important;
+  border-color: rgba(255, 255, 252, 0.70) !important;
+}
+:root[data-theme-pack][data-theme="light"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 58%, var(--neox-bg-elevated, #fff) 42%) !important;
+  border-color: rgba(28, 25, 23, 0.08) !important;
+}
+
+/* ============================================================
+ * QQ dark/night calibration — do NOT reuse light white-fog values.
+ * QQ dark is layered charcoal: black titlebar, dark card, slightly lighter
+ * list panels, and muted gray selection. The real card remains a card, but it
+ * is a deep acrylic surface instead of a white fog overlay.
+ * ============================================================ */
+:root[data-theme-pack][data-theme="dark"] {
+  --pack-tint:        rgba(255, 255, 255, 0.035);
+  --pack-tint-strong: rgba(255, 255, 255, 0.070);
+  --pack-tint-card:   rgba(255, 255, 255, 0.055);
+  --pack-edge:        rgba(255, 255, 255, 0.075);
+  --pack-edge-strong: rgba(255, 255, 255, 0.12);
+  --pack-shadow:      none;
+
+  --neox-bg-canvas:   #111216 !important;
+  --neox-bg-card:     rgba(31, 31, 31, 0.92) !important;
+  --neox-bg-muted:    rgba(43, 43, 43, 0.88) !important;
+  --neox-bg-hover:    rgba(255, 255, 255, 0.075) !important;
+  --neox-bg-elevated: rgba(38, 38, 38, 0.94) !important;
+  --neox-bg-sunken:   rgba(18, 18, 18, 0.92) !important;
+  --neox-line:        rgba(255, 255, 255, 0.070) !important;
+  --neox-line-soft:   rgba(255, 255, 255, 0.045) !important;
+
+  --bg-card:          rgba(31, 31, 31, 0.92) !important;
+  --bg-muted:         rgba(43, 43, 43, 0.88) !important;
+  --bg-hover:         rgba(255, 255, 255, 0.075) !important;
+  --bg-elevated:      rgba(38, 38, 38, 0.94) !important;
+  --bg-tertiary:      rgba(18, 18, 18, 0.92) !important;
+}
+:root[data-theme-pack][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(30, 30, 30, 0.88);
+  --neox-glass-card-filter: blur(16px) saturate(95%);
+  --neox-glass-card-border: 1px solid rgba(255, 255, 255, 0.075);
+  --neox-glass-card-shadow: none;
+}
+:root[data-theme-pack][data-theme="dark"] .neox-shell::before {
+  opacity: 0.55;
+  filter: saturate(0.78) brightness(0.72);
+  background-blend-mode:
+    soft-light,
+    normal;
+}
+:root[data-theme-pack][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack][data-theme="dark"] .neox-shell__topbar {
+  background: var(--neox-bg-canvas) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(90%) !important;
+  backdrop-filter: blur(18px) saturate(90%) !important;
+}
+:root[data-theme-pack][data-theme="dark"] .neox-shell__glass-card {
+  background-color: var(--neox-bg-canvas) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(95%) !important;
+  backdrop-filter: blur(16px) saturate(95%) !important;
+  border-color: rgba(255, 255, 255, 0.075) !important;
+}
+:root[data-theme-pack][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack][data-theme="dark"] .neox-sidebar,
+:root[data-theme-pack][data-theme="dark"] .neox-shell__main,
+:root[data-theme-pack][data-theme="dark"] .neox-shell__right,
+:root[data-theme-pack][data-theme="dark"] .neox-rightpanel {
+  background: transparent !important;
+}
+:root[data-theme-pack][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack][data-theme="dark"] .file-tree-item.selected,
+:root[data-theme-pack][data-theme="dark"] .editor-tab.active {
+  background: rgba(255, 255, 255, 0.105) !important;
+}
+:root[data-theme-pack][data-theme="dark"] .atl-composer__box {
+  background: rgba(38, 38, 38, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.085) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(14px) saturate(96%) !important;
+  backdrop-filter: blur(14px) saturate(96%) !important;
+}
+
+/* ============================================================
+ * Moye / QQ dark exact pass — preset-specific, not shared with Liuli.
+ * Reference QQ dark uses nearly neutral charcoal layers, not a gray/white fog.
+ *   topbar: #1B1B1B
+ *   main surfaces: #222222
+ *   controls/hover: #2F2F2F
+ *   selected/bubbles: #3B3B3B
+ * ============================================================ */
+:root[data-theme-preset="moye"][data-theme="dark"] {
+  --neox-bg-canvas:   #1B1B1B !important;
+  --neox-bg-panel:    #222222 !important;
+  --neox-bg-card:     #222222 !important;
+  --neox-bg-muted:    #2F2F2F !important;
+  --neox-bg-hover:    #2F2F2F !important;
+  --neox-bg-elevated: #303030 !important;
+  --neox-bg-sunken:   #1F1F1F !important;
+  --neox-line:        rgba(255, 255, 255, 0.065) !important;
+  --neox-line-soft:   rgba(255, 255, 255, 0.045) !important;
+  --neox-line-strong: rgba(255, 255, 255, 0.095) !important;
+
+  --pack-tint:        rgba(255, 255, 255, 0.000);
+  --pack-tint-strong: rgba(255, 255, 255, 0.055);
+  --pack-tint-card:   rgba(255, 255, 255, 0.045);
+  --pack-edge:        rgba(255, 255, 255, 0.065);
+  --pack-edge-strong: rgba(255, 255, 255, 0.095);
+  --pack-shadow:      none;
+
+  --bg-void:          #1B1B1B !important;
+  --bg-primary:       #222222 !important;
+  --bg-secondary:     #222222 !important;
+  --bg-tertiary:      #2F2F2F !important;
+  --bg-card:          #222222 !important;
+  --bg-muted:         #2F2F2F !important;
+  --bg-hover:         #2F2F2F !important;
+  --bg-elevated:      #303030 !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell {
+  background: #1B1B1B !important;
+  --neox-glass-card-bg: #222222;
+  --neox-glass-card-filter: none;
+  --neox-glass-card-border: 1px solid rgba(255, 255, 255, 0.055);
+  --neox-glass-card-shadow: none;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell::before {
+  opacity: 0.04 !important;
+  filter: grayscale(1) brightness(0.35) !important;
+  background-blend-mode: normal, normal !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__topbar {
+  background: #1B1B1B !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055) !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__glass-card {
+  background: #222222 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-color: rgba(255, 255, 255, 0.055) !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__rail,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-rail,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-sidebar,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__main,
+:root[data-theme-preset="moye"][data-theme="dark"] .agent-timeline,
+:root[data-theme-preset="moye"][data-theme="dark"] .chat-messages,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__right {
+  background: #222222 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-sidebar__search,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-sidebar__search input,
+:root[data-theme-preset="moye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-preset="moye"][data-theme="dark"] .atl-msg__bubble,
+:root[data-theme-preset="moye"][data-theme="dark"] .atl-code,
+:root[data-theme-preset="moye"][data-theme="dark"] .markdown-content .md-code-block {
+  background: #2F2F2F !important;
+  border-color: rgba(255, 255, 255, 0.065) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .atl-composer__box {
+  background: #1F1F1F !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-preset="moye"][data-theme="dark"] .file-tree-item.selected,
+:root[data-theme-preset="moye"][data-theme="dark"] .editor-tab.active {
+  background: #3B3B3B !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-shell__right,
+:root[data-theme-preset="moye"][data-theme="dark"] .neox-rightpanel,
+:root[data-theme-preset="moye"][data-theme="dark"] .ide-aipanel,
+:root[data-theme-preset="moye"][data-theme="dark"] .rc-panel__card {
+  border-left-color: rgba(255, 255, 255, 0.065) !important;
+}
+:root[data-theme-preset="moye"][data-theme="dark"] .atl-header,
+:root[data-theme-preset="moye"][data-theme="dark"] .ide-side__head,
+:root[data-theme-preset="moye"][data-theme="dark"] .editor-tabs-bar,
+:root[data-theme-preset="moye"][data-theme="dark"] .atl-composer__top {
+  border-bottom-color: rgba(255, 255, 255, 0.065) !important;
+}
+
+/* ============================================================
+ * Preset-aware QQ acrylic — light colorful themes
+ * ------------------------------------------------------------
+ * These themes should not use the same pure-white glass. QQ's colorful themes
+ * keep the wallpaper hue under acrylic: tint is sampled from the preset
+ * background, then softened with a translucent light layer.
+ * ============================================================ */
+:root[data-theme-preset="chenguang"][data-theme="light"] {
+  /* 晨光: coral / peach background, glass should be warm peach-white. */
+  --neox-bg-canvas:   #F5B2AA !important;
+  --neox-bg-panel:    rgba(255, 239, 232, 0.74) !important;
+  --neox-bg-card:     rgba(255, 246, 240, 0.78) !important;
+  --neox-bg-muted:    rgba(243, 212, 207, 0.54) !important;
+  --neox-bg-hover:    rgba(170, 84, 84, 0.090) !important;
+  --neox-line:        rgba(120, 70, 65, 0.080) !important;
+  --neox-line-soft:   rgba(120, 70, 65, 0.052) !important;
+  --pack-tint:        rgba(255, 236, 229, 0.48);
+  --pack-tint-strong: rgba(255, 231, 222, 0.62);
+  --pack-tint-card:   rgba(255, 245, 239, 0.70);
+  --pack-edge:        rgba(120, 70, 65, 0.070);
+  --pack-edge-strong: rgba(120, 70, 65, 0.115);
+}
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 241, 234, 0.66);
+  --neox-glass-card-filter: blur(20px) saturate(118%);
+  --neox-glass-card-border: 1px solid rgba(255, 252, 248, 0.50);
+}
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-shell::before {
+  opacity: 0.92;
+  filter: saturate(1.05) brightness(1.02);
+}
+
+:root[data-theme-preset="nuanyang"][data-theme="light"] {
+  /* 暖阳: golden cream background, glass should be honey/cream not pure white. */
+  --neox-bg-canvas:   #F2D39A !important;
+  --neox-bg-panel:    rgba(255, 244, 218, 0.76) !important;
+  --neox-bg-card:     rgba(255, 249, 232, 0.78) !important;
+  --neox-bg-muted:    rgba(237, 216, 174, 0.56) !important;
+  --neox-bg-hover:    rgba(142, 101, 36, 0.085) !important;
+  --neox-line:        rgba(118, 86, 38, 0.078) !important;
+  --neox-line-soft:   rgba(118, 86, 38, 0.050) !important;
+  --pack-tint:        rgba(255, 244, 218, 0.50);
+  --pack-tint-strong: rgba(255, 238, 204, 0.64);
+  --pack-tint-card:   rgba(255, 249, 232, 0.72);
+  --pack-edge:        rgba(118, 86, 38, 0.070);
+  --pack-edge-strong: rgba(118, 86, 38, 0.115);
+}
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 245, 222, 0.66);
+  --neox-glass-card-filter: blur(20px) saturate(112%);
+  --neox-glass-card-border: 1px solid rgba(255, 253, 242, 0.52);
+}
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-shell::before {
+  opacity: 0.92;
+  filter: saturate(1.00) brightness(1.03);
+}
+
+:root[data-theme-preset="liuli"][data-theme="light"] {
+  /* Legacy preset id liuli now represents the user-facing Soft White theme. */
+  --neox-bg-canvas:   #fbfbfa !important;
+  --neox-bg-panel:    #f2f3f3 !important;
+  --neox-bg-card:     rgba(255, 255, 255, 0.94) !important;
+  --neox-bg-muted:    rgba(36, 41, 47, 0.045) !important;
+  --neox-bg-hover:    rgba(36, 41, 47, 0.060) !important;
+  --neox-line:        rgba(36, 41, 47, 0.090) !important;
+  --neox-line-soft:   rgba(36, 41, 47, 0.060) !important;
+  --pack-tint:        rgba(255, 255, 255, 0.74);
+  --pack-tint-strong: rgba(255, 255, 255, 0.86);
+  --pack-tint-card:   rgba(255, 255, 255, 0.94);
+  --pack-edge:        rgba(36, 41, 47, 0.065);
+  --pack-edge-strong: rgba(36, 41, 47, 0.110);
+}
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 255, 255, 0.90);
+  --neox-glass-card-filter: blur(14px) saturate(106%) brightness(1.02);
+  --neox-glass-card-border: 1px solid rgba(36, 41, 47, 0.060);
+}
+
+/* Shared light preset acrylic application: let wallpaper color participate. */
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-shell__glass-card,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-shell__glass-card,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-shell__glass-card {
+  background-color: var(--neox-glass-card-bg) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter) !important;
+  backdrop-filter: var(--neox-glass-card-filter) !important;
+  border: var(--neox-glass-card-border) !important;
+  box-shadow: none !important;
+}
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-shell__sidebar,
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-sidebar,
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-shell__main,
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-shell__right,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-shell__sidebar,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-sidebar,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-shell__main,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-shell__right,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-shell__sidebar,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-sidebar,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-shell__main,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-shell__right {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-sidebar__search,
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-sidebar__search input,
+:root[data-theme-preset="chenguang"][data-theme="light"] .atl-composer__box,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-sidebar__search,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-sidebar__search input,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .atl-composer__box,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-sidebar__search,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-sidebar__search input,
+:root[data-theme-preset="liuli"][data-theme="light"] .atl-composer__box {
+  background: var(--pack-tint-card) !important;
+  border-color: var(--pack-edge) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(112%) !important;
+  backdrop-filter: blur(16px) saturate(112%) !important;
+  box-shadow: none !important;
+}
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-session-item.is-active,
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-session-item[aria-selected="true"],
+:root[data-theme-preset="chenguang"][data-theme="light"] .neox-session-item:hover,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-session-item.is-active,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-session-item[aria-selected="true"],
+:root[data-theme-preset="nuanyang"][data-theme="light"] .neox-session-item:hover,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-session-item.is-active,
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-session-item[aria-selected="true"],
+:root[data-theme-preset="liuli"][data-theme="light"] .neox-session-item:hover {
+  background: var(--pack-tint-strong) !important;
+}
+
+/* ============================================================
+ * QQ acrylic physics pass — data-theme-pack pipeline
+ * ------------------------------------------------------------
+ * The current ThemePack runtime writes data-theme-pack, not the legacy
+ * data-theme-preset attribute.  Keep this block at the end so every built-in
+ * wallpaper theme gets the same QQ-like acrylic behavior:
+ *   - stronger backdrop blur,
+ *   - lower surface alpha so wallpaper hue actually participates,
+ *   - inner regions stay transparent (no stacked solid white fog),
+ *   - controls/selected rows use only a thin local acrylic layer.
+ * ============================================================ */
+:root[data-theme-pack][data-theme="light"] .neox-shell {
+  --neox-glass-card-filter: blur(42px) saturate(122%) brightness(1.04);
+  --neox-glass-card-border: 1px solid rgba(255, 255, 255, 0.34);
+  --neox-panel-divider: 1px;
+}
+
+/* Basic light / Soft White: neutral Codex-like white, no purple-blue cast. */
+:root[data-theme-pack="liulibasic"][data-theme="light"] {
+  --pack-tint:        rgba(255, 255, 255, 0.74);
+  --pack-tint-strong: rgba(255, 255, 255, 0.86);
+  --pack-tint-card:   rgba(255, 255, 255, 0.94);
+  --pack-edge:        rgba(36, 41, 47, 0.065);
+  --pack-edge-strong: rgba(36, 41, 47, 0.110);
+  --neox-bg-elevated: rgba(255, 255, 255, 0.98) !important;
+  --bg-card:          rgba(255, 255, 255, 0.94) !important;
+  --bg-muted:         rgba(36, 41, 47, 0.045) !important;
+  --bg-hover:         rgba(36, 41, 47, 0.060) !important;
+  --bg-elevated:      rgba(255, 255, 255, 0.98) !important;
+  --bg-tertiary:      rgba(36, 41, 47, 0.035) !important;
+}
+:root[data-theme-pack="liulibasic"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 255, 255, 0.90);
+  --neox-glass-card-filter: blur(14px) saturate(106%) brightness(1.02);
+  --neox-glass-card-border: 1px solid rgba(36, 41, 47, 0.060);
+}
+:root[data-theme-pack="liulibasic"][data-theme="light"] .neox-shell::before {
+  opacity: 1 !important;
+  filter: saturate(1) contrast(1) brightness(1.01) !important;
+  background-blend-mode: normal, normal !important;
+}
+
+/* Vivid / picture light themes: less white paint, more real blur. */
+:root[data-theme-pack="liuli"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(244, 238, 252, 0.46);
+  --pack-tint:        rgba(246, 238, 252, 0.24);
+  --pack-tint-strong: rgba(238, 229, 250, 0.38);
+  --pack-tint-card:   rgba(250, 247, 253, 0.40);
+  --pack-edge:        rgba(55, 46, 90, 0.062);
+  --pack-edge-strong: rgba(55, 46, 90, 0.096);
+}
+:root[data-theme-pack="chenguang"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 228, 238, 0.42);
+  --pack-tint:        rgba(255, 224, 236, 0.22);
+  --pack-tint-strong: rgba(246, 210, 230, 0.36);
+  --pack-tint-card:   rgba(255, 238, 246, 0.40);
+  --pack-edge:        rgba(112, 62, 92, 0.060);
+  --pack-edge-strong: rgba(112, 62, 92, 0.095);
+}
+:root[data-theme-pack="nuanyang"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 234, 198, 0.42);
+  --pack-tint:        rgba(255, 232, 194, 0.24);
+  --pack-tint-strong: rgba(248, 218, 174, 0.38);
+  --pack-tint-card:   rgba(255, 244, 224, 0.42);
+  --pack-edge:        rgba(126, 82, 30, 0.060);
+  --pack-edge-strong: rgba(126, 82, 30, 0.095);
+}
+:root[data-theme-pack="moye"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(226, 246, 235, 0.42);
+  --pack-tint:        rgba(220, 244, 234, 0.23);
+  --pack-tint-strong: rgba(204, 233, 222, 0.38);
+  --pack-tint-card:   rgba(239, 250, 245, 0.42);
+  --pack-edge:        rgba(34, 88, 68, 0.060);
+  --pack-edge-strong: rgba(34, 88, 68, 0.095);
+}
+
+/* Ink / aurora light themes: sampled from their wallpaper families, never pure white. */
+:root[data-theme-pack="dianyajin"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 240, 204, 0.45);
+  --pack-tint: rgba(255, 238, 198, 0.24);
+  --pack-tint-strong: rgba(238, 214, 166, 0.38);
+  --pack-tint-card: rgba(255, 248, 229, 0.42);
+  --pack-edge: rgba(116, 84, 32, 0.062);
+}
+:root[data-theme-pack="dingxiangzi"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(241, 231, 246, 0.44);
+  --pack-tint: rgba(237, 225, 246, 0.23);
+  --pack-tint-strong: rgba(224, 213, 238, 0.37);
+  --pack-tint-card: rgba(249, 245, 252, 0.42);
+  --pack-edge: rgba(82, 58, 104, 0.060);
+}
+:root[data-theme-pack="chenshazhu"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 226, 213, 0.43);
+  --pack-tint: rgba(255, 222, 208, 0.23);
+  --pack-tint-strong: rgba(242, 205, 190, 0.37);
+  --pack-tint-card: rgba(255, 242, 235, 0.42);
+  --pack-edge: rgba(118, 50, 38, 0.060);
+}
+:root[data-theme-pack="sakura"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(255, 226, 238, 0.42);
+  --pack-tint: rgba(255, 224, 236, 0.23);
+  --pack-tint-strong: rgba(248, 209, 226, 0.37);
+  --pack-tint-card: rgba(255, 242, 248, 0.42);
+  --pack-edge: rgba(122, 52, 82, 0.060);
+}
+:root[data-theme-pack="musanzi"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(238, 233, 246, 0.43);
+  --pack-tint: rgba(236, 230, 246, 0.23);
+  --pack-tint-strong: rgba(220, 228, 218, 0.37);
+  --pack-tint-card: rgba(248, 246, 252, 0.42);
+  --pack-edge: rgba(82, 56, 102, 0.058);
+}
+:root[data-theme-pack="qingkong"][data-theme="light"] .neox-shell {
+  --neox-glass-card-bg: rgba(226, 239, 250, 0.43);
+  --pack-tint: rgba(222, 237, 250, 0.23);
+  --pack-tint-strong: rgba(213, 228, 242, 0.37);
+  --pack-tint-card: rgba(242, 248, 253, 0.42);
+  --pack-edge: rgba(42, 84, 118, 0.058);
+}
+
+:root[data-theme-pack][data-theme="light"] .neox-shell__glass-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.07)),
+    var(--neox-glass-card-bg) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter) !important;
+  backdrop-filter: var(--neox-glass-card-filter) !important;
+  border: var(--neox-glass-card-border) !important;
+  box-shadow: none !important;
+}
+
+/* Keep actual work regions transparent; the one real card provides the blur. */
+:root[data-theme-pack][data-theme="light"] .neox-shell__rail,
+:root[data-theme-pack][data-theme="light"] .neox-rail,
+:root[data-theme-pack][data-theme="light"] .neox-shell__sidebar,
+:root[data-theme-pack][data-theme="light"] .neox-sidebar,
+:root[data-theme-pack][data-theme="light"] .neox-shell__main,
+:root[data-theme-pack][data-theme="light"] .agent-timeline,
+:root[data-theme-pack][data-theme="light"] .chat-messages,
+:root[data-theme-pack][data-theme="light"] .neox-shell__right,
+:root[data-theme-pack][data-theme="light"] .neox-rightpanel {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Controls get a small local acrylic surface, not a second opaque card.
+ * Composer 单独走浮层阴影, 不在这里清 shadow. */
+:root[data-theme-pack][data-theme="light"] .neox-sidebar__search,
+:root[data-theme-pack][data-theme="light"] .neox-sidebar__search input,
+:root[data-theme-pack][data-theme="light"] .atl-msg__bubble,
+:root[data-theme-pack][data-theme="light"] .rc-panel__card,
+:root[data-theme-pack][data-theme="light"] .ide-aipanel,
+:root[data-theme-pack][data-theme="light"] .editor-tab.active {
+  background: var(--pack-tint-card) !important;
+  border-color: var(--pack-edge) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(118%) brightness(1.03) !important;
+  backdrop-filter: blur(26px) saturate(118%) brightness(1.03) !important;
+  box-shadow: none !important;
+}
+
+/* Composer: 扁平实色跟画布同色相；壁纸/玻璃主题走文末 acrylic 覆写 */
+:root[data-theme-pack][data-theme="light"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 58%, var(--neox-bg-elevated, #fff) 42%) !important;
+  border-color: rgba(28, 25, 23, 0.08) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow:
+    0 1px 1px rgba(28, 25, 23, 0.03),
+    0 6px 20px rgba(28, 25, 23, 0.045) !important;
+}
+
+:root[data-theme-pack][data-theme="light"] .neox-session-item.is-active,
+:root[data-theme-pack][data-theme="light"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack][data-theme="light"] .file-tree-item.selected {
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(116%) !important;
+  backdrop-filter: blur(22px) saturate(116%) !important;
+}
+:root[data-theme-pack][data-theme="light"] .neox-session-item:hover,
+:root[data-theme-pack][data-theme="light"] .file-tree-item:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 4.5%, transparent);
+}
+
+:root[data-theme-pack][data-theme="light"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before,
+:root[data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-shell__right,
+:root[data-theme-pack][data-theme="light"] .neox-shell.has-surface .neox-rightpanel {
+  border-color: var(--pack-edge) !important;
+}
+:root[data-theme-pack][data-theme="light"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  background: var(--pack-edge) !important;
+}
+
+/* Dark basic premium pass: neutral charcoal, brighter surfaces, no chroma accent. */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --neox-bg-canvas: #17181b !important;
+  --neox-bg-panel: rgba(31, 33, 37, 0.92) !important;
+  --neox-bg-card: rgba(255, 255, 255, 0.078) !important;
+  --neox-bg-muted: rgba(255, 255, 255, 0.062) !important;
+  --neox-bg-hover: rgba(255, 255, 255, 0.110) !important;
+  --neox-bg-elevated: rgba(38, 40, 45, 0.94) !important;
+  --neox-bg-sunken: rgba(0, 0, 0, 0.24) !important;
+  --neox-line: rgba(255, 255, 255, 0.118) !important;
+  --neox-line-soft: rgba(255, 255, 255, 0.074) !important;
+  --neox-line-strong: rgba(255, 255, 255, 0.180) !important;
+  --neox-accent: #e8eaed !important;
+  --neox-primary-900: #30343a !important;
+  --neox-primary-800: #4c535c !important;
+  --neox-primary-700: #565d66 !important;
+  --neox-primary-600: #666c75 !important;
+  --neox-primary-500: #9298a1 !important;
+  --neox-primary-400: #b2b7be !important;
+  --neox-primary-300: #d7d9dd !important;
+  --neox-primary-200: rgba(255, 255, 255, 0.24) !important;
+  --neox-primary-100: rgba(255, 255, 255, 0.145) !important;
+  --neox-primary-50: rgba(255, 255, 255, 0.082) !important;
+  --neox-primary-25: rgba(255, 255, 255, 0.050) !important;
+  --neox-primary-ring: rgba(255, 255, 255, 0.18) !important;
+  --text-accent: #e8eaed !important;
+  --accent-900: #24272d !important;
+  --accent-800: #30343a !important;
+  --accent-700: #4c535c !important;
+  --accent-600: #565d66 !important;
+  --accent-500: #666c75 !important;
+  --accent-400: #9298a1 !important;
+  --accent-300: #b2b7be !important;
+  --accent-200: #d7d9dd !important;
+  --accent-100: rgba(255, 255, 255, 0.24) !important;
+  --accent-50: rgba(255, 255, 255, 0.145) !important;
+  --border-accent: rgba(255, 255, 255, 0.18) !important;
+  --border-accent-bright: rgba(255, 255, 255, 0.28) !important;
+  --shadow-accent: 0 0 0 rgba(0, 0, 0, 0) !important;
+  --gold-900: var(--accent-900) !important;
+  --gold-800: var(--accent-800) !important;
+  --gold-700: var(--accent-700) !important;
+  --gold-600: var(--accent-600) !important;
+  --gold-500: var(--accent-500) !important;
+  --gold-400: var(--accent-400) !important;
+  --gold-300: var(--accent-300) !important;
+  --gold-200: var(--accent-200) !important;
+  --gold-100: var(--accent-100) !important;
+  --gold-50: var(--accent-50) !important;
+  --gold-500-rgb: 146, 152, 161 !important;
+  --gold-rgb: 146, 152, 161 !important;
+  --text-gold: var(--text-accent) !important;
+  --border-gold: var(--border-accent) !important;
+  --border-gold-bright: var(--border-accent-bright) !important;
+  --shadow-gold: var(--shadow-accent) !important;
+  --xterm-cursor: #f2f3f5 !important;
+  --xterm-selection: rgba(255, 255, 255, 0.18) !important;
+  --pack-tint: rgba(255, 255, 255, 0.048);
+  --pack-tint-strong: rgba(255, 255, 255, 0.126);
+  --pack-tint-card: rgba(255, 255, 255, 0.086);
+  --pack-edge: rgba(255, 255, 255, 0.112);
+  --pack-edge-strong: rgba(255, 255, 255, 0.190);
+  --bg-primary: #17181b !important;
+  --bg-secondary: rgba(31, 33, 37, 0.92) !important;
+  --bg-card: rgba(255, 255, 255, 0.078) !important;
+  --bg-muted: rgba(255, 255, 255, 0.062) !important;
+  --bg-hover: rgba(255, 255, 255, 0.110) !important;
+  --bg-elevated: rgba(38, 40, 45, 0.94) !important;
+  --bg-tertiary: rgba(0, 0, 0, 0.24) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  background: #17181b !important;
+  --neox-glass-card-bg: rgba(26, 28, 32, 0.82);
+  --neox-glass-card-filter: blur(22px) saturate(104%) brightness(1.06);
+  --neox-glass-card-border: 1px solid rgba(255, 255, 255, 0.118);
+  --neox-glass-card-shadow: 0 24px 60px -44px rgba(0, 0, 0, 0.82);
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::before {
+  opacity: 0.78 !important;
+  filter: saturate(0) contrast(1.03) brightness(1.02) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"] .chat-messages,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__right {
+  background: transparent !important;
+  box-shadow: none;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.058), rgba(0, 0, 0, 0.048)),
+    var(--neox-glass-card-bg) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter) !important;
+  backdrop-filter: var(--neox-glass-card-filter) !important;
+  border-color: rgba(255, 255, 255, 0.118) !important;
+  box-shadow: var(--neox-glass-card-shadow) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__bubble,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-code-block {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(0, 0, 0, 0.034)),
+    color-mix(in srgb, var(--pack-tint-card) 78%, rgba(18, 19, 23, 0.86)) !important;
+  border-color: rgba(255, 255, 255, 0.118) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(112%) !important;
+  backdrop-filter: blur(18px) saturate(112%) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.035) inset !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.088), rgba(255, 255, 255, 0.040)),
+    rgba(49, 51, 56, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.165) !important;
+  border-radius: 19px !important;
+  padding: 7px 10px 7px !important;
+  gap: 5px !important;
+  box-shadow:
+    0 10px 28px -22px rgba(0, 0, 0, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.085) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(108%) brightness(1.04) !important;
+  backdrop-filter: blur(24px) saturate(108%) brightness(1.04) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer {
+  padding-top: 4px !important;
+  padding-bottom: 8px !important;
+  background: transparent !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  padding: 2px 4px 5px !important;
+  margin-bottom: 4px !important;
+  row-gap: 4px !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top::after {
+  left: 2px !important;
+  right: 2px !important;
+  background: rgba(255, 255, 255, 0.088) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  min-height: 34px !important;
+  max-height: 104px !important;
+  padding: 4px 4px 2px !important;
+  color: #f2f3f5 !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.55 !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input::placeholder {
+  color: rgba(236, 238, 241, 0.48) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__actions {
+  padding-top: 1px !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn {
+  color: rgba(238, 240, 243, 0.62) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn.is-active {
+  background: rgba(255, 255, 255, 0.090) !important;
+  color: #f2f3f5 !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item.selected,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab.active {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.142), transparent 86%),
+    rgba(255, 255, 255, 0.102) !important;
+  border-color: rgba(255, 255, 255, 0.170) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo {
+  filter: grayscale(1) saturate(0) contrast(1.18) brightness(1.18) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill[aria-expanded="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval--manual,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__effort-opt.is-selected {
+  background: rgba(255, 255, 255, 0.118) !important;
+  border-color: rgba(255, 255, 255, 0.185) !important;
+  color: #f3f4f6 !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] {
+  color: #f4f5f7 !important;
+  box-shadow:
+    inset 3px 0 0 rgba(255, 255, 255, 0.82),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.135) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active *,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] * {
+  color: inherit !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-inline-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .md-inline-code {
+  background: rgba(255, 255, 255, 0.075) !important;
+  color: #eef0f2 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content td .md-inline-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content th .md-inline-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content td code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content th code {
+  background: transparent;
+  padding: 0;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send {
+  background: #f2f3f5 !important;
+  color: #151619 !important;
+  height: 24px !important;
+  min-width: 28px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover {
+  background: #ffffff !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: rgba(255, 255, 255, 0.115) !important;
+  color: rgba(255, 255, 255, 0.42) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge {
+  background: rgba(255, 255, 255, 0.072) !important;
+  border-color: rgba(255, 255, 255, 0.105) !important;
+  color: #e7e9ec !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge:hover {
+  background: rgba(255, 255, 255, 0.112) !important;
+  border-color: rgba(255, 255, 255, 0.160) !important;
+  color: #ffffff !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn__ring,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__caret,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__pct {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__track-fill {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan {
+  background: #f2f3f5 !important;
+  color: #17181b !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-agentcard__avatar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon {
+  background: linear-gradient(135deg, #f1f2f4 0%, #aeb4bc 100%) !important;
+  color: #17181b !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 2px 6px rgba(0, 0, 0, 0.22) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill {
+  background: rgba(255, 255, 255, 0.086) !important;
+  border-color: rgba(255, 255, 255, 0.125) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill:hover {
+  background: rgba(255, 255, 255, 0.125) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__name {
+  color: #f0f1f3 !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.046)),
+    rgba(54, 56, 61, 0.82) !important;
+  border-color: rgba(255, 255, 255, 0.230) !important;
+  box-shadow:
+    0 10px 28px -22px rgba(0, 0, 0, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.095),
+    0 0 0 2px rgba(255, 255, 255, 0.060) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:focus-visible {
+  border-color: rgba(255, 255, 255, 0.210) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.070) !important;
+  outline: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode {
+  background: rgba(255, 255, 255, 0.060) !important;
+  border: 1px solid rgba(255, 255, 255, 0.082) !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn {
+  color: rgba(239, 241, 244, 0.62) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.060) !important;
+  color: #f0f1f3 !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn.is-active {
+  background: rgba(255, 255, 255, 0.155) !important;
+  color: #f5f6f8 !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__role--user,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row-snippet mark {
+  background: rgba(255, 255, 255, 0.125) !important;
+  color: #f2f3f5 !important;
+}
+
+/* Anye final acrylic pass: warm black glass, neutral white accent, no purple/cement gray. */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --neox-bg-canvas: #101010 !important;
+  --neox-bg-panel: rgba(22, 22, 21, 0.68) !important;
+  --neox-bg-card: rgba(255, 255, 255, 0.052) !important;
+  --neox-bg-muted: rgba(255, 255, 255, 0.056) !important;
+  --neox-bg-hover: rgba(255, 255, 255, 0.082) !important;
+  --neox-bg-elevated: rgba(255, 255, 255, 0.066) !important;
+  --neox-bg-sunken: rgba(0, 0, 0, 0.34) !important;
+  --neox-line: rgba(255, 255, 255, 0.082) !important;
+  --neox-line-soft: rgba(255, 255, 255, 0.050) !important;
+  --neox-line-strong: rgba(255, 255, 255, 0.126) !important;
+  --neox-line-subtle: rgba(255, 255, 255, 0.032) !important;
+  --neox-fg-primary: #f2f2f0 !important;
+  --neox-fg-secondary: rgba(242, 242, 240, 0.78) !important;
+  --neox-fg-muted: rgba(242, 242, 240, 0.62) !important;
+  --neox-fg-hint: rgba(242, 242, 240, 0.42) !important;
+  --neox-fg-invert: #101010 !important;
+  --neox-accent: #d8d8d4 !important;
+  --neox-primary-900: #1f1f1e !important;
+  --neox-primary-800: #2f2f2c !important;
+  --neox-primary-700: #eeeeea !important;
+  --neox-primary-600: #d8d8d4 !important;
+  --neox-primary-500: #bdbdb8 !important;
+  --neox-primary-400: #f2f2ef !important;
+  --neox-primary-300: #ffffff !important;
+  --neox-primary-200: rgba(255, 255, 255, 0.20) !important;
+  --neox-primary-100: rgba(255, 255, 255, 0.118) !important;
+  --neox-primary-50: rgba(255, 255, 255, 0.072) !important;
+  --neox-primary-25: rgba(255, 255, 255, 0.042) !important;
+  --neox-primary-ring: rgba(255, 255, 255, 0.11) !important;
+  --text-accent: #d8d8d4 !important;
+  --accent-900: #1f1f1e !important;
+  --accent-800: #2f2f2c !important;
+  --accent-700: #eeeeea !important;
+  --accent-600: #d8d8d4 !important;
+  --accent-500: #bdbdb8 !important;
+  --accent-400: #f2f2ef !important;
+  --accent-300: #ffffff !important;
+  --accent-200: rgba(255, 255, 255, 0.20) !important;
+  --accent-100: rgba(255, 255, 255, 0.118) !important;
+  --accent-50: rgba(255, 255, 255, 0.072) !important;
+  --border-accent: rgba(255, 255, 255, 0.112) !important;
+  --border-accent-bright: rgba(255, 255, 255, 0.170) !important;
+  --shadow-accent: none !important;
+  --gold-900: var(--accent-900) !important;
+  --gold-800: var(--accent-800) !important;
+  --gold-700: var(--accent-700) !important;
+  --gold-600: var(--accent-600) !important;
+  --gold-500: var(--accent-500) !important;
+  --gold-400: var(--accent-400) !important;
+  --gold-300: var(--accent-300) !important;
+  --gold-200: var(--accent-200) !important;
+  --gold-100: var(--accent-100) !important;
+  --gold-50: var(--accent-50) !important;
+  --gold-500-rgb: 189, 189, 184 !important;
+  --gold-rgb: 189, 189, 184 !important;
+  --text-gold: #d8d8d4 !important;
+  --border-gold: rgba(255, 255, 255, 0.112) !important;
+  --border-gold-bright: rgba(255, 255, 255, 0.170) !important;
+  --shadow-gold: none !important;
+  --pack-tint: rgba(255, 255, 255, 0.035);
+  --pack-tint-strong: rgba(255, 255, 255, 0.078);
+  --pack-tint-card: rgba(255, 255, 255, 0.052);
+  --pack-edge: rgba(255, 255, 255, 0.074);
+  --pack-edge-strong: rgba(255, 255, 255, 0.112);
+  --pack-shadow: none;
+  --bg-primary: #101010 !important;
+  --bg-secondary: rgba(22, 22, 21, 0.68) !important;
+  --bg-card: rgba(255, 255, 255, 0.052) !important;
+  --bg-muted: rgba(255, 255, 255, 0.056) !important;
+  --bg-hover: rgba(255, 255, 255, 0.082) !important;
+  --bg-elevated: rgba(255, 255, 255, 0.066) !important;
+  --bg-tertiary: rgba(0, 0, 0, 0.34) !important;
+  --bg-code: rgba(13, 13, 13, 0.86) !important;
+  --shell-card-bg: rgba(16, 16, 15, 0.72) !important;
+  --shell-card-border: rgba(255, 255, 255, 0.070) !important;
+  --shell-card-hover-bg: rgba(255, 255, 255, 0.060) !important;
+  --shell-status-running: #d8d8d4 !important;
+  --shell-status-running-soft: rgba(255, 255, 255, 0.095) !important;
+  --xterm-bg: rgba(13, 13, 13, 0.86) !important;
+  --xterm-fg: #e9e9e4 !important;
+  --xterm-cursor: #f2f2ef !important;
+  --xterm-cursor-accent: #101010 !important;
+  --xterm-selection: rgba(255, 255, 255, 0.17) !important;
+  --xterm-border: rgba(255, 255, 255, 0.076) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  background: #101010 !important;
+  --neox-glass-margin: 4px;
+  --neox-glass-radius: 12px;
+  --neox-glass-card-bg: rgba(21, 21, 20, 0.56);
+  --neox-glass-card-filter: blur(34px) saturate(128%) brightness(1.02);
+  --neox-glass-card-border: 1px solid rgba(255, 255, 255, 0.074);
+  --neox-glass-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.060);
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::before {
+  opacity: 1 !important;
+  filter: none !important;
+  background-image:
+    radial-gradient(ellipse at 18% 8%, rgba(255, 255, 255, 0.082) 0%, transparent 38%),
+    radial-gradient(ellipse at 82% 70%, rgba(255, 255, 255, 0.044) 0%, transparent 42%),
+    linear-gradient(135deg, #171716 0%, #101010 48%, #0b0b0c 100%) !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-blend-mode: screen, screen, normal !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::after {
+  background-color: rgba(255, 255, 255, 0.010) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(8px) saturate(110%) !important;
+  backdrop-filter: blur(8px) saturate(110%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card {
+  background:
+    radial-gradient(circle at 50% -12%, rgba(255, 255, 255, 0.058), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.040), rgba(0, 0, 0, 0.052)),
+    var(--neox-glass-card-bg) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter) !important;
+  backdrop-filter: var(--neox-glass-card-filter) !important;
+  border: var(--neox-glass-card-border) !important;
+  box-shadow: var(--neox-glass-card-shadow) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar {
+  background: rgba(14, 14, 14, 0.52) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.052) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(118%) !important;
+  backdrop-filter: blur(22px) saturate(118%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"] .chat-messages,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightpanel {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tabs-bar::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell.has-surface .neox-shell__right::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  background: rgba(255, 255, 255, 0.058) !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell.has-surface .neox-shell__right::before,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.016)),
+    rgba(28, 28, 27, 0.46) !important;
+  border: 1px solid rgba(255, 255, 255, 0.086) !important;
+  border-radius: 13px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.060) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(122%) !important;
+  backdrop-filter: blur(28px) saturate(122%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.066), rgba(255, 255, 255, 0.020)),
+    rgba(31, 31, 30, 0.52) !important;
+  border-color: rgba(255, 255, 255, 0.120) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.072),
+    0 0 0 1px rgba(255, 255, 255, 0.020) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input:focus {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search__kbd {
+  background: rgba(255, 255, 255, 0.052) !important;
+  border-color: rgba(255, 255, 255, 0.090) !important;
+  box-shadow: none !important;
+  color: rgba(242, 242, 240, 0.56) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer {
+  background: transparent !important;
+  padding-top: 3px !important;
+  padding-bottom: 6px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.058), rgba(255, 255, 255, 0.018)),
+    rgba(27, 27, 26, 0.56) !important;
+  border: 1px solid rgba(255, 255, 255, 0.098) !important;
+  border-radius: 18px !important;
+  padding: 6px 9px 6px !important;
+  gap: 4px !important;
+  box-shadow:
+    0 10px 30px -26px rgba(0, 0, 0, 0.88),
+    inset 0 1px 0 rgba(255, 255, 255, 0.060) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(126%) !important;
+  backdrop-filter: blur(30px) saturate(126%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.066), rgba(255, 255, 255, 0.020)),
+    rgba(31, 31, 30, 0.62) !important;
+  border-color: rgba(255, 255, 255, 0.145) !important;
+  box-shadow:
+    0 10px 30px -26px rgba(0, 0, 0, 0.88),
+    inset 0 1px 0 rgba(255, 255, 255, 0.074),
+    0 0 0 1px rgba(255, 255, 255, 0.030) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  padding: 1px 4px 5px !important;
+  margin-bottom: 3px !important;
+  row-gap: 3px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top::after {
+  left: 3px !important;
+  right: 3px !important;
+  background: rgba(255, 255, 255, 0.050) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  min-height: 32px !important;
+  max-height: 104px !important;
+  padding: 4px 4px 2px !important;
+  color: #f2f2f0 !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.55 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input::placeholder {
+  color: rgba(242, 242, 240, 0.44) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__actions {
+  padding-top: 0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn {
+  color: rgba(242, 242, 240, 0.58) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn.is-active {
+  background: rgba(255, 255, 255, 0.070) !important;
+  color: #f2f2f0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item:hover:not(.selected),
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab:hover {
+  background: rgba(255, 255, 255, 0.044) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item.selected,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab.active {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.072), rgba(255, 255, 255, 0.040) 68%, transparent 100%),
+    rgba(255, 255, 255, 0.036) !important;
+  border-color: rgba(255, 255, 255, 0.082) !important;
+  box-shadow:
+    inset 2px 0 0 rgba(255, 255, 255, 0.52),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.042) !important;
+  color: #f2f2f0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active::before {
+  top: 6px !important;
+  bottom: 6px !important;
+  width: 2px !important;
+  background: rgba(255, 255, 255, 0.64) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__title {
+  color: #f2f2f0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__subtitle,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__subtitle,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__time {
+  color: rgba(242, 242, 240, 0.58) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo {
+  filter: saturate(0.78) contrast(1.06) brightness(1.04) opacity(0.92) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill[aria-expanded="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval--manual,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-model__effort-opt.is-selected {
+  background: rgba(255, 255, 255, 0.076) !important;
+  border-color: rgba(255, 255, 255, 0.110) !important;
+  color: #f2f2f0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active::before {
+  background: rgba(255, 255, 255, 0.70) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send {
+  background: #ecece7 !important;
+  color: #101010 !important;
+  height: 24px !important;
+  min-width: 28px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover {
+  background: #ffffff !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: rgba(255, 255, 255, 0.078) !important;
+  color: rgba(255, 255, 255, 0.34) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: rgba(255, 255, 255, 0.048) !important;
+  border-color: rgba(255, 255, 255, 0.076) !important;
+  color: rgba(242, 242, 240, 0.82) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(18px) saturate(118%) !important;
+  backdrop-filter: blur(18px) saturate(118%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action:hover {
+  background: rgba(255, 255, 255, 0.074) !important;
+  border-color: rgba(255, 255, 255, 0.112) !important;
+  color: #f2f2f0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn__ring,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__caret,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__pct {
+  color: rgba(242, 242, 240, 0.62) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__track-fill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery__fill {
+  background: rgba(255, 255, 255, 0.16) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan {
+  background: #ecece7 !important;
+  color: #101010 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode {
+  background: rgba(255, 255, 255, 0.034) !important;
+  border: 1px solid rgba(255, 255, 255, 0.060) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn {
+  color: rgba(242, 242, 240, 0.56) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.044) !important;
+  color: rgba(242, 242, 240, 0.84) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn.is-active {
+  background: rgba(255, 255, 255, 0.096) !important;
+  color: #f2f2f0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__bubble,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-code-block {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.040), rgba(255, 255, 255, 0.014)),
+    rgba(18, 18, 17, 0.60) !important;
+  border-color: rgba(255, 255, 255, 0.082) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.036) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(120%) !important;
+  backdrop-filter: blur(22px) saturate(120%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-term {
+  background: rgba(13, 13, 13, 0.86) !important;
+  border-color: rgba(255, 255, 255, 0.076) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-agentcard__avatar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon {
+  background: linear-gradient(135deg, #eeeeea 0%, #b8b8b3 100%) !important;
+  color: #101010 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__name {
+  color: #f2f2f0 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch-backdrop {
+  background: rgba(8, 8, 8, 0.42) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(110%) !important;
+  backdrop-filter: blur(12px) saturate(110%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.056), rgba(255, 255, 255, 0.018)),
+    rgba(20, 20, 19, 0.64) !important;
+  border-color: rgba(255, 255, 255, 0.096) !important;
+  box-shadow:
+    0 28px 80px -52px rgba(0, 0, 0, 0.92),
+    inset 0 1px 0 rgba(255, 255, 255, 0.066) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(126%) !important;
+  backdrop-filter: blur(32px) saturate(126%) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__input-wrap {
+  border-bottom-color: rgba(255, 255, 255, 0.060) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row.is-active {
+  background: rgba(255, 255, 255, 0.066) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__role--user,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row-snippet mark {
+  background: rgba(255, 255, 255, 0.100) !important;
+  color: #f2f2f0 !important;
+}
+
+/* Chenguang IDE work areas should not be fully transparent: the wallpaper center is lavender,
+ * which makes editor / terminal surfaces look like a different purple theme.  Use a warm
+ * peach-pink acrylic surface sampled from the pack instead, while keeping controls translucent. */
+:root[data-theme-pack="chenguang"][data-theme="light"] .neox-shell {
+  --pack-work-surface: rgba(255, 226, 236, 0.46);
+  --pack-work-surface-soft: rgba(255, 232, 240, 0.34);
+  --pack-work-surface-strong: rgba(255, 238, 246, 0.58);
+}
+:root[data-theme-pack="chenguang"][data-theme="light"] .neox-shell[data-mode="ide"] .neox-shell__main,
+:root[data-theme-pack="chenguang"][data-theme="light"] .neox-shell[data-mode="ide"] .neox-shell__right,
+:root[data-theme-pack="chenguang"][data-theme="light"] .neox-shell[data-mode="ide"] .neox-rightpanel,
+:root[data-theme-pack="chenguang"][data-theme="light"] .ide-workspace,
+:root[data-theme-pack="chenguang"][data-theme="light"] .ide-workspace__main,
+:root[data-theme-pack="chenguang"][data-theme="light"] .workspace-shell.editor-mode,
+:root[data-theme-pack="chenguang"][data-theme="light"] .editor-content,
+:root[data-theme-pack="chenguang"][data-theme="light"] .editor-pane,
+:root[data-theme-pack="chenguang"][data-theme="light"] .media-viewer,
+:root[data-theme-pack="chenguang"][data-theme="light"] .media-viewer.media-doc.media-doc-fallback-view,
+:root[data-theme-pack="chenguang"][data-theme="light"] .rc-panel,
+:root[data-theme-pack="chenguang"][data-theme="light"] .rc-panel__body,
+:root[data-theme-pack="chenguang"][data-theme="light"] .rc-panel__card,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-manager,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-manager-body,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-panel,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-container,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-container .xterm,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-container .xterm-viewport,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-container .xterm-screen {
+  background: var(--pack-work-surface) !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack="chenguang"][data-theme="light"] .editor-tabs-bar,
+:root[data-theme-pack="chenguang"][data-theme="light"] .rc-panel__tabs,
+:root[data-theme-pack="chenguang"][data-theme="light"] .terminal-header,
+:root[data-theme-pack="chenguang"][data-theme="light"] .media-statusbar {
+  background: var(--pack-work-surface-strong) !important;
+  border-color: var(--pack-edge, rgba(112, 62, 92, 0.06)) !important;
+}
+:root[data-theme-pack="chenguang"][data-theme="light"] .media-viewer.media-doc.media-doc-fallback-view::before {
+  background: color-mix(in srgb, var(--pack-work-surface-strong) 74%, transparent) !important;
+}
+
+:root[data-theme-pack][data-theme-wallpaper="image"] .neox-shell::before {
+  opacity: 0.98 !important;
+  filter: saturate(1.06) contrast(1.02) brightness(0.98) !important;
+  background-blend-mode: normal, normal !important;
+}
+
+:root[data-theme-pack][data-theme="light"][data-theme-wallpaper="image"] .neox-shell::before {
+  opacity: 0.98 !important;
+  filter: saturate(1.04) contrast(1.01) brightness(1.02) !important;
+}
+
+:root[data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] {
+  --pack-tint:        rgba(255, 255, 255, 0.030);
+  --pack-tint-strong: rgba(255, 255, 255, 0.080);
+  --pack-tint-card:   rgba(255, 255, 255, 0.060);
+  --pack-edge:        rgba(255, 255, 255, 0.060);
+  --pack-edge-strong: rgba(255, 255, 255, 0.105);
+
+  --neox-bg-card:     rgba(255, 255, 255, 0.050) !important;
+  --neox-bg-muted:    rgba(255, 255, 255, 0.040) !important;
+  --neox-bg-hover:    rgba(255, 255, 255, 0.080) !important;
+  --neox-bg-elevated: rgba(255, 255, 255, 0.060) !important;
+  --neox-bg-sunken:   rgba(0, 0, 0, 0.180) !important;
+  --bg-card:          rgba(255, 255, 255, 0.050) !important;
+  --bg-muted:         rgba(255, 255, 255, 0.040) !important;
+  --bg-hover:         rgba(255, 255, 255, 0.080) !important;
+  --bg-elevated:      rgba(255, 255, 255, 0.060) !important;
+  --bg-tertiary:      rgba(0, 0, 0, 0.180) !important;
+}
+
+:root[data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] .neox-shell {
+  --neox-glass-card-bg: rgba(18, 22, 22, 0.50);
+  --neox-glass-card-filter: blur(32px) saturate(126%) brightness(0.95);
+  --neox-glass-card-border: 0;
+  --neox-glass-card-shadow: none;
+}
+
+:root[data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] .neox-shell::before {
+  opacity: 0.96 !important;
+  filter: saturate(1.08) contrast(1.04) brightness(0.86) !important;
+  background-blend-mode: normal, normal !important;
+}
+
+:root[data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] .neox-shell__glass-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.030), rgba(0,0,0,0.060)),
+    var(--neox-glass-card-bg) !important;
+  -webkit-backdrop-filter: var(--neox-glass-card-filter) !important;
+  backdrop-filter: var(--neox-glass-card-filter) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] .neox-topbar,
+:root[data-theme-pack][data-theme="dark"][data-theme-wallpaper="image"] .neox-shell__topbar {
+  background: rgba(8, 12, 14, 0.24) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(112%) !important;
+  backdrop-filter: blur(16px) saturate(112%) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.045) !important;
+}
+
+/* Theme-toned dark image acrylic.  These are not fallback colors; they are the
+ * translucent fog color for each wallpaper family, sampled from the actual art
+ * so the card stays connected to the background instead of becoming charcoal. */
+:root[data-theme-pack="muyunqing"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(13, 43, 34, 0.48);
+}
+:root[data-theme-pack="songyanmo"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(32, 28, 22, 0.52);
+}
+:root[data-theme-pack="wumoyan"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(18, 39, 54, 0.50);
+}
+:root[data-theme-pack="haiyue"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(14, 25, 42, 0.50);
+}
+:root[data-theme-pack="neonlight"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(30, 20, 48, 0.50);
+}
+:root[data-theme-pack="matrix"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(10, 28, 22, 0.50);
+}
+:root[data-theme-pack="jiguang"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(12, 28, 46, 0.50);
+}
+:root[data-theme-pack="vaporwave"][data-theme="dark"] .neox-shell {
+  --neox-glass-card-bg: rgba(32, 18, 48, 0.50);
+}
+
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-shell__rail,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-rail,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-shell__sidebar,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-sidebar,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-shell__main,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .agent-timeline,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .chat-messages,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-shell__right,
+:root[data-theme-pack][data-theme-wallpaper="image"]:not([data-sidebar-glass="on"]) .neox-rightpanel {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Sidebar search is one glass control; the input itself stays transparent. */
+:root[data-theme-pack] .neox-sidebar__search {
+  height: 34px !important;
+  border: 1px solid color-mix(in srgb, var(--pack-edge) 78%, transparent) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.055)),
+    color-mix(in srgb, var(--pack-tint-card) 46%, transparent) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(118%) brightness(1.02) !important;
+  backdrop-filter: blur(24px) saturate(118%) brightness(1.02) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+:root[data-theme-pack] .neox-sidebar__search input {
+  height: 100% !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack] .neox-sidebar__search:hover,
+:root[data-theme-pack] .neox-sidebar__search:focus-within {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.075)),
+    color-mix(in srgb, var(--pack-tint-card) 56%, transparent) !important;
+  border-color: color-mix(in srgb, var(--pack-edge-strong, var(--pack-edge)) 78%, transparent) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 0 0 1px color-mix(in srgb, var(--neox-primary-500) 22%, transparent) !important;
+}
+
+:root[data-theme-pack] .neox-sidebar__search input:hover,
+:root[data-theme-pack] .neox-sidebar__search input:focus {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack][data-theme="dark"] .neox-sidebar__search input {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack][data-theme="dark"] .neox-sidebar__search {
+  border-color: color-mix(in srgb, var(--pack-edge-strong, var(--pack-edge)) 72%, transparent) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    color-mix(in srgb, var(--pack-tint-card) 62%, transparent) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(122%) brightness(0.96) !important;
+  backdrop-filter: blur(28px) saturate(122%) brightness(0.96) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14) !important;
+}
+
+:root[data-theme-pack] .neox-sidebar__search__kbd {
+  border: 1px solid color-mix(in srgb, var(--pack-edge) 65%, transparent) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--pack-tint-strong) 42%, transparent) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Anye authoritative flat pass: VS Code-style matte grays, no glass, no gradients, no raised controls. */
+:root[data-theme-pack="anye"][data-theme="dark"] {
+  --neox-bg-canvas: #181818 !important;
+  --neox-bg-panel: #252526 !important;
+  --neox-bg-card: #1e1e1e !important;
+  --neox-bg-muted: #2d2d2d !important;
+  --neox-bg-hover: #2a2d2e !important;
+  --neox-bg-elevated: #252526 !important;
+  --neox-bg-sunken: #151515 !important;
+  --neox-line: #3c3c3c !important;
+  --neox-line-soft: #2a2a2a !important;
+  --neox-line-strong: #505050 !important;
+  --neox-line-subtle: #242424 !important;
+  --neox-fg-primary: #d4d4d4 !important;
+  --neox-fg-secondary: #b8b8b8 !important;
+  --neox-fg-muted: #8a8a8a !important;
+  --neox-fg-hint: #6a6a6a !important;
+  --neox-fg-invert: #1e1e1e !important;
+  --neox-accent: #d4d4d4 !important;
+  --neox-primary-900: #0e0e0e !important;
+  --neox-primary-800: #1e1e1e !important;
+  --neox-primary-700: #f2f2f2 !important;
+  --neox-primary-600: #d4d4d4 !important;
+  --neox-primary-500: #c5c5c5 !important;
+  --neox-primary-400: #9d9d9d !important;
+  --neox-primary-300: #6f6f6f !important;
+  --neox-primary-200: rgba(255, 255, 255, 0.18) !important;
+  --neox-primary-100: rgba(255, 255, 255, 0.12) !important;
+  --neox-primary-50: rgba(255, 255, 255, 0.08) !important;
+  --neox-primary-25: rgba(255, 255, 255, 0.04) !important;
+  --neox-primary-ring: rgba(255, 255, 255, 0.16) !important;
+  --text-accent: #d4d4d4 !important;
+  --accent-900: #0e0e0e !important;
+  --accent-800: #1e1e1e !important;
+  --accent-700: #f2f2f2 !important;
+  --accent-600: #d4d4d4 !important;
+  --accent-500: #c5c5c5 !important;
+  --accent-400: #9d9d9d !important;
+  --accent-300: #6f6f6f !important;
+  --accent-200: rgba(255, 255, 255, 0.18) !important;
+  --accent-100: rgba(255, 255, 255, 0.12) !important;
+  --accent-50: rgba(255, 255, 255, 0.08) !important;
+  --border-accent: #505050 !important;
+  --border-accent-bright: #6a6a6a !important;
+  --shadow-accent: none !important;
+  --gold-900: var(--accent-900) !important;
+  --gold-800: var(--accent-800) !important;
+  --gold-700: var(--accent-700) !important;
+  --gold-600: var(--accent-600) !important;
+  --gold-500: var(--accent-500) !important;
+  --gold-400: var(--accent-400) !important;
+  --gold-300: var(--accent-300) !important;
+  --gold-200: var(--accent-200) !important;
+  --gold-100: var(--accent-100) !important;
+  --gold-50: var(--accent-50) !important;
+  --gold-500-rgb: 197, 197, 197 !important;
+  --gold-rgb: 197, 197, 197 !important;
+  --text-gold: #d4d4d4 !important;
+  --border-gold: #505050 !important;
+  --border-gold-bright: #6a6a6a !important;
+  --shadow-gold: none !important;
+  --pack-tint: #252526;
+  --pack-tint-strong: #333333;
+  --pack-tint-card: #2d2d2d;
+  --pack-edge: #3c3c3c;
+  --pack-edge-strong: #505050;
+  --pack-shadow: none;
+  --bg-primary: #181818 !important;
+  --bg-secondary: #252526 !important;
+  --bg-card: #1e1e1e !important;
+  --bg-muted: #2d2d2d !important;
+  --bg-hover: #2a2d2e !important;
+  --bg-elevated: #252526 !important;
+  --bg-tertiary: #151515 !important;
+  --bg-code: #151515 !important;
+  --shell-card-bg: #252526 !important;
+  --shell-card-border: #3c3c3c !important;
+  --shell-card-hover-bg: #2a2d2e !important;
+  --shell-status-running: #d4d4d4 !important;
+  --shell-status-running-soft: #2d2d2d !important;
+  --xterm-bg: #181818 !important;
+  --xterm-fg: #d4d4d4 !important;
+  --xterm-cursor: #d4d4d4 !important;
+  --xterm-cursor-accent: #181818 !important;
+  --xterm-selection: #37373d !important;
+  --xterm-border: #3c3c3c !important;
+  --neox-shadow-1: none !important;
+  --neox-shadow-2: none !important;
+  --neox-shadow-3: none !important;
+  --neox-shadow-focus: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] body,
+:root[data-theme-pack="anye"][data-theme="dark"] #root,
+:root[data-theme-pack="anye"][data-theme="dark"] .app-root,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-page,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-shell,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell-host {
+  background: #181818 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell {
+  background: #181818 !important;
+  --shell-tray-bg: #181818;
+  --neox-glass-margin: 0px;
+  --neox-glass-radius: 0px;
+  --neox-glass-card-bg: #1e1e1e;
+  --neox-glass-card-filter: none;
+  --neox-glass-card-border: 0;
+  --neox-glass-card-shadow: none;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::before {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: #181818 !important;
+  background-image: none !important;
+  background-blend-mode: normal !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__glass-card {
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #1e1e1e !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__topbar {
+  background: #181818 !important;
+  background-image: none !important;
+  border-bottom: 1px solid #2d2d2d !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__rail,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail {
+  background: #181818 !important;
+  background-image: none !important;
+  border-right: 1px solid #2d2d2d !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__right,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightpanel {
+  background: #252526 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .agent-timeline,
+:root[data-theme-pack="anye"][data-theme="dark"] .chat-messages,
+:root[data-theme-pack="anye"][data-theme="dark"] .ide-workspace,
+:root[data-theme-pack="anye"][data-theme="dark"] .ide-workspace__main,
+:root[data-theme-pack="anye"][data-theme="dark"] .workspace-shell.editor-mode,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-content,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-pane {
+  background: #1e1e1e !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-header::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tabs-bar::after,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell.has-surface .neox-shell__right::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  background: #2d2d2d !important;
+}
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell.has-surface .neox-shell__right::before,
+:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off] .neox-shell:not(.is-sidebar-collapsed) .neox-shell__main::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__logo {
+  filter: grayscale(1) saturate(0) contrast(1.08) brightness(1.12) !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode {
+  background: #2d2d2d !important;
+  background-image: none !important;
+  border: 1px solid #3c3c3c !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-trimode__btn.is-active {
+  background: #3a3a3a !important;
+  background-image: none !important;
+  color: #f2f2f2 !important;
+  border: 0 !important;
+  border-radius: 3px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn {
+  color: #b8b8b8 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-topbar__iconbtn.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active {
+  color: #f2f2f2 !important;
+  background: #2a2d2e !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rail__btn.is-active::before {
+  content: none !important;
+  display: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search {
+  height: 32px !important;
+  background: #2d2d2d !important;
+  background-image: none !important;
+  border: 1px solid #3c3c3c !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search:focus-within {
+  background: #333333 !important;
+  background-image: none !important;
+  border-color: #505050 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input:focus {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #d4d4d4 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search input::placeholder {
+  color: #8a8a8a !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sidebar__search__kbd {
+  background: #252526 !important;
+  border: 1px solid #3c3c3c !important;
+  border-radius: 3px !important;
+  color: #8a8a8a !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item:hover:not(.selected),
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row:hover {
+  background: #2a2d2e !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"],
+:root[data-theme-pack="anye"][data-theme="dark"] .file-tree-item.selected,
+:root[data-theme-pack="anye"][data-theme="dark"] .editor-tab.active,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row.is-active {
+  background: #37373d !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #f2f2f2 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active::before,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"]::before {
+  content: none !important;
+  display: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__title,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__title {
+  color: #f2f2f2 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__subtitle,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item.is-active .neox-session-item__time,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__subtitle,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-session-item[aria-selected="true"] .neox-session-item__time {
+  color: #b8b8b8 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer {
+  background: #1e1e1e !important;
+  padding-top: 4px !important;
+  padding-bottom: 8px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box {
+  background: #252526 !important;
+  background-image: none !important;
+  border: 1px solid #3c3c3c !important;
+  border-radius: 8px !important;
+  padding: 6px 8px 6px !important;
+  gap: 3px !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer.is-drag-over .atl-composer__box,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__box:focus-within,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__box:focus-within {
+  background: #252526 !important;
+  background-image: none !important;
+  border-color: #5a5a5a !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top {
+  padding: 0 2px 5px !important;
+  margin-bottom: 5px !important;
+  border-bottom: 1px solid #333333 !important;
+  row-gap: 3px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__top::after {
+  display: none !important;
+  content: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input-wrap {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input {
+  min-height: 30px !important;
+  max-height: 96px !important;
+  padding: 3px 2px !important;
+  background: transparent !important;
+  color: #d4d4d4 !important;
+  font-size: calc(13px * var(--nx-fs-scale, 1)) !important;
+  line-height: 1.5 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__input::placeholder {
+  color: #8a8a8a !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__actions {
+  padding-top: 1px !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-mode-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action {
+  background: #2d2d2d !important;
+  background-image: none !important;
+  border-color: #3c3c3c !important;
+  color: #d4d4d4 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-rundest__pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-approval__btn:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery:hover,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-rightcard__action:hover {
+  background: #333333 !important;
+  background-image: none !important;
+  border-color: #505050 !important;
+  color: #f2f2f2 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  color: #9d9d9d !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__iconbtn.is-active {
+  background: #333333 !important;
+  background-image: none !important;
+  color: #f2f2f2 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send {
+  background: #d4d4d4 !important;
+  background-image: none !important;
+  color: #1e1e1e !important;
+  height: 24px !important;
+  min-width: 28px !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="assistant"] .atl-composer__send:hover:not(:disabled),
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer[data-mode="ask"] .atl-composer__send:hover:not(:disabled) {
+  background: #f2f2f2 !important;
+  background-image: none !important;
+  filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__send:disabled {
+  background: #3a3a3a !important;
+  background-image: none !important;
+  color: #8a8a8a !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn:focus-visible,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery:focus-visible {
+  border-color: #5a5a5a !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-ctx-btn__ring,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-composer__model__caret,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__pct,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__nums {
+  color: #b8b8b8 !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__track-fill,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-battery__fill {
+  background: #9d9d9d !important;
+  background-image: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--pro,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--pro-plus,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--ultra,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--elite,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-quota-badge__plan--vip {
+  background: #d4d4d4 !important;
+  background-image: none !important;
+  color: #1e1e1e !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-msg__bubble,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-code,
+:root[data-theme-pack="anye"][data-theme="dark"] .markdown-content .md-code-block,
+:root[data-theme-pack="anye"][data-theme="dark"] .atl-term {
+  background: #151515 !important;
+  background-image: none !important;
+  border-color: #3c3c3c !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-agentcard__avatar,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-model-pill__icon {
+  background: #d4d4d4 !important;
+  background-image: none !important;
+  color: #1e1e1e !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch-backdrop {
+  background: rgba(0, 0, 0, 0.42) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch {
+  background: #252526 !important;
+  background-image: none !important;
+  border-color: #3c3c3c !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__input-wrap {
+  border-bottom-color: #3c3c3c !important;
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__role--user,
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-sessionsearch__row-snippet mark {
+  background: #333333 !important;
+  color: #f2f2f2 !important;
+}
+
+:root[data-theme-pack][data-theme="light"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 58%, var(--neox-bg-elevated, #fff) 42%) !important;
+  border: 1px solid rgba(28, 25, 23, 0.08) !important;
+  border-radius: 16px !important;
+  --atl-chip-radius: 10px;
+  --atl-chip-h: 26px;
+  box-shadow:
+    0 1px 1px rgba(28, 25, 23, 0.03),
+    0 6px 20px rgba(28, 25, 23, 0.045) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme-pack][data-theme="light"][data-glass-off]:not([data-theme-wallpaper="image"]) .atl-composer__box:focus-within {
+  background: color-mix(in srgb, var(--neox-bg-canvas) 50%, var(--neox-bg-elevated, #fff) 50%) !important;
+  border-color: rgba(28, 25, 23, 0.12) !important;
+  box-shadow:
+    0 1px 2px rgba(28, 25, 23, 0.04),
+    0 10px 28px rgba(28, 25, 23, 0.07) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__top {
+  border-bottom: none !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__top::after {
+  display: none !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-mode-pill {
+  height: 22px !important;
+  padding: 0 9px !important;
+  background: rgba(28, 25, 23, 0.05) !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--neox-fg-secondary) !important;
+  font-weight: 550 !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__model {
+  height: var(--atl-chip-h, 26px) !important;
+  padding: 0 8px !important;
+  background: rgba(28, 25, 23, 0.05) !important;
+  border: 1px solid transparent !important;
+  color: var(--neox-fg-secondary) !important;
+  border-radius: var(--atl-chip-radius, 10px) !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__model:hover {
+  background: rgba(28, 25, 23, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__send {
+  height: var(--atl-chip-h, 26px) !important;
+  min-width: var(--atl-chip-h, 26px) !important;
+  width: auto !important;
+  padding: 0 8px !important;
+  border-radius: var(--atl-chip-radius, 10px) !important;
+  background: #1C1917 !important;
+  color: #FFFFFF !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__send:hover:not(:disabled) {
+  background: #0C0A09 !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__send:disabled {
+  background: rgba(28, 25, 23, 0.18) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+:root[data-theme-pack][data-theme="light"] .neox-sidebar,
+:root[data-theme-pack][data-theme="light"] .neox-shell__sidebar {
+  border-right: none !important;
+}
+
+/* 次要控件 + 发送: 同高 26 · 同圆角 10 (跟输入框 16 同族, 不再满 pill / 正圆) */
+:root[data-theme-pack][data-theme="light"] .atl-approval__btn,
+:root[data-theme-pack][data-theme="light"] .atl-rundest__pill,
+:root[data-theme-pack][data-theme="light"] .atl-ctx-btn,
+:root[data-theme-pack][data-theme="light"] .atl-composer__model,
+:root[data-theme-pack][data-theme="light"] .atl-composer__send,
+:root[data-theme-pack][data-theme="light"] .neox-quota-badge {
+  height: 26px !important;
+  min-height: 26px !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  font-size: calc(12px * var(--nx-fs-scale, 1)) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-approval__btn,
+:root[data-theme-pack][data-theme="light"] .atl-rundest__pill,
+:root[data-theme-pack][data-theme="light"] .atl-ctx-btn,
+:root[data-theme-pack][data-theme="light"] .atl-composer__model,
+:root[data-theme-pack][data-theme="light"] .neox-quota-badge {
+  padding: 0 8px !important;
+  background: rgba(28, 25, 23, 0.05) !important;
+  border: 1px solid transparent !important;
+  color: var(--neox-fg-secondary) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-approval__btn {
+  min-width: 26px !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__send {
+  min-width: 26px !important;
+  width: auto !important;
+  padding: 0 8px !important;
+  background: #1C1917 !important;
+  border: 0 !important;
+  color: #FFFFFF !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-approval__btn:hover,
+:root[data-theme-pack][data-theme="light"] .atl-rundest__pill:hover,
+:root[data-theme-pack][data-theme="light"] .atl-rundest__pill[aria-expanded="true"],
+:root[data-theme-pack][data-theme="light"] .atl-ctx-btn:hover,
+:root[data-theme-pack][data-theme="light"] .atl-composer__model:hover,
+:root[data-theme-pack][data-theme="light"] .neox-quota-badge:hover {
+  background: rgba(28, 25, 23, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--neox-fg-primary) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-approval__btn.atl-approval--manual {
+  color: var(--neox-fg-primary) !important;
+  background: rgba(28, 25, 23, 0.05) !important;
+  box-shadow: none !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-rundest__pill.is-mobile-active {
+  color: color-mix(in srgb, #15803d 45%, var(--neox-fg-secondary)) !important;
+  background: rgba(28, 25, 23, 0.05) !important;
+  border-color: transparent !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-rundest__mobile-badge {
+  background: rgba(28, 25, 23, 0.05) !important;
+  color: inherit !important;
+  border-radius: 6px !important;
+  padding: 0 4px !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-ctx-btn__ring {
+  color: var(--neox-fg-hint) !important;
+}
+:root[data-theme-pack][data-theme="light"] .atl-composer__right {
+  gap: 4px !important;
+  align-items: center !important;
+}
+
+/* ============================================================
+ * Composer acrylic — 质感壁纸 / 开玻璃：画布 hue + 模糊，跟侧栏同族
+ * 扁平实色 (glass-off + 非图片壁纸) 仍走上方画布混色胶囊
+ * ============================================================ */
+:root[data-theme-pack][data-theme="light"][data-theme-wallpaper="image"] .atl-composer__box,
+:root[data-theme-preset="chenguang"][data-theme="light"] .atl-composer__box,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .atl-composer__box,
+:root[data-theme-preset="liuli"][data-theme="light"] .atl-composer__box {
+  background: color-mix(in srgb, var(--pack-tint-card, rgba(255, 255, 255, 0.42)) 48%, var(--neox-bg-canvas)) !important;
+  border: 1px solid var(--pack-edge, rgba(28, 25, 23, 0.08)) !important;
+  border-radius: 16px !important;
+  -webkit-backdrop-filter: blur(18px) saturate(120%) !important;
+  backdrop-filter: blur(18px) saturate(120%) !important;
+  box-shadow:
+    0 1px 1px rgba(28, 25, 23, 0.03),
+    0 8px 24px rgba(28, 25, 23, 0.06) !important;
+}
+:root[data-theme-pack][data-theme="light"][data-theme-wallpaper="image"] .atl-composer__box:focus-within,
+:root[data-theme-preset="chenguang"][data-theme="light"] .atl-composer__box:focus-within,
+:root[data-theme-preset="nuanyang"][data-theme="light"] .atl-composer__box:focus-within,
+:root[data-theme-preset="liuli"][data-theme="light"] .atl-composer__box:focus-within {
+  background: color-mix(in srgb, var(--pack-tint-card, rgba(255, 255, 255, 0.50)) 56%, var(--neox-bg-canvas)) !important;
+  border-color: var(--pack-edge-strong, rgba(28, 25, 23, 0.12)) !important;
+  box-shadow:
+    0 1px 2px rgba(28, 25, 23, 0.04),
+    0 10px 28px rgba(28, 25, 23, 0.07) !important;
+}
+
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-side,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-sidebar,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-sidebar__top,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-sidebar__tree,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-sidebar__bottom,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .file-explorer,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-workspace,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-workspace__main,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-welcome-host,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-sidebar--ide,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__sidebar,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-side,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar__top,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar__tree,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar__bottom,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .file-explorer,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-workspace,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-workspace__main,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .ide-welcome-host,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .neox-sidebar--ide,
+:root[data-theme-pack][data-theme][data-glass-off] .neox-shell[data-mode="ide"] .neox-shell__sidebar,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-side,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar__top,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar__tree,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-sidebar__bottom,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .file-explorer,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-workspace,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-workspace__main,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .ide-welcome-host,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .neox-sidebar--ide,
+:root[data-glass-off] .neox-shell[data-mode="ide"] .neox-shell__sidebar {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html .neox-shell[data-mode="ide"] .rc-panel__tabs,
+html .neox-shell[data-mode="ide"] .rc-panel__tab,
+html .neox-shell[data-mode="ide"] .neox-shell__statusbar,
+html[data-theme-pack] .neox-shell[data-mode="ide"] .rc-panel__tabs,
+html[data-theme-pack] .neox-shell[data-mode="ide"] .rc-panel__tab,
+html[data-theme-pack] .neox-shell[data-mode="ide"] .neox-shell__statusbar,
+html[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .rc-panel__tabs,
+html[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__statusbar {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel .rc-panel__tabs,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .rc-panel__tabs,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__statusbar,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .ide-statusbar {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+
+:root .neox-shell[data-mode="ide"] {
+  /* 底色取值: 沿用前十轮验证过的那条链, 【不是】偷懒。
+   * 试过改成 var(--neox-bg-canvas) 追求"一个 Agent token 都不读", 结果 anye 纯色包
+   * 立刻裂开: canvas 是 #181818, 而 anye-flat 里编辑区/右栏内层吃的是 #191919,
+   * 差一个色阶就是一条肉眼可见的缝 —— 正是前十轮辛苦消掉的那个问题。
+   *
+   * 独立性的真正含义是【配方独立】(实度/模糊/层次/背幕都是 IDE 自己的),
+   * 不是"连主题给的颜色值都不能读"。底色本来就该跟主题走, 否则每个包都要手配一次。 */
+  --neox-ide-base: var(--neox-shell-flat-main-bg, var(--neox-bg-card, var(--neox-bg-canvas)));
+  --neox-ide-plane-alpha: 56%;
+  --neox-ide-chrome-alpha: 72%;
+
+  --neox-ide-blur: 8px;
+
+  --neox-ide-plane: color-mix(in srgb, var(--neox-ide-base) var(--neox-ide-plane-alpha), transparent);
+  --neox-ide-chrome: color-mix(in srgb, var(--neox-ide-base) var(--neox-ide-chrome-alpha), transparent);
+}
+/* 暗色底再加一档实度 —— 亮壁纸透过暗玻璃会把正文压成灰糊 */
+:root[data-theme="dark"] .neox-shell[data-mode="ide"] {
+  --neox-ide-plane-alpha: 70%;
+  --neox-ide-chrome-alpha: 82%;
+}
+:root:not([data-theme-wallpaper="image"]) .neox-shell[data-mode="ide"] {
+  --neox-ide-plane: var(--neox-ide-base);
+  --neox-ide-chrome: var(--neox-ide-base);
+  --neox-ide-blur: 0px;
+}
+
+/* 背幕: IDE 自己铺壁纸, 不复用 Agent 的背幕层。
+ * 铺在 .neox-shell 上而不是伪元素 —— 伪元素在这套样式里已经被别的规则占用/关掉过,
+ * 直接用 background-image 最不容易被别人的 content:none 干掉。 */
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"].has-surface,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] {
+  background-color: var(--neox-ide-base) !important;
+  background-image: var(--wallpaper-image) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__main.neox-shell__main,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__sidebar.neox-sidebar,
+/* 右栏只让【外层 surface-slot】承载玻璃; 内层 .rc-panel 由上面那条铁律设成透明。
+ * 两层都刷 = 0.82 叠 0.82 ≈ 0.97, 又变回不透明。 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"].has-surface .neox-shell__right.neox-shell__right--surface-slot {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(var(--neox-ide-blur)) saturate(112%) !important;
+  backdrop-filter: blur(var(--neox-ide-blur)) saturate(112%) !important;
+}
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-side,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-sidebar,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-sidebar__top,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-sidebar__tree,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-sidebar__bottom,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .file-explorer,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-workspace,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-workspace__main,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .ide-welcome-host,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .neox-shell__right-stack,
+:root[data-theme-pack][data-theme][data-theme-wallpaper="image"] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel {
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* chrome 三件套更实一档 (顶栏 / 标签条 / 状态栏) —— 它们承载最小号的文字, 最吃对比度 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__topbar.neox-topbar,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__statusbar.ide-statusbar,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel .rc-panel__tabs,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel .ide-aipanel__head {
+  background: var(--neox-ide-chrome) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(var(--neox-ide-blur)) saturate(112%) !important;
+  backdrop-filter: blur(var(--neox-ide-blur)) saturate(112%) !important;
+}
+
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__statusbar.ide-statusbar,
+:root[data-theme-pack] .neox-shell[data-mode="ide"] .neox-shell__statusbar.ide-statusbar,
+html .neox-shell[data-mode="ide"] .neox-shell__statusbar.ide-statusbar {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+:root .neox-shell[data-mode="ide"] .ide-aipanel__head,
+:root .neox-shell[data-mode="ide"] .ide-aipanel__head--embedded {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+}
+
+:root .neox-shell[data-mode="ide"] {
+  --neox-ide-divider: rgba(127, 127, 127, 0.22);
+}
+/* 左:资源管理器 | 中:编辑区 */
+:root .neox-shell[data-mode="ide"] .neox-sidebar--ide,
+:root .neox-shell[data-mode="ide"] .neox-shell__sidebar {
+  border-right: 1px solid var(--neox-ide-divider) !important;
+}
+/* 中:编辑区 | 右:AI/终端面板 */
+:root .neox-shell[data-mode="ide"] .neox-shell__right {
+  border-left: 1px solid var(--neox-ide-divider) !important;
+}
+/* 底部状态栏与工作区之间 */
+:root .neox-shell[data-mode="ide"] .neox-shell__statusbar.ide-statusbar {
+  border-top: 1px solid var(--neox-ide-divider) !important;
+}
+
+
+/* 分栏线: 左 | 中 | 右, 以及状态栏顶边 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__sidebar.neox-sidebar.neox-sidebar--ide,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__sidebar.neox-sidebar {
+  border-right: 1px solid var(--neox-ide-divider) !important;
+}
+/* 右侧那条要算清楚: 赢家 `[data-theme-pack="anye"][data-theme="dark"][data-glass-off]
+ * .neox-shell.has-surface .neox-shell__right` 是 (0,7,0), 而 anye-flat.css 排在
+ * theme-packs.css 之后 —— 同分它赢。所以必须真的到 (0,8,0): 末尾用【复合类名】,
+ * 而不是再往 :root 上挂属性。 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"].has-surface .neox-shell__right.neox-shell__right--surface-slot,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"].has-surface .neox-shell__right.rc-panel {
+  border-left: 1px solid var(--neox-ide-divider) !important;
+  border-left-color: var(--neox-ide-divider) !important;
+}
+/* 右栏是两层嵌套 (.neox-shell__right--surface-slot > .neox-shell__right.rc-panel),
+ * 两层都画就是 2px 双线。外层画, 内层清零。 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right--surface-slot .neox-shell__right.rc-panel,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right--surface-slot .rc-panel {
+  border-left: 0 !important;
+}
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__statusbar.ide-statusbar {
+  border-top: 1px solid var(--neox-ide-divider) !important;
+}
+
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__topbar.neox-topbar {
+  box-shadow: inset 0 -1px 0 var(--neox-ide-divider) !important;
+}
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__sidebar .ide-sidebar {
+  position: relative;
+}
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__sidebar .ide-sidebar::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--neox-ide-divider);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* 特异性又数错了一次, 记在这里防止第三次犯:
+ *   竞争者 `:root[data-theme-pack="anye"][data-theme="dark"][data-glass-off]
+ *          .neox-shell.has-surface .neox-shell__right`
+ *   = :root(1) + 3 个属性(3) + .neox-shell.has-surface(2) + .neox-shell__right(1) = (0,7,0)
+ *   我第一版 `:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"]
+ *            .neox-shell__right.neox-shell__right--surface-slot`
+ *   = 1+2 + 2 + 2 = (0,7,0) —— 平手, 而 anye-flat.css 后加载, 所以它赢。
+ * 必须把 .has-surface 也加进来才真的到 (0,8,0)。
+ * 同时保留不带 .has-surface 的一组: 竞争者本身要求 .has-surface, 它不在时 (0,7,0) 就够。 */
+/* 第十一轮: 从这条里摘掉 .rc-panel 和 .neox-shell__right-stack —— 玻璃化之后
+ * 一根栏只许一层承载底色, 内层再刷就是 0.56 叠 0.56 ≈ 0.81, 右栏会比别的栏明显更实。
+ * 底由外层 .neox-shell__right--surface-slot 一层扛。 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"].has-surface .neox-shell__right.neox-shell__right--surface-slot,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.neox-shell__right--surface-slot {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(var(--neox-ide-blur)) saturate(112%) !important;
+  backdrop-filter: blur(var(--neox-ide-blur)) saturate(112%) !important;
+}
+
+/* AI 面板头并入平面 —— 兜底 (0,8,0), 防其它主题包还有同级别的 tint 规则 */
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel .ide-aipanel__head,
+:root[data-theme-pack][data-theme] .neox-shell[data-mode="ide"] .neox-shell__right.rc-panel .rc-panel__tabs {
+  background: var(--neox-ide-plane) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-recording="on"] body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 44px;
+  pointer-events: none;
+  z-index: 2147483647;
+  background:
+    radial-gradient(circle 6px at 22px 20px, #ff5f57 98%, transparent 100%),
+    radial-gradient(circle 6px at 42px 20px, #febc2e 98%, transparent 100%),
+    radial-gradient(circle 6px at 62px 20px, #28c840 98%, transparent 100%);
+}
+
+:root[data-theme-pack][data-theme] .markdown-content td .md-inline-code,
+:root[data-theme-pack][data-theme] .markdown-content th .md-inline-code,
+:root[data-theme-pack][data-theme] .markdown-content td code,
+:root[data-theme-pack][data-theme] .markdown-content th code,
+:root[data-theme-pack][data-theme] .sfc-doc .markdown-content td code,
+:root[data-theme-pack][data-theme] .sfc-doc .markdown-content th code {
+  background: none;
+  background-image: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.markdown-content .ncard-wrap,
+.markdown-content .ncard {
+  white-space: normal;
+  font-family: var(--neox-font-sans, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif);
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.markdown-content .ncard .nsum__file-path,
+.markdown-content .ncard .nrep__path,
+.markdown-content .ncard .nrep__file,
+.markdown-content .ncard .ncard-c td.is-path {
+  font-family: var(--neox-font-mono);
+}

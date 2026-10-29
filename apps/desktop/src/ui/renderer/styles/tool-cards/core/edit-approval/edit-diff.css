@@ -1,0 +1,919 @@
+/* ==================== Edit File Diff Card - 简约版 (与 ReadFile/WriteFile 风格统一) ==================== */
+.edit-file-diff-card {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-file-diff-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.edit-file-diff-card.pending {
+  animation: none;
+}
+
+.edit-file-diff-card.complete {
+  border-color: rgba(34, 197, 94, 0.15);
+}
+
+.edit-file-diff-card.reverted {
+  border-color: rgba(239, 68, 68, 0.2);
+  opacity: 0.85;
+}
+
+/* 等待审批 / 已拒绝 — 跟 status 类正交，由 isAwaitingApproval / isDeniedApproval
+   旁路 flag 触发。颜色统一用 JetBrains New UI 暖橙金 #c19a6b。 */
+.edit-file-diff-card.awaiting-approval {
+  border-color: rgba(193, 154, 107, 0.55) !important;
+  background: linear-gradient(180deg, rgba(193, 154, 107, 0.06), rgba(255, 255, 255, 0.02));
+  animation: edit-card-awaiting-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+.edit-file-diff-card.denied-approval {
+  border-color: rgba(193, 154, 107, 0.4) !important;
+  background: rgba(193, 154, 107, 0.04);
+  opacity: 0.95;
+}
+.edit-file-diff-card .edit-status-badge.awaiting-approval,
+.edit-file-diff-card .edit-status-badge.denied-approval {
+  display: inline-flex;
+  align-items: center;
+  color: #c19a6b !important;
+  background: rgba(193, 154, 107, 0.14) !important;
+  border: 1px solid rgba(193, 154, 107, 0.35) !important;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.edit-file-diff-card .edit-status-badge.awaiting-approval {
+  animation: edit-card-awaiting-chip-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+@keyframes edit-card-awaiting-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 154, 107, 0); }
+  50%      { box-shadow: 0 0 0 2px rgba(193, 154, 107, 0.18); }
+}
+@keyframes edit-card-awaiting-chip-pulse {
+  0%, 100% { background: rgba(193, 154, 107, 0.14); }
+  50%      { background: rgba(193, 154, 107, 0.32); }
+}
+
+.edit-file-diff-card.streaming-preview {
+  border-color: rgba(90, 170, 210, 0.45) !important;
+  background: linear-gradient(180deg, rgba(90, 170, 210, 0.05), rgba(255, 255, 255, 0.01));
+}
+.edit-file-diff-card .edit-status-badge.streaming-preview {
+  display: inline-flex;
+  align-items: center;
+  color: #5aaad2 !important;
+  background: rgba(90, 170, 210, 0.14) !important;
+  border: 1px solid rgba(90, 170, 210, 0.35) !important;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  animation: edit-card-streaming-chip-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+@keyframes edit-card-streaming-chip-pulse {
+  0%, 100% { background: rgba(90, 170, 210, 0.14); opacity: 0.85; }
+  50%      { background: rgba(90, 170, 210, 0.32); opacity: 1; }
+}
+/* 流式期间最后一行 NEW 侧加一个闪烁 cursor, 让用户感到"还在打字" */
+.edit-file-diff-card.streaming-preview .code-diff-paired-group:last-child .code-diff-paired-line.add .code-diff-paired-code::after {
+  content: '▍';
+  color: #5aaad2;
+  margin-left: 2px;
+  animation: edit-streaming-cursor-blink 1s steps(2, end) infinite;
+}
+@keyframes edit-streaming-cursor-blink {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 1; }
+}
+
+.edit-file-diff-card.streaming-preview .code-diff-paired-line.add,
+.edit-file-diff-card.streaming-preview .code-diff-split-line.add {
+  animation: edit-streaming-line-appear var(--neox-dur-fast) var(--neox-ease-out);
+  will-change: opacity, transform;
+}
+@keyframes edit-streaming-line-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 减少动画偏好的用户直接关掉 (a11y) */
+@media (prefers-reduced-motion: reduce) {
+  .edit-file-diff-card.streaming-preview .code-diff-paired-line.add,
+  .edit-file-diff-card.streaming-preview .code-diff-split-line.add {
+    animation: none;
+  }
+  .edit-file-diff-card.streaming-preview .code-diff-paired-group:last-child .code-diff-paired-line.add .code-diff-paired-code::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Edit File Diff Card Header - 与 ReadFile/WriteFile 风格统一 */
+.edit-file-diff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-file-diff-header:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+}
+
+.edit-file-diff-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.edit-file-diff-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--gold-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.edit-file-diff-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.edit-file-diff-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.edit-file-diff-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.edit-file-diff-stat {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.edit-file-diff-stat.added {
+  color: #22c55e;
+}
+
+.edit-file-diff-stat.deleted {
+  color: #ef4444;
+}
+
+.edit-file-diff-tag {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--gold-400);
+  font-weight: 500;
+}
+
+.edit-file-diff-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* 已应用/已回退状态标签 */
+.edit-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.edit-status-badge.applied {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.edit-status-badge.reverted {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.edit-status-badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* 查看全部按钮 */
+.edit-expand-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-expand-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.edit-tag {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.edit-tag.replace-all {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--gold-400);
+}
+
+.edit-status {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.edit-status.pending {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--gold-400);
+}
+
+.edit-status.complete {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.edit-status.reverted {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.edit-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.edit-collapse-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-collapse-btn:hover {
+  background: var(--bg-hover);
+  color: var(--gold-400);
+}
+
+.edit-collapse-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+.edit-file-diff-body {
+  padding: 0;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+  width: 100%;
+}
+
+.edit-file-diff-hunk {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.edit-file-diff-hunk:first-child {
+  border-top: none;
+}
+
+.edit-file-diff-hunk-meta {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.edit-diff-pending {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--gold-400);
+  background: rgba(201, 162, 39, 0.05);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.edit-diff-pending .pending-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-400);
+  animation: pending-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+/* Legacy .edit-diff-header for backwards compatibility */
+.edit-diff-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.08), rgba(201, 162, 39, 0.02));
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-diff-header:hover {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.12), rgba(201, 162, 39, 0.04));
+}
+
+.edit-diff-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.edit-diff-icon svg {
+  width: 14px;
+  height: 14px;
+  color: var(--bg-primary);
+}
+
+.edit-diff-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-diff-action {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  color: var(--gold-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.edit-diff-path {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.edit-diff-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(201, 162, 39, 0.15);
+  color: var(--gold-400);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.edit-diff-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+}
+
+.edit-diff-stats .diff-add {
+  color: #22c55e;
+}
+
+.edit-diff-stats .diff-del {
+  color: #ef4444;
+}
+
+.edit-diff-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.edit-diff-collapse {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-diff-collapse:hover {
+  background: var(--bg-hover);
+  color: var(--gold-400);
+}
+
+.edit-diff-collapse svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.edit-diff-collapse.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+.edit-diff-body {
+  padding: 12px;
+  background: var(--bg-tertiary);
+}
+
+.edit-diff-file-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.edit-diff-file-badge svg {
+  width: 14px;
+  height: 14px;
+  color: var(--gold-500);
+}
+
+.edit-diff-file-badge span {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.edit-diff-file-badge .file-ext {
+  color: var(--gold-400);
+  font-weight: 600;
+}
+
+.edit-diff-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.diff-section {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.diff-section.removed {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.diff-section.added {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.diff-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.diff-section.removed .diff-section-header {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.diff-section.added .diff-section-header {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.diff-section-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.diff-section.removed .diff-section-label {
+  color: #ef4444;
+}
+
+.diff-section.added .diff-section-label {
+  color: #22c55e;
+}
+
+.diff-section-lines {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.diff-code {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  background: var(--bg-primary);
+  max-height: 300px;
+  overflow: auto;
+}
+
+.diff-line {
+  display: flex;
+  min-height: 20px;
+}
+
+.diff-line.del {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.diff-line.add {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.diff-line-num {
+  width: 40px;
+  padding: 0 8px;
+  text-align: right;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.15);
+  border-right: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.diff-line-sign {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.diff-line.del .diff-line-sign {
+  color: #ef4444;
+}
+
+.diff-line.add .diff-line-sign {
+  color: #22c55e;
+}
+
+.diff-line-text {
+  flex: 1;
+  padding: 0 8px;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.diff-line.del .diff-line-text {
+  color: #fca5a5;
+}
+
+.diff-line.add .diff-line-text {
+  color: #86efac;
+}
+
+.edit-diff-pending {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+.edit-diff-pending .pending-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold-400);
+  animation: pending-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+@keyframes pending-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+}
+
+.edit-diff-pending span {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--gold-400);
+  font-weight: 500;
+}
+
+/* Timeline entry edit_file 样式 */
+.timeline-entry.edit_file .timeline-body.edit-file-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Timeline entry command_execution 样式 */
+.timeline-entry.command_execution .timeline-body.command-execution-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Compact collapsed view for command cards — matches ReadFileCard layout */
+.command-collapsed-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  min-height: 32px;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: var(--radius-sm);
+  background: rgba(248, 250, 252, 0.5);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.command-collapsed-card:hover {
+  background: rgba(241, 245, 249, 0.8);
+}
+
+.command-collapsed-icon-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.command-collapsed-icon-box svg {
+  width: 14px;
+  height: 14px;
+}
+
+.command-collapsed-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.command-collapsed-name {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.command-collapsed-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.file-card-type-badge.shell {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.file-card-type-badge.shell.completed {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.file-card-type-badge.shell.running {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.file-card-type-badge.shell.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+:root[data-theme="dark"] .command-collapsed-card {
+  border-color: rgba(51, 65, 85, 0.6);
+  background: rgba(30, 41, 59, 0.5);
+}
+
+:root[data-theme="dark"] .command-collapsed-card:hover {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.timeline-entry.command_execution .timeline-body.command-execution-body .timeline-meta {
+  padding: 0 0 4px 0;
+}
+
+.timeline-entry.command_execution .node-dot {
+  background: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.timeline-entry.command_execution.live .node-dot {
+  --live-ring-color: #6366f1;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.timeline-entry.edit_file .node-dot {
+  background: var(--gold-400);
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.35);
+}
+
+.timeline-entry.edit_file.live .node-dot {
+  --live-ring-color: var(--gold-400);
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ==================== Light theme ==================== */
+:root[data-theme="light"] .edit-file-diff-card {
+  background: #ffffff;
+  border-color: var(--border-default, #e2e8f0);
+}
+
+:root[data-theme="light"] .edit-file-diff-card:hover {
+  border-color: var(--border-strong, #cbd5e1);
+}
+
+:root[data-theme="light"] .edit-file-diff-header:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .edit-file-diff-name,
+:root[data-theme="light"] .edit-diff-path,
+:root[data-theme="light"] .command-collapsed-name {
+  color: var(--text-primary, #0f172a);
+}
+
+:root[data-theme="light"] .edit-file-diff-body,
+:root[data-theme="light"] .edit-diff-body {
+  background: #f8fafc;
+}
+
+:root[data-theme="light"] .edit-file-diff-hunk-meta {
+  background: #f1f5f9;
+  color: var(--text-secondary, #475569);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .edit-file-diff-hunk {
+  border-top-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .edit-diff-header {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.1), rgba(201, 162, 39, 0.04));
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .edit-diff-header:hover {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.14), rgba(201, 162, 39, 0.06));
+}
+
+:root[data-theme="light"] .edit-diff-file-badge {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .edit-diff-file-badge span {
+  color: var(--text-secondary, #475569);
+}
+
+:root[data-theme="light"] .diff-section {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .diff-section-header {
+  background: #f1f5f9;
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .diff-code {
+  background: #ffffff;
+}
+
+:root[data-theme="light"] .diff-line.del {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+:root[data-theme="light"] .diff-line.add {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+:root[data-theme="light"] .diff-line-num {
+  color: var(--text-tertiary, #94a3b8);
+  background: rgba(15, 23, 42, 0.04);
+  border-right-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .diff-line.del .diff-line-text {
+  color: #991b1b;
+}
+
+:root[data-theme="light"] .diff-line.add .diff-line-text {
+  color: #166534;
+}
+
+:root[data-theme="light"] .command-collapsed-card {
+  border-color: rgba(15, 23, 42, 0.1);
+  background: #ffffff;
+}
+
+:root[data-theme="light"] .command-collapsed-card:hover {
+  background: rgba(15, 23, 42, 0.04);
+}

@@ -1,0 +1,154 @@
+/* 「服务正忙」卡 —— 不是报错: 不用红, 不出错误码。暖琥珀点题 + 平的中性底, 跟客户端控件一样平。 */
+.nx-busy {
+  --nx-busy-accent: #d97706;
+  --nx-busy-accent-soft: color-mix(in srgb, var(--nx-busy-accent) 12%, transparent);
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 6px 0 2px;
+  padding: 12px 36px 12px 12px;
+  max-width: 560px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--nx-busy-accent) 22%, var(--neox-line-soft, rgba(0, 0, 0, 0.08)));
+  background: color-mix(in srgb, var(--nx-busy-accent) 5%, var(--neox-bg-card, #fff));
+  animation: nx-busy-in 180ms var(--neox-ease-out, ease-out);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .nx-busy { --nx-busy-accent: #f59e0b; }
+}
+:root[data-theme="dark"] .nx-busy { --nx-busy-accent: #f59e0b; }
+
+@keyframes nx-busy-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 图标: 三颗点轮流起伏 = 「在排队 / 人多」, 不是「坏了」 */
+.nx-busy__icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--nx-busy-accent-soft);
+}
+.nx-busy__icon span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--nx-busy-accent);
+  animation: nx-busy-dot 1.2s ease-in-out infinite;
+}
+.nx-busy__icon span:nth-child(2) { animation-delay: 0.15s; }
+.nx-busy__icon span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes nx-busy-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.55; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-busy, .nx-busy__icon span { animation: none; }
+}
+
+.nx-busy__body { flex: 1; min-width: 0; }
+.nx-busy__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary, var(--neox-fg));
+  line-height: 1.4;
+}
+.nx-busy__count {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+.nx-busy__desc {
+  margin-top: 2px;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.55;
+  color: var(--neox-fg-secondary, var(--neox-fg-hint));
+}
+
+.nx-busy__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.nx-busy__btn {
+  appearance: none;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 7px;
+  border: 1px solid var(--neox-line-soft, rgba(0, 0, 0, 0.1));
+  background: var(--neox-bg-card, #fff);
+  color: var(--neox-fg-primary, var(--neox-fg));
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-medium, 500);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast, 120ms) ease, border-color var(--neox-dur-fast, 120ms) ease;
+}
+.nx-busy__btn:hover { background: color-mix(in srgb, var(--neox-fg-primary, #000) 5%, var(--neox-bg-card, #fff)); }
+.nx-busy__btn:active { transform: translateY(0.5px); }
+.nx-busy__btn--primary {
+  border-color: transparent;
+  background: var(--nx-busy-accent);
+  color: #fff;
+}
+.nx-busy__btn--primary:hover { background: color-mix(in srgb, var(--nx-busy-accent) 88%, #000); }
+:root[data-theme="dark"] .nx-busy__btn--primary { color: #1c1408; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .nx-busy__btn--primary { color: #1c1408; }
+}
+.nx-busy__link {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0 4px;
+  height: 26px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+}
+.nx-busy__link:hover { color: var(--neox-fg-primary, var(--neox-fg)); }
+.nx-busy__id {
+  appearance: none;
+  margin-left: auto;
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: 10.5px;
+  color: var(--neox-fg-hint);
+  opacity: 0.7;
+  cursor: pointer;
+}
+.nx-busy__id:hover { opacity: 1; }
+
+.nx-busy__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+}
+.nx-busy__close:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #000) 6%, transparent);
+  color: var(--neox-fg-primary, var(--neox-fg));
+}

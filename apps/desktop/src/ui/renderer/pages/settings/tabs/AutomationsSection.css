@@ -1,0 +1,42 @@
+/* 设置 → 技能 → 自动化 分区; 卡片语言跟上面的技能卡 (.sk3-card) 一致 */
+.settings-page .sk3 .sk3-auto { margin-top: 28px; }
+.settings-page .sk3 .sk3-auto__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.settings-page .sk3 .sk3-auto__title { font-size: 13px; font-weight: 600; color: var(--neox-fg-secondary); }
+.settings-page .sk3 .sk3-auto__count { font-size: 13px; color: var(--neox-fg-hint); }
+.settings-page .sk3 .sk3-auto__hint { font-size: 12px; color: var(--neox-fg-hint); margin-left: auto; }
+.settings-page .sk3 .sk3-auto__empty {
+  padding: 18px; border-radius: 14px; border: 1px dashed var(--neox-line-subtle);
+  font-size: 13px; color: var(--neox-fg-hint); text-align: center;
+}
+.settings-page .sk3 .sk3-auto__row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; margin-bottom: 8px; border-radius: 14px;
+  border: 1px solid var(--neox-line-subtle); background: var(--neox-bg-card);
+  transition: border-color .16s ease;
+}
+.settings-page .sk3 .sk3-auto__row:hover { border-color: var(--neox-line, rgba(60, 45, 25, .16)); }
+.settings-page .sk3 .sk3-auto__clock {
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 9px;
+  background: color-mix(in srgb, #4f84ff 10%, transparent); color: #3a6be0;
+}
+.settings-page .sk3 .sk3-auto__main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.settings-page .sk3 .sk3-auto__when { font-size: 14px; font-weight: 600; color: var(--neox-fg-primary); }
+.settings-page .sk3 .sk3-auto__what {
+  font-size: 13px; color: var(--neox-fg-secondary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.settings-page .sk3 .sk3-auto__meta { font-size: 12px; color: var(--neox-fg-hint); }
+.settings-page .sk3 .sk3-auto__del {
+  flex: 0 0 auto; height: 26px; padding: 0 10px; border: 0; border-radius: 7px;
+  background: transparent; color: var(--neox-fg-secondary); font: inherit; font-size: 12px; cursor: pointer;
+  opacity: 0; transition: opacity .16s ease, background .16s ease;
+}
+.settings-page .sk3 .sk3-auto__row:hover .sk3-auto__del,
+.settings-page .sk3 .sk3-auto__del:focus-visible,
+.settings-page .sk3 .sk3-auto__del.is-confirm { opacity: 1; }
+.settings-page .sk3 .sk3-auto__del:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); }
+.settings-page .sk3 .sk3-auto__del.is-confirm { background: #d4543f; color: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .settings-page .sk3 .sk3-auto__row, .settings-page .sk3 .sk3-auto__del { transition: none; }
+}

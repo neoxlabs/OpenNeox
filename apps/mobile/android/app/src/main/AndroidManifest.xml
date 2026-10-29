@@ -1,0 +1,256 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 配对扫码 (mobile_scanner) + composer 拍照附件 — runtime permission Android 6+ 自动弹 dialog -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- composer 选图/选文件 — Android 13+ 用 READ_MEDIA_*, 低版本走 Photo Picker 不需要权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <!-- 应用锁 (指纹/面容): local_auth plugin -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <!-- 本地通知 (life reminder 同步, flutter_local_notifications) — Android 13+ 运行时申请 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- 定时提醒 (schedule_reminder 工具).
+         RECEIVE_BOOT_COMPLETED: 重启后 flutter_local_notifications 重排已设的闹钟,
+           否则用户设了"下周三提醒", 中间关机一次提醒就没了。
+         SCHEDULE_EXACT_ALARM: 精确到分。没有它只能用 inexact, 在 Doze 下会被系统
+           攒到十几分钟后才弹 —— "20 分钟后提醒我关火" 那种就废了。
+           拿不到也不致命: 代码里 canScheduleExactNotifications() 判一下, 没有就
+           降级成 inexact 并**如实告诉用户可能晚几分钟**, 不假装准时。 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- App 内更新 (R2 自建分发, 不上商店): 下载 APK 后拉起系统安装器.
+         Android 8 起这是**按应用**授权的, 声明了还要用户在设置里点同意 ——
+         ApkInstaller.canInstall() 会先判, 没授权就把用户送到那个页面. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- LAN P2P 必需: mDNS 扫描 + WSS 连 Desktop, 跨网络下 Mode B Cloud Relay -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 语音输入 (speech_to_text 系统识别) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- mDNS / NSD 在 Android 12+ 要这个 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- 电脑上任务在跑时切后台: 前台服务保住连接 (KeepAliveService) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- 设置 → 让 Pilot 一直在线 (2026-10-18): 直接弹「不限制电池」的系统确认框;
+         没这个声明只能把用户扔到电池优化列表里自己找。 -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Pilot 的手机工具 (PhoneToolsBridge): 每项都是工具第一次用到才弹授权, 不在启动时要。
+         自己分发不上商店, 短信 / 打电话这类敏感权限不受商店政策限制。 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 情境层 (ContextSense): 到家 / 出门 / 到公司的系统接近提醒要后台定位; 认「你的车」要蓝牙 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <!-- Pilot 打到手机: 锁屏时全屏亮屏响铃 (PilotCallBridge) -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <application
+        android:label="OpenNeox"
+        android:localeConfig="@xml/locales_config"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:hasFragileUserData="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- OAuth 回调接收 (Chrome Custom Tabs).
+             flutter_web_auth_2 用它把授权码交回 app 并**自动关掉** Custom Tab ——
+             这正是"内嵌浏览层"与"跳去独立浏览器"的体感差别所在。
+             scheme 用 applicationId 派生的私有值, 不用通用词, 降低被别的应用抢注的概率;
+             真正的防冒用靠 PKCE (code_verifier 只在本进程内存里)。 -->
+        <activity
+            android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
+            android:exported="true">
+            <intent-filter android:label="neox_oauth">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="openneoxapp"/>
+            </intent-filter>
+        </activity>
+        <!-- App 内更新: 把下载好的 APK 以 content:// 授权给系统安装器.
+             Android 7 起传 file:// 会抛 FileUriExposedException, 安装器读不到文件.
+             authority 跟着 applicationId 走 —— release 侧装包会加 applicationIdSuffix,
+             写死的话那个变体就崩. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- 本机大模型 GPU (OpenCL) / NPU (联发科 Neuron) —— Android 12+ 应用要声明才能加载系统里的
+             这些厂商库; required=false: 没有的机器照样能装, 运行时退到 CPU -->
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-car.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-pixel.so" android:required="false" />
+        <uses-native-library android:name="libvndksupport.so" android:required="false" />
+        <uses-native-library android:name="libneuronusdk_adapter.mtk.so" android:required="false" />
+        <uses-native-library android:name="libneuron_adapter_mgvi.so" android:required="false" />
+        <uses-native-library android:name="libapuwareutils_v2.mtk.so" android:required="false" />
+
+        <service
+            android:name=".KeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- 操控期前台服务 (pilot:D-12): phone_ui 在别的 App 里点点按时挂上, 国产 ROM 不会中途把进程清掉 -->
+        <service
+            android:name=".PhoneControlService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- Pilot 来电通知上的「挂断」 -->
+        <receiver android:name=".PilotCallActionReceiver" android:exported="false" />
+
+        <!-- 情境层: 车载蓝牙连上 / 断开、开机后重挂围栏和 17:00 闹钟 (蓝牙广播由蓝牙进程发, 要 exported) -->
+        <receiver android:name=".ContextReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- FCM 推送: App 被杀 / 锁屏时电脑或云端的 Pilot 叫醒这台手机 (来电 / 急事) -->
+        <service android:name=".NeoxPushService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Pilot 看通知: 用户在系统设置里给了「通知使用权」才会被系统绑定 -->
+        <service
+            android:name=".NeoxNotificationListener"
+            android:label="Neox Pilot"
+            android:exported="false"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Pilot 代你操作手机上的 App: 用户在 设置 → 无障碍 里打开才会被系统绑定 -->
+        <service
+            android:name=".NeoxAccessibilityService"
+            android:label="Neox Pilot"
+            android:exported="false"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/pilot_accessibility" />
+        </service>
+
+        <!-- 定时提醒到点真正弹出来的那一环 (flutter_local_notifications zonedSchedule)。
+             插件**不**自带这两个 receiver, 要 App 自己声明 (插件 README 写着)。以前漏了:
+             系统闹钟按时触发, 广播投给一个不存在的组件, 静默丢掉 —— schedule_reminder 定的提醒
+             一次都没响过, 没有任何报错 (2026-10-02 模拟器实测: alarm 3 次 wakeup, 通知栏 0 条)。
+             BootReceiver: 重启 / App 更新后把排着的提醒重新挂回系统闹钟。 -->
+        <receiver
+            android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver
+            android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- speech_to_text: 发现系统语音识别服务 (Android 11+ package visibility) -->
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
+        </intent>
+        <!-- Pilot 电脑连不上时用系统 TTS 开口: 要看得见语音合成引擎 -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE"/>
+        </intent>
+        <!-- Pilot 开 App: 列出桌面上能点开的应用 -->
+        <intent>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent>
+        <!-- Pilot 打电话 / 定闹钟 / 开链接: 要能看见处理这些 intent 的系统 App -->
+        <intent>
+            <action android:name="android.intent.action.DIAL"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SET_ALARM"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="geo"/>
+        </intent>
+    </queries>
+</manifest>

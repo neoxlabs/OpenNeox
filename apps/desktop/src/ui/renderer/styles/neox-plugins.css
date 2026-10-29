@@ -1,0 +1,1085 @@
+/**
+ * Neox Plugins — Library + Catalog (Cursor Automations–style).
+ * Quiet chrome · tonal borderless cards · content-first hierarchy.
+ */
+
+.neox-plugins {
+  --np-surface: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  --np-surface-hover: color-mix(in srgb, var(--neox-fg-primary) 6.5%, transparent);
+  --np-panel: color-mix(in srgb, var(--neox-fg-primary) 3.2%, transparent);
+  --np-muted: var(--neox-fg-secondary, color-mix(in srgb, var(--neox-fg-primary) 55%, transparent));
+  --np-faint: var(--neox-fg-muted, color-mix(in srgb, var(--neox-fg-primary) 38%, transparent));
+  --np-accent: var(--neox-accent, #c8a46a);
+  --np-radius: 10px;
+  --np-gap: 10px;
+  --np-ctrl-h: 26px;
+
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 22px 18px;
+  overflow: hidden;
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-sans, var(--font-sans, system-ui, sans-serif));
+  -webkit-font-smoothing: antialiased;
+}
+
+.neox-plugins *,
+.neox-plugins *::before,
+.neox-plugins *::after {
+  box-sizing: border-box;
+}
+
+/* ── Intro (page identity) ── */
+.neox-plugins__intro {
+  flex: 0 0 auto;
+}
+
+.neox-plugins__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.neox-plugins__subtitle {
+  margin: 4px 0 0;
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.4;
+  color: var(--np-muted);
+  max-width: 36em;
+}
+
+/* ── Toolbar: Mine tabs + one CTA ── */
+.neox-plugins__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--np-ctrl-h);
+}
+
+.neox-plugins__btn {
+  height: var(--np-ctrl-h);
+  padding: 0 11px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 520;
+  cursor: pointer;
+  transition: background 140ms ease, filter 140ms ease, opacity 140ms ease;
+}
+
+.neox-plugins__btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.neox-plugins__btn.is-ghost {
+  background: var(--np-surface);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugins__btn.is-ghost:hover:not(:disabled) {
+  background: var(--np-surface-hover);
+}
+
+.neox-plugins__btn.is-primary {
+  background: color-mix(in srgb, var(--neox-fg-primary) 90%, transparent);
+  color: var(--neox-bg-primary, #0d0d0d);
+}
+
+.neox-plugins__btn.is-primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+/* 刷新: 方形图标钮, 高度跟搜索框 / 导入按钮同一条线 */
+.neox-plugins__icon-btn {
+  width: var(--np-ctrl-h);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--np-muted);
+}
+.neox-plugins__icon-btn:hover:not(:disabled) { color: var(--neox-fg-primary); }
+/* 转着的时候不要变半透明 —— 那是"不可用", 这里是"正在刷" */
+.neox-plugins__icon-btn.is-spinning:disabled { opacity: 1; }
+.neox-plugins__icon-btn.is-spinning svg { animation: neox-plugins-spin 800ms linear infinite; }
+@keyframes neox-plugins-spin { to { transform: rotate(360deg); } }
+
+.neox-plugins__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--np-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.neox-plugins__link:hover {
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugins__tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--np-surface);
+}
+
+.neox-plugins__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 9px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--np-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.neox-plugins__tab.is-active {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugins__tab-count {
+  min-width: 14px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  color: var(--np-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.neox-plugins__tab-count.is-accent {
+  background: color-mix(in srgb, var(--np-accent) 20%, transparent);
+  color: var(--np-accent);
+}
+
+/* ── Zones ── */
+.neox-plugins__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-right: 2px;
+}
+
+.neox-plugins__zone {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.neox-plugins__panel {
+  min-height: 120px;
+  border-radius: 12px;
+  background: var(--np-panel);
+  padding: 4px;
+}
+
+.neox-plugins__panel:has(.neox-plugin-installed:empty),
+.neox-plugins__panel:has(.neox-plugin-empty) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+}
+
+/* ── Catalog bar ── */
+.neox-plugins__catalog-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.neox-plugins__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  align-items: center;
+  min-width: 0;
+}
+
+.neox-plugins__chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--np-faint);
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.neox-plugins__chip:hover {
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugins__chip.is-active {
+  background: var(--np-surface-hover);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugins__search-inline {
+  flex: 0 0 auto;
+  margin-left: auto;
+  width: min(160px, 22vw);
+  height: 24px;
+  padding: 0 9px;
+  border: none;
+  border-radius: 6px;
+  background: var(--np-surface);
+  color: var(--neox-fg-primary);
+  font-size: 12px;
+  outline: none;
+}
+
+.neox-plugins__search-inline::placeholder {
+  color: var(--np-faint);
+}
+
+.neox-plugins__search-inline:focus {
+  background: var(--np-surface-hover);
+}
+
+/* ── Grid / tonal cards ── */
+.neox-plugin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--np-gap);
+  align-items: stretch;
+}
+
+.neox-plugin-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 128px;
+  padding: 12px;
+  border: none;
+  border-radius: var(--np-radius);
+  background: var(--np-surface);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 160ms ease;
+}
+
+.neox-plugin-card:hover {
+  background: var(--np-surface-hover);
+}
+
+.neox-plugin-card:focus-visible {
+  outline: 1.5px solid color-mix(in srgb, var(--np-accent) 45%, transparent);
+  outline-offset: 1px;
+}
+
+.neox-plugin-card__glow {
+  display: none;
+}
+
+.neox-plugin-card__head {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.neox-plugin-card__mark {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 620;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugin-card__mark.kind-module {
+  background: color-mix(in srgb, var(--np-accent) 16%, transparent);
+  color: color-mix(in srgb, var(--np-accent) 82%, #fff 18%);
+}
+
+.neox-plugin-card__mark.kind-auth {
+  background: color-mix(in srgb, #6ea8ff 14%, transparent);
+  color: #9ec2ff;
+}
+
+.neox-plugin-card__mark.kind-mcp {
+  background: color-mix(in srgb, #7dcea0 14%, transparent);
+  color: #a8e0c0;
+}
+
+.neox-plugin-card__titles {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.neox-plugin-card__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.neox-plugin-card__name {
+  margin: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 580;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.neox-plugin-card__ver {
+  flex: 0 0 auto;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--np-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.neox-plugin-card__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.neox-plugin-card__chip {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--np-muted);
+}
+
+.neox-plugin-card__chip.kind-module {
+  background: color-mix(in srgb, var(--np-accent) 14%, transparent);
+  color: color-mix(in srgb, var(--np-accent) 85%, #fff 15%);
+}
+
+.neox-plugin-card__chip.is-official {
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugin-card__chip.is-muted {
+  color: var(--np-faint);
+}
+
+.neox-plugin-card__chip.is-update {
+  background: color-mix(in srgb, var(--np-accent) 16%, transparent);
+  color: var(--np-accent);
+}
+
+.neox-plugin-card__desc {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.45;
+  color: var(--np-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.neox-plugin-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.neox-plugin-card__stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--np-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.neox-plugin-card__dot {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--neox-fg-muted) 50%, transparent);
+}
+
+.neox-plugin-card__status {
+  font-size: 11px;
+  font-weight: 520;
+  color: var(--np-muted);
+}
+
+.neox-plugin-card__install {
+  height: 22px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  color: var(--neox-fg-primary);
+  font-size: 11px;
+  font-weight: 530;
+  cursor: pointer;
+}
+
+.neox-plugin-card__install:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+}
+
+.neox-plugin-card__install:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ── Empty ── */
+.neox-plugin-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 28px 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.neox-plugin-empty.is-panel {
+  min-height: 132px;
+}
+
+.neox-plugin-empty__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 560;
+}
+
+.neox-plugin-empty__hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--np-faint);
+}
+
+.neox-plugin-empty__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.neox-plugin-empty__sep {
+  color: var(--np-faint);
+  opacity: 0.55;
+}
+
+/* ── Installed rows ── */
+.neox-plugin-installed {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.neox-plugin-installed__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: transparent;
+  transition: background 140ms ease;
+}
+
+.neox-plugin-installed__row:hover {
+  background: var(--np-surface);
+}
+
+.neox-plugin-installed__row.is-disabled {
+  opacity: 0.55;
+}
+
+.neox-plugin-installed__mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 620;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+
+.neox-plugin-installed__mark.kind-module {
+  background: color-mix(in srgb, var(--np-accent) 16%, transparent);
+  color: color-mix(in srgb, var(--np-accent) 82%, #fff 18%);
+}
+
+.neox-plugin-installed__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.neox-plugin-installed__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.neox-plugin-installed__name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 560;
+}
+
+.neox-plugin-installed__ver {
+  font-size: 11px;
+  color: var(--np-faint);
+}
+
+.neox-plugin-installed__desc {
+  margin: 2px 0 0;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--np-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.neox-plugin-installed__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.neox-plugin-toggle {
+  position: relative;
+  width: 28px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.neox-plugin-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.neox-plugin-toggle__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+}
+
+.neox-plugin-toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--neox-fg-primary) 70%, transparent);
+  transition: transform 120ms ease, background 120ms ease;
+}
+
+.neox-plugin-toggle input:checked + .neox-plugin-toggle__track {
+  background: color-mix(in srgb, var(--np-accent) 50%, transparent);
+}
+
+.neox-plugin-toggle input:checked + .neox-plugin-toggle__track::after {
+  transform: translateX(12px);
+  background: #fff;
+}
+
+.neox-plugin-installed__remove {
+  height: 22px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--np-faint);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.neox-plugin-installed__remove:hover {
+  color: #e07070;
+  background: color-mix(in srgb, #e07070 10%, transparent);
+}
+
+/* ── Updates / pager ── */
+.neox-plugin-updates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.neox-plugin-updates__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.neox-plugin-updates__ver {
+  margin-left: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--np-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.neox-plugins__pager {
+  display: flex;
+  justify-content: flex-start;
+  padding: 4px 0 2px;
+}
+
+.neox-plugins .plugin-detail {
+  border: none !important;
+  background: var(--np-surface) !important;
+  border-radius: var(--np-radius) !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================================
+   Connector panel — 平台连接 (连接 / 授权 / 自检)
+
+   跟已安装列表同一套材质变量, 不自带底色: 它坐在插件页的浮卡里, 再刷一层
+   实底就会在浅色下割出一条白边。
+   ========================================================================= */
+
+.neox-connector-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: var(--np-gap);
+}
+
+.neox-connector-panel__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.neox-connector-panel__title {
+  margin: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+.neox-connector-panel__hint {
+  font-size: 11px;
+  color: var(--np-faint);
+}
+
+.neox-connector-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--np-radius);
+  background: var(--np-surface);
+}
+
+.neox-connector-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.neox-connector-card__spacer {
+  flex: 1 1 auto;
+}
+
+.neox-connector-card__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--neox-fg-primary) 22%, transparent);
+  flex: none;
+}
+
+.neox-connector-card__dot.is-on {
+  background: var(--np-accent);
+}
+
+.neox-connector-card__name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 560;
+  color: var(--neox-fg-primary);
+}
+
+.neox-connector-card__connect {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.neox-connector-card__row {
+  display: flex;
+  gap: 6px;
+}
+
+.neox-connector-card__input {
+  flex: 1 1 auto;
+  height: var(--np-ctrl-h);
+  padding: 0 9px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.neox-connector-card__input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--np-accent) 55%, transparent);
+}
+
+.neox-connector-card__instructions,
+.neox-connector-card__note,
+.neox-connector-card__tools {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--np-muted);
+}
+
+.neox-connector-card__note,
+.neox-connector-card__tools {
+  color: var(--np-faint);
+}
+
+.neox-connector-card__perms {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.neox-connector-card__perm label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.neox-connector-card__perm input {
+  accent-color: var(--np-accent);
+  flex: none;
+}
+
+.neox-connector-card__reason {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugin-card__chip.is-warn {
+  background: color-mix(in srgb, #d08a3a 18%, transparent);
+  color: color-mix(in srgb, #d08a3a 88%, #fff 12%);
+}
+
+.neox-plugin-card__chip.is-danger {
+  background: color-mix(in srgb, #d0503a 18%, transparent);
+  color: color-mix(in srgb, #d0503a 88%, #fff 12%);
+}
+
+.neox-connector-card__msg {
+  margin: 0;
+  font-size: 11px;
+}
+
+.neox-connector-card__msg.is-ok {
+  color: var(--np-accent);
+}
+
+.neox-connector-card__msg.is-err {
+  color: color-mix(in srgb, #d0503a 88%, #fff 12%);
+}
+
+/* 拖放导入 —— 面板整块都是投放区 */
+.neox-plugins__panel {
+  position: relative;
+}
+
+.neox-plugins__panel.is-dropping {
+  outline: 1px dashed color-mix(in srgb, var(--np-accent) 60%, transparent);
+  outline-offset: -4px;
+  border-radius: var(--np-radius);
+}
+
+.neox-plugins__droppad {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  border-radius: var(--np-radius);
+  background: color-mix(in srgb, var(--np-panel) 88%, transparent);
+  color: var(--np-accent);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 560;
+  /* 覆盖层不能吃掉 drop 事件 —— 否则松手时事件落在它身上, 导入不触发 */
+  pointer-events: none;
+}
+
+/* ============================================================================
+   品牌 logo — 真官方 mark, 缺失时 emoji / 首字母兜底
+   ========================================================================= */
+
+.neox-plugin-logo {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.neox-plugin-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.neox-plugin-logo.is-emoji,
+.neox-plugin-logo.is-monogram {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+  font-weight: 620;
+}
+
+
+.neox-plugin-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 24px 44px;
+  text-align: center;
+}
+
+.neox-plugin-art {
+  width: 96px;
+  height: 72px;
+  color: var(--neox-fg-primary);
+  margin-bottom: 4px;
+}
+
+.neox-plugin-state__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 560;
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugin-state__hint {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.6;
+  color: var(--np-muted);
+}
+
+/* 连不上市场时的手动安装三步 —— 左对齐的编号列表, 宽度跟上面那句提示一致 */
+.neox-plugin-state__steps {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  max-width: 46ch;
+  text-align: left;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.7;
+  color: var(--neox-fg-secondary);
+}
+
+.neox-plugin-state__detail {
+  margin: 2px 0 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--np-faint);
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+}
+
+.neox-plugin-state .neox-plugins__btn {
+  margin-top: 4px;
+}
+
+/* 骨架卡 — 形状跟真卡一致, 免得内容到位时整块跳一下 */
+.neox-plugin-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--np-radius);
+  background: var(--np-surface);
+}
+
+.neox-plugin-skeleton__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.neox-plugin-skeleton__logo,
+.neox-plugin-skeleton__title,
+.neox-plugin-skeleton__line {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--neox-fg-primary) 7%, transparent) 25%,
+    color-mix(in srgb, var(--neox-fg-primary) 12%, transparent) 37%,
+    color-mix(in srgb, var(--neox-fg-primary) 7%, transparent) 63%
+  );
+  background-size: 400% 100%;
+  animation: neox-plugin-shimmer 1.4s ease infinite;
+}
+
+.neox-plugin-skeleton__logo { width: 28px; height: 28px; border-radius: 7px; }
+.neox-plugin-skeleton__title { width: 42%; height: 11px; }
+.neox-plugin-skeleton__line { width: 100%; height: 9px; }
+.neox-plugin-skeleton__line.is-short { width: 62%; }
+
+@keyframes neox-plugin-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* 尊重系统的减弱动效设置 —— shimmer 是装饰, 不该硬闪 */
+@media (prefers-reduced-motion: reduce) {
+  .neox-plugin-skeleton__logo,
+  .neox-plugin-skeleton__title,
+  .neox-plugin-skeleton__line { animation: none; }
+}
+
+
+
+/* 状态筛选和分面是两个维度, 中间给一道分隔, 别让人以为是同一组 */
+.neox-plugins__chip-sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 2px 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  flex: none;
+}
+
+.neox-plugin-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 有新版本时更新是主操作, 视觉上要压过普通「安装」 */
+.neox-plugin-card__install.is-update {
+  background: color-mix(in srgb, var(--np-accent) 18%, transparent);
+  color: var(--np-accent);
+}
+
+.neox-plugin-card__more {
+  position: relative;
+}
+
+.neox-plugin-card__more-btn {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--np-faint);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.neox-plugin-card__more-btn:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  color: var(--neox-fg-primary);
+}
+
+.neox-plugin-card__menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  z-index: 5;
+  min-width: 92px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border-radius: 8px;
+  background: linear-gradient(var(--np-panel), var(--np-panel)), var(--neox-bg-canvas, #1e1f22);
+  border: 1px solid var(--np-line, color-mix(in srgb, var(--neox-fg-primary) 10%, transparent));
+  box-shadow: 0 6px 20px rgb(0 0 0 / 28%);
+}
+
+.neox-plugin-card__menu button {
+  padding: 5px 8px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-xs, 12px);
+  text-align: left;
+  cursor: pointer;
+}
+
+.neox-plugin-card__menu button:hover {
+  background: var(--np-surface-hover);
+}
+
+.neox-plugin-card__menu button.is-danger:hover {
+  background: color-mix(in srgb, #d0503a 20%, transparent);
+  color: color-mix(in srgb, #d0503a 88%, #fff 12%);
+}
+
+/* 停用的插件仍然在列表里, 但要一眼看出它现在不干活 */
+.neox-plugin-card.is-off {
+  opacity: 0.62;
+}

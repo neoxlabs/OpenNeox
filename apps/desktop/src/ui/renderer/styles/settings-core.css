@@ -1,0 +1,31 @@
+/* Material vibrancy 三档 + spacing/typography token. 必须最先 import. */
+@import './settings-core/material.css';
+
+@import './settings-core/layout.css';
+
+/* nx-* 共享基础组件 (SettingsCard / Row / Switch / Segmented / RadioCard /
+ * Select / Button / Input / SectionTitle / PageTitle). 在各 tab CSS 前 import,
+ * 让 tab 自定义 CSS 仍能覆盖 (老 tab 还没迁移完). 迁移完后会反过来. */
+@import './settings-core/settings-base.css';
+
+@import './settings-core/analytics.css';
+
+@import './settings-core/usage.css';
+
+@import './settings-core/account.css';
+@import './settings-core/account-overview.css';
+
+@import './settings-core/billing.css';
+
+@import './settings-core/subscription-v2.css';
+@import './settings-core/coupon-wallet.css';
+
+@import './settings-core/security-v2.css';
+
+@import './settings-core/providers-v2.css';
+
+/* macOS 统一覆写 — 覆盖各 tab 自定义样式 */
+@import './settings-core/macos-unified.css';
+
+/* Cursor-like 浅灰软面 — 必须在 macos-unified 之后, 盖掉厚玻璃卡 */
+@import './settings-core/settings-soft.css';

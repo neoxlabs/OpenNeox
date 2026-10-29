@@ -1,0 +1,143 @@
+
+/* 行首那颗图标的配色 —— 缺这条就只有 currentColor 一个灰底方块 (同族的
+   --skill 也漏过)。Computer Use 借数据库那档的紫, 跟终端(term)/搜索(search)分开。 */
+.atl-tool__icon--computer { background: var(--neox-tool-db-bg); color: var(--neox-tool-db-fg); }
+
+/* 行首的真实 App 图标 —— 占的是跟 glyph 一模一样的盒子, 所以整列仍然对齐。
+   容器不上底色: 图标自己带完整视觉 (圆角/阴影/配色), 再垫一层色块只会脏。 */
+.atl-tool__icon.atl-tool__icon--app,
+.atl-activity-child__icon.atl-activity-child__icon--app {
+  /* 两段类名是为了压过 .atl-tool__icon 的底色, 不用 !important (那是层叠里的死路) */
+  background: transparent;
+  color: inherit;
+}
+.atl-appicon {
+  width: 14px;
+  height: 14px;
+  display: block;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
+.atl-computer {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg);
+}
+
+.atl-computer__head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+/* App 图标 —— 真身的 icns, 由 os-bridge 按 pid 反查取, 不是我们画的 glyph */
+.atl-computer__logo {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  object-fit: contain;
+}
+.atl-computer__logo--blank {
+  background: var(--neox-line, rgba(128, 128, 128, 0.18));
+}
+
+.atl-computer__app {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.atl-computer__meta {
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.atl-computer__badge {
+  padding: 1px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.atl-computer__badge--err {
+  color: var(--neox-danger, #c0392b);
+  background: color-mix(in srgb, var(--neox-danger, #c0392b) 12%, transparent);
+}
+
+.atl-computer__note {
+  color: var(--neox-fg-hint);
+  line-height: 1.5;
+}
+
+/* 步骤清单 —— 序号自己画 (list-style 的位置会跟卡片缩进叠起来二次内推) */
+.atl-computer__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: fit-content;
+  max-width: min(100%, 560px);
+  counter-reset: atl-computer-step;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  user-select: text;
+}
+.atl-computer__steps li {
+  counter-increment: atl-computer-step;
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 8px;
+  row-gap: 2px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.atl-computer__steps li::before {
+  content: counter(atl-computer-step);
+  flex: 0 0 auto;
+  min-width: 12px;
+  text-align: right;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+.atl-computer__steps li.is-failed .atl-computer__step-text {
+  color: var(--neox-danger, #c0392b);
+}
+
+.atl-computer__step-text { min-width: 0; }
+.atl-computer__step-ms {
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+}
+/* 失败原因: 第二行, 从动作列起跨到行尾 —— 跟耗时挤一行会把动作列压到换行 */
+.atl-computer__step-err {
+  grid-column: 2 / -1;
+  color: var(--neox-danger, #c0392b);
+}
+
+/* 这一步的补充说明 (浏览器卡用它标「定位失效, 已自愈」)。
+   跟失败原因同一个位置但不是红的 —— 自愈是**成功**的一步, 只是路上换了个定位。 */
+.atl-computer__step-note {
+  grid-column: 2 / -1;
+  color: var(--neox-fg-hint);
+}
+
+/* 展开行的底部节奏统一收在 row-rhythm.css 里 (所有卡片类型一视同仁), 这里不再单收一份。 */
+
+/* 窗口截图 —— AX 读不到元素的 App (微信/飞书…) 只有这一条能看的线索。
+   高度封顶: 卡片是回执, 不该被一张 Retina 大图撑成半屏。 */
+.atl-computer__shot {
+  max-width: 100%;
+  max-height: 220px;
+  width: auto;
+  border-radius: 6px;
+  border: 1px solid var(--neox-line, rgba(128, 128, 128, 0.22));
+  align-self: flex-start;
+}

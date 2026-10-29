@@ -1,0 +1,127 @@
+/* ============================================================
+ * Terminal & Shell Card tokens — 完全可定制
+ *
+ * 为 agent-timeline 的 .atl-term 静态终端块 + (未来) xterm 实时终端
+ * 提供一套独立的 token. 默认从 surface/text/accent token 派生,
+ * 各主题/预设可单独覆盖任意一项, 不需要改 JS.
+ *
+ * 命名:
+ *   --shell-card-*    Shell 卡片本体 (bg/border/icon/label)
+ *   --xterm-*         xterm.js 主题 (前/背景/光标/选区 + ANSI 16 色)
+ *
+ * 加载顺序: 必须最后导入, 让前面所有 base/preset 的 surface token
+ * 已经就位, 这里的 var() 链才能正确解析.
+ * ============================================================ */
+
+:root,
+:root[data-theme="dark"],
+:root[data-theme="light"],
+:root[data-theme="midnight"],
+:root[data-theme="high-contrast"] {
+  /* ---- Shell 卡片本体 ---- */
+  --shell-card-bg:        var(--bg-elevated);
+  --shell-card-border:    var(--border-subtle);
+  --shell-card-hover-bg:  var(--bg-hover);
+  --shell-icon-color:     var(--neox-tool-term-fg, #2F8A4E);
+  --shell-label-color:    var(--neox-primary-600, #666c75);
+
+  /* 状态点 / 胶囊 (Running / DONE / FAIL) — 主色走 status, 软底走 *-soft */
+  --shell-status-running:        var(--neox-primary-500, #9298a1);
+  --shell-status-running-soft:   var(--neox-primary-100, rgba(146, 152, 161, 0.22));
+  --shell-status-completed:      var(--neox-ok,          #22c55e);
+  --shell-status-completed-soft: var(--neox-ok-soft,     rgba(34, 197, 94, 0.18));
+  --shell-status-error:          var(--neox-err,         #ef4444);
+  --shell-status-error-soft:     var(--neox-err-soft,    rgba(239, 68, 68, 0.20));
+
+  /* "BG" 后台徽标 + open-terminal 浮动按钮的 accent */
+  --shell-accent-info:      var(--neox-info,      #3b82f6);
+  --shell-accent-info-soft: var(--neox-info-soft, rgba(59, 130, 246, 0.12));
+
+  /* ---- xterm.js 主面板 ---- */
+  --xterm-bg:            var(--bg-code);
+  --xterm-fg:            var(--text-primary);
+  --xterm-cursor:        var(--text-accent);
+  --xterm-cursor-accent: var(--bg-code);
+  --xterm-selection:     rgba(var(--gold-500-rgb, 146, 152, 161), 0.22);
+  --xterm-border:        var(--border-subtle);
+  --xterm-font-family:   var(--font-mono);
+  --xterm-font-size:     12px;
+
+  /* ---- ANSI 16 色 (默认: 暗色基线 = VS Code Dark+) ---- */
+  --xterm-black:          #1e1f22;
+  --xterm-red:            #f44747;
+  --xterm-green:          #4ec9b0;
+  --xterm-yellow:         #dcdcaa;
+  --xterm-blue:           #569cd6;
+  --xterm-magenta:        #c586c0;
+  --xterm-cyan:           #4dc9b0;
+  --xterm-white:          #d4d4d4;
+  --xterm-bright-black:   #808080;
+  --xterm-bright-red:     #f14c4c;
+  --xterm-bright-green:   #23d18b;
+  --xterm-bright-yellow:  #f5f543;
+  --xterm-bright-blue:    #3b8eea;
+  --xterm-bright-magenta: #d670d6;
+  --xterm-bright-cyan:    #29b8db;
+  --xterm-bright-white:   #ffffff;
+}
+
+/* ============================================================
+ * Light 主题 — 浅底要用更深的 ANSI 才能看清
+ * ============================================================ */
+:root[data-theme="light"] {
+  /* 浅色/暖色主题下终端也用浅底深字，避免右侧日志区变成突兀黑块。 */
+  --xterm-bg:        var(--bg-code, #fafaf8);
+  --xterm-fg:        var(--text-primary, #2f3136);
+  --xterm-cursor:    var(--text-accent);
+  --xterm-cursor-accent: var(--xterm-bg);
+  --xterm-selection: rgba(146, 152, 161, 0.18);
+
+  --xterm-black:          #141824;
+  --xterm-red:            #D63A3A;
+  --xterm-green:          #1F8C4D;
+  --xterm-yellow:         #B27800;
+  --xterm-blue:           #2563EB;
+  --xterm-magenta:        #7a7f88;
+  --xterm-cyan:           #0E7490;
+  --xterm-white:          #3A3F4D;
+  --xterm-bright-black:   #6B7080;
+  --xterm-bright-red:     #E04545;
+  --xterm-bright-green:   #28A75F;
+  --xterm-bright-yellow:  #C28800;
+  --xterm-bright-blue:    #3B7BFA;
+  --xterm-bright-magenta: #aeb4bc;
+  --xterm-bright-cyan:    #1A8DA8;
+  --xterm-bright-white:   #141824;
+}
+
+/* ============================================================
+ * 主题预设覆盖 — 只调跟 canvas 同色调的 background/cursor/selection
+ *   ANSI 16 色继续走默认 (Dark+ 暗色基线), 在各预设的深色画布下都能用
+ * ============================================================ */
+
+/* 墨夜 — 真·中性灰 (R=G=B), xterm 跟 #171717 sunken 一致, 光标/选区也走灰白阶 */
+:root[data-theme-preset="moye"] {
+  --xterm-cursor:    #ebebeb;
+  --xterm-selection: rgba(255, 255, 255, 0.18);
+}
+
+/* 暖阳 — 暖底, 选区也走暖色, 不用紫 */
+:root[data-theme-preset="nuanyang"] {
+  --xterm-cursor:    #ed8a2e;
+  --xterm-selection: rgba(237, 138, 46, 0.20);
+}
+
+/* 琉璃 — 海玻璃, xterm 半透 */
+:root[data-theme-preset="liuli"][data-theme="dark"] {
+  --xterm-bg:        rgba(11, 22, 32, 0.85);
+  --xterm-fg:        #e6f4f8;
+  --xterm-cursor:    #4dc9b0;
+  --xterm-selection: rgba(180, 240, 255, 0.22);
+}
+
+/* 晨光 — 暖金亮色, xterm 走更深的 ANSI 配 light 基线 */
+:root[data-theme-preset="chenguang"] {
+  --xterm-cursor:    #c19a6b;
+  --xterm-selection: rgba(193, 154, 107, 0.22);
+}

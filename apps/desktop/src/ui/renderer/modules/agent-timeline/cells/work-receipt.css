@@ -1,0 +1,59 @@
+.nx-receipt {
+  margin: 6px 0 2px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--neox-fg-muted, #6b6255);
+}
+.nx-receipt__line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 18px;
+}
+.nx-receipt__k {
+  flex: none;
+  color: var(--neox-fg-hint, #948b7d);
+}
+.nx-receipt__v {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+}
+.nx-receipt__num {
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.nx-receipt__src {
+  color: var(--neox-fg-hint, #948b7d);
+  font-size: 11px;
+}
+.nx-receipt__sep { color: var(--neox-fg-hint, #948b7d); }
+.nx-receipt__line--warn .nx-receipt__k,
+.nx-receipt__line--warn .nx-receipt__v {
+  color: var(--neox-warn-ink, #a86400);
+}
+.nx-receipt__line--warn { cursor: help; }
+
+/* 失败三行: 左侧一道细竖线, 跟错误卡的语汇一致, 但不做成大红块 */
+.nx-receipt--failed {
+  border-left: 2px solid var(--neox-warn, #d99b1c);
+  padding-left: 10px;
+}
+.nx-receipt__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nx-receipt__row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.nx-receipt__row .nx-receipt__k { min-width: 6.5em; }
+.nx-receipt__row .nx-receipt__v { color: var(--neox-fg-secondary, #3c3525); }

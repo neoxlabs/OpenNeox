@@ -1,0 +1,36 @@
+# Qwen3.7 Flash (订阅 / 按量, 2026-10-21 上架)
+#
+# 跟 qwen3.8-flash 同一套思考开关 (阿里云百炼 + OpenRouter 锁阿里):
+#   · 关思考: 百炼认 enable_thinking:false, OpenRouter 认 reasoning:{enabled:false}, 两个一起发。
+#   · 开 / 加深: enable_thinking:true; max 档再加 reasoning_effort:high。
+id: qwen3.7-flash
+display_name: Qwen3.7 Flash
+family: qwen
+availability: ga
+
+context_window: 1000000
+max_output_tokens: 32768
+
+upstream_slugs:
+  prov_openrouter: qwen/qwen3.7-flash
+
+capabilities:
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: enable_thinking
+    default_level: on
+  prompt_cache:
+    supported: true
+
+effort_map:
+  off: { enable_thinking: false, reasoning: { enabled: false } }
+  on:  { enable_thinking: true }
+  max: { enable_thinking: true, reasoning_effort: high }
+
+pricing:
+  input_per_mtok: 0.0387
+  cached_input_per_mtok: 0.0077
+  output_per_mtok: 0.1548
+  currency: USD

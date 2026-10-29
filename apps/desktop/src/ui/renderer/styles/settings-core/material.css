@@ -1,0 +1,128 @@
+/* ============================================================
+ * Neox Material — macOS Vibrancy 三档
+ *
+ * 跟"web glassmorphism 教程"区别:
+ *   - blur ≥ 30px 才像 Apple Material (web 教的 10-20px 太轻, 飘)
+ *   - 不透明度 80-92% (不是 60%), 透明只是手段, 可读性优先
+ *   - 双 hairline (顶部高光 + 底部暗) 是"玻璃感"的灵魂
+ *   - saturate 150-160% 让背后内容"活"起来, 不是雾
+ *
+ * 跨主题策略:
+ *   - 底色用 color-mix(var(--neox-bg-card)) 派生, 跟 20 套 ThemePack 联动
+ *   - blur / saturate 数值跨主题统一 (品牌一致性)
+ *   - alpha + hairline 强度按 [data-theme="light"|"dark"] 分两套
+ *
+ * 用法:
+ *   外层卡片  → .neox-material--regular   (50px blur, 88% 不透)
+ *   悬浮层    → .neox-material--thick     (60px blur, 82% 不透)
+ *   极淡氛围  → .neox-material--thin      (30px blur, 92% 不透)
+ *   row 内容  → 透明继承父卡, 靠 hairline 分割
+ * ============================================================ */
+
+:root {
+  /* ── 三档 vibrancy 滤镜 (跨主题统一) — v3 saturate 整体拉高让 wallpaper 色更显 ── */
+  --neox-mat-thin-blur:    blur(30px) saturate(180%);
+  --neox-mat-regular-blur: blur(50px) saturate(180%);
+  --neox-mat-thick-blur:   blur(60px) saturate(180%);
+
+  --neox-mat-thin-bg:    color-mix(in srgb, var(--neox-bg-card) 84%, transparent);
+  --neox-mat-regular-bg: color-mix(in srgb, var(--neox-bg-card) 76%, transparent);
+  --neox-mat-thick-bg:   color-mix(in srgb, var(--neox-bg-card) 68%, transparent);
+
+  /* ── Light 模式双 hairline (微亮顶 + 微暗底) ── */
+  --neox-mat-hairline-top:    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  --neox-mat-hairline-bottom: inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+
+  /* ── Light 模式外阴影 (regular / thick 卡片浮起感) ── */
+  --neox-mat-shadow-regular:
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+  --neox-mat-shadow-thick:
+    0 2px 0 rgba(0, 0, 0, 0.06),
+    0 12px 36px rgba(0, 0, 0, 0.12);
+
+  /* ── 卡内 row 互动态 (透明叠加, 不抢戏) ── */
+  --neox-mat-row-hover:    color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  --neox-mat-row-selected: color-mix(in srgb, var(--neox-primary-600) 9%, transparent);
+  --neox-mat-row-divider:  color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+
+  --nx-space-1: 4px;
+  --nx-space-2: 8px;
+  --nx-space-3: 12px;
+  --nx-space-4: 16px;
+  --nx-space-5: 24px;
+
+  --nx-fs-page:      24px;                  /* 页标题 — 跟正文拉开两档, 一眼看出在哪一页 */
+  --nx-fs-section:   var(--neox-fs-md);     /* 13 — 分区标题 (配 600 字重) */
+  --nx-fs-row-title: var(--neox-fs-md);     /* 13 — 跟导航项同号 */
+  --nx-fs-row-desc:  var(--neox-fs-sm);     /* 12 — 比条目名小一档 */
+  --nx-fs-group:     var(--neox-fs-xs);     /* 11 — 分组小标签 */
+}
+
+/* ── Dark 模式 (anye / muyunqing / songyanmo / wumoyan / haiyue / neonlight 等) ── */
+:root[data-theme="dark"] {
+  /* dark 下 bg-card 偏深, alpha 稍低让玻璃透得多一点 */
+  --neox-mat-thin-bg:    color-mix(in srgb, var(--neox-bg-card) 88%, transparent);
+  --neox-mat-regular-bg: color-mix(in srgb, var(--neox-bg-card) 82%, transparent);
+  --neox-mat-thick-bg:   color-mix(in srgb, var(--neox-bg-card) 76%, transparent);
+
+  /* dark 模式 hairline: 顶部冷白细高光 + 底部更深 */
+  --neox-mat-hairline-top:    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --neox-mat-hairline-bottom: inset 0 -1px 0 rgba(0, 0, 0, 0.24);
+
+  /* dark 模式阴影更深, 让浮起感不被吃掉 */
+  --neox-mat-shadow-regular:
+    0 1px 0 rgba(0, 0, 0, 0.20),
+    0 8px 24px rgba(0, 0, 0, 0.30);
+  --neox-mat-shadow-thick:
+    0 2px 0 rgba(0, 0, 0, 0.24),
+    0 12px 36px rgba(0, 0, 0, 0.40);
+
+  --neox-mat-row-hover:    color-mix(in srgb, white 5%, transparent);
+  --neox-mat-row-selected: color-mix(in srgb, var(--neox-primary-600) 16%, transparent);
+  --neox-mat-row-divider:  color-mix(in srgb, white 7%, transparent);
+}
+
+/* ============================================================
+ * Modifier classes — 任何元素加 .neox-material--xxx 即得 vibrancy
+ * ============================================================ */
+.neox-material {
+  position: relative;
+  isolation: isolate;
+}
+
+.neox-material--thin {
+  background: var(--neox-mat-thin-bg);
+  -webkit-backdrop-filter: var(--neox-mat-thin-blur);
+          backdrop-filter: var(--neox-mat-thin-blur);
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom);
+}
+
+.neox-material--regular {
+  background: var(--neox-mat-regular-bg);
+  -webkit-backdrop-filter: var(--neox-mat-regular-blur);
+          backdrop-filter: var(--neox-mat-regular-blur);
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    var(--neox-mat-shadow-regular);
+}
+
+.neox-material--thick {
+  background: var(--neox-mat-thick-bg);
+  -webkit-backdrop-filter: var(--neox-mat-thick-blur);
+          backdrop-filter: var(--neox-mat-thick-blur);
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    var(--neox-mat-shadow-thick);
+}
+
+/* backdrop-filter 不支持时回落: 提高不透明度保可读 (老 Linux Electron / Chromium pre-76) */
+@supports not (backdrop-filter: blur(1px)) {
+  .neox-material--thin    { background: var(--neox-bg-card); }
+  .neox-material--regular { background: var(--neox-bg-card); }
+  .neox-material--thick   { background: var(--neox-bg-card); }
+}

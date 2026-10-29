@@ -1,0 +1,112 @@
+
+/* ── macOS 缓动令牌覆盖 ───────────────────────────────────
+ *
+ *   基线是 Material Standard cubic-bezier(0.4, 0, 0.2, 1): 匀速起步、柔和减速。
+ *   Apple 那套的区别在**末段**: 它把绝大部分时间花在最后一点点距离上, 所以
+ *   停下的瞬间没有"啪"的一下, 视觉上像是"贴住"了终点。
+ *
+ *   0.32, 0.72, 0, 1 —— 这是 SwiftUI 默认过渡的常用近似, 也是分享卡上用的那条。
+ */
+html[data-platform='darwin'],
+html[data-platform='darwin'][data-theme],
+html[data-platform='darwin'] :root[data-theme] {
+  --neox-ease-out:    cubic-bezier(0.32, 0.72, 0, 1);
+  --neox-ease-in-out: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* 强调缓动 —— 给"出现/消失"这类有存在感的变化用; 微交互继续用 ease-out。 */
+  --neox-ease-emphasized: cubic-bezier(0.32, 0.72, 0, 1);
+  /* 退场专用: 起步就快, 别让用户等一个正在消失的东西 */
+  --neox-ease-exit:       cubic-bezier(0.4, 0, 1, 1);
+
+  /* 时长在 macOS 上略放长一点点 —— 苹果的曲线末段慢, 时长太短会把那段"贴住"
+     的手感压没, 反而显得生硬。 */
+  --neox-ease-spring: cubic-bezier(0.34, 1.28, 0.5, 1);
+  --neox-dur-instant: 100ms;
+  --neox-dur-fast: 180ms;
+  --neox-dur-base: 260ms;
+  --neox-dur-slow: 380ms;
+  --neox-loop-breathe: 2200ms;
+  --neox-loop-shimmer: 1500ms;
+}
+
+/* 非 darwin 的 emphasized/exit 兜底 (linux 等); win32 由 motion-win32.css 再覆盖。
+   否则用到新令牌的样式在非 mac 上会失效。 */
+html:not([data-platform='darwin']):not([data-platform='win32']) {
+  --neox-ease-emphasized: var(--neox-ease-out);
+  --neox-ease-exit:       var(--neox-ease-out);
+}
+
+/* ── 可复用的入场原语 ─────────────────────────────────────
+ *
+ *   只在 macOS 生效。用法: 挂 .nx-in--xxx, 元素就绪后加 .is-in。
+ *   (必须分两步 —— 首次渲染就是终态的属性浏览器不会做过渡。)
+ *
+ *   位移幅度刻意小 (8~12px)、缩放刻意浅 (0.97 起): 幅度再大就成了"弹窗特效",
+ *   而系统级动效的高级感恰恰来自克制。也不做 spring 回弹 —— 回弹在信息界面上轻浮。
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-platform='darwin'] .nx-in {
+    opacity: 0;
+    transition:
+      opacity var(--neox-dur-base) var(--neox-ease-emphasized),
+      transform var(--neox-dur-slow) var(--neox-ease-emphasized);
+  }
+  html[data-platform='darwin'] .nx-in.is-in { opacity: 1; transform: none; }
+
+  /* 浮层/弹窗: 微升 + 轻放大 */
+  html[data-platform='darwin'] .nx-in--modal { transform: translateY(10px) scale(0.972); }
+  /* 气泡/菜单: 从触发点方向"长"出来, 不做位移只做缩放 —— 菜单位移会跟触发器脱节。
+     transform-origin 决定它从哪一角展开, 对不上会有"菜单和按钮没关系"的割裂感。 */
+  html[data-platform='darwin'] .nx-in--pop { transform: scale(0.94); transform-origin: var(--nx-pop-origin, 50% 0); }
+  /* 顶栏右侧的图标菜单 (通知 / 提醒 / 帮助 / 主题) 统一从右上角展开 —— 触发器都在那儿。
+     用具体类名而不是让每个调用方传 --nx-pop-origin: 少一处要记得传的地方, 就少一处会漏。 */
+  html[data-platform='darwin'] .neox-taskdetail-popover.nx-in--pop,
+  html[data-platform='darwin'] .atl-svc__pop.nx-in--pop { transform-origin: 100% 0; }
+  /* 抽屉/侧栏: 只沿一个轴 */
+  html[data-platform='darwin'] .nx-in--sheet-right { transform: translateX(16px); }
+  html[data-platform='darwin'] .nx-in--sheet-left  { transform: translateX(-16px); }
+  html[data-platform='darwin'] .nx-in--rise        { transform: translateY(8px); }
+
+  /* 背幕: 只淡入, 不动 backdrop-filter —— 动它等于每帧对整屏做一次高斯模糊。
+     开销上它是本文件里最贵的属性, 静态用可以, 动画绝对不行。 */
+  html[data-platform='darwin'] .nx-in--scrim { transition: opacity var(--neox-dur-base) var(--neox-ease-emphasized); }
+
+  /* 顺序错开: 容器进场后, 次要元素晚一拍。只给**固定数量**的元素用,
+     长列表禁止 (见文件头性能红线 3)。 */
+  html[data-platform='darwin'] .nx-in--delay-1 { transition-delay: 60ms; }
+  html[data-platform='darwin'] .nx-in--delay-2 { transition-delay: 120ms; }
+  html[data-platform='darwin'] .nx-in--delay-3 { transition-delay: 180ms; }
+}
+
+/* ── 按下反馈 ─────────────────────────────────────────────
+ *   macOS 上按钮按下会有一个几乎察觉不到的下压。只用 transform, 且时长极短 ——
+ *   按压反馈超过 100ms 就会让人觉得"按钮粘手"。 */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-platform='darwin'] .nx-press {
+    transition: transform 90ms var(--neox-ease-out);
+  }
+  html[data-platform='darwin'] .nx-press:active { transform: scale(0.975); }
+}
+
+/* ── 减弱动效 ─────────────────────────────────────────────
+ *   系统开了"减弱动态效果"就全部退回瞬时。不是"变快", 是**取消位移和缩放** ——
+ *   前庭敏感的用户受不了的是移动本身, 不是速度。淡入保留 (不引起不适)。 */
+@media (prefers-reduced-motion: reduce) {
+  html[data-platform='darwin'] .nx-in,
+  html[data-platform='darwin'] .nx-in.is-in {
+    transform: none !important;
+    transition: opacity 120ms linear !important;
+  }
+  html[data-platform='darwin'] .nx-press:active { transform: none; }
+}
+
+/* ============================================================
+ * 遗留清理 (给后来者)
+ * ------------------------------------------------------------
+ *   还有 ~136 处硬编码 cubic-bezier 绕过了令牌, 它们在 macOS 上不会跟着变。
+ *   改法很机械: 把 cubic-bezier(...) 换成 var(--neox-ease-out), 把裸毫秒数
+ *   换成 var(--neox-dur-fast|base|slow)。
+ *
+ *   没有一次性全改是因为: 其中一部分是刻意的特例 (比如进度条要 linear、
+ *   loading 要匀速循环), 无脑替换会把它们弄坏。要一个个看过再动。
+ * ============================================================ */

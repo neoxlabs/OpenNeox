@@ -1,0 +1,33 @@
+# 阿里 Qwen / 通义千问 家族能力声明
+
+id: qwen
+display_name: 阿里 Qwen
+
+aliases:
+  - qwen
+  - tongyi
+  - dashscope
+
+capabilities:
+  thinking:
+    # 2026-07-03 调研修正: Qwen3 混合思考模式真实存在 — enable_thinking 布尔开关
+    # (dashscope / OpenAI 兼容端点), 思考走 reasoning_content。之前 native:false 是错的。
+    native: true
+    field: enable_thinking
+    builder_hint: toggle
+    passback: never
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: true
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+
+markdown_constraint: light
+supplement_key: generic_parallel
+
+fast_patterns:
+  - /turbo/i
+  - /flash/i
+  - /plus/i

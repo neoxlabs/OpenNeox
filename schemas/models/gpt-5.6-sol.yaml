@@ -1,0 +1,51 @@
+id: gpt-5.6-sol
+display_name: GPT-5.6 Sol
+family: openai
+released: 2026-07-09
+availability: ga
+
+context_window: 272000
+max_output_tokens: 128000
+
+upstream_slugs:
+  prov_openrouter: openai/gpt-5.6-sol
+  prov_openai_direct: gpt-5.6-sol
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  reasoning_effort:
+    supported: true
+    field: reasoning_effort
+    # 5.6 新增 max(最大推理深度) / ultra(自动任务委派, 仅 Sol/Terra)
+    # 2026-09-04 实测: 5.6 系不再接受 minimal (上游 400), 已删 —— 详见 terra.yaml 的说明。
+    values: [low, medium, high, xhigh, max, ultra]
+    default: xhigh
+  verbosity:
+    supported: true
+    field: verbosity
+    values: [low, medium, high]
+    default: medium
+  prompt_cache:
+    supported: true
+    type: openai-prompt-cache
+    key_field: prompt_cache_key
+  uses_max_completion_tokens: true
+
+# 5.6 在 5.5 五档之上加 max/ultra。billing_multiplier 为估算值
+# (max 参照 xhigh→max 官方倍率待实测校准; ultra 委派模式 token 消耗最重)。
+effort_map:
+  # minimal 故意缺席 (上游对 5.6 系拒收) —— 就近映射到 low, 见 terra.yaml 的完整说明
+  low:   { reasoning_effort: low,     verbosity: low }
+  medium:  { reasoning_effort: medium,  verbosity: medium }
+  high:    { reasoning_effort: high,    verbosity: high }
+  xhigh:   { reasoning_effort: xhigh,   verbosity: high }
+  max:     { reasoning_effort: max,     verbosity: high }
+  ultra:   { reasoning_effort: ultra,   verbosity: high }
+
+pricing:
+  input_per_mtok: 5.00
+  cached_input_per_mtok: 0.50
+  output_per_mtok: 30.00
+  currency: USD

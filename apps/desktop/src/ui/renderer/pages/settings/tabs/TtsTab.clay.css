@@ -1,0 +1,78 @@
+/* 设置 → 语音 · UI 3.0 陶土风 (set-tts3) —— 零 !important, 全部挂在 .tts3 作用域下 */
+
+/* 组标题: 13px/600 放卡外上方 */
+.tts3 .nx-section-title { margin: 22px 0 8px; }
+.tts3 .nx-section-title__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+/* 卡: 发丝边 + 16 圆角, 不加阴影 */
+.tts3 .nx-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+  overflow: hidden;
+}
+.tts3 .nx-card + .nx-card,
+.tts3 .nx-card + .vc-kind + .nx-card { margin-top: 10px; }
+
+/* 行: 最少 52px, 第二行起行间发丝分隔 */
+.tts3 .nx-row { min-height: 52px; padding: 10px 16px; gap: 12px; }
+.tts3 .nx-row + .nx-row { box-shadow: inset 0 1px 0 var(--neox-line-subtle); }
+.tts3 .nx-row__title { font-size: 14px; color: var(--neox-fg-primary); }
+.tts3 .nx-row__desc { font-size: 12px; color: var(--neox-fg-muted); }
+.tts3 .nx-row__control { font-variant-numeric: tabular-nums; }
+
+/* 行首图标: 28 方块 + 16 线条 */
+.tts3 .tts3-glyph {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.tts3 .tts3-glyph svg { width: 16px; height: 16px; }
+.tts3 .tts3-glyph svg,
+.tts3 .tts3-glyph svg * { stroke-width: 1.5px; }
+
+/* 本地 / 云端选择卡: 未选发丝边; 选中 1.5px 钴蓝边 + 右上角蓝底白勾 */
+.tts3 .vc-kind { margin: 10px 0 0; }
+.tts3 .vc-kind .ws-engine {
+  position: relative;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+  transform: none;
+}
+.tts3 .vc-kind .ws-engine.is-on {
+  border: 1.5px solid var(--clay-blue, #2F6BFF);
+}
+.tts3 .vc-kind .ws-engine.is-on::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--clay-blue, #2F6BFF);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4.5 8.5l2.2 2.2 4.8-5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-size: 16px 16px;
+}
+.tts3 .vc-kind .ws-engine__tag { display: none; }
+.tts3 .vc-kind .ws-engine:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 滑杆 (语速) 的数字用等宽 */
+.tts3 .nx-slider-row__value { font-variant-numeric: tabular-nums; color: var(--neox-fg-secondary); }
+
+/* 词库 / 专名纠正 卡里的标题 */
+.tts3 .vc-lexicon__head b { font-size: 13px; font-weight: 600; color: var(--neox-fg-primary); }
+.tts3 .vc-lexicon__head span { font-size: 12px; color: var(--neox-fg-muted); }
+.tts3 .vc-lexicon + .vc-lexicon { border-top: 1px solid var(--neox-line-subtle); }

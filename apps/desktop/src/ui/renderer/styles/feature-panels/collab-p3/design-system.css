@@ -1,0 +1,145 @@
+/* ==================== 精致简约设计系统 v2 ==================== */
+
+/* 统一的紧凑卡片样式 */
+.compact-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.compact-card:hover {
+  border-color: var(--border-hover);
+}
+
+/* 统一的列表项样式 */
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.list-item:hover {
+  border-color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.03);
+}
+
+/* 统一的标签样式 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  border-radius: 3px;
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+
+.tag.accent {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-color);
+}
+
+.tag.success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.tag.warning {
+  background: rgba(234, 179, 8, 0.12);
+  color: #eab308;
+}
+
+.tag.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+/* 统一的图标按钮 */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.icon-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.icon-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* 统一的状态指示点 */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.status-dot.online {
+  background: #22c55e;
+}
+
+.status-dot.offline {
+  background: var(--text-muted);
+}
+
+.status-dot.connecting {
+  background: #eab308;
+}
+
+.status-dot.error {
+  background: #ef4444;
+}
+
+/* 统一的数据网格 */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.data-cell {
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.data-cell .label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.data-cell .value {
+  font-size: var(--neox-fs-xl, 18px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.data-cell .unit {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+

@@ -1,0 +1,137 @@
+
+.neox-reminder-alerts {
+  position: fixed;
+  top: 56px;
+  right: 16px;
+  /* 持久提醒 "不点掉不消失" 的前提是能看见 — 跟 toast 同层, 压过 lightbox / 全局 confirm */
+  z-index: 2147483300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  pointer-events: none;
+}
+.neox-reminder-alerts > * { pointer-events: auto; }
+
+.neox-reminder-alert {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--neox-primary-600, #3b82f6) 32%, transparent);
+  background: color-mix(in srgb, var(--neox-bg-card, #fff) 92%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    0 12px 32px color-mix(in srgb, var(--neox-primary-600, #3b82f6) 12%, transparent),
+    0 2px 8px color-mix(in srgb, var(--neox-fg-primary, #000) 6%, transparent);
+  animation: neox-reminder-alert-in 300ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+@keyframes neox-reminder-alert-in {
+  from { opacity: 0; transform: translateX(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.neox-reminder-alert__head {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.neox-reminder-alert__icon {
+  flex: none;
+  font-size: var(--neox-fs-xl, 18px);
+  line-height: 1.2;
+  padding-top: 1px;
+  animation: neox-reminder-alert-bell 1.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) 3;
+  transform-origin: top center;
+}
+@keyframes neox-reminder-alert-bell {
+  0%, 100% { transform: rotate(0); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(-14deg); }
+  20%, 40%, 60%, 80% { transform: rotate(14deg); }
+}
+.neox-reminder-alert__body {
+  flex: 1;
+  min-width: 0;
+}
+.neox-reminder-alert__title {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+  margin-bottom: 3px;
+  word-break: break-word;
+}
+.neox-reminder-alert__context {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.neox-reminder-alert__time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.neox-reminder-alert__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+.neox-reminder-alert__close:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-primary);
+}
+
+.neox-reminder-alert__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.neox-reminder-alert__btn {
+  flex: 1;
+  min-width: 84px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-medium, 500);
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.neox-reminder-alert__btn:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 20%, transparent);
+}
+.neox-reminder-alert__btn--primary {
+  background: var(--neox-primary-600, #3b82f6);
+  color: var(--neox-fg-invert, #fff);
+  border-color: transparent;
+}
+.neox-reminder-alert__btn--primary:hover {
+  background: color-mix(in srgb, var(--neox-primary-600, #3b82f6) 88%, #000);
+  color: #fff;
+}
+.neox-reminder-alert__btn--ghost {
+  border-color: transparent;
+  color: var(--neox-fg-muted);
+}
+.neox-reminder-alert__btn--ghost:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}

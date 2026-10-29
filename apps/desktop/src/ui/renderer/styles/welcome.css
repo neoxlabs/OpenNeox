@@ -1,0 +1,1022 @@
+
+:root[data-theme-pack][data-theme].is-welcome-page,
+:root[data-theme-pack][data-theme].is-welcome-page body,
+:root[data-theme-pack][data-theme].is-welcome-page #root,
+html.is-welcome-page,
+html.is-welcome-page body,
+html.is-welcome-page #root {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.welcome-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+
+/* ---- 背景层: 透 vibrancy + 软雾 ---- */
+.welcome-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* 壁纸只做极淡染色, 主角是系统 vibrancy */
+.welcome-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--wallpaper-image, none);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.28;
+}
+
+.welcome-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* 软雾斑要够显眼 — 参考用户截图那种左上/中部灰蓝 haze,
+   * 太淡在暗桌面上会跟 flat 实色几乎无差别. */
+  background:
+    radial-gradient(ellipse 80% 65% at 14% 12%, rgba(170, 185, 205, 0.28), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 0% 48%, rgba(120, 140, 165, 0.16), transparent 62%),
+    radial-gradient(ellipse 70% 55% at 88% 78%, rgba(90, 110, 140, 0.18), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 52% 42%, rgba(255, 255, 255, 0.06), transparent 68%),
+    var(--theme-pack-overlay, linear-gradient(180deg, transparent, transparent)),
+    rgba(18, 20, 26, 0.18);
+}
+
+.bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(255, 255, 255, 0.08), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 6% 60%, rgba(148, 163, 184, 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 94% 90%, color-mix(in srgb, var(--neox-primary-500, #8974FF) 6%, transparent), transparent 55%);
+}
+
+.bg-glow {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 680px;
+  height: 460px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+:root[data-theme="light"] .welcome-bg::before {
+  opacity: 0.2;
+}
+
+:root[data-theme="light"] .welcome-bg::after {
+  background:
+    radial-gradient(ellipse 80% 65% at 16% 10%, rgba(255, 255, 255, 0.55), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 0% 50%, rgba(200, 210, 225, 0.28), transparent 62%),
+    radial-gradient(ellipse 70% 55% at 88% 80%, rgba(180, 195, 215, 0.22), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 50% 45%, rgba(255, 255, 255, 0.18), transparent 68%),
+    var(--theme-pack-overlay, linear-gradient(180deg, transparent, transparent)),
+    rgba(250, 248, 242, 0.28);
+}
+
+:root[data-theme="light"] .bg-glow {
+  opacity: 0.55;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.65),
+    transparent 68%
+  );
+}
+
+/* ---- 右上工具栏 — 44px 高 mode-tag 与 32px toolbar-btn align-items:center 视觉齐平,
+ * top 让 tag 中心 y=26 (跟红绿灯中心 20 差 6px, 视觉可接受, brand logo 才够大) ---- */
+.welcome-toolbar {
+  position: absolute;
+  top: 4px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 1000;
+  -webkit-app-region: no-drag;
+}
+
+/* Windows 三大金刚 ~138px — 工具栏必须让出, 否则设置/主题按钮被盖住 */
+:root[data-platform="win32"] .welcome-toolbar {
+  right: var(--neox-win-caption-inset, 152px);
+}
+
+.welcome-toolbar .toolbar-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.welcome-toolbar .toolbar-btn:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.welcome-toolbar .toolbar-btn.is-active {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.welcome-toolbar .toolbar-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- 主题切换弹窗 ---- */
+.welcome-theme-switch {
+  position: relative;
+  display: inline-flex;
+}
+
+.welcome-theme-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 244px;
+  padding: 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--glass-bg, var(--bg-elevated)) 88%, transparent);
+  border: 1px solid var(--glass-border, var(--border-subtle));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 18px))) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(calc(var(--glass-blur, 18px))) saturate(var(--glass-saturate, 160%));
+  box-shadow: var(--neox-shadow-3, 0 12px 32px rgba(15, 23, 42, 0.16), 0 2px 8px rgba(15, 23, 42, 0.08));
+  z-index: 1100;
+  animation: wtpIn var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+:root[data-theme="dark"] .welcome-theme-pop {
+  background: rgba(28, 30, 36, 0.72);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42);
+}
+
+@keyframes wtpIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.welcome-theme-pop__label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 2px 2px 8px;
+}
+
+.welcome-theme-pop__themes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.wtp-theme {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.wtp-theme:hover { background: var(--bg-hover); }
+
+.wtp-theme.is-active {
+  border-color: var(--accent-500);
+  background: color-mix(in srgb, var(--accent-500) 8%, transparent);
+}
+
+.wtp-theme__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 5px;
+  border: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.wtp-theme__name { white-space: nowrap; }
+
+.welcome-theme-pop__accents {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.wtp-accent {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.wtp-accent::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.wtp-accent:hover { transform: scale(1.12); }
+.wtp-accent.is-active { border-color: var(--c); }
+
+/* ---- 内容容器 ---- */
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+  padding: 40px;
+  width: 100%;
+  max-width: 580px;
+}
+
+/* ---- Login / BYOK CTA — 扁平无边框, 无 3D / 玻璃高光 ---- */
+.welcome-auth-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  width: 100%;
+  max-width: 240px;
+}
+
+.welcome-auth-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 140ms ease,
+    color 140ms ease,
+    opacity 120ms ease;
+}
+
+.welcome-auth-btn::before {
+  content: none;
+}
+
+.welcome-auth-btn__label {
+  position: static;
+}
+
+.welcome-auth-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Primary — 纯色扁平 */
+.welcome-auth-btn--primary {
+  color: #fff;
+  background: #1C1917;
+}
+
+.welcome-auth-btn--primary:hover:not(:disabled) {
+  background: #2A2724;
+}
+
+.welcome-auth-btn--primary:active:not(:disabled) {
+  background: #141210;
+}
+
+/* Secondary — 扁平浅底, 无描边 */
+.welcome-auth-btn--secondary {
+  color: var(--neox-fg-primary, #1C1917);
+  background: color-mix(in srgb, var(--neox-fg-primary, #1C1917) 6%, transparent);
+}
+
+.welcome-auth-btn--secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary, #1C1917) 10%, transparent);
+}
+
+.welcome-auth-btn--secondary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary, #1C1917) 14%, transparent);
+}
+
+:root[data-theme="light"] .welcome-auth-btn--primary {
+  color: #fff;
+  background: #1C1917;
+}
+
+:root[data-theme="light"] .welcome-auth-btn--primary:hover:not(:disabled) {
+  background: #2A2724;
+}
+
+:root[data-theme="light"] .welcome-auth-btn--secondary {
+  color: #1C1917;
+  background: rgba(28, 25, 23, 0.06);
+}
+
+:root[data-theme="light"] .welcome-auth-btn--secondary:hover:not(:disabled) {
+  background: rgba(28, 25, 23, 0.10);
+}
+
+:root[data-theme="dark"] .welcome-auth-btn--primary {
+  color: #14151A;
+  background: #EDEEF2;
+}
+
+:root[data-theme="dark"] .welcome-auth-btn--primary:hover:not(:disabled) {
+  background: #F5F6FA;
+}
+
+:root[data-theme="dark"] .welcome-auth-btn--secondary {
+  color: rgba(245, 246, 250, 0.92);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="dark"] .welcome-auth-btn--secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-auth-btn {
+    transition: none;
+  }
+}
+
+/* ---- Hero: 插画 + 字标 + slogan ---- */
+.welcome-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 插画区: 装饰 SVG (光晕+节点) + 真 N 标志居中叠放 */
+.welcome-hero__art {
+  position: relative;
+  width: 300px;
+  height: 196px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.welcome-hero__deco {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.welcome-hero__mark {
+  position: relative;
+  z-index: 1;
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+  -webkit-user-select: none;
+}
+
+/* 真 · neox 字标 (深色 navy + 紫 x). 深色主题下翻白才看得见 */
+.welcome-wordmark__img {
+  height: 30px;
+  width: auto;
+  display: block;
+  -webkit-user-select: none;
+}
+
+/* 四主题各自有适配自身底色的字标 (晨光 navy/亮, 暖阳 橙/亮, 墨夜 银/暗, 琉璃 银/暗),
+ * 不再需要按主题翻色. 若某主题回退到默认 navy 字标且处于深色底, 再单独处理. */
+
+/* slogan + 版本胶囊 同一行, 居中 */
+.welcome-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcome-slogan {
+  margin: 0;
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.welcome-version-chip {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  padding: 4px 9px;
+  border: 1px solid var(--glass-border, var(--border-subtle));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--glass-bg, transparent) 70%, transparent);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: 0 1px 0 color-mix(in srgb, #fff 35%, transparent) inset;
+}
+
+:root[data-theme="dark"] .welcome-version-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+.welcome-quick-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.welcome-quick-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 13px;
+  border-radius: 9px;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  transition:
+    background var(--neox-dur-fast) var(--neox-ease-out),
+    border-color var(--neox-dur-fast) var(--neox-ease-out),
+    color var(--neox-dur-fast) var(--neox-ease-out),
+    transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.welcome-quick-action svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.welcome-quick-action:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.welcome-quick-action--primary {
+  border-color: color-mix(in srgb, var(--accent-500) 28%, transparent);
+  background: linear-gradient(135deg, var(--accent-500), var(--accent-600, var(--accent-500)));
+  color: var(--neox-fg-invert, #fff);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--accent-500) 24%, transparent);
+}
+
+.welcome-quick-action--primary:hover {
+  color: var(--neox-fg-invert, #fff);
+  border-color: color-mix(in srgb, var(--accent-500) 38%, transparent);
+  filter: brightness(1.04);
+}
+
+.welcome-quick-hint {
+  margin: -1px 0 0;
+  max-width: 440px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.45;
+}
+
+.welcome-modes {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.welcome-mode-card {
+  appearance: none;
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.08));
+  background: var(--bg-elevated, rgba(255,255,255,0.7));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-radius: 14px;
+  padding: 22px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+  text-align: left;
+  transition:
+    background 180ms var(--neox-ease-out, ease),
+    border-color 180ms var(--neox-ease-out, ease),
+    transform 180ms var(--neox-ease-out, ease),
+    box-shadow 180ms var(--neox-ease-out, ease);
+}
+.welcome-mode-card:hover:not(:disabled) {
+  border-color: var(--accent-500, #8974FF);
+  background: var(--bg-elevated-hover, rgba(255,255,255,0.88));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+}
+.welcome-mode-card:disabled { opacity: 0.55; cursor: default; }
+.welcome-mode-card.is-busy { opacity: 0.8; }
+.welcome-mode-card__glyph {
+  display: inline-flex;
+  color: var(--accent-500, #8974FF);
+  margin-bottom: 6px;
+}
+.welcome-mode-card__glyph svg { width: 26px; height: 26px; }
+.welcome-mode-card__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+.welcome-mode-card__desc {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-muted, var(--text-secondary));
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.welcome-mode-card__cta {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--accent-500, #8974FF);
+  margin-top: auto;
+  letter-spacing: 0.02em;
+}
+@media (max-width: 720px) {
+  .welcome-modes { grid-template-columns: 1fr; }
+}
+
+/* ---- Mode-tag 切换 (放右上工具栏第一个, 无边框融背景) — brand 放大突出, height 32px 对齐 toolbar-btn ---- */
+.welcome-mode-tag {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 0 8px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 160ms ease;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+.welcome-mode-tag:hover:not(:disabled),
+.welcome-mode-tag.is-open {
+  background: var(--bg-hover);
+}
+.welcome-mode-tag:disabled { opacity: 0.5; cursor: default; }
+.welcome-mode-tag__brand {
+  height: 40px;
+  width: auto;
+  max-width: 120px;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+}
+.welcome-mode-tag__chev { color: var(--text-muted); opacity: 0.6; flex: 0 0 auto; }
+/* toolbar 内所有元素 baseline 对齐 (mode-tag / toolbar-btn 都是 32px) */
+.welcome-toolbar { align-items: center; }
+.welcome-mode-tag__pop {
+  position: fixed;
+  min-width: 160px;
+  background: var(--bg-elevated, rgba(255,255,255,0.92));
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.06);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1001;
+  animation: welcome-tag-in 160ms cubic-bezier(.2,.8,.2,1);
+}
+.welcome-mode-tag__opt-brand {
+  grid-column: 1;
+  height: 28px;
+  width: auto;
+  max-width: 96px;
+  object-fit: contain;
+  align-self: center;
+}
+@keyframes welcome-tag-in {
+  from { opacity: 0; transform: translateY(-4px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.welcome-mode-tag__opt {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  color: var(--text-primary);
+  transition: background 140ms ease;
+  min-height: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.welcome-mode-tag__opt:hover { background: var(--bg-hover); }
+.welcome-mode-tag__opt.is-current { background: color-mix(in srgb, var(--accent-500, #8974FF) 10%, transparent); }
+.welcome-mode-tag__opt-check {
+  grid-column: 3;
+  align-self: center;
+  color: var(--accent-500, #8974FF);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+}
+
+/* ---- Life/Work 最近对话列表 ---- */
+.welcome-sessions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.welcome-sessions__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+.welcome-sessions__label {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted, var(--text-secondary));
+  letter-spacing: 0.02em;
+}
+.welcome-sessions__enter,
+.welcome-sessions__start {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--accent-500, #8974FF);
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 140ms ease;
+  font-weight: 500;
+}
+.welcome-sessions__enter:hover:not(:disabled),
+.welcome-sessions__start:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-500, #8974FF) 10%, transparent);
+}
+.welcome-sessions__enter:disabled,
+.welcome-sessions__start:disabled { opacity: 0.5; cursor: default; }
+.welcome-sessions__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.welcome-sessions__row {
+  appearance: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 140ms ease;
+  text-align: left;
+}
+.welcome-sessions__row:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-500, #8974FF) 6%, transparent);
+}
+.welcome-sessions__row:disabled { opacity: 0.55; cursor: default; }
+.welcome-sessions__row-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--neox-fs-md, 14px);
+}
+.welcome-sessions__row-time {
+  flex: 0 0 auto;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted, var(--text-secondary));
+}
+.welcome-sessions--empty {
+  align-items: center;
+  gap: 14px;
+  padding: 40px 0 20px;
+}
+.welcome-sessions__empty {
+  color: var(--text-muted, var(--text-secondary));
+  font-size: var(--neox-fs-sm, 13px);
+}
+.welcome-sessions__loading {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--text-muted, var(--text-secondary));
+  font-size: var(--neox-fs-xs, 12px);
+}
+.welcome-sessions__more {
+  align-self: flex-start;
+  margin-top: 6px;
+  margin-left: 10px;
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--accent-500, #8974FF);
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 140ms ease;
+}
+.welcome-sessions__more:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-500, #8974FF) 10%, transparent);
+}
+.welcome-sessions__more:disabled { opacity: 0.5; cursor: default; }
+
+/* ---- 最近项目区 ---- */
+.welcome-projects {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-projects__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* 跟列表项同一左右内边距 → label 对齐项目名, 按钮对齐路径右缘 */
+  padding: 0 12px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.welcome-projects__label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+}
+
+/* 打开项目 — 纯文字链接式, 无卡片无边框无阴影. hover 才出极淡底 */
+.welcome-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 8px;
+  margin-right: -8px;          /* 让文字右缘跟列表项右缘对齐 (抵消内边距) */
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.welcome-open-btn svg {
+  width: 15px;
+  height: 15px;
+  color: currentColor;
+}
+
+.welcome-open-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.welcome-open-btn:active {
+  color: var(--text-accent, var(--accent-500));
+}
+
+/* 项目列表 — 扁平, 无卡片嵌套. overflow 必须 visible, 否则 ⋯ 菜单会被裁切 (最多 6 条不需滚动) */
+.welcome-projects__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* 一行 = [打开按钮 flex:1] [相对时间] [⋯ 菜单槽] */
+.welcome-project {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  padding: 4px 12px;
+  background: transparent;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.welcome-project:hover {
+  background: var(--bg-hover);
+}
+
+.welcome-project__open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.welcome-project__name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.welcome-project__path {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.welcome-project__status {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-accent, var(--accent-500));
+  flex-shrink: 0;
+}
+
+/* 相对时间 — 右侧, 极淡, 数字等宽 */
+.welcome-project__time {
+  flex-shrink: 0;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0.8;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.welcome-project:hover .welcome-project__time {
+  opacity: 1;
+}
+
+/* ⋯ 操作 — 固定槽位 (不抖动), 默认隐藏, hover/打开时显形 */
+.welcome-project__menu-wrap {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.welcome-project__menu-btn {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out), background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.welcome-project:hover .welcome-project__menu-btn,
+.welcome-project__menu-btn.is-open {
+  opacity: 1;
+}
+
+.welcome-project__menu-btn:hover {
+  background: color-mix(in srgb, var(--text-muted) 16%, transparent);
+  color: var(--text-primary);
+}
+
+.welcome-project__menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 170px;
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(15, 23, 42, 0.08);
+  z-index: 1100;
+  animation: wtpIn var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.wpm-item {
+  width: 100%;
+  text-align: left;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.wpm-item:hover { background: var(--bg-hover); }
+
+.wpm-item--danger { color: var(--danger-500, #ef4444); }
+.wpm-item--danger:hover { background: color-mix(in srgb, var(--danger-500, #ef4444) 12%, transparent); }
+
+.wpm-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--border-subtle);
+}
+
+.welcome-projects__empty {
+  margin-top: 18px;
+  text-align: center;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-muted);
+}
+
+
+/* 顶栏是拖拽区, 但里面的按钮必须还能点 (Electron 侧靠 no-drag; Tauri 侧
+ * 没挂 data-tauri-drag-region 的子元素天然可点)。 */
+.welcome-toolbar button,
+.welcome-toolbar [role="button"] {
+  -webkit-app-region: no-drag;
+}

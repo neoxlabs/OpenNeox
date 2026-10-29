@@ -1,0 +1,234 @@
+/* 对话区设置 (UI 3.0 陶土, 稿 s2-B) —— 作用域 .cv3, 不用强制覆盖规则
+ * 选择器比 layout-nav.css / clay-studio.css 里同名规则更具体, 不靠加载顺序。 */
+
+/* ---------- 行左边的软方块图标 (28px, 圆角 8, 线条 16px) ---------- */
+.cv3 .cv3-ico {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.cv3 .cv3-ico svg { width: 16px; height: 16px; }
+
+/* ---------- 字号 / 行距 滑块 + 数值 ---------- */
+.cv3 .cv-slider { display: inline-flex; align-items: center; gap: 12px; }
+.cv3 .cv-slider .nx-slider { width: 200px; }
+.cv3 .cv-slider em {
+  min-width: 44px;
+  text-align: right;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 预览: 灰底小块, 右下角一颗「恢复默认」 ---------- */
+.cv3 .nx-row.cv-preview-row {
+  align-items: flex-end;
+  padding: 2px 16px 14px;
+  box-shadow: inset 0 1px 0 var(--neox-line-subtle);
+}
+.cv3 .cv-preview {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.cv3 .cv3-reset {
+  flex: none;
+  height: 28px;
+  margin-left: 12px;
+  padding: 0 12px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 999px;
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-primary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.cv3 .cv3-reset:hover:not(:disabled) { background: color-mix(in srgb, var(--neox-fg-primary) 5%, var(--neox-bg-card)); }
+.cv3 .cv3-reset:disabled { opacity: 0.45; cursor: default; }
+
+/* ---------- 分组标题 (卡外上方) ---------- */
+.cv3 .ag-approval { margin-bottom: 0; }
+.cv3 .ag-approval__head h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+/* ---------- 选择卡 (输入框形态 / 显示密度): 竖排, 发丝边; 选中一圈钴蓝 + 右上蓝勾 ---------- */
+.cv3 .cv-choices { gap: 12px; }
+.cv3 .cv-choices button.ws-engine {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 12px;
+  border: 1.5px solid var(--neox-line-subtle);
+  border-radius: 14px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+  text-align: left;
+  transform: none;
+  cursor: pointer;
+}
+.cv3 .cv-choices button.ws-engine:hover { border-color: color-mix(in srgb, var(--clay-blue, #2F6BFF) 35%, var(--neox-line-subtle)); transform: none; }
+.cv3 .cv-choices button.ws-engine.is-on {
+  border-color: var(--clay-blue, #2F6BFF);
+  box-shadow: none;
+}
+.cv3 .cv-choices .ws-engine__stage {
+  grid-row: auto;
+  width: auto;
+  height: 72px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+}
+.cv3 .cv-choices .ws-engine__stage img { max-width: 64px; max-height: 60px; }
+
+/* ---------- 输入框形态: 照真输入框画的缩小版 (ComposerMini) ---------- */
+.cv3 .cv-choices button.ws-engine.ws-engine {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 8px;
+  row-gap: 8px;
+  padding: 8px 8px 10px;
+  border-radius: 14px;
+}
+.cv3 .cv-choices .ws-engine__stage { grid-column: 1 / -1; }
+.cv3 .cv-choices .ws-engine__head { padding-left: 4px; }
+.cv3 .cv-choices .ws-engine__desc { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cv3 .cv-choices .ws-engine__stage.is-preview { height: 88px; padding: 0 12px; place-items: center stretch; align-content: center; border-radius: 9px; }
+.cv3 .cv3-check { top: 12px; right: 12px; }
+
+/* ---------- 显示密度: 一轮对话在三档下展开多少 (DensityMini) ----------
+ * 示意区是一扇固定高度的窗: 从顶往下排, 装不下的在底边淡出 —— 完整档「塞满往下溢」本身就是要表达的 */
+.cv3 .cv-choices .ws-engine__stage.is-preview { overflow: hidden; }
+.cv3 .cv-choices .ws-engine__stage.is-preview:has(> .cvd) {
+  height: 100px;
+  align-content: start;
+  padding-top: 10px;
+}
+/* 淡出只作用在里面这段对话上, 不连灰底一起淡 */
+.cv3 .cvd {
+  gap: 2px;
+  padding: 7px 9px 9px;
+  max-height: 90px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+}
+.cv3 .cvd:has(.cvd__row.is-fold) { -webkit-mask-image: none; mask-image: none; }
+.cv3 .cvd i { display: block; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--neox-fg-primary) 14%, transparent); }
+.cv3 .cvd i.is-short { width: 55%; }
+.cv3 .cvd__msg { display: flex; flex-direction: column; gap: 3px; margin-bottom: 2px; }
+.cv3 .cvd__row { display: flex; align-items: center; gap: 4px; height: 12px; font-size: 8.5px; color: var(--neox-fg-secondary); white-space: nowrap; }
+.cv3 .cvd__row b { font-size: 6px; font-weight: 400; color: var(--neox-fg-hint); }
+.cv3 .cvd__row.is-fold b { font-size: 8px; color: #3f9b6b; }
+.cv3 .cvd__row em { margin-left: auto; font-style: normal; color: var(--neox-fg-hint); }
+.cv3 .cvd__arg { padding: 0 4px; border-radius: 3px; background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); font-family: var(--neox-font-mono, ui-monospace, Menlo, monospace); font-size: 7.5px; }
+.cv3 .cvd__step.is-open .cvd__row b { color: var(--clay-blue, #2F6BFF); }
+.cv3 .cvd__body { display: flex; flex-direction: column; gap: 2px; margin: 1px 0 2px 9px; padding: 3px 5px; border-radius: 4px; background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+.cv3 .cvd__body i { height: 3px; }
+.cv3 .cvd__body.is-diff i:nth-child(1) { background: color-mix(in srgb, #d0453a 40%, transparent); }
+.cv3 .cvd__body.is-diff i:nth-child(2) { background: color-mix(in srgb, #3f9b6b 45%, transparent); }
+.cv3 .cvm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 9px 7px;
+  border-radius: 12px;
+  background: var(--neox-bg-card, #fbfaf8);
+  box-shadow: 0 0 0 1px var(--neox-line-subtle), 0 2px 6px rgba(60, 45, 25, 0.06);
+  font-size: 9.5px;
+  line-height: 1.3;
+  color: var(--neox-fg-primary);
+  text-align: left;
+  pointer-events: none;
+}
+.cv3 .cvm__mode { font-size: 9.5px; font-weight: 600; color: var(--neox-fg-secondary); padding-left: 3px; }
+.cv3 .cvm__ph { min-height: 22px; padding: 0 3px; color: var(--neox-fg-hint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cv3 .cvm__bar { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.cv3 .cvm__fill { flex: 1; }
+.cv3 .cvm__ico { width: 16px; height: 16px; display: grid; place-items: center; flex: none; color: var(--neox-fg-muted); font-size: 8px; letter-spacing: -0.5px; }
+.cv3 .cvm__ico.is-ring { border-radius: 50%; box-shadow: inset 0 0 0 1px var(--neox-line-subtle); }
+.cv3 .cvm__chip {
+  height: 16px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-secondary);
+  font-size: 8.5px;
+  white-space: nowrap;
+}
+.cv3 .cvm__chip.is-ring { background: transparent; box-shadow: inset 0 0 0 1px var(--neox-line-subtle); }
+.cv3 .cvm__chip.is-model { color: var(--neox-fg-primary); font-weight: 500; }
+.cv3 .cvm__dot { width: 7px; height: 7px; border-radius: 50%; background: #5b6cf0; flex: none; }
+.cv3 .cvm__sq {
+  width: 16px; height: 16px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.cv3 .cvm__sq.is-send { background: color-mix(in srgb, var(--neox-fg-primary) 14%, transparent); color: var(--neox-bg-card, #fff); }
+.cv3 .cvm__round {
+  width: 17px; height: 17px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  color: var(--neox-fg-secondary);
+}
+.cv3 .cvm__round.is-plus { background: color-mix(in srgb, var(--neox-fg-primary) 12%, transparent); color: var(--neox-fg-primary); }
+.cv3 .cvm__round.is-ring { box-shadow: inset 0 0 0 1px var(--neox-line-subtle); }
+.cv3 .cvm__round.is-send { background: var(--clay-blue, #2F6BFF); color: #fff; }
+.cv3 .cv-choices .ws-engine__head { align-self: auto; justify-content: flex-start; }
+.cv3 .cv-choices .ws-engine__head b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.cv3 .cv-choices .ws-engine__desc { align-self: auto; font-size: 12px; line-height: 1.5; color: var(--neox-fg-muted); }
+
+/* 选中勾: 右上 16px 蓝底白勾小圆 */
+.cv3 .cv3-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--clay-blue, #2F6BFF);
+  color: #fff;
+}
+.cv3 .cv3-check svg { display: block; }
+
+/* 读屏用的「当前」文字, 视觉上不占位 */
+.cv3 .cv3-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .cv3 .cv-choices button.ws-engine { gap: 6px; }
+}

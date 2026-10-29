@@ -1,0 +1,6 @@
+{
+  "title": "在大 fixture (600+ 文件) 里定位并修复失败测试",
+  "kind": "code",
+    "quick": true,
+  "timeoutSec": 600
+}

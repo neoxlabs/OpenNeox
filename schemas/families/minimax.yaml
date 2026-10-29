@@ -1,0 +1,33 @@
+# MiniMax (海螺 / abab) 家族能力声明
+#
+# OpenAI 兼容协议. 新版 abab-6.5+ / hailuo 系列支持 parallel tool use.
+# 无 prompt cache / 无 thinking 字段 (官方未文档化).
+
+id: minimax
+display_name: MiniMax
+
+aliases:
+  - minimax
+  - abab
+  - hailuo
+
+capabilities:
+  thinking:
+    native: false
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: true   # abab-6.5+ / hailuo 主力都支持; 老 abab-5 不支持但已边缘
+  prompt_cache: false
+  structured_output: false  # 官方未声明 json_schema mode (有 json_object 但不严格)
+  tool_use_shape: openai-function
+
+# MiniMax 输出风格默认就规整, 不需要强约束
+markdown_constraint: light
+# 暂复用 kimi supplement (国内长上下文场景类似); 实测有专属 quirks 再加 minimax supplement
+supplement_key: kimi
+
+fast_patterns:
+  - /\bturbo\b/i
+  - /\bspeed\b/i
+  - /\babab-6\.5\b/i  # 6.5 是中档, 6.6/7 才是主力

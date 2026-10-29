@@ -1,0 +1,198 @@
+/* CloudAgentTab — Settings → 云端 Agent
+ *   layout 沿用 settings-tab 通用容器, 这里只新增组件级样式. */
+
+.cloud-agent-tab {
+  padding: 20px 28px;
+  max-width: 880px;
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.55;
+}
+.cloud-agent-tab__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.cloud-agent-tab__title {
+  margin: 0 0 4px;
+  font-size: var(--neox-fs-xl, 18px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.cloud-agent-tab__sub {
+  margin: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary);
+}
+.cloud-agent-tab__refresh {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--neox-line-strong);
+  color: var(--neox-fg-primary);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  height: fit-content;
+}
+.cloud-agent-tab__refresh:hover {
+  background: var(--neox-bg-hover);
+}
+
+.cloud-agent-tab__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.cloud-agent-tab__stat {
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line-soft);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.cloud-agent-tab__stat-num {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--neox-primary-700);
+  font-variant-numeric: tabular-nums;
+}
+.cloud-agent-tab__stat-label {
+  margin-top: 2px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+}
+
+.cloud-agent-tab__section {
+  margin: 6px 0 10px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+}
+.cloud-agent-tab__error {
+  background: color-mix(in srgb, var(--neox-err, #ef4444) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-err, #ef4444) 25%, transparent);
+  color: var(--neox-err, #ef4444);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  margin-bottom: 12px;
+}
+.cloud-agent-tab__empty {
+  background: var(--neox-bg-card);
+  border: 1px dashed var(--neox-line-strong);
+  border-radius: 8px;
+  padding: 24px 18px;
+  text-align: center;
+  color: var(--neox-fg-secondary);
+}
+.cloud-agent-tab__empty h3 {
+  margin: 0 0 6px;
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+}
+.cloud-agent-tab__empty p { margin: 4px 0; font-size: var(--neox-fs-sm, 13px); }
+.cloud-agent-tab__hint { color: var(--neox-fg-muted); }
+
+.cloud-agent-tab__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cloud-agent-tab__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line-soft);
+  border-radius: 8px;
+}
+.cloud-agent-tab__item-main {
+  flex: 1;
+  min-width: 0;
+}
+.cloud-agent-tab__item-title {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cloud-agent-tab__item-meta {
+  margin-top: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary);
+}
+.cloud-agent-tab__item-meta code {
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: var(--neox-fs-xxs, 11px);
+  background: var(--neox-bg-hover);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--neox-fg-secondary);
+}
+.cloud-agent-tab__pill {
+  padding: 1px 7px;
+  border-radius: 9999px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.cloud-agent-tab__pill--ok {
+  background: color-mix(in srgb, var(--neox-ok, #10b981) 14%, transparent);
+  color: var(--neox-ok, #10b981);
+}
+.cloud-agent-tab__pill--warn {
+  background: color-mix(in srgb, var(--neox-warn-ink, #c2410c) 14%, transparent);
+  color: var(--neox-warn-ink, #c2410c);
+}
+.cloud-agent-tab__pill--mute {
+  background: var(--neox-bg-hover);
+  color: var(--neox-fg-muted);
+}
+
+.cloud-agent-tab__item-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.cloud-agent-tab__btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--neox-line-strong);
+  color: var(--neox-fg-primary);
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.cloud-agent-tab__btn:hover:not(:disabled) {
+  background: var(--neox-bg-hover);
+}
+.cloud-agent-tab__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.cloud-agent-tab__btn--danger {
+  border-color: color-mix(in srgb, var(--neox-err, #ef4444) 35%, transparent);
+  color: var(--neox-err, #ef4444);
+}
+.cloud-agent-tab__btn--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-err, #ef4444) 8%, transparent);
+}

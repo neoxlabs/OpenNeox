@@ -1,0 +1,32 @@
+# Self-hosted Neox relay with automatic HTTPS.
+#
+#   1. Point a domain at this server (A/AAAA record), open ports 80 and 443.
+#   2. echo "RELAY_DOMAIN=relay.example.com" >  .env
+#      echo "RELAY_TOKEN=$(openssl rand -hex 24)" >> .env
+#   3. docker compose up -d
+#
+# Then in Neox desktop: Settings → Mobile → Self-hosted relay, enter
+# https://relay.example.com and the token.
+services:
+  relay:
+    build: .
+    restart: unless-stopped
+    environment:
+      RELAY_TOKEN: ${RELAY_TOKEN:?set RELAY_TOKEN in .env}
+    expose:
+      - "8089"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    command: caddy reverse-proxy --from ${RELAY_DOMAIN:?set RELAY_DOMAIN in .env} --to relay:8089
+    volumes:
+      - caddy_data:/data
+    depends_on:
+      - relay
+
+volumes:
+  caddy_data:

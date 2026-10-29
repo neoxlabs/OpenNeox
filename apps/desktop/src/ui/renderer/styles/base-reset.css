@@ -1,0 +1,135 @@
+/* ==================== 全局重置 ==================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==================== 无障碍 · prefers-reduced-motion 全局兜底 ====================
+ *   尊重系统 / 浏览器无障碍偏好, 关闭装饰性 transition / animation. 主要场景:
+ *     · 用户在 macOS 系统偏好里勾了 "减少动态效果"
+ *     · 低端设备 / 远程 RDP
+ *     · 部分前庭功能障碍人群对运动敏感
+ *   做法: 全局把 animation / transition 时长压成 0.01ms (不是 0 — 0 会跳过 transitionend
+ *   事件, 部分代码依赖此事件; 0.01ms 仍能触发但视觉等同于无动画).
+ *   特定 loading spinner / pulse 等"状态反馈"动画在各自组件里用 :not 兜回, 或显式 keep.
+ *   组件级 prefers-reduced-motion (例如 auth-loginpage.css L73) 仍能 override 全局规则.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  font-size: var(--neox-fs-sm, 13px);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:root[data-theme="light"] {
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+body {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif);
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  line-height: 1.45;
+  overflow: hidden;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ==================== 滚动条 — 全局统一 token 化 ====================
+ *  细 thin 5px + 半透 thumb, 主题跟随 (light/dark 自动适配).
+ *  Firefox 通过 scrollbar-width 控制, Chromium/Webkit 通过 ::-webkit-scrollbar.
+ *  通过 CSS var 让暖阳/晨光/墨夜各主题 thumb 颜色自动跟随. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--neox-scrollbar-thumb, rgba(0, 0, 0, 0.15)) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neox-scrollbar-thumb, rgba(0, 0, 0, 0.15));
+  border-radius: 3px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neox-scrollbar-thumb-hover, rgba(0, 0, 0, 0.28));
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* dark 主题反转 — thumb 走半透白, 在暗底上可见 */
+:root[data-theme="dark"] * {
+  scrollbar-color: var(--neox-scrollbar-thumb, rgba(255, 255, 255, 0.18)) transparent;
+}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--neox-scrollbar-thumb, rgba(255, 255, 255, 0.18));
+}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--neox-scrollbar-thumb-hover, rgba(255, 255, 255, 0.32));
+}
+
+/* ==================== 窗口拖动区域 ==================== */
+.drag-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--titlebar-height);
+  -webkit-app-region: drag;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Tauri 宿主: 把这条带子加高到标准标题栏高度, 并让它真的接事件。
+ *
+ * 为什么不逐个页面去挂 data-tauri-drag-region: 那要求**每加一个新页面都记得挂一次**,
+ * 这种约定必然会漏 —— 今晚就漏了登录页 (只处理了 onboarding), 用户当场撞上。
+ * 一条通用的顶部拖拽带覆盖所有页面, 新页面零成本。
+ *
+ * z-index 压在页面顶栏**之下** (它们是 10, 这里 5): 顶栏里的按钮要能点,
+ * 空白处才落到这条带子上被拖走。原来 9999 盖在上面, 按钮全被它吃了。
+ *
+ * 只在 Tauri 下开 —— Electron 有自己的 -webkit-app-region, 不需要这条。 */
+:root[data-host="tauri"] .drag-region {
+  height: var(--neox-topbar-height, 44px);   /* 兜底必须 = token 值 44px, 见下 */
+  pointer-events: auto;
+  z-index: 5;
+}
+
+/* Windows: overlay 高 44, 8px 拖条几乎拖不动窗口 — 拉到与 caption 同高 */
+:root[data-platform="win32"] .drag-region {
+  height: var(--neox-topbar-height, 44px);
+  /* 右上留给系统 caption 命中区, 避免抢点击 */
+  right: var(--neox-win-caption-inset, 152px);
+  pointer-events: auto;
+}
+
+button,
+input,
+textarea,
+a,
+select {
+  -webkit-app-region: no-drag;
+  font-family: inherit;
+}

@@ -1,0 +1,36 @@
+# DeepSeek 家族能力声明
+
+id: deepseek
+display_name: DeepSeek
+
+aliases:
+  - deepseek
+
+capabilities:
+  thinking:
+    native: true
+    field: thinking
+    # V4: 开关 + reasoning_effort 分档 (不再是纯 toggle)
+    builder_hint: toggle
+    # Requests carrying tools require reasoning from ALL prior assistant turns,
+    # including replies without tool_calls. Without tools, it is safely ignored.
+    # https://api-docs.deepseek.com/guides/thinking_mode
+    passback: always
+  reasoning_effort:
+    # V4 Flash/Pro: low | high | max (OpenAI 格式 reasoning_effort)
+    supported: true
+  vision: false
+  parallel_tool_use: true
+  prompt_cache: true
+  structured_output: false
+  tool_use_shape: openai-function
+
+# DeepSeek 抽象规则会反噬, 必须 few-shot
+markdown_constraint: deepseek_example
+supplement_key: deepseek
+
+fast_patterns:
+  - /\blite\b/i
+  - /\bflash\b/i
+  - /-chat\b/i
+  - /v3\.\d/i

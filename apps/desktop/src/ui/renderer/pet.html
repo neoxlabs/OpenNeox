@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neox Pet</title>
+  <!-- 桌宠窗口的入口 HTML — 跟主窗口 index.html 平行的独立 entry.
+       走 vite.config 的 rollupOptions.input.pet, 打包后单独出一份 pet bundle (不带 Neox 主 app),
+       只包含 React + 桌宠渲染层 (T64+ 才 lazy import Three.js).
+       这样 BrowserWindow.loadURL('pet.html') 启动 < 100ms 就能首屏出图. -->
+
+  <!-- 桌宠窗口现在用 macOS vibrancy 毛玻璃背景 + 圆角 + 阴影, 看起来像 macOS 计算器/便签.
+       html/body 仍然透明 (让 vibrancy 透出来), 但窗口本身 transparent:false (WebGL 才能渲染).
+       -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent !important;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      outline: none;
+    }
+    #pet-root {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="pet-root"></div>
+  <script type="module" src="/pet-entry.tsx"></script>
+</body>
+
+</html>

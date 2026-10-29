@@ -1,0 +1,9 @@
+@import './workspace-shell/structure.css';
+
+@import './workspace-shell/topbar.css';
+
+@import './workspace-shell/selectors.css';
+
+@import './workspace-shell/ide-status-bar.css';
+
+@import './workspace-shell/rightpanel.css';

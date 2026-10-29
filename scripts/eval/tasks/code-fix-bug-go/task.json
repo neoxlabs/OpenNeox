@@ -1,0 +1,5 @@
+{
+  "title": "按失败测试修 Go bug",
+  "kind": "code",
+  "timeoutSec": 600
+}

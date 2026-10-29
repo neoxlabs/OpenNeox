@@ -1,0 +1,5 @@
+/* BrandMarkImg: 浅色主题显示蓝标, 深色主题显示白标。
+ * 不用 !important (棘轮): :root + img 叠到 0,2,1 / 0,3,1, 压过 .atl-empty__mark img 这类 0,1,1 的 display。 */
+:root img.neox-brandmark--dark { display: none; }
+:root[data-theme="dark"] img.neox-brandmark--light { display: none; }
+:root[data-theme="dark"] img.neox-brandmark--dark { display: block; }

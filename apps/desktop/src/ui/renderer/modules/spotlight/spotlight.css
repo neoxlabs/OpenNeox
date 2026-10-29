@@ -1,0 +1,237 @@
+/* 聚光卡 —— 上图下文。颜色全走主题 token, 深浅主题 / 强调色自动跟随。
+ * 插画是 NeoxIllus 那套透明底等距图, 舞台只垫一层很淡的强调色光晕 + 点阵, 不画实心底块
+ * (实心方块在毛玻璃窗口上一眼假, 见 media/illus/index.ts 文件头)。 */
+
+.nx-spot {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.nx-spot__scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #000 32%, transparent);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: nx-spot-fade 220ms var(--neox-ease-out, ease-out) both;
+}
+
+.nx-spot__card {
+  position: relative;
+  width: min(380px, 100%);
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--neox-bg-elevated, var(--neox-bg-card, #1c1e22));
+  border: 1px solid var(--neox-line, rgba(127, 127, 127, .18));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .34), 0 2px 8px rgba(0, 0, 0, .08);
+  color: var(--neox-fg-primary, #e8eaed);
+  animation: nx-spot-rise 460ms var(--neox-ease-spring, cubic-bezier(.34, 1.28, .5, 1)) both;
+  outline: none;
+}
+
+/* ── 上半: 插画舞台 ── */
+.nx-spot__stage {
+  position: relative;
+  height: 196px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--neox-primary-600, #6c5cf2) 9%, transparent) 0%,
+      transparent 100%);
+  border-bottom: 1px solid var(--neox-line-soft, rgba(127, 127, 127, .1));
+}
+.nx-spot__glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    color-mix(in srgb, var(--neox-primary-600, #6c5cf2) 30%, transparent),
+    transparent);
+  filter: blur(6px);
+  animation:
+    nx-spot-glow-in 700ms var(--neox-ease-out, ease-out) 60ms both,
+    nx-spot-breathe 5.2s ease-in-out 800ms infinite;
+}
+.nx-spot__dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--neox-fg-primary, #fff) 14%, transparent) 1px, transparent 1.2px);
+  background-size: 16px 16px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 55%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 55%, #000 20%, transparent 75%);
+  opacity: .55;
+  animation: nx-spot-fade 500ms var(--neox-ease-out, ease-out) 120ms both;
+}
+.nx-spot__art {
+  position: relative;
+  width: 150px;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  animation:
+    nx-spot-art-in 620ms var(--neox-ease-spring, cubic-bezier(.34, 1.28, .5, 1)) 110ms both,
+    nx-spot-float 4.6s ease-in-out 900ms infinite;
+}
+
+.nx-spot__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neox-fg-muted, #9ca3af);
+  cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.nx-spot__close:hover { background: var(--neox-bg-hover, rgba(127, 127, 127, .12)); color: var(--neox-fg-primary, #e8eaed); }
+.nx-spot__close:focus { outline: none; }
+.nx-spot__close:focus-visible { box-shadow: 0 0 0 2px var(--neox-primary-ring, rgba(108, 92, 242, .4)); }
+
+/* ── 下半: 文字 ── */
+.nx-spot__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 20px 16px;
+}
+.nx-spot__body > * { animation: nx-spot-up 380ms var(--neox-ease-out, ease-out) both; }
+.nx-spot__tag { animation-delay: 140ms; }
+.nx-spot__title { animation-delay: 180ms; }
+.nx-spot__text { animation-delay: 220ms; }
+.nx-spot__actions { animation-delay: 260ms; }
+
+.nx-spot__tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--neox-primary-600, #6c5cf2);
+  background: color-mix(in srgb, var(--neox-primary-600, #6c5cf2) 12%, transparent);
+}
+.nx-spot[data-kind="promo"] .nx-spot__tag {
+  color: var(--neox-warn-ink, #ac5f05);
+  background: var(--neox-warn-soft, rgba(217, 119, 6, .12));
+}
+.nx-spot__title {
+  margin: 10px 0 0;
+  font-size: var(--neox-fs-lg, 16px);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.35;
+}
+.nx-spot__text {
+  margin: 6px 0 0;
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.6;
+  color: var(--neox-fg-secondary, #aab);
+}
+
+.nx-spot__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 18px;
+}
+.nx-spot__spacer { flex: 1; }
+.nx-spot__off {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint, #8a929a);
+  cursor: pointer;
+}
+.nx-spot__off:hover { color: var(--neox-fg-secondary, #aab); }
+.nx-spot__btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 120ms, background 120ms, transform 120ms;
+}
+.nx-spot__btn:active { transform: scale(.97); }
+.nx-spot__btn:focus { outline: none; }
+.nx-spot__btn:focus-visible { box-shadow: 0 0 0 2px var(--neox-primary-ring, rgba(108, 92, 242, .4)); }
+.nx-spot__btn--ghost {
+  background: transparent;
+  border-color: var(--neox-line, rgba(127, 127, 127, .22));
+  color: var(--neox-fg-secondary, #aab);
+}
+.nx-spot__btn--ghost:hover { background: var(--neox-bg-hover, rgba(127, 127, 127, .1)); color: var(--neox-fg-primary, #e8eaed); }
+.nx-spot__btn--primary {
+  background: var(--neox-primary-600, #6c5cf2);
+  color: var(--neox-fg-invert, #fff);
+}
+.nx-spot__btn--primary:hover { filter: brightness(1.08); }
+
+/* ── 出场 ── */
+.nx-spot.is-leaving .nx-spot__scrim { animation: nx-spot-fade-out 180ms var(--neox-ease-out, ease-out) both; }
+.nx-spot.is-leaving .nx-spot__card { animation: nx-spot-leave 180ms var(--neox-ease-out, ease-out) both; }
+
+@keyframes nx-spot-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nx-spot-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes nx-spot-rise {
+  from { opacity: 0; transform: translateY(18px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes nx-spot-leave {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(6px) scale(.97); }
+}
+@keyframes nx-spot-glow-in {
+  from { opacity: 0; transform: scale(.6); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes nx-spot-breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .7; transform: scale(1.06); }
+}
+@keyframes nx-spot-art-in {
+  from { opacity: 0; transform: translateY(16px) scale(.9); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes nx-spot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes nx-spot-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 动效关 / 系统减弱动态: 只留淡入淡出, 不位移不缩放不循环 */
+:root[data-motion="off"] .nx-spot *,
+:root[data-motion="off"] .nx-spot__card {
+  animation-name: nx-spot-fade !important;
+  animation-iteration-count: 1 !important;
+}
+:root[data-motion="off"] .nx-spot.is-leaving .nx-spot__card,
+:root[data-motion="off"] .nx-spot.is-leaving .nx-spot__scrim { animation-name: nx-spot-fade-out !important; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-spot *, .nx-spot__card {
+    animation-name: nx-spot-fade !important;
+    animation-iteration-count: 1 !important;
+  }
+  .nx-spot.is-leaving .nx-spot__card,
+  .nx-spot.is-leaving .nx-spot__scrim { animation-name: nx-spot-fade-out !important; }
+}

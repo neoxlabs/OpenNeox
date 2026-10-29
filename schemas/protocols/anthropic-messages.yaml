@@ -1,0 +1,31 @@
+# Anthropic Messages API
+#
+#   直连 Anthropic 用. selfhosted / OpenRouter 这种聚合层走的是 openai-chat,
+#   它们在内部做 openai-chat → anthropic-messages 的协议转换 (然后**忘了**调整
+#   system 顺序就出今天的 400). 我们直连时走这个 protocol.
+
+id: anthropic-messages
+display_name: Anthropic Messages
+spec: https://docs.anthropic.com/en/api/messages
+
+api_path: /v1/messages
+
+auth:
+  scheme: x-api-key
+  header: x-api-key
+
+request_shape:
+  messages_field: messages
+  tools_field: tools
+  system_position: separate-field   # system 在顶层 system 字段, 不在 messages 数组
+  tool_use_shape: anthropic-blocks   # content blocks of {type:'tool_use', ...}
+
+streaming:
+  format: sse
+  event_field: event   # named events (message_start / content_block_delta / ...)
+
+required_headers:
+  - name: anthropic-version
+    value: "2023-06-01"
+
+output_token_field: max_tokens

@@ -1,0 +1,171 @@
+/* 子 Agent 卡 (explore / 并行探索)。
+ *
+ * 独立的类名空间, 不复用 .atl-explore (也不用 .atl-subagents: 旧的底部坞样式和滚动控制器的坞探测都认那个名字):那一族在 agent-timeline.css 与各主题包里叠了上百条覆盖,
+ * 浅色下底色被压掉、间距各处不一。这里只读共享卡片 token (--atl-card-*), 浅色深色同一套结构。
+ *
+ * 结构: 一张卡 → 头行 (角色 · 汇总) → 每个子 Agent 一段, 段与段之间是分隔线, 不再套内层框。
+ */
+
+.agent-timeline .atl-agentgroup {
+  border-radius: var(--atl-card-radius, 11px);
+  background: var(--atl-card-bg, var(--neox-bg-elevated, #fff));
+  border: 1px solid var(--atl-card-border, rgba(15, 23, 42, 0.12));
+  padding: 10px 14px 4px;
+  font-size: var(--atl-fs-body, 13px);
+  color: var(--neox-fg-primary);
+}
+
+.atl-agentgroup__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+.atl-agentgroup__role {
+  font-weight: var(--neox-fw-semibold, 600);
+}
+.atl-agentgroup__summary {
+  color: var(--neox-fg-hint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.atl-agentgroup__error {
+  color: var(--neox-err, #d14343);
+  font-size: 12px;
+  padding-bottom: 8px;
+}
+
+/* ── 一个子 Agent ─────────────────────────────────────────────── */
+.atl-agentgroup__agent {
+  padding: 9px 0 10px;
+  border-top: 1px solid color-mix(in srgb, var(--neox-line, rgba(15, 23, 42, 0.08)) 80%, transparent);
+}
+.atl-agentgroup__agent-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.atl-agentgroup__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--neox-fg-hint);
+}
+.atl-agentgroup__dot.is-running {
+  background: var(--neox-primary-600, #5b5bd6);
+  animation: atl-agentgroup-pulse 1.4s ease-in-out infinite;
+}
+.atl-agentgroup__dot.is-completed { background: var(--neox-ok, #2f9e6b); }
+.atl-agentgroup__dot.is-error { background: var(--neox-err, #d14343); }
+@keyframes atl-agentgroup-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.atl-agentgroup__agent-name {
+  font-weight: var(--neox-fw-medium, 500);
+  white-space: nowrap;
+}
+.atl-agentgroup__model {
+  min-width: 0;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px;
+  line-height: 18px;
+  padding: 0 7px;
+  border-radius: 6px;
+  color: var(--neox-fg-secondary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.atl-agentgroup__agent-meta {
+  margin-left: auto;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: var(--neox-fg-hint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.atl-agentgroup__task,
+.atl-agentgroup__waiting {
+  margin: 3px 0 0 15px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--neox-fg-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atl-agentgroup__waiting { color: var(--neox-fg-hint); }
+
+/* ── 工具列表 ─────────────────────────────────────────────────────
+ * 跑动中 (.is-ticker) 只露最近三条: 新的一条从下方滑入, 较早的两条逐级变淡,
+ * 看起来是一列在往上滚的工具流; 跑完之后同一套行样式用于展开全部。 */
+.atl-agentgroup__tools {
+  list-style: none;
+  margin: 6px 0 0 15px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.atl-agentgroup__tool {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 22px;
+}
+.atl-agentgroup__tools.is-ticker .atl-agentgroup__tool {
+  animation: atl-agentgroup-tick-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.atl-agentgroup__tools.is-ticker .atl-agentgroup__tool:nth-last-child(3) { opacity: 0.45; }
+.atl-agentgroup__tools.is-ticker .atl-agentgroup__tool:nth-last-child(2) { opacity: 0.72; }
+@keyframes atl-agentgroup-tick-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+.atl-agentgroup__tool-name {
+  flex: none;
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: 11.5px;
+  color: var(--neox-fg-primary);
+}
+.atl-agentgroup__tool-args {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--neox-fg-secondary);
+}
+.atl-agentgroup__tool-dur {
+  flex: none;
+  margin-left: auto;
+  color: var(--neox-fg-hint);
+  font-variant-numeric: tabular-nums;
+}
+.atl-agentgroup__tool.is-running .atl-agentgroup__tool-dur { color: var(--neox-primary-600, #5b5bd6); }
+.atl-agentgroup__tool.is-error .atl-agentgroup__tool-name { color: var(--neox-err, #d14343); }
+
+.atl-agentgroup__toggle {
+  margin: 4px 0 0 15px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+}
+.atl-agentgroup__toggle:hover { color: var(--neox-fg-primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .atl-agentgroup__dot.is-running,
+  .atl-agentgroup__tools.is-ticker .atl-agentgroup__tool { animation: none; }
+}

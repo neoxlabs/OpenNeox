@@ -1,0 +1,296 @@
+/* ============================================================================
+ * Assistant Status Panel — 助理模式状态面板
+ * ============================================================================ */
+
+.assistant-status-panel {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 20;
+  min-width: 160px;
+  max-width: 320px;
+  border-radius: 8px;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow: hidden;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+/* 紧凑状态栏 */
+.assistant-status-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #d0d0d0;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.assistant-status-compact:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* 状态圆点 */
+.assistant-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: assistant-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+@keyframes assistant-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.assistant-status-label {
+  flex: 1;
+  text-align: left;
+  color: #c0c0c0;
+}
+
+/* Worker 数量徽章 */
+.assistant-worker-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* 队列深度徽章 */
+.assistant-queue-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 5px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* 展开的 worker 列表 */
+.assistant-status-expanded {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.assistant-worker-section {
+  padding: 0 4px;
+}
+
+.assistant-worker-section-title {
+  padding: 4px 8px 2px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+}
+
+.assistant-worker-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  transition: background 0.15s;
+}
+
+.assistant-worker-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Worker 状态圆点 */
+.assistant-worker-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.assistant-worker-dot.running {
+  background: #60a5fa;
+  animation: assistant-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.assistant-worker-dot.done {
+  background: #4ade80;
+}
+
+.assistant-worker-dot.error {
+  background: #f87171;
+}
+
+/* Worker ID */
+.assistant-worker-id {
+  font-size: 10px;
+  font-weight: 600;
+  color: #888;
+  min-width: 32px;
+}
+
+/* Worker 任务描述 */
+.assistant-worker-task {
+  flex: 1;
+  color: #b0b0b0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Worker 角色标签 */
+.assistant-worker-role {
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.assistant-worker-time {
+  font-size: 10px;
+  color: #666;
+  font-variant-numeric: tabular-nums;
+}
+
+.assistant-worker-status.done {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.assistant-worker-status.error {
+  color: #f87171;
+  font-weight: 600;
+}
+
+/* ============================================================================
+ * Light Theme
+ * ============================================================================ */
+
+@media (prefers-color-scheme: light) {
+  .assistant-status-panel {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .assistant-status-compact {
+    color: #333;
+  }
+
+  .assistant-status-compact:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .assistant-status-label {
+    color: #555;
+  }
+
+  .assistant-status-expanded {
+    border-top-color: rgba(0, 0, 0, 0.06);
+  }
+
+  .assistant-worker-section-title {
+    color: #999;
+  }
+
+  .assistant-worker-item:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  .assistant-worker-id {
+    color: #777;
+  }
+
+  .assistant-worker-task {
+    color: #555;
+  }
+
+  .assistant-worker-time {
+    color: #999;
+  }
+}
+
+/* ==================== Light Theme Overrides (data-theme) ==================== */
+:root[data-theme="light"] .assistant-status-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: var(--border-default);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .assistant-status-compact {
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .assistant-status-compact:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+:root[data-theme="light"] .assistant-status-label {
+  color: #475569;
+}
+
+:root[data-theme="light"] .assistant-worker-badge {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+:root[data-theme="light"] .assistant-queue-badge {
+  background: rgba(234, 88, 12, 0.14);
+  color: #ea580c;
+}
+
+:root[data-theme="light"] .assistant-status-expanded {
+  border-top-color: var(--border-subtle);
+}
+
+:root[data-theme="light"] .assistant-worker-section-title {
+  color: #94a3b8;
+}
+
+:root[data-theme="light"] .assistant-worker-item:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .assistant-worker-dot.running {
+  background: #2563eb;
+}
+
+:root[data-theme="light"] .assistant-worker-id {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .assistant-worker-task {
+  color: #475569;
+}
+
+:root[data-theme="light"] .assistant-worker-role {
+  background: rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+}
+
+:root[data-theme="light"] .assistant-worker-time {
+  color: #94a3b8;
+}

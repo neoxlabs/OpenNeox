@@ -1,0 +1,582 @@
+/* ==================== 用量 · 自带 Key (BYOK) UI 3.0 照稿 ====================
+ * 管 UsageTab 的本地段 (.byok3-stack 包住的部分) + ByokBalancePanel (各家余额)。
+ * 页头 .usage-head 与订阅分支不在这里。
+ *
+ * 所有选择器都以 .byok3 开头: 旧规则在 settings-core/usage.css 与
+ * collab-network/.../usage-flat.css 里, 单类选择器压不过, 这里靠作用域 + 复合选择器盖掉。
+ * 颜色只走 token: 墨色 --neox-fg-primary / 灰 --neox-fg-muted / 线 --neox-line-subtle;
+ * 唯一的蓝是「输出」段 (--clay-blue), 不做蓝色实心大块。 */
+
+.byok3 {
+  --byok3-ink: var(--neox-fg-primary);
+  --byok3-muted: var(--neox-fg-muted, #8a8f98);
+  --byok3-line: var(--neox-line-subtle, rgba(127, 127, 127, 0.14));
+  --byok3-card-bg: var(--nx-soft-card-bg, var(--neox-bg-card));
+  --byok3-warn: #C2492F;
+  --byok3-blue: var(--clay-blue, #2F6BFF);
+  color: var(--byok3-ink);
+}
+
+/* ---------- 通用: 堆叠 / 卡片 / 标题 / 文字按钮 ---------- */
+
+.byok3 .byok3-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.byok3 .byok3-card {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 0 20px;
+  border-radius: 16px;
+  border: 1px solid var(--byok3-line);
+  background: var(--byok3-card-bg);
+}
+
+.byok3 .byok3-card--flush {
+  padding: 0 20px;
+}
+
+/* 余额卡 / 统计卡 等挂在页面顶上时, 跟下一块留 14px (堆叠内由 gap 管) */
+.byok3 .byok-bal-card {
+  margin-bottom: 14px;
+}
+
+.byok3 .byok3-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0 8px;
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.byok3 .byok3-card__title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--byok3-ink);
+  line-height: 1.4;
+}
+
+.byok3 .byok3-card__foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 0 14px;
+}
+
+.byok3 .byok3-textbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--byok3-muted);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.byok3 .byok3-textbtn:hover:not(:disabled) {
+  color: var(--byok3-ink);
+  text-decoration: none;
+}
+
+.byok3 .byok3-textbtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.byok3 .byok3-textbtn.is-active {
+  color: var(--byok3-ink);
+  font-weight: 500;
+}
+
+/* ---------- 各家余额 (ByokBalancePanel) ---------- */
+
+/* 一行 48px; 四列: 品牌标 24 | 名字 | 快捷链接 | 金额列 120 右对齐 */
+.byok3 .byok-bal__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 220px) minmax(0, 1fr) 120px;
+  column-gap: 12px;
+  align-items: center;
+  height: 48px;
+  min-height: 48px;
+}
+
+/* 分隔线从名字列起画: 卡内边距 20 + 品牌标 24 + 间距 12 = 56, 相对行左缘 36 */
+.byok3 .byok-bal__row + .byok-bal__row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 36px;
+  right: 0;
+  height: 1px;
+  background: var(--byok3-line);
+}
+
+.byok3 .byok-bal__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.byok3 .byok-bal__initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--neox-fg-secondary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+}
+
+.byok3 .byok-bal__name {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--byok3-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.byok3 .byok-bal__links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.byok3 .byok-bal__link {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--byok3-muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.byok3 .byok-bal__link:hover {
+  color: var(--byok3-ink);
+  text-decoration: none;
+}
+
+.byok3 .byok-bal__dot {
+  font-size: 12px;
+  color: var(--byok3-muted);
+  opacity: 0.6;
+}
+
+.byok3 .byok-bal__value {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.byok3 .byok-bal__amount {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--byok3-ink);
+}
+
+.byok3 .byok-bal__amount.is-low {
+  color: var(--byok3-warn);
+}
+
+/* 余额低: 金额变淡红 + 一颗极小的淡红标签 */
+.byok3 .byok-bal__chip {
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--byok3-warn);
+  background: color-mix(in srgb, var(--byok3-warn) 12%, transparent);
+}
+
+.byok3 .byok-bal__muted {
+  font-size: 12px;
+  color: var(--byok3-muted);
+}
+
+/* Key 无效 / 查询失败: 淡红字, 不加标签 */
+.byok3 .byok-bal__err {
+  font-size: 12px;
+  color: var(--byok3-warn);
+}
+
+/* ---------- 本地统计卡 ---------- */
+
+.byok3 .byok3-stats__head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  padding: 14px 0 12px;
+  box-sizing: border-box;
+}
+
+.byok3 .byok3-stats__ctrls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+}
+
+.byok3 .byok3-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.byok3 .byok3-tabs .byok3-textbtn.is-active {
+  color: var(--byok3-ink);
+}
+
+/* 时间窗: 紧凑分段。轨道淡灰, 选中是白色浮起的小药丸 */
+.byok3 .byok3-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+
+.byok3 .byok3-seg__btn {
+  margin: 0;
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--byok3-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.byok3 .byok3-seg__btn:hover {
+  color: var(--byok3-ink);
+}
+
+.byok3 .byok3-seg__btn.is-active {
+  background: var(--neox-bg-card);
+  color: var(--byok3-ink);
+  font-weight: 500;
+  box-shadow: 0 0 0 0.5px var(--byok3-line), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* 时间窗自定义弹层: 沿用 usage-flat 的 .usg-range__pop 结构, 这里只把它摆到右边、加白底 */
+.byok3 .byok3-stats__head .usg-range__pop {
+  z-index: 5;
+  background: var(--neox-bg-card);
+}
+
+/* 四个指标: 标签在上 (灰 12px), 数字在下 (20px semibold, 不用等宽字体) */
+.byok3 .byok3-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  padding-bottom: 2px;
+}
+
+.byok3 .byok3-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 4px 0 4px 16px;
+}
+
+.byok3 .byok3-metric:first-child {
+  padding-left: 0;
+}
+
+.byok3 .byok3-metric + .byok3-metric {
+  border-left: 1px solid var(--byok3-line);
+}
+
+.byok3 .byok3-metric__lbl {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--byok3-muted);
+  white-space: nowrap;
+}
+
+.byok3 .byok3-metric__val {
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--byok3-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.byok3 .byok3-sep {
+  height: 1px;
+  margin: 14px 0 12px;
+  background: var(--byok3-line);
+}
+
+/* Token 构成: 一条 8px 圆角叠条 + 一行图例 */
+.byok3 .byok3-mix__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.byok3 .byok3-mix__label {
+  font-size: 12px;
+  color: var(--byok3-muted);
+}
+
+.byok3 .byok3-mix__total {
+  font-size: 12px;
+  color: var(--byok3-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.byok3 .byok3-mix__bar {
+  display: flex;
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+
+.byok3 .byok3-mix__seg {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+.byok3 .byok3-mix__seg--in {
+  background: var(--neox-fg-primary);
+}
+
+.byok3 .byok3-mix__seg--cache {
+  background: color-mix(in srgb, var(--neox-fg-primary) 30%, transparent);
+}
+
+.byok3 .byok3-mix__seg--out {
+  background: var(--byok3-blue);
+}
+
+.byok3 .byok3-mix__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--byok3-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.byok3 .byok3-mix__legend > span + span::before {
+  content: '·';
+  margin: 0 10px;
+  opacity: 0.6;
+}
+
+.byok3 .byok3-cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 10px;
+  padding-bottom: 14px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--byok3-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.byok3 .byok3-cost strong {
+  font-weight: 500;
+  color: var(--byok3-ink);
+}
+
+/* ---------- 行式分布 (按服务商 / 按模型 / 详情里的模型) ---------- */
+
+/* 一行 44px; 品牌标 20 | 名字 | 细条 240 | 占比 56 | token 92 */
+.byok3 .byok3-drow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) minmax(80px, 240px) 56px 92px;
+  column-gap: 12px;
+  align-items: center;
+  height: 44px;
+  min-height: 44px;
+}
+
+/* 分隔线从名字列起: 卡内边距 20 + 品牌标 20 + 间距 12 = 52, 相对行左缘 32 */
+.byok3 .byok3-drow + .byok3-drow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 32px;
+  right: 0;
+  height: 1px;
+  background: var(--byok3-line);
+}
+
+.byok3 .byok3-drow__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.byok3 .byok3-drow__initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--neox-fg-secondary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+}
+
+.byok3 .byok3-drow__name {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--byok3-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.byok3 .byok3-drow__bar {
+  position: relative;
+  display: block;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+
+/* 细条是墨色的一小段, 不上彩色: 占比大小靠长度说, 身份靠左边的名字说 */
+.byok3 .byok3-drow__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 70%, transparent);
+}
+
+.byok3 .byok3-drow__pct {
+  font-size: 12px;
+  line-height: 18px;
+  text-align: right;
+  color: var(--byok3-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.byok3 .byok3-drow__tok {
+  font-size: 12px;
+  line-height: 18px;
+  text-align: right;
+  color: var(--byok3-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 行式卡自己是查询容器 (inline-size: 只看宽度, 不影响卡高), 窄宽时细条让位给名字 */
+.byok3 .byok3-dist {
+  container-type: inline-size;
+}
+
+@container (max-width: 560px) {
+  .byok3 .byok3-drow {
+    grid-template-columns: 20px minmax(0, 1fr) minmax(56px, 120px) 48px 80px;
+  }
+}
+
+/* ---------- 缓存 / 限额 / 详情 (沿用原有 class 的内容, 只换外壳与分隔) ---------- */
+
+.byok3 .usg-cache-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  padding-bottom: 14px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--byok3-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.byok3 .usg-cache-row > span {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.byok3 .usg-cache-row strong {
+  font-weight: 500;
+  color: var(--byok3-ink);
+}
+
+.byok3 .byok3-limit {
+  padding-bottom: 14px;
+}
+
+.byok3 .byok3-limit .usg-limit-grid {
+  margin-top: 0;
+}
+
+/* 详情: 每家一行一条分隔线, 不再一块一块的实色卡 */
+.byok3 .usg-detail-block {
+  border: 0;
+  border-top: 1px solid var(--byok3-line);
+  background: none;
+  border-radius: 0;
+}
+
+.byok3 .usg-detail-block:first-child {
+  border-top: 0;
+}
+
+.byok3 .byok3-card--flush .usg-detail-block:first-child {
+  border-top: 0;
+}

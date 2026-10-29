@@ -1,0 +1,846 @@
+/* ==================== About 页 — 商用版 ==================== */
+
+.about-panel {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.settings-tab-anim:has(> .about-panel) {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* 光 justify-content:center 还不够居中 —— 离线渲染 before/after 一比就看出来内容
+   * 整体偏下。两个偏移源:
+   *   ① .settings-main 的上下 padding 是 58 / 40 (顶部那 18px 是给关闭按钮让位的),
+   *      居中算的是内容盒, 不补这一下就整体偏下 18px → 这里 padding-bottom 补回来。
+   *   ② .about-hero--centered 自带 32px padding-top, 它当初存在就是为了"把内容从
+   *      面板顶端推下来" —— 这活现在归居中管了, 再留着就是双重下推。 */
+  box-sizing: border-box;
+  padding-bottom: 4px;
+}
+.settings-tab-anim:has(> .about-panel) > .about-panel {
+  width: 100%;
+}
+.settings-tab-anim:has(> .about-panel) .about-hero--centered {
+  padding-top: 0;
+}
+
+/* ===== Hero ===== */
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px 0 12px;
+}
+.about-hero--centered {
+  align-items: center;
+  padding-top: 32px;
+}
+
+.about-hero-logo {
+  height: 44px;
+  width: auto;
+  max-width: 320px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* 版本行 — 居中, 可点 (7-tap 开 devMode), 全 monospace + dot separator. */
+.about-hero-version {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+.about-hero-version--tap {
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+.about-hero-version--tap:hover {
+  background: var(--bg-hover, rgba(255,255,255,0.04));
+  opacity: 1;
+}
+.about-ver-num {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.about-ver-sep {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+.about-ver-devbadge {
+  margin-left: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--neox-accent, #818cf8);
+  letter-spacing: 0.08em;
+}
+
+.nx-upd {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  /* 段间距统一 20 (见 .about-links 的说明) */
+  margin: 20px 0;
+  border: 1px solid var(--neox-line, var(--border-subtle));
+  border-radius: 14px;
+  background: var(--neox-bg-card, var(--bg-elevated));
+  position: relative;
+  isolation: isolate;
+  transition: background 320ms var(--neox-ease-out, ease-out);
+}
+/* 光晕: 只在"正在发生"和"有新版本"时浮出来, 用 ::before 而不是 background,
+   这样它可以有自己的渐变和呼吸动画而不影响内容层。 */
+.nx-upd::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(120% 160% at 8% 50%, var(--nx-upd-aura, transparent) 0%, transparent 62%);
+  transition: opacity 380ms var(--neox-ease-out, ease-out);
+}
+/* 光晕只留给错误态 —— 其余状态在实底卡上不需要一层彩雾来说"我在做事";
+ * 圆环的进度和那行文字已经把状态说清楚了。 */
+.nx-upd--installing,
+.nx-upd--checking,
+.nx-upd--paused,
+.nx-upd--has-update,
+.nx-upd--ready     { --nx-upd-aura: transparent; }
+.nx-upd--error     { --nx-upd-aura: rgba(239, 68, 68, 0.10); }
+.nx-upd--error::before { opacity: 1; }
+/* 下载中的光晕轻轻呼吸 —— 唯一一处持续动效, 表示"它还活着" */
+.nx-upd--installing::before {
+  animation: nx-upd-breathe 3.2s ease-in-out infinite;
+}
+@keyframes nx-upd-breathe {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
+
+.nx-upd { align-items: center; }
+.nx-upd__stage {
+  --nx-radar: #41a0ff;
+  position: relative;
+  flex: 0 0 auto;
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  isolation: isolate;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--nx-radar) 12%, transparent), transparent 80%);
+}
+.nx-pot.nx-upd__stage { width: 120px; height: 120px; border-radius: 0; background: none; }
+.nx-pot__art { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; user-select: none; pointer-events: none; }
+.nx-pot__ghost { opacity: 0.22; filter: grayscale(1); }
+.nx-pot__fill { transition: clip-path 300ms var(--neox-ease-out, ease-out); }
+.nx-pot__lump { transform-origin: 50% 70%; }
+.nx-upd__stage--checking .nx-pot__lump { animation: nx-pot-wobble 1.6s ease-in-out infinite; }
+/* 盘面扫光: 盘子在图里约 y 62%–86%, 一条亮带从左扫到右, 用椭圆遮罩只亮在盘面上 */
+.nx-pot__spin {
+  position: absolute; z-index: 3; left: 6%; right: 6%; top: 60%; height: 22%;
+  border-radius: 50%; overflow: hidden; pointer-events: none;
+  background: linear-gradient(100deg, transparent 0%, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%, transparent 100%);
+  background-size: 250% 100%;
+  mix-blend-mode: soft-light;
+  animation: nx-pot-spin 1.1s linear infinite;
+}
+.nx-pot__arc { position: absolute; z-index: 4; left: 4%; right: 4%; top: 58%; width: 92%; height: 26%; overflow: visible; pointer-events: none; }
+.nx-pot__arc ellipse { fill: none; stroke: var(--clay-blue, #2F6BFF); stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: stroke-dasharray 300ms var(--neox-ease-out, ease-out); transform: rotate(180deg); transform-origin: 50% 50%; }
+.nx-pot__tag { position: absolute; z-index: 4; right: 10%; top: 18%; width: 34%; transform-origin: 30% 0%; animation: nx-pot-swing 1.2s ease-in-out 2; }
+.nx-upd__stage--paused .nx-pot__fill { opacity: 0.55; filter: grayscale(0.6); }
+.nx-upd__stage--ready .nx-pot__art { filter: drop-shadow(0 0 10px rgba(255, 176, 92, 0.45)); }
+@keyframes nx-pot-wobble { 0%, 100% { transform: rotate(0) scaleX(1); } 30% { transform: rotate(-2deg) scaleX(1.02); } 70% { transform: rotate(2deg) scaleX(0.99); } }
+@keyframes nx-pot-spin { from { background-position: 125% 0; } to { background-position: -125% 0; } }
+@keyframes nx-pot-swing { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-9deg); } 70% { transform: rotate(6deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .nx-upd__stage .nx-pot__lump, .nx-upd__stage .nx-pot__spin, .nx-upd__stage .nx-pot__tag { animation: none; }
+}
+.nx-upd__art {
+  position: relative;
+  z-index: 2;
+  width: 70px;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  animation: nx-upd-float 4s ease-in-out infinite;
+}
+/* 雷达扫描光束: 一道锥形渐变扇面绕中心转 (只在检查时出现) */
+.nx-upd__sweep {
+  position: absolute;
+  inset: 4px;
+  z-index: 1;
+  border-radius: 50%;
+  opacity: 0;
+  background: conic-gradient(from 0deg, color-mix(in srgb, var(--nx-radar) 55%, transparent) 0deg, transparent 70deg, transparent 360deg);
+  -webkit-mask: radial-gradient(closest-side, #000 98%, transparent 100%);
+          mask: radial-gradient(closest-side, #000 98%, transparent 100%);
+  transition: opacity 240ms ease;
+}
+/* 波纹: 从锅口往外扩散的圈 */
+.nx-upd__ripple {
+  position: absolute;
+  left: 42%;
+  top: 30%;
+  z-index: 3;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  border: 2px solid var(--nx-radar);
+  opacity: 0;
+  pointer-events: none;
+}
+.nx-upd__stage--checking .nx-upd__sweep { opacity: 1; animation: nx-upd-spin 1.8s linear infinite; }
+.nx-upd__stage--checking .nx-upd__ripple { animation: nx-upd-ripple 1.8s cubic-bezier(.2, .7, .3, 1) infinite; }
+.nx-upd__stage--checking .nx-upd__ripple--2 { animation-delay: .6s; }
+.nx-upd__stage--checking .nx-upd__ripple--3 { animation-delay: 1.2s; }
+.nx-upd__stage--checking .nx-upd__art { animation: nx-upd-scan 1.8s ease-in-out infinite; }
+
+/* 下载中: 舞台外一圈进度环 (--p) + 数据点往下落 */
+.nx-upd__ring {
+  position: absolute;
+  inset: -5px;
+  z-index: 0;
+  border-radius: 24px;
+  background: conic-gradient(var(--nx-radar) var(--p), color-mix(in srgb, var(--neox-fg-primary, #000) 8%, transparent) 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  padding: 3px;
+  transition: background 200ms linear;
+}
+.nx-upd__drop {
+  position: absolute;
+  left: 42%;
+  top: 6px;
+  z-index: 3;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--nx-radar);
+  opacity: 0;
+  animation: nx-upd-drop 1.3s ease-in infinite;
+}
+.nx-upd__drop--2 { left: 30%; animation-delay: .45s; }
+.nx-upd__drop--3 { left: 55%; animation-delay: .9s; }
+
+/* 右下角状态徽章 */
+.nx-upd__badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  z-index: 4;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--nx-radar);
+  box-shadow: 0 0 0 3px var(--neox-bg-card, var(--bg-elevated, #fff)), 0 4px 10px color-mix(in srgb, var(--nx-radar) 40%, transparent);
+  animation: nx-upd-pop 420ms cubic-bezier(.34, 1.56, .64, 1) both;
+}
+.nx-upd__stage--has-update .nx-upd__badge,
+.nx-upd__stage--ready .nx-upd__badge { animation: nx-upd-pop 420ms cubic-bezier(.34, 1.56, .64, 1) both, nx-upd-hop 900ms ease-in-out 450ms 2; }
+.nx-upd__stage--up-to-date .nx-upd__badge { background: #22b35e; box-shadow: 0 0 0 3px var(--neox-bg-card, var(--bg-elevated, #fff)), 0 4px 10px rgba(34, 179, 94, .35); }
+.nx-upd__stage--paused .nx-upd__badge { background: #8a93a6; box-shadow: 0 0 0 3px var(--neox-bg-card, var(--bg-elevated, #fff)); }
+.nx-upd__stage--paused .nx-upd__art { opacity: .55; filter: grayscale(.5); animation: none; }
+.nx-upd__stage--error { animation: nx-upd-shake 420ms ease-in-out 1; }
+.nx-upd__stage--error .nx-upd__badge { background: var(--neox-err, #ef4444); box-shadow: 0 0 0 3px var(--neox-bg-card, var(--bg-elevated, #fff)), 0 4px 10px rgba(239, 68, 68, .35); }
+.nx-upd__stage--error .nx-upd__art { filter: saturate(.3); animation: none; }
+
+/* 已是最新: 四颗星点炸开一次 */
+.nx-upd__sparks { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.nx-upd__sparks i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: #22b35e;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0;
+  animation: nx-upd-spark 900ms ease-out 1 both;
+}
+.nx-upd__sparks i:nth-child(1) { --dx: -40px; --dy: -34px; }
+.nx-upd__sparks i:nth-child(2) { --dx: 42px;  --dy: -30px; animation-delay: 60ms; }
+.nx-upd__sparks i:nth-child(3) { --dx: -38px; --dy: 30px;  animation-delay: 120ms; }
+.nx-upd__sparks i:nth-child(4) { --dx: 36px;  --dy: 36px;  animation-delay: 180ms; }
+
+@keyframes nx-upd-float  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes nx-upd-scan   { 0%, 100% { transform: rotate(0deg) translateY(0); } 25% { transform: rotate(-4deg) translateY(-2px); } 75% { transform: rotate(4deg) translateY(-2px); } }
+@keyframes nx-upd-spin   { to { transform: rotate(360deg); } }
+@keyframes nx-upd-ripple { 0% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(4.2); } }
+@keyframes nx-upd-drop   { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(58px); } }
+@keyframes nx-upd-pop    { 0% { opacity: 0; transform: scale(.3); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes nx-upd-hop    { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
+@keyframes nx-upd-shake  { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+@keyframes nx-upd-spark  { 0% { opacity: 0; transform: translate(0, 0) scale(.4); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(90deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-upd__art, .nx-upd__sweep, .nx-upd__ripple, .nx-upd__drop, .nx-upd__badge, .nx-upd__sparks i, .nx-upd__stage { animation: none !important; }
+  .nx-upd__stage--checking .nx-upd__sweep { opacity: .6; }
+}
+
+/* ── 文字 ── */
+.nx-upd__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.nx-upd__title {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.nx-upd__sub {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* key 变了就重新播一遍 —— 数字换行时有个轻微的淡入, 不是硬跳 */
+  animation: nx-upd-sub-in 240ms var(--neox-ease-out, ease-out);
+}
+@keyframes nx-upd-sub-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nx-upd__sub--live { animation: none; font-variant-numeric: tabular-nums; }
+.nx-upd--error .nx-upd__sub { color: #ef4444; }
+/* 本次更新: 官网更新日志里这个版本的条目, 最多 6 条 */
+.nx-upd__notes {
+  margin: 8px 0 0;
+  padding: 0 0 0 16px;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  color: var(--neox-fg-secondary, var(--text-secondary));
+  max-width: 64ch;
+}
+.nx-upd__notes li { margin: 1px 0; }
+.nx-upd__notes-more { list-style: none; margin-left: -16px; opacity: .8; }
+
+/* 细进度轨 —— 圆环给"感觉", 这条给"精确到哪" */
+.nx-upd__track {
+  height: 3px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  color: var(--text-muted);
+  overflow: hidden;
+}
+.nx-upd__track-fill {
+  height: 100%;
+  border-radius: inherit;
+  /* 实色, 不用双色渐变 —— 渐变在单色主题里就是两处彩色 */
+  background: var(--neox-fg-primary, var(--text-primary));
+  transition: width 320ms var(--neox-ease-out, ease-out);
+}
+/* 下载中在填充上叠一层流光 —— 只在真的在下的时候有 */
+.nx-upd--installing .nx-upd__track-fill {
+  background-image: linear-gradient(90deg, var(--neox-fg-primary, #fff), var(--neox-fg-primary, #fff)),
+    linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+  background-size: 100% 100%, 40% 100%;
+  background-repeat: no-repeat, no-repeat;
+  animation: nx-upd-sheen 1.4s linear infinite;
+}
+@keyframes nx-upd-sheen {
+  from { background-position: 0 0, -40% 0; }
+  to   { background-position: 0 0, 140% 0; }
+}
+.nx-upd--paused .nx-upd__track-fill { filter: saturate(0.35); }
+
+/* ── 动作 ── */
+.nx-upd__acts { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.nx-upd__icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text-primary, #fff) 7%, transparent);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 160ms var(--neox-ease-out), color 160ms var(--neox-ease-out), transform 160ms var(--neox-ease-out);
+}
+.nx-upd__icon-btn:hover {
+  background: color-mix(in srgb, var(--text-primary, #fff) 13%, transparent);
+  color: var(--text-primary);
+}
+.nx-upd__icon-btn:active { transform: scale(0.94); }
+
+.nx-upd__cta {
+  height: 32px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--neox-primary-600, var(--jb-accent-blue, #3574f0));
+  color: var(--neox-fg-invert, #fff);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 160ms var(--neox-ease-out), transform 160ms var(--neox-ease-out);
+  box-shadow: none;
+}
+.nx-upd__cta:hover { background: var(--neox-primary-700, var(--neox-primary-600)); }
+.nx-upd__cta:active { transform: scale(0.98); }
+.nx-upd__cta:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+}
+
+.nx-upd__ghost {
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text-primary, #fff) 7%, transparent);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 160ms var(--neox-ease-out), color 160ms var(--neox-ease-out);
+}
+.nx-upd__ghost:hover {
+  background: color-mix(in srgb, var(--text-primary, #fff) 13%, transparent);
+  color: var(--text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-upd::before,
+  .nx-upd--installing .nx-upd__glyph,
+  .nx-upd--installing .nx-upd__track-fill,
+  .nx-upd--checking .nx-upd__ring-arc { animation: none !important; }
+}
+
+/* ===== Link list ===== */
+.about-link-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0;
+}
+.about-link-list__sep {
+  height: 1px;
+  margin: 6px 8px;
+  background: var(--border-subtle);
+  opacity: 0.6;
+}
+.about-link-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+  transition: background 0.12s, color 0.12s;
+}
+.about-link-item:hover {
+  background: var(--bg-hover, rgba(255,255,255,0.04));
+  color: var(--text-primary);
+}
+
+/* 键盘焦点 —— 这些行是 div(样式按 div 写的, 见 AboutTab 里的说明), 聚焦没有默认样式。
+ * 跟鼠标 hover 同一套底色 + 一圈描边, 键盘和鼠标看到的是同一个"当前项"。 */
+.about-link-item:focus-visible {
+  background: var(--bg-hover, rgba(255,255,255,0.04));
+  outline: 2px solid var(--neox-focus-ring, currentColor);
+  outline-offset: -2px;
+}
+.about-link-item > svg:first-child {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.about-link-item > svg:last-child {
+  margin-left: auto;
+  width: 12px;
+  height: 12px;
+  opacity: 0.3;
+}
+.about-link-item:hover > svg:last-child {
+  opacity: 0.6;
+}
+.about-link-item span {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ===== Dev panel (隐藏入口) ===== */
+.about-devpanel {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px dashed var(--border-subtle);
+  background: rgba(99, 102, 241, 0.03);
+  animation: about-hint-slide-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.about-devpanel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.about-devpanel__badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--neox-accent, #818cf8);
+  letter-spacing: 0.08em;
+}
+.about-devpanel__title {
+  flex: 1;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.about-devpanel__close {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-lg, 16px);
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
+}
+.about-devpanel__close:hover {
+  background: var(--bg-hover, rgba(255,255,255,0.06));
+  color: var(--text-primary);
+}
+.about-devpanel__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+.about-devpanel__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.about-devpanel__label {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.about-devpanel__hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ===== Footer ===== */
+.about-footer {
+  padding: 10px 0 0;
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  opacity: 0.6;
+}
+
+/* ===== 兼容旧 class — 不再渲染但留选择器免 css purger 删 ===== */
+.about-hero-info,
+.about-hero-name,
+.about-hero-tagline,
+.about-hero-meta,
+.about-ver-pill,
+.about-grid-2col,
+.about-update-row,
+.about-update-status,
+.about-update-msg,
+.about-update-ver,
+.about-update-err,
+.about-update-btns { /* no-op */ }
+
+/* ==================== Light Theme ==================== */
+:root[data-theme="light"] .about-link-item:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+:root[data-theme="light"] .about-btn-check:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.05);
+}
+:root[data-theme="light"] .about-update-card {
+  background: rgba(15, 23, 42, 0.02);
+}
+:root[data-theme="light"] .about-update-card__icon {
+  background: rgba(15, 23, 42, 0.04);
+}
+:root[data-theme="light"] .about-devpanel {
+  background: rgba(99, 102, 241, 0.05);
+}
+:root[data-theme="light"] .about-hero-version--tap:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2px 4px;
+  margin: 28px 0 0;
+}
+.about-links__item {
+  border: 0;
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 7px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 140ms var(--neox-ease-out), background 140ms var(--neox-ease-out);
+}
+.about-links__item:hover {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-primary, #fff) 7%, transparent);
+}
+/* 项与项之间一枚极淡的间隔点 —— 比竖线轻, 比纯空格清楚 */
+.about-links__item + .about-links__item::before {
+  content: '·';
+  margin-right: 8px;
+  opacity: 0.32;
+}
+
+.nx-cl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+.nx-cl__head-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+.nx-cl__head {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--neox-fg-muted, var(--text-muted));
+}
+.nx-cl__all {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-muted, var(--text-muted));
+  cursor: pointer;
+  transition: color 160ms var(--neox-ease-out, ease-out);
+}
+.nx-cl__all:hover { color: var(--neox-fg-primary, var(--text-primary)); }
+.nx-cl__all:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.nx-cl__hint {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-muted, var(--text-muted));
+}
+.nx-cl__card {
+  border: 1px solid var(--neox-line, var(--border-subtle));
+  border-radius: 12px;
+  background: var(--neox-bg-card, var(--bg-elevated));
+  overflow: hidden;
+}
+.nx-cl__row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+.nx-cl__row:hover { background: var(--neox-bg-hover, transparent); }
+.nx-cl__row:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: -2px;
+}
+/* 版本号做成实心小徽标 —— 一列卡片里它是唯一的锚点, 写成普通文字三张卡长得一样 */
+.nx-cl__ver {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 9%, transparent);
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.nx-cl__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--neox-fg-primary, var(--text-primary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nx-cl__date {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--neox-fg-hint, var(--text-muted));
+  font-variant-numeric: tabular-nums;
+}
+.nx-cl__chev {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--neox-fg-muted, var(--text-muted));
+}
+.nx-cl__body {
+  padding: 2px 12px 10px 12px;
+  border-top: 1px solid var(--neox-line-soft, var(--border-subtle));
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.45;
+  color: var(--neox-fg-secondary, var(--text-secondary));
+}
+.nx-cl__subhead {
+  margin: 7px 0 1px;
+  font-weight: 700;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+.nx-cl__subhead:first-child { margin-top: 8px; }
+/* 条目自己画点 —— 用 ul/li 会继承设置页别处的列表样式, 这里只要一个圆点 */
+.nx-cl__item {
+  position: relative;
+  padding-left: 14px;
+  margin: 1px 0;
+}
+.nx-cl__item::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+.nx-cl__para { margin: 6px 0 2px; color: var(--neox-fg-muted, var(--text-muted)); }
+
+.about-panel > .settings-list { gap: 20px; }
+.about-panel .about-hero,
+.about-panel .nx-upd,
+.about-panel .nx-cl,
+.about-panel .about-links,
+.about-panel .about-footer { margin: 0; }
+/* 页脚是外链那行的附注, 不是新的一段 —— 靠紧一点 */
+.about-panel .about-footer { padding: 0; margin-top: -8px; }
+
+/* ── 更新日志浮层 ────────────────────────────────────────────────
+ * 关于页是一屏居中的"名片", 正文塞进页面里就会把它顶散 —— 所以正文走浮层。 */
+.nx-cl__modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+          backdrop-filter: blur(8px) saturate(115%);
+  animation: nx-cl-modal-in 160ms var(--neox-ease-out, ease-out);
+}
+@keyframes nx-cl-modal-in { from { opacity: 0; } to { opacity: 1; } }
+.nx-cl__modal-card {
+  width: min(560px, 100%);
+  max-height: 72vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  border: 1px solid var(--nx-card-border, var(--neox-line));
+  background-color: var(--neox-bg-canvas, #181818);
+  background-image:
+    linear-gradient(0deg, var(--neox-bg-canvas, #181818), var(--neox-bg-canvas, #181818)),
+    linear-gradient(0deg, var(--neox-bg-card, #1e1e1e), var(--neox-bg-card, #1e1e1e));
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+          backdrop-filter: blur(18px) saturate(120%);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  animation: nx-cl-card-in 200ms var(--neox-ease-out, ease-out);
+}
+@keyframes nx-cl-card-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+.nx-cl__modal-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 12px 14px;
+  border-bottom: 1px solid var(--neox-line-soft, var(--border-subtle));
+}
+.nx-cl__modal-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--neox-fg-primary, var(--text-primary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nx-cl__modal-x {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--neox-fg-muted, var(--text-muted));
+  font-size: 12px;
+  cursor: pointer;
+}
+.nx-cl__modal-x:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+.nx-cl__modal-x:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+}
+/* 浮层里的正文自己滚 —— 长日志不会把卡撑出屏幕 */
+.nx-cl__modal-card .nx-cl__body {
+  border-top: 0;
+  overflow-y: auto;
+  padding: 10px 14px 14px;
+}

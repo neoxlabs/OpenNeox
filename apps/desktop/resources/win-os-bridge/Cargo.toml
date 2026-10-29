@@ -1,0 +1,25 @@
+[package]
+name = "neox-os-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Neox computer use 的 Windows 原生桥 (UI Automation + SendInput)"
+license = "UNLICENSED"
+publish = false
+
+[[bin]]
+name = "neox-os-bridge"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 2
+lto = false
+strip = true
+
+[dependencies]
+# 截图编码用它而不是 `image`: image 会拖进来 moxcms/pxfm 一串传递依赖 (实测其中
+# 一个在网差的机器上直接拉不下来, 整个构建就卡死), 而我们只要"把 RGB 编成 JPEG"
+# 这一件事 —— jpeg-encoder 是纯 Rust 零依赖的。
+jpeg-encoder = "0.6"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_System_Threading", "Win32_UI_Accessibility", "Win32_System_Com", "Win32_System_Variant", "Win32_System_Ole", "Win32_UI_Input_KeyboardAndMouse", "Win32_Graphics_Gdi", "Win32_UI_HiDpi", "Win32_UI_Shell", "Win32_Storage_Xps", "Win32_System_LibraryLoader", "Win32_System_ProcessStatus", "Win32_Security"] }

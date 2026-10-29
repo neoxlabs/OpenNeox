@@ -1,0 +1,918 @@
+/* ============================================================
+ * QuotaBadge — composer 顶角进度环
+ * ============================================================ */
+.neox-quota-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid rgba(28, 25, 23, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--neox-fg-secondary);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), border-color var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+  -webkit-app-region: no-drag;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.neox-quota-badge:hover {
+  background: #FFFFFF;
+  border-color: rgba(28, 25, 23, 0.12);
+  color: var(--neox-fg-primary);
+}
+.neox-quota-badge:active { transform: scale(0.98); }
+
+.neox-quota-badge--plan-pro,
+.neox-quota-badge--plan-pro-plus,
+.neox-quota-badge--plan-ultra,
+.neox-quota-badge--plan-elite,
+.neox-quota-badge--plan-vip,
+.neox-quota-badge--plan-free {
+  border-color: rgba(28, 25, 23, 0.08);
+}
+
+.neox-quota-badge__full {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  line-height: 1;
+  min-width: 0;
+}
+.neox-quota-badge__pct {
+  display: none;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium);
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+/* composer 容器 < 560 → swap: 隐藏完整版, 显示百分比. 阈值 560 是 ctx pct 隐藏点 +20,
+ *  保证在 ctx 还显数字的宽度时 quota 已经收成 %, 避免 top 行 + bottom 行 同时压. */
+@container atl-composer (max-width: 560px) {
+  .neox-quota-badge__full { display: none; }
+  .neox-quota-badge__pct  { display: inline-flex; }
+}
+/* 不在 atl-composer 容器内时 (例如设置页 / 浮窗) 走宽显, 保证完整信息. */
+@supports not (container-type: inline-size) {
+  .neox-quota-badge__full { display: inline-flex; }
+  .neox-quota-badge__pct  { display: none; }
+}
+
+.neox-quota-badge.is-compact {
+  padding: 0 8px;
+  justify-content: center;
+}
+.neox-quota-badge.is-compact .neox-quota-badge__full { display: none; }
+.neox-quota-badge.is-compact .neox-quota-badge__pct  { display: inline-flex; }
+
+/* 底部细进度条 — 替代原来的进度环 (那个"圈"), 干净不抢眼, 大厂用量条手感 */
+.neox-quota-badge__track {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2.5px;
+  background: color-mix(in srgb, var(--neox-line) 65%, transparent);
+}
+.neox-quota-badge__track-fill {
+  display: block;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  transition: width var(--neox-dur-fast) var(--neox-ease-out), background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neox-quota-badge.is-exceeded .neox-quota-badge__track-fill { background: var(--neox-err) !important; }
+
+.neox-quota-badge.is-exceeded {
+  border-color: #f3c2c2;
+  background: var(--neox-err-soft);
+}
+.neox-quota-badge.is-exceeded:hover { background: #fce0e0; }
+
+/* 数据过期 — 右上角橙色小点 (后台刷新失败但 cached 仍可用), 提示用户点开 popover 重刷 */
+.neox-quota-badge.is-stale {
+  position: relative;
+}
+.neox-quota-badge.is-stale::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 0 1.5px var(--neox-bg, #fff);
+  animation: neox-quota-stale-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+@keyframes neox-quota-stale-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 0.4; }
+}
+
+.neox-quota-badge.is-error {
+  border-color: #f3c2c2;
+  background: var(--neox-err-soft);
+  color: var(--neox-err-ink);
+}
+.neox-quota-badge.is-error:hover { background: #fce0e0; }
+.neox-quota-badge__error { font-size: var(--neox-fs-sm, 13px); line-height: 1; }
+.neox-quota-badge__error-text { font-size: var(--neox-fs-xs, 12px); font-weight: 500; }
+
+/* init 加载中的灰色 skeleton 占位 — 不可点击, 仅视觉提示 */
+.neox-quota-badge.is-skeleton {
+  cursor: default;
+  pointer-events: none;
+  background: rgba(15, 15, 18, 0.04);
+  border-color: transparent;
+}
+.neox-quota-badge__skeleton-ring {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(15, 15, 18, 0.08);
+  animation: neox-quota-skeleton-pulse var(--neox-loop-shimmer) var(--neox-ease-out) infinite;
+}
+.neox-quota-badge__skeleton-text {
+  width: 56px;
+  height: 12px;
+  border-radius: 3px;
+  background: rgba(15, 15, 18, 0.08);
+  animation: neox-quota-skeleton-pulse var(--neox-loop-shimmer) var(--neox-ease-out) infinite;
+}
+@keyframes neox-quota-skeleton-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+.neox-quota-badge__ring {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* 改为单行显示, plan label 收成内联小标 */
+.neox-quota-badge__text {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  line-height: 1;
+  gap: 6px;
+  min-width: 0;
+}
+
+.neox-quota-badge__nums {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.neox-quota-badge__sep {
+  margin: 0 1px;
+  color: var(--neox-fg-hint);
+  font-weight: 400;
+}
+
+/* plan label — 纯文字胶囊, 跟数字同基线. 等级越高视觉权重越重 (淡紫 → 深紫 → 金 → 深蓝). */
+.neox-quota-badge__plan {
+  font-size: 9px;
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(108, 92, 242, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.neox-quota-badge__plan > svg { flex-shrink: 0; }
+
+.neox-quota-badge__plan-extra {
+  display: none;
+}
+@container atl-composer (min-width: 620px) {
+  .neox-quota-badge__plan-extra { display: inline; }
+}
+/* fallback — 不在 atl-composer 容器内时 (例如设置页 quota 浮窗) 也能完整显示 */
+@supports not (container-type: inline-size) {
+  .neox-quota-badge__plan-extra { display: inline; }
+}
+
+/* ============================================================
+ * 会员等级皮肤 (跟 PlanSkin 一一对应)
+ *   付费等级越高视觉权重越重 — 淡紫 → 深紫 → 金 → 深蓝/金描边
+ * ============================================================ */
+
+.neox-quota-badge__plan--pro-plus,
+.neox-quota-badge__plan--pro {
+  color: #6E56FF;
+  background: rgba(108, 92, 242, 0.14);
+  font-weight: var(--neox-fw-semibold, 600);
+}
+
+.neox-quota-badge__plan--ultra {
+  color: #5b3fe0;
+  background: linear-gradient(180deg, rgba(140, 110, 255, 0.22), rgba(108, 92, 242, 0.16));
+  font-weight: var(--neox-fw-semibold, 600);
+  box-shadow: inset 0 0 0 1px rgba(108, 92, 242, 0.25);
+}
+
+.neox-quota-badge__plan--elite {
+  color: #8a6a1e;
+  background: linear-gradient(180deg, #fbe6a8, #f5cf66);
+  font-weight: var(--neox-fw-semibold, 600);
+  box-shadow: inset 0 0 0 1px rgba(180, 140, 40, 0.35);
+}
+
+.neox-quota-badge__plan--vip {
+  color: #f5d46a;
+  background: linear-gradient(180deg, #1c2747, #0d1530);
+  font-weight: var(--neox-fw-semibold, 600);
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 212, 106, 0.55),
+    0 1px 3px rgba(13, 21, 48, 0.25);
+}
+
+/* ============================================================
+ * Plan skin 全局穿透 — AppShell 把 PlanSkin 写到 :root[data-plan-skin],
+ * 4 档 (pro-plus/ultra/elite/vip) 给 composer 配套主题色: 边框 + Agentic 选中态 +
+ * 发送按钮 + 模型按钮 brand 着色. VIP 整个 composer 还换深蓝底.
+ *
+ * 设计:
+ *   · plan-accent       : 主色 (Agentic 选中文字 + 发送按钮底色 + 模型 caret)
+ *   · plan-accent-soft  : 边框/box-shadow 用的低饱和度
+ *   · plan-accent-fg    : 发送按钮里 icon 的颜色 (一般是反色)
+ *   · plan-shell-bg     : composer 整体背景 (仅 VIP 换深蓝, 其他不动)
+ *   · plan-shell-fg     : VIP 深底下文字颜色翻转
+ * ============================================================ */
+
+/* PRO PLUS — 紫 (跟默认 primary 一致, 加强一点 saturation) */
+:root[data-plan-skin="pro-plus"] {
+  --plan-accent: #6E56FF;
+  --plan-accent-soft: rgba(108, 92, 242, 0.32);
+  --plan-accent-fg: #ffffff;
+}
+/* ULTRA — 金色 (温暖的黄金) */
+:root[data-plan-skin="ultra"] {
+  --plan-accent: #c08620;
+  --plan-accent-soft: rgba(212, 161, 42, 0.42);
+  --plan-accent-fg: #ffffff;
+}
+/* ELITE — 高级银灰 (内敛奢华) */
+:root[data-plan-skin="elite"] {
+  --plan-accent: #6f7488;
+  --plan-accent-soft: rgba(125, 130, 148, 0.42);
+  --plan-accent-fg: #ffffff;
+}
+/* VIP — 深蓝底 + 金色 accent, 整套换肤. */
+:root[data-plan-skin="vip"] {
+  --plan-accent: #d4a93a;
+  --plan-accent-soft: rgba(212, 169, 58, 0.55);
+  --plan-accent-fg: #0d1530;
+  --plan-shell-bg: linear-gradient(180deg, #1c2747, #0d1530);
+  --plan-shell-fg: #e6e8ef;
+  --plan-shell-fg-muted: rgba(230, 232, 239, 0.6);
+}
+
+/* ============================================================
+ * 各 plan-skin 下 composer 视觉差异化
+ * ============================================================ */
+
+/* 1. Composer 外框: 4 档都走 plan-accent-soft, VIP 还换深蓝背景 */
+:root[data-plan-skin="pro-plus"] .atl-composer__box,
+:root[data-plan-skin="ultra"]    .atl-composer__box,
+:root[data-plan-skin="elite"]    .atl-composer__box {
+  border-color: var(--plan-accent-soft);
+  box-shadow:
+    var(--neox-shadow-2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+:root[data-plan-skin="vip"] .atl-composer__box {
+  background: var(--plan-shell-bg);
+  border-color: var(--plan-accent-soft);
+  color: var(--plan-shell-fg);
+  box-shadow:
+    var(--neox-shadow-2),
+    inset 0 0 0 1px rgba(245, 212, 106, 0.12);
+}
+:root[data-plan-skin="vip"] .atl-composer__input {
+  color: var(--plan-shell-fg);
+}
+:root[data-plan-skin="vip"] .atl-composer__input::placeholder {
+  color: var(--plan-shell-fg-muted);
+}
+/* VIP 顶部 trimode 分割线变暗 */
+:root[data-plan-skin="vip"] .atl-composer__top {
+  border-bottom-color: rgba(245, 212, 106, 0.15);
+}
+
+/* 2. Agentic / Assistant / Ask trimode 选中态着色 */
+:root[data-plan-skin="pro-plus"] .atl-trimode__btn.is-active,
+:root[data-plan-skin="ultra"]    .atl-trimode__btn.is-active,
+:root[data-plan-skin="elite"]    .atl-trimode__btn.is-active {
+  color: var(--plan-accent);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, .06),
+    0 0 0 1px var(--plan-accent-soft);
+}
+/* VIP trimode: 选中态加金描边 + 深底 */
+:root[data-plan-skin="vip"] .atl-trimode {
+  background: rgba(0, 0, 0, 0.18);
+}
+:root[data-plan-skin="vip"] .atl-trimode__btn {
+  color: var(--plan-shell-fg-muted);
+}
+:root[data-plan-skin="vip"] .atl-trimode__btn:hover:not(.is-active) {
+  color: var(--plan-shell-fg);
+}
+:root[data-plan-skin="vip"] .atl-trimode__btn.is-active {
+  background: transparent;
+  color: var(--plan-accent);
+  box-shadow: 0 0 0 1px var(--plan-accent-soft);
+}
+
+/* 3. 发送按钮: 4 档跟随 plan-accent (VIP 已在上面单独定义渐变, 这里给其他 3 档) */
+:root[data-plan-skin="pro-plus"] .atl-composer__send,
+:root[data-plan-skin="ultra"]    .atl-composer__send,
+:root[data-plan-skin="elite"]    .atl-composer__send {
+  background: var(--plan-accent);
+  color: var(--plan-accent-fg);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, .12),
+    0 4px 10px -4px var(--plan-accent-soft);
+}
+:root[data-plan-skin="pro-plus"] .atl-composer__send:hover:not(:disabled),
+:root[data-plan-skin="ultra"]    .atl-composer__send:hover:not(:disabled),
+:root[data-plan-skin="elite"]    .atl-composer__send:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+/* VIP send 用深蓝渐变 + 金色 svg (覆盖之前那段) */
+:root[data-plan-skin="vip"] .atl-composer__send {
+  background: linear-gradient(180deg, #1c2747, #0d1530);
+  color: var(--plan-accent);
+  box-shadow:
+    inset 0 0 0 1px var(--plan-accent-soft),
+    0 2px 6px rgba(13, 21, 48, 0.35);
+}
+:root[data-plan-skin="vip"] .atl-composer__send:hover:not(:disabled) {
+  background: linear-gradient(180deg, #243156, #14213d);
+}
+
+/* 4. 模型按钮 caret 跟 plan-accent (VIP 整个按钮深底) */
+:root[data-plan-skin="pro-plus"] .atl-composer__model__caret,
+:root[data-plan-skin="ultra"]    .atl-composer__model__caret,
+:root[data-plan-skin="elite"]    .atl-composer__model__caret {
+  color: var(--plan-accent);
+}
+:root[data-plan-skin="vip"] .atl-composer__model {
+  background: rgba(0, 0, 0, 0.28);
+  border-color: var(--plan-accent-soft);
+  color: var(--plan-accent);
+}
+:root[data-plan-skin="vip"] .atl-composer__model:hover {
+  background: rgba(0, 0, 0, 0.36);
+}
+:root[data-plan-skin="vip"] .atl-composer__model__caret {
+  color: var(--plan-accent);
+}
+
+/* 5. 上下文按钮 (icon-only) 边框跟 plan-accent */
+:root[data-plan-skin="ultra"]    .atl-ctx-btn,
+:root[data-plan-skin="elite"]    .atl-ctx-btn {
+  border-color: var(--plan-accent-soft);
+}
+:root[data-plan-skin="vip"] .atl-ctx-btn {
+  border-color: var(--plan-accent-soft);
+  color: var(--plan-accent);
+}
+
+/* 6. composer__tools 内 icon 在 VIP 深底下的颜色翻转 */
+:root[data-plan-skin="vip"] .atl-composer__iconbtn {
+  color: var(--plan-shell-fg-muted);
+}
+:root[data-plan-skin="vip"] .atl-composer__iconbtn:hover {
+  color: var(--plan-shell-fg);
+}
+/* Approval 按钮在 VIP 深底下的颜色 */
+:root[data-plan-skin="vip"] .atl-approval {
+  background: rgba(0, 0, 0, 0.22);
+}
+:root[data-plan-skin="vip"] .atl-approval__btn {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--plan-shell-fg);
+  box-shadow: 0 0 0 1px var(--plan-accent-soft);
+}
+
+.neox-quota-badge.is-exceeded .neox-quota-badge__nums { color: var(--neox-err-ink); }
+
+/* ============================================================
+ * QuotaPopover — 详情面板 (portal 渲染到 body)
+ * ============================================================ */
+.neox-quota-pop {
+  position: fixed;
+  width: 280px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  box-shadow: var(--neox-shadow-3);
+  padding: 14px 16px;
+  z-index: 9000;
+  animation: neox-quota-pop-in 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes neox-quota-pop-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* 向上弹时反向动画 — 从下方淡入, 让出箭头方向感 */
+.neox-quota-pop.is-upward {
+  animation: neox-quota-pop-up-in 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes neox-quota-pop-up-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.neox-quota-pop__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--neox-line-soft);
+  margin-bottom: 12px;
+}
+
+.neox-quota-pop__plan-name {
+  font-size: 15px;
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.neox-quota-pop__plan-id {
+  font-size: 10px;
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 3px;
+}
+
+.neox-quota-pop__upgrade {
+  height: 28px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--neox-radius-pill);
+  background: linear-gradient(180deg, var(--neox-primary-500), var(--neox-primary-700));
+  color: #fff;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-semibold, 600);
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(110, 86, 255, 0.25);
+  transition: filter var(--neox-dur-fast) var(--neox-ease-out), transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neox-quota-pop__upgrade:hover { filter: brightness(1.06); }
+.neox-quota-pop__upgrade:active { transform: translateY(1px); }
+
+.neox-quota-pop__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.neox-quota-pop__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+}
+.neox-quota-pop__row strong {
+  color: var(--neox-fg-primary);
+  font-weight: var(--neox-fw-semibold, 600);
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.neox-quota-pop__bar {
+  height: 8px;
+  background: var(--neox-bg-muted);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.neox-quota-pop__fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.neox-quota-pop__fill.is-safe   { background: var(--neox-primary-600); }
+.neox-quota-pop__fill.is-warn   { background: var(--neox-warn); }
+.neox-quota-pop__fill.is-danger { background: var(--neox-err); }
+
+/* 一条窗口 (5 小时 / 本周) — 标题行 + 进度条 + 重置时间紧凑成一组.
+ * 两组之间用细分隔线, 避免两条进度条挨在一起被读成"一条被切开了". */
+.neox-quota-pop__window {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.neox-quota-pop__window + .neox-quota-pop__window {
+  padding-top: 8px;
+  border-top: 1px solid var(--neox-border, rgba(0, 0, 0, 0.08));
+}
+
+.neox-quota-pop__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+}
+
+.neox-quota-pop__exceed {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: var(--neox-err-soft);
+  color: var(--neox-err-ink);
+  border-radius: var(--neox-radius-sm);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.4;
+}
+.neox-quota-pop__warn {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #92400e;
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: var(--neox-radius-sm);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.4;
+}
+
+/* 数据过期提示条 — popover 顶部, 比 warn 弱一档 (灰色), 不抢用户注意力 */
+.neox-quota-pop__stale {
+  margin: 0 16px;
+  padding: 6px 10px;
+  background: rgba(15, 15, 18, 0.04);
+  color: #6b7280;
+  border-radius: var(--neox-radius-sm);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ============================================================
+ * QuotaWarnToast — 配额阈值跨档轻提示 (右上角浮)
+ *
+ *   主题自适应 玻璃拟态 (毛玻璃 + 中性 elevated surface), tone 只由左侧细条 +
+ *   icon 承担, 不再白底硬卡片。深/浅主题都用 neox token, 不写死颜色。
+ * ============================================================ */
+.quota-warn-toast {
+  --tone: var(--neox-fg-muted, #94a3b8);
+  position: fixed;
+  top: 16px; right: 16px;
+  /* 信息通道跟 toast-container 同层 — 任何浮层之上都可见 */
+  z-index: 2147483300;
+  width: max-content;
+  max-width: min(460px, calc(100vw - 32px));
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 12px 11px 16px;
+  background: var(--neox-bg-elevated, var(--neox-bg-card, rgba(28, 30, 34, 0.92)));
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(14px) saturate(1.25);
+  border: 1px solid var(--neox-line, rgba(127, 127, 127, 0.16));
+  border-radius: 12px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-primary, #e8eaed);
+  overflow: hidden;
+  animation: quota-toast-slide 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+/* 左侧 tone 细条 —— 用伪元素, 不破圆角 (之前 border-left 在圆角上断裂) */
+.quota-warn-toast::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--tone);
+}
+@keyframes quota-toast-slide {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.quota-warn-toast--warn     { --tone: var(--neox-warn-ink, #f59e0b); }
+.quota-warn-toast--danger,
+.quota-warn-toast--exceeded { --tone: var(--neox-err-ink, #f43f5e); }
+.quota-warn-toast__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--tone);
+}
+.quota-warn-toast__msg {
+  flex: 1; min-width: 0;
+  line-height: 1.5;
+  color: var(--neox-fg-primary, #e8eaed);
+}
+.quota-warn-toast__cta {
+  flex-shrink: 0;
+  background: var(--neox-primary-600, #6c5cf2);
+  color: var(--neox-fg-invert, #fff);
+  border: 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-semibold, 600);
+  cursor: pointer;
+  transition: filter var(--neox-dur-fast) var(--neox-ease-out), transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+.quota-warn-toast__cta:hover { filter: brightness(1.08); }
+.quota-warn-toast__cta:active { transform: translateY(1px); }
+.quota-warn-toast__close {
+  background: transparent; border: 0;
+  color: var(--neox-fg-muted, #94a3b8);
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+  display: inline-flex;
+  border-radius: 6px;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out), background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.quota-warn-toast__close:hover {
+  color: var(--neox-fg-primary, #e8eaed);
+  background: var(--neox-bg-hover, rgba(127, 127, 127, 0.16));
+}
+
+/* ============================================================
+ * QuotaInlineBanner — 紧贴 Composer 顶部的常驻警告条
+ *   填补 80%-95% 区间持续提示空缺. warn 黄 / danger 红, 用户可 × dismiss.
+ *   icon 用 flat SVG (currentColor), 跟随 tone 上色, 不用 3D emoji.
+ * ============================================================ */
+.quota-inline-banner {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 3px;
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 6px;
+  padding: 5px 10px 5px 9px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.4;
+  background: var(--neox-bg-muted, rgba(127, 127, 127, 0.06));
+  color: var(--neox-fg-primary, #e8eaed);
+}
+
+.quota-inline-banner--warn {
+  background: color-mix(in srgb, var(--neox-warn-ink, #f59e0b) 13%, transparent);
+}
+.quota-inline-banner--danger {
+  background: color-mix(in srgb, var(--neox-err-ink, #f43f5e) 13%, transparent);
+}
+
+.quota-inline-banner__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.quota-inline-banner--warn .quota-inline-banner__icon { color: var(--neox-warn-ink, #f59e0b); }
+.quota-inline-banner--danger .quota-inline-banner__icon { color: var(--neox-err-ink, #f43f5e); }
+/* msg 占满首行(随宽自换行), 把 reset/CTA/关闭 顶到第二行, 窄宽下不再被挤压 */
+.quota-inline-banner__msg {
+  flex: 0 1 auto; min-width: 0; font-weight: 500; font-variant-numeric: tabular-nums;
+  /* 挤的时候先截这里, CTA 永远完整 —— 动作不能被截 */
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.quota-inline-banner__reset { color: var(--neox-fg-muted, #94a3b8); font-size: var(--neox-fs-xs, 12px); flex-shrink: 0; }
+.quota-inline-banner__reset::before { content: '·'; margin-right: 4px; opacity: .55; }
+
+.quota-inline-banner__cta {
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.quota-inline-banner__cta:hover { opacity: 0.8; }
+/* secondary CTA "查看套餐" — 弱化版, 主 CTA 是登录, 这里只 anchor 价格 */
+.quota-inline-banner__cta--secondary {
+  font-weight: 500;
+  opacity: 0.75;
+  text-decoration: none;
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+.quota-inline-banner__cta--secondary:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.quota-inline-banner__close {
+  /* 回到行内。当初钉右上角是为了防「换行后 ✕ 卡在句子中间」; 现在容器 hug 内容 +
+     nowrap, 结构上不可能换行, 绝对定位反而要在右侧永久留一块内距 (原来 padding-right
+     26px), 那正是"没合理利用空间"的一部分。 */
+  position: static;
+  margin-left: 1px;
+  margin-right: -3px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: currentColor;
+  opacity: 0.55;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out), background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.quota-inline-banner__close:hover {
+  opacity: 1;
+  background: var(--neox-bg-hover, rgba(127, 127, 127, 0.16));
+}
+
+/* ============================================================
+ * QuotaExhaustedModal — 全局 402 配额 / 积分耗尽弹窗
+ * ============================================================ */
+.quota-modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex; align-items: center; justify-content: center;
+  /* 402 随时可能在任何浮层 (lightbox / 设置页 / 全屏预览) 之上触发 — 必须真全局置顶,
+   * 9000 会被 lightbox(2147483000) 等压住, 用户看不到弹窗还以为发送无响应. */
+  z-index: 2147483000;
+  animation: quota-fade var(--neox-dur-fast) var(--neox-ease-out);
+}
+@keyframes quota-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.quota-modal {
+  width: 480px; max-width: calc(100vw - 32px);
+  background: var(--neox-bg-base, #fff);
+  color: var(--neox-ink, #1c1f24);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  animation: quota-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+@keyframes quota-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.quota-modal { position: relative; }
+.quota-modal-close {
+  position: absolute; top: 10px; right: 10px; z-index: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px;
+  border: 0; background: transparent;
+  color: var(--neox-ink-faint, #9ca3af); cursor: pointer;
+  border-radius: 6px;
+}
+.quota-modal-close:hover { background: rgba(127, 127, 127, 0.12); color: var(--neox-ink, #1c1f24); }
+/* 打开时 focus trap 会把焦点落在关闭钮上 —— 默认焦点环是一圈粗蓝框, 像是被选中了。
+ * 只在键盘导航 (:focus-visible) 时显示一个轻的环。 */
+.quota-modal-close:focus { outline: none; }
+.quota-modal-close:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--neox-primary-600, #7c5cff) 45%, transparent); }
+
+.quota-modal-hero {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 22px 28px 6px;
+}
+.quota-modal-art { width: 112px; height: auto; margin-bottom: 10px; user-select: none; pointer-events: none; }
+.quota-modal-hero h3 { margin: 0; font-size: var(--neox-fs-lg, 16px); font-weight: 600; letter-spacing: -0.01em; }
+.quota-modal-hero .quota-modal-hint { margin: 6px 0 0; max-width: 360px; }
+.quota-modal-reset {
+  margin-top: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-ink-soft, #4b5563);
+  background: rgba(127, 127, 127, 0.1);
+}
+
+.quota-modal-body { padding: 14px 20px 16px; }
+.quota-modal-msg {
+  padding: 8px 10px;
+  background: rgba(244, 63, 94, 0.06);
+  border: 1px solid rgba(244, 63, 94, 0.18);
+  border-radius: 7px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #be123c;
+  margin-bottom: 10px;
+}
+.quota-modal-hint { font-size: var(--neox-fs-xs, 12px); color: var(--neox-ink-soft, #6b7280); line-height: 1.6; margin: 0 0 12px; }
+
+/* CTA: 左侧 32px 圆角方块里放单色线性图标 (跟随文字色), 右侧箭头。主 CTA 只加强调色描边 + 淡底。 */
+.quota-modal-cta { display: flex; flex-direction: column; gap: 6px; }
+.quota-cta {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  color: var(--neox-ink, #1c1f24);
+  border: 1px solid rgba(127, 127, 127, 0.16);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.quota-cta:hover { background: rgba(127, 127, 127, 0.07); border-color: rgba(127, 127, 127, 0.26); }
+.quota-cta--primary {
+  border-color: color-mix(in srgb, var(--neox-primary-600, #7c5cff) 45%, transparent);
+  background: color-mix(in srgb, var(--neox-primary-600, #7c5cff) 7%, transparent);
+}
+.quota-cta--primary:hover { background: color-mix(in srgb, var(--neox-primary-600, #7c5cff) 12%, transparent); }
+.quota-cta-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; flex-shrink: 0;
+  border-radius: 8px;
+  color: var(--neox-ink-soft, #4b5563);
+  background: rgba(127, 127, 127, 0.1);
+}
+.quota-cta--primary .quota-cta-icon {
+  color: var(--neox-primary-600, #7c5cff);
+  background: color-mix(in srgb, var(--neox-primary-600, #7c5cff) 14%, transparent);
+}
+.quota-cta-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.quota-cta-title { font-size: var(--neox-fs-sm, 13px); font-weight: 600; }
+.quota-cta-sub { font-size: var(--neox-fs-xxs, 11px); color: var(--neox-ink-soft, #6b7280); margin-top: 2px; }
+.quota-cta-chev { flex-shrink: 0; color: var(--neox-ink-faint, #9ca3af); }
+
+/* 用量面板: 每个生效窗口一条细进度条 (含 window 模式叠加的月上限), 耗尽的那条变红。 */
+.quota-modal-usage {
+  display: flex; flex-direction: column; gap: 10px;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.06);
+  font-size: var(--neox-fs-xs, 12px);
+}
+.quota-modal-usage__plan { display: flex; justify-content: space-between; color: var(--neox-ink-soft, #6b7280); }
+.quota-modal-usage__plan strong { color: var(--neox-ink, #1c1f24); font-weight: 600; }
+.quota-modal-usage__credits { color: var(--neox-ink-soft, #6b7280); font-size: var(--neox-fs-xxs, 11px); }
+.quota-win__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.quota-win__label { color: var(--neox-ink-soft, #6b7280); }
+.quota-win__value { font-weight: 600; font-variant-numeric: tabular-nums; }
+.quota-win__bar {
+  margin-top: 5px;
+  height: 4px; border-radius: 999px; overflow: hidden;
+  background: rgba(127, 127, 127, 0.16);
+}
+.quota-win__bar > span { display: block; height: 100%; border-radius: inherit; background: var(--neox-ink-soft, #6b7280); }
+.quota-win__reset { margin-top: 3px; font-size: var(--neox-fs-xxs, 11px); color: var(--neox-ink-faint, #9ca3af); font-variant-numeric: tabular-nums; }
+.quota-win.is-exhausted .quota-win__value { color: var(--neox-err, #d23838); }
+.quota-win.is-exhausted .quota-win__bar > span { background: var(--neox-err, #d23838); }
+
+.quota-modal-channels {
+  margin-top: 14px;
+  padding: 8px 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #6b7280;
+  background: rgba(15, 15, 18, 0.03);
+  border-radius: 6px;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.quota-modal-foot {
+  display: flex; justify-content: flex-end;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(15, 15, 18, 0.05);
+}
+.quota-modal-dismiss {
+  background: transparent; border: 0;
+  font-family: inherit; font-size: var(--neox-fs-xs, 12px);
+  color: #6b7280; cursor: pointer;
+}
+.quota-modal-dismiss:hover { color: #1c1f24; }

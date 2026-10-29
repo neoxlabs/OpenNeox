@@ -1,0 +1,48 @@
+
+:root[data-theme] body .agent-timeline .atl-row-clamp--activity-child
+  .atl-activity-child > .atl-activity-child__details,
+:root[data-theme] body .agent-timeline
+  .atl-activity-child > .atl-activity-child__details {
+  margin-bottom: 0 !important;
+}
+
+:root[data-theme-pack][data-theme] body .agent-timeline .atl-activity:not(.is-plain) .atl-activity__body-shell-inner,
+:root[data-theme-preset][data-theme] body .agent-timeline .atl-activity:not(.is-plain) .atl-activity__body-shell-inner,
+:root[data-theme] body .agent-timeline .atl-activity:not(.is-plain) .atl-activity__body-shell-inner {
+  gap: 2px !important;
+  padding-bottom: 0 !important;
+}
+
+:root[data-theme-pack][data-theme] body .agent-timeline .atl-tool > .atl-tool__row,
+:root[data-theme-preset][data-theme] body .agent-timeline .atl-tool > .atl-tool__row,
+:root[data-theme-pack][data-theme] body .agent-timeline .atl-tool > .atl-tool__row,
+:root[data-theme-preset][data-theme] body .agent-timeline .atl-tool > .atl-tool__row,
+:root[data-theme] body .agent-timeline .atl-tool > .atl-tool__row {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  /* 钉死 24 = 子行那一档。上面只改 padding 的话, 有徽标的行 26px、没徽标的 20px,
+     依然是三个高度 (量过)。min-height 托住矮的, 下面那条压住高的。 */
+  min-height: 24px !important;
+}
+
+/* diffstat 徽标自带 padding, 单独把行头顶到 26px —— 它是行里的配角, 不该决定行高 */
+:root[data-theme-pack][data-theme] body .agent-timeline .atl-tool__row .atl-tool__diffstat,
+:root[data-theme-preset][data-theme] body .agent-timeline .atl-tool__row .atl-tool__diffstat,
+:root[data-theme] body .agent-timeline .atl-tool__row .atl-tool__diffstat {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1.2 !important;
+  /* padding 清零后它仍是 22px —— 高度来自它自己的 min-height (量过: 子元素只有 15px)。
+     徽标是配角, 高度跟着内容走就行。 */
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+/* 展开体内层那张卡也不许自带尾巴 —— .atl-tool__content 默认 margin: 3px 0 6px,
+   那 6px 在"卡片是这一行的正文"这个语境里是多余的下沉, 会把下一行推开。
+   只收活动子行里的那份, 不动独立工具行 (那里的卡片是主角, 留白是它自己的)。 */
+:root[data-theme] body .agent-timeline
+  .atl-activity-child__details .atl-tool--content-only > .atl-tool__content-shell
+  .atl-tool__content {
+  margin-bottom: 0 !important;
+}

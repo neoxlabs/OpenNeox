@@ -1,0 +1,174 @@
+/* ==================== Java Debug 环境状态样式 ==================== */
+.java-debug-status {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+}
+
+.java-debug-status .status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.java-debug-status .status-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.java-debug-status .status-item span {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.java-debug-status .status-item.success {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.java-debug-status .status-item.success svg {
+  color: #22c55e;
+}
+
+.java-debug-status .status-item.error {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.java-debug-status .status-item.error svg {
+  color: #ef4444;
+}
+
+.java-debug-status .status-path {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+}
+
+.java-debug-status .status-path svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.java-debug-status .status-path .path-text {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+/* 下载按钮样式 */
+.download-jar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px dashed var(--border-gold);
+  background: rgba(201, 162, 39, 0.05);
+  color: var(--gold-500);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.download-jar-btn:hover {
+  background: rgba(201, 162, 39, 0.12);
+  border-color: var(--gold-400);
+  color: var(--gold-400);
+}
+
+.download-jar-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* 浅色主题适配 */
+:root[data-theme="light"] .java-debug-status {
+  background: var(--bg-secondary);
+}
+
+:root[data-theme="light"] .java-debug-status .status-item {
+  background: var(--bg-tertiary);
+}
+
+:root[data-theme="light"] .java-debug-status .status-item.success {
+  background: rgba(34, 197, 94, 0.06);
+}
+
+:root[data-theme="light"] .java-debug-status .status-item.error {
+  background: rgba(239, 68, 68, 0.06);
+}
+
+:root[data-theme="light"] .java-debug-status .status-path {
+  background: var(--bg-tertiary);
+}
+
+:root[data-theme="light"] .download-jar-btn {
+  background: rgba(201, 162, 39, 0.03);
+}
+
+/* ==================== Tool Prefix Text 样式 ==================== */
+/* 工具调用前 LLM 的解释文字 */
+.tool-prefix-text {
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  border-left: 3px solid var(--border-gold);
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.tool-prefix-text p {
+  margin: 0;
+}
+
+.tool-prefix-text p+p {
+  margin-top: 8px;
+}
+
+.tool-prefix-text code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.tool-prefix-text pre {
+  background: var(--bg-code);
+  padding: 10px;
+  border-radius: 6px;
+  margin: 8px 0;
+  overflow-x: auto;
+}
+
+/* 浅色主题适配 */
+:root[data-theme="light"] .tool-prefix-text {
+  background: var(--bg-tertiary);
+}
+

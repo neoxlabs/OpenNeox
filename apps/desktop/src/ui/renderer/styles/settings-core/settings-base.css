@@ -1,0 +1,843 @@
+/* ============================================================
+ * Neox Settings Base Components — Phase 1
+ *
+ * 9 个共享原子, 配合 material.css 用. 每个 settings tab 强制走这层,
+ * 不再自画 row / 自画 switch / 自画 card.
+ *
+ * 命名:  .nx-{component}__{element}--{modifier}
+ *        nx-  → 新组件层 (跟老 .settings-* 区分, 避免污染)
+ * ============================================================ */
+
+:root {
+  --nx-control-h: 32px;
+  --nx-control-h-sm: 28px;
+  --nx-control-h-lg: 38px;
+}
+
+.nx-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nx-space-5, 20px);
+}
+.nx-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.nx-field__label {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+}
+.nx-field__label em {
+  font-style: normal;
+  color: var(--neox-danger, #e5484d);
+  margin-left: 2px;
+}
+.nx-field__hint {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  color: var(--neox-fg-secondary);
+}
+.nx-field > .nx-segmented { align-self: flex-start; }
+/* 标签/说明在左、开关在右的一行 (开关太小, 放下一行会孤零零) */
+.nx-field--inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.nx-field--inline > .nx-field__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.nx-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: var(--nx-space-5, 20px);
+  padding-bottom: 12px;
+}
+
+/* ─── SectionTitle ────────────────────────────────────────── */
+.nx-section-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 var(--nx-space-2) 0;
+}
+
+.nx-section-title__title {
+  margin: 0;
+  font-size: var(--nx-fs-section);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--neox-fg-secondary);
+  /* 曾经 text-transform: uppercase — 中文标题不受影响, 但含品牌名的中英混排 (如 "百炼 CosyVoice 配置")
+   * 会被强制大写变成 "百炼 COSYVOICE 配置", 破坏品牌大小写. 改为 none 让原文照实显示. */
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.nx-section-title__desc {
+  margin: 0;
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+}
+
+/* Section block (一个 SectionTitle + 一张 Card 的间距 wrapper) */
+.nx-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--nx-space-5);
+}
+
+/* ─── SettingsCard ────────────────────────────────────────── */
+.nx-card {
+  border-radius: var(--neox-radius-lg);
+  overflow: hidden;
+  /* material 类由 React 透传 (.neox-material .neox-material--regular) */
+}
+
+/* ─── SettingsRow ─────────────────────────────────────────── */
+.nx-row {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+  padding: 10px var(--nx-space-4);
+  min-height: 44px;
+  position: relative;
+  transition: background 160ms ease;
+}
+
+.nx-row + .nx-row {
+  /* hairline divider between rows in same card */
+  box-shadow: inset 0 1px 0 var(--neox-mat-row-divider);
+}
+
+.nx-row__info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nx-row__title {
+  font-size: var(--nx-fs-row-title);
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+  line-height: 1.35;
+}
+
+.nx-row__desc {
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+}
+
+.nx-row-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+}
+.nx-row-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+
+.nx-row__control {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-2);
+}
+
+.nx-row--top,
+.nx-row--top .nx-row__control {
+  align-items: flex-start;
+}
+
+.nx-row--top .nx-row__info {
+  padding-top: 8px;
+}
+
+/* clickable row (跳转 / 触发) */
+.nx-row--clickable {
+  cursor: pointer;
+}
+
+.nx-row--clickable:hover {
+  background: var(--neox-mat-row-hover);
+}
+
+.nx-row--clickable:active {
+  background: var(--neox-mat-row-selected);
+}
+
+/* ─── SwitchRow (iOS 风 toggle) ───────────────────────────── */
+.nx-switch {
+  position: relative;
+  width: 36px;
+  height: 22px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 16%, transparent);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: background 200ms ease;
+  flex: 0 0 auto;
+}
+
+.nx-switch::before {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    0 2px 5px rgba(0, 0, 0, 0.18);
+  transition: transform 220ms cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.nx-switch[data-on="true"] {
+  background: var(--neox-primary-600);
+}
+
+.nx-switch[data-on="true"]::before {
+  transform: translateX(14px);
+}
+
+.nx-switch:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+}
+
+.nx-switch[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── SegmentedRow (二/三/N 选 1 切换胶囊) ────────────────── */
+.nx-segmented {
+  display: inline-flex;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  border-radius: var(--neox-radius-sm);
+  padding: 2px;
+  gap: 0;
+  flex: 0 0 auto;
+}
+
+.nx-segmented__btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--neox-fg-secondary);
+  padding: 3px 10px;
+  min-width: 36px;
+  border-radius: calc(var(--neox-radius-sm) - 2px);
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.nx-segmented__btn:hover {
+  color: var(--neox-fg-primary);
+}
+
+.nx-segmented__btn[data-on="true"] {
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-primary);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .nx-segmented__btn[data-on="true"] {
+  background: color-mix(in srgb, white 12%, transparent);
+  color: var(--neox-fg-primary);
+  box-shadow: none;
+}
+
+.nx-segmented__btn:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ─── RadioCard (大卡 2 选 1, 像 Codex "For coding/everyday") ─ */
+.nx-radio-group {
+  display: grid;
+  grid-template-columns: repeat(var(--nx-radio-cols, 2), 1fr);
+  gap: var(--nx-space-3);
+}
+
+.nx-radio-card {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  background: var(--neox-mat-thin-bg);
+  -webkit-backdrop-filter: var(--neox-mat-thin-blur);
+          backdrop-filter: var(--neox-mat-thin-blur);
+  border-radius: var(--neox-radius-md);
+  padding: var(--nx-space-3) var(--nx-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+  position: relative;
+  min-height: 60px;
+}
+
+.nx-radio-card:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+}
+
+.nx-radio-card[data-on="true"] {
+  border-color: var(--neox-primary-600);
+  background: var(--neox-mat-row-selected);
+  box-shadow:
+    inset 0 0 0 1px var(--neox-primary-600),
+    0 0 0 4px color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+}
+
+.nx-radio-card__icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--neox-fg-secondary);
+}
+
+.nx-radio-card[data-on="true"] .nx-radio-card__icon {
+  color: var(--neox-primary-600);
+}
+
+.nx-radio-card__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nx-radio-card__title {
+  font-size: var(--nx-fs-row-title);
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  line-height: 1.3;
+}
+
+.nx-radio-card__desc {
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  line-height: 1.4;
+}
+
+.nx-radio-card__dot {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--neox-fg-primary) 24%, transparent);
+  position: relative;
+  transition: border-color 180ms ease;
+}
+
+.nx-radio-card[data-on="true"] .nx-radio-card__dot {
+  border-color: var(--neox-primary-600);
+}
+
+.nx-radio-card[data-on="true"] .nx-radio-card__dot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 999px;
+  background: var(--neox-primary-600);
+}
+
+/* ─── SelectRow (right-aligned ▼ trigger) ─────────────────── */
+.nx-select {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  color: var(--neox-fg-primary);
+  font-size: var(--nx-fs-row-desc);
+  font-weight: 500;
+  padding: 6px 30px 6px 12px;
+  border-radius: var(--neox-radius-md);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.nx-select:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 22%, transparent);
+}
+
+.nx-select:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 1px;
+}
+
+/* ─── NeoxButton ──────────────────────────────────────────── */
+.nx-btn {
+  appearance: none;
+  border: none;
+  font-family: inherit;
+  font-size: var(--nx-fs-row-title);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  height: var(--nx-control-h);
+  padding: 0 14px;
+  line-height: 1;
+  box-sizing: border-box;
+  border-radius: var(--neox-radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 160ms ease, color 160ms ease, transform 100ms ease;
+  white-space: nowrap;
+}
+
+.nx-btn:active { transform: translateY(0.5px); }
+.nx-btn:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+}
+.nx-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.nx-btn--primary {
+  background: var(--neox-primary-600);
+  color: var(--neox-fg-invert, #fff);
+}
+.nx-btn--primary:hover:not([disabled]) {
+  background: var(--neox-primary-700);
+}
+
+.nx-btn--secondary {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+}
+.nx-btn--secondary:hover:not([disabled]) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 13%, transparent);
+}
+
+.nx-btn--ghost {
+  background: transparent;
+  color: var(--neox-fg-secondary);
+}
+.nx-btn--ghost:hover:not([disabled]) {
+  background: var(--neox-mat-row-hover);
+  color: var(--neox-fg-primary);
+}
+
+.nx-btn--danger {
+  background: transparent;
+  color: var(--neox-err);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neox-err) 30%, transparent);
+}
+.nx-btn--danger:hover:not([disabled]) {
+  background: color-mix(in srgb, var(--neox-err) 10%, transparent);
+}
+
+.nx-btn--sm { height: var(--nx-control-h-sm); padding: 0 10px; font-size: var(--nx-fs-row-desc); }
+.nx-btn--lg { height: var(--nx-control-h-lg); padding: 0 20px; font-size: var(--neox-fs-lg); }
+
+/* ─── Slider (range) + SliderRow ──────────────────────────── */
+.nx-slider-row__control {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+  min-width: 160px;
+}
+
+.nx-slider-row__value {
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.nx-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 120px;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+  /* track 用 background-image 画, 让 fill 跟随 --nx-slider-pct */
+  --_track-bg: color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+  --_track-fill: var(--neox-primary-600);
+}
+
+/* WebKit track (Chromium / Electron 主战场) */
+.nx-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      to right,
+      var(--_track-fill) 0%,
+      var(--_track-fill) var(--nx-slider-pct, 50%),
+      var(--_track-bg)  var(--nx-slider-pct, 50%),
+      var(--_track-bg)  100%
+    );
+}
+
+.nx-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    0 2px 5px rgba(0, 0, 0, 0.20),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+  margin-top: -5px;
+  transition: transform 120ms ease;
+}
+
+.nx-slider:active::-webkit-slider-thumb {
+  transform: scale(1.08);
+}
+
+.nx-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 3px var(--neox-focus-ring),
+    0 2px 5px rgba(0, 0, 0, 0.20);
+}
+
+/* Firefox 兼容 (用 Electron 几乎用不到, 但留个 fallback 不丑) */
+.nx-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--_track-bg);
+}
+.nx-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--_track-fill);
+}
+.nx-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.20);
+}
+
+.nx-slider:focus { outline: none; }
+
+.nx-slider[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── NeoxInput ───────────────────────────────────────────── */
+.nx-input {
+  appearance: none;
+  font-family: inherit;
+  font-size: var(--nx-fs-row-title);
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  border-radius: var(--neox-radius-md);
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* 单行框钉高度 (多行框按内容长) —— 跟按钮/下拉同一档 */
+input.nx-input {
+  height: var(--nx-control-h);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.nx-input::placeholder {
+  color: var(--neox-fg-hint);
+}
+
+.nx-input:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+}
+
+.nx-input:focus {
+  border-color: var(--neox-primary-600);
+  box-shadow: 0 0 0 3px var(--neox-focus-ring);
+}
+
+.nx-input[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+textarea.nx-input {
+  font-family: var(--neox-font-sans, inherit);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.nx-card textarea.nx-input,
+.nx-card .nx-input.nx-input--bare {
+  border: 0;
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+}
+.nx-card textarea.nx-input:focus,
+.nx-card .nx-input.nx-input--bare:focus {
+  border: 0;
+  box-shadow: 0 0 0 2px var(--neox-focus-ring);
+}
+
+/* ─── PageTitle (Settings tab 顶 page title) ──────────────── */
+.nx-page-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 var(--nx-space-4) 0;
+}
+
+.nx-page-title__title {
+  margin: 0;
+  font-size: var(--nx-fs-page);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--neox-fg-primary);
+  line-height: 1.2;
+}
+
+.nx-page-title__back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 6px -6px;
+  padding: 3px 8px 3px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  font-size: var(--nx-fs-row-desc);
+  cursor: pointer;
+}
+.nx-page-title__back:hover {
+  background: var(--neox-mat-row-hover);
+  color: var(--neox-fg-primary);
+}
+
+/* 首页上通往二级页的入口行: 右边一个 › */
+.nx-row__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--neox-fg-muted);
+  font-size: var(--nx-fs-row-desc);
+  white-space: nowrap;
+}
+
+.nx-page-title__subtitle {
+  margin: 0;
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+}
+
+/* CustomSelect 版的 nx-select —— 不能直接复用 .nx-select 类:
+ * 那套是给原生 <select> 写的 (appearance:none + 背景图箭头 + 右侧 30px 让位),
+ * 套在 CustomSelect 的外层 div 上会变成外层一个边框+箭头、内层触发器再一个, 双份。
+ * 这里只把观感落到触发器上, 外层保持透明。 */
+.nx-select-cs { min-width: 140px; }
+.nx-select-cs .custom-select-trigger {
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  color: var(--neox-fg-primary);
+  font-size: var(--nx-fs-row-desc);
+  font-weight: 500;
+  padding: 6px 10px 6px 12px;
+  border-radius: var(--neox-radius-md);
+}
+.nx-select-cs .custom-select-trigger:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 22%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+
+
+.nx-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: var(--nx-fs-row-desc, 12px);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  /* 半透明染色 + 同色 hairline: 在任何表面上都只是"染了一层", 不是盖了一块 */
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  color: var(--text-secondary);
+}
+.nx-tag--ok   { color: var(--ok-500, #22c55e); }
+.nx-tag--warn { color: var(--warn-500, #eab308); }
+.nx-tag--err  { color: var(--err-500, #ef4444); }
+
+/* 行尾的次要数值 (大小 / 数量 / 时间) — 不是控件, 只是右对齐的一段灰字 */
+.nx-row__meta {
+  font-size: var(--nx-fs-row-desc, 12px);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.nx-progress {
+  width: 140px;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+}
+.nx-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text-accent, var(--gold-500));
+  transition: width var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.nx-row__control > .nx-input {
+  width: auto;
+  padding: 6px 10px;
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 20%, transparent);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.nx-row__control > .nx-input[type="text"] { text-align: left; }
+
+.sa-pair-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; max-width: 420px; }
+.sa-pair {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 4px 3px 10px;
+  border-radius: var(--radius-pill, 999px);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  font-size: var(--nx-fs-row-desc, 12px);
+  color: var(--text-secondary);
+}
+.sa-pair__main { font-family: var(--font-mono); }
+.sa-pair__arrow { opacity: 0.5; }
+.sa-pair__sub { font-family: var(--font-mono); color: var(--text-primary); }
+.sa-pair__x {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border: none; border-radius: 50%;
+  background: transparent; color: var(--text-muted); cursor: pointer; line-height: 1;
+}
+.sa-pair__x:hover { background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent); color: var(--text-primary); }
+
+
+
+.nx-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 52px 24px 56px;
+}
+.nx-empty__icon {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-primary-600) 12%, transparent);
+  color: var(--neox-primary-600);
+}
+.nx-empty__icon svg { width: 22px; height: 22px; }
+.nx-empty__art {
+  height: 116px;
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
+  /* 它是气氛不是主体 —— 比标题淡一档, 免得空态比有内容时还抢眼 */
+  opacity: 0.92;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.nx-empty__title {
+  margin: 0;
+  font-size: var(--neox-fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--neox-fg-primary);
+}
+.nx-empty__desc {
+  margin: 0;
+  max-width: 420px;
+  font-size: var(--nx-fs-row-desc);
+  line-height: 1.6;
+  color: var(--neox-fg-secondary);
+}
+.nx-empty__actions { display: flex; gap: 8px; margin-top: 2px; }
+
+.nx-illus {
+  height: 100px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  opacity: 0.55;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.nx-illus-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 52px 24px;
+  text-align: center;
+  color: var(--neox-fg-secondary);
+  font-size: var(--neox-fs-sm, 13px);
+}
+/* 窄栏用 (侧栏 218px 宽) —— 再大就把这一栏的主角挤没了 */
+.nx-illus--sm { height: 76px; max-width: 140px; }

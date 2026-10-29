@@ -1,0 +1,364 @@
+/* ============================================================
+ * 深度调研结果卡
+ *
+ * 跟 simple-diff.css 同一条战略: **新东西不进 agent-timeline.css 那片战场**
+ * (那边 3000+ 条 !important, 有棘轮闸)。这里零 !important 起家, 靠自己的
+ * nx-research 前缀和正常层叠拿下, 别叠权重。
+ *
+ * 视觉参数对齐 .nx-diff (圆角 10 / fg-primary 6% 底 / 一条细边), 于是它跟
+ * edit 卡在同一条时间线上看着是**同一种东西**, 区别只在里面摆什么。
+ * ============================================================ */
+
+.nx-research {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 11px;
+  background: var(--atl-tool-card-bg, transparent);
+  border: 1px solid var(--atl-tool-card-border, rgba(255, 255, 255, 0.075));
+  font-size: calc(12px * var(--nx-fs-scale, 1));
+  line-height: 1.55;
+}
+
+/* ---------- 统计行 ---------- */
+
+.nx-research__stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+}
+
+.nx-research__stat b {
+  color: var(--neox-fg-primary, currentColor);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+
+.nx-research__sep {
+  opacity: .45;
+}
+
+.nx-research__badge {
+  margin-left: 2px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* 有分歧是这张卡最该被看见的状态 —— 唯一给暖色的地方 */
+.nx-research__badge.is-disputed {
+  color: var(--neox-warn-fg, #e0a458);
+  background: color-mix(in srgb, var(--neox-warn-fg, #e0a458) 14%, transparent);
+}
+
+.nx-research__badge.is-single,
+.nx-research__badge.is-unverified {
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+
+/* ---------- 分歧 ---------- */
+
+.nx-research__disputes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nx-research__dispute {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 1px 0 1px 9px;
+  border-left: 2px solid color-mix(in srgb, var(--neox-warn-fg, #e0a458) 55%, transparent);
+}
+
+.nx-research__claim {
+  color: var(--neox-fg-primary, currentColor);
+  font-weight: 550;
+}
+
+/* 同源自辩的小标 —— 一份文档自己的注脚, 不是两家在对峙。
+ * 刻意用中性灰而不是分歧那个暖色: 它的分量本来就该比跨来源冲突轻。 */
+.nx-research__samesrc {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  font-weight: 400;
+  vertical-align: middle;
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .55));
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+
+/* 两边并排 —— 窄了就上下叠, 但永远不横向滚 */
+.nx-research__sides {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px;
+}
+
+.nx-research__side {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+
+.nx-research__side-tag {
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+
+.nx-research__side.is-for .nx-research__side-tag {
+  color: var(--neox-ok-fg, #6cc08b);
+}
+
+.nx-research__side.is-against .nx-research__side-tag {
+  color: var(--neox-err-fg, #d97a7a);
+}
+
+/* 引句是原文, 用等宽更像"照抄的一段"而不是我们自己的话 */
+.nx-research__quote {
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-primary, currentColor);
+  overflow-wrap: anywhere;
+}
+
+.nx-research__host {
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .55));
+  overflow-wrap: anywhere;
+}
+
+.nx-research__lean {
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .68));
+}
+
+/* ---------- 站点 ---------- */
+
+.nx-research__domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.nx-research__chip {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: calc(10.5px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.nx-research__chip.is-more {
+  opacity: .6;
+}
+
+/* ---------- 尾注 ---------- */
+
+.nx-research__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .55));
+}
+
+.nx-research__pending {
+  color: var(--neox-warn-fg, #e0a458);
+  opacity: .85;
+}
+
+.nx-research__path {
+  margin-left: auto;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: calc(10.5px * var(--nx-fs-scale, 1));
+  opacity: .7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* ---------- 跑着的时候: 一连串调研员 ---------- */
+
+
+.nx-research__elapsed {
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-primary, currentColor);
+  font-weight: 600;
+}
+
+.nx-research__tokens {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+  white-space: nowrap;
+}
+
+.nx-research__workers {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 刻意不给底色/圆角 —— 外面已经是一张卡了, 再套一层就是"盒子套盒子"
+ * (用户对 edit 卡说过「不要卡片嵌套」)。行与行之间只靠间距分开。 */
+.nx-research__worker {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 0;
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+}
+
+/* 「还有 N 条排队」那一行 —— 是计划的一部分, 但不该抢正在跑的那几路的注意力 */
+.nx-research__more {
+  opacity: .62;
+}
+
+.nx-research__wicon {
+  flex: none;
+  width: 1em;
+  text-align: center;
+  opacity: .75;
+}
+
+/* 在跑的那一路整行提亮 —— 扫一眼就知道此刻是谁在动 */
+.nx-research__worker[data-status="running"] {
+  color: var(--neox-fg-primary, currentColor);
+}
+
+.nx-research__worker[data-status="running"] .nx-research__wicon {
+  opacity: 1;
+  animation: nx-research-pulse 1.4s ease-in-out infinite;
+}
+
+.nx-research__worker[data-status="done"] .nx-research__wicon {
+  color: var(--neox-ok-fg, #6cc08b);
+  opacity: 1;
+}
+
+.nx-research__worker[data-status="failed"] .nx-research__wicon {
+  color: var(--neox-err-fg, #d97a7a);
+  opacity: 1;
+}
+
+.nx-research__worker[data-status="queued"] {
+  opacity: .58;
+}
+
+@keyframes nx-research-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .38; }
+}
+
+/* 题目: 可以被挤窄, 但不换行 —— 一行一个调研员, 行高必须稳定 */
+.nx-research__wq {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 此刻在动什么 (web_fetch / web_search …) —— 等宽, 一眼看出是工具名不是句子 */
+.nx-research__wact {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: calc(10.5px * var(--nx-fs-scale, 1));
+  opacity: .75;
+}
+
+/* 收了的那一路给一句它查到了什么 */
+.nx-research__wsum {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: calc(10.5px * var(--nx-fs-scale, 1));
+  opacity: .7;
+}
+
+.nx-research__wnums {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-left: auto;
+  font-size: calc(10.5px * var(--nx-fs-scale, 1));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: .8;
+}
+
+.nx-research__wtok {
+  color: var(--neox-fg-primary, currentColor);
+  opacity: .85;
+}
+
+@media (max-width: 560px) {
+  .nx-research__wsum { display: none; }
+}
+
+/* ---------- 被中断的那副相 ---------- */
+
+/* turn 被掐掉时调度器的 done 事件走不到, 卡片得自己收敛。收敛的第一要务是**别再假装在跑**:
+ * 脉冲停掉、秒表停掉 (组件里做的)。调研本身是增量落盘的, 所以这时候最该说的是
+ * "查到的都还在, 在这儿" —— 而不是一张停在半路、什么都不解释的卡。 */
+.nx-research.is-stopped .nx-research__wicon {
+  animation: none;
+}
+
+.nx-research.is-stopped .nx-research__worker[data-status="running"] {
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+}
+
+.nx-research__badge.is-stopped-tag {
+  color: var(--neox-fg-secondary, rgba(255, 255, 255, .62));
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+}
+
+/* ---------- 可点开报告 ---------- */
+
+/* 用户问「卡片不支持点击悬浮，让我看到更多细节吗」。卡上只放一眼能决定下一步的东西,
+ * 全文 30KB 级不进卡 —— 所以"更多细节"的去处是右栏那份报告。
+ * 悬浮时给一点点提示就够: 这是回执卡, 不是按钮, 别做成一块高亮的操作区。 */
+.nx-research.is-clickable {
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+}
+
+.nx-research.is-clickable:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  border-color: color-mix(in srgb, var(--neox-line-soft, rgba(255, 255, 255, .10)) 100%, transparent);
+}
+
+.nx-research.is-clickable:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--neox-fg-primary) 40%, transparent);
+  outline-offset: 1px;
+}

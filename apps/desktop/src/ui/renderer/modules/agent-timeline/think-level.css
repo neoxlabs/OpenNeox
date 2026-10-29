@@ -1,0 +1,150 @@
+/* 思考档位 · 按钮 + 粗滑杆 (ThinkLevel.tsx; 设计稿 E8jf #effort)
+ * 釉色 (--tk-c 是文字色, 深浅主题各一套保证对比度; --tk-a 是轨道走过那段的终点色) */
+.nx-think, .nx-thinkchip, .nx-think-fixed {
+  --tk-c: #3B6BEA; --tk-a: #2F6BFF; --tk-from: #A9C4FF;
+}
+.nx-think--off,   .nx-thinkchip--off   { --tk-c: #8A8377; --tk-a: #B9B1A4; --tk-from: #D6CFC3; }
+.nx-think--low,   .nx-thinkchip--low   { --tk-c: #4672E6; --tk-a: #7FA2FF; }
+.nx-think--mid,   .nx-thinkchip--mid   { --tk-c: #2B60E8; --tk-a: #2F6BFF; }
+.nx-think--high,  .nx-thinkchip--high  { --tk-c: #B8730E; --tk-a: #E9A23A; }
+.nx-think--xhigh, .nx-thinkchip--xhigh { --tk-c: #B9502C; --tk-a: #D9663F; }
+.nx-think--max,   .nx-thinkchip--max   { --tk-c: #A8730E; --tk-a: #E2AE3E; }
+.nx-think--ultra, .nx-thinkchip--ultra { --tk-c: #8A5BC9; --tk-a: #C9B6F2; }
+:root[data-theme="dark"] .nx-think--off,   :root[data-theme="dark"] .nx-thinkchip--off   { --tk-c: #B3AB9E; }
+:root[data-theme="dark"] .nx-think--low,   :root[data-theme="dark"] .nx-thinkchip--low   { --tk-c: #9DB8FF; }
+:root[data-theme="dark"] .nx-think--mid,   :root[data-theme="dark"] .nx-thinkchip--mid   { --tk-c: #7FA4FF; }
+:root[data-theme="dark"] .nx-think--high,  :root[data-theme="dark"] .nx-thinkchip--high  { --tk-c: #F2B44E; }
+:root[data-theme="dark"] .nx-think--xhigh, :root[data-theme="dark"] .nx-thinkchip--xhigh { --tk-c: #F08E66; }
+:root[data-theme="dark"] .nx-think--max,   :root[data-theme="dark"] .nx-thinkchip--max   { --tk-c: #F2C454; }
+:root[data-theme="dark"] .nx-think--ultra, :root[data-theme="dark"] .nx-thinkchip--ultra { --tk-c: #D7C2FF; }
+
+/* ── 小卡 (继承 .atl-model__menu 的面/边/影, 这里只改尺寸) ── */
+.atl-model__menu.nx-think-pop {
+  position: fixed;
+  z-index: 100000;
+  min-width: 0;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  border-radius: 16px;
+}
+
+/* ── 滑杆 ── */
+.nx-think { --tk-ball: 26px; padding: 28px 16px 12px; }
+.nx-think-menu .nx-think { padding: 24px 10px 6px; }
+.nx-think__rail {
+  position: relative;
+  height: 26px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  border-radius: 999px;
+  outline: none;
+}
+.nx-think__rail:focus-visible .nx-think__ball { outline: 2px solid color-mix(in srgb, var(--tk-a) 55%, transparent); outline-offset: 1px; border-radius: 50%; }
+.nx-think__track {
+  position: absolute;
+  left: 0; right: 0; top: 6px;
+  height: 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  box-shadow: inset 0 1px 2px rgba(60, 45, 25, .10);
+}
+.nx-think__fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tk-from), var(--tk-a));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+  transition: width .42s cubic-bezier(.34, 1.45, .64, 1), background .3s ease;
+}
+.nx-think__notch {
+  position: absolute;
+  top: 5px;
+  width: 4px; height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--neox-fg-primary) 22%, transparent);
+  pointer-events: none;
+}
+.nx-think__notch.is-on { background: rgba(255, 255, 255, .72); }
+.nx-think__ball {
+  position: absolute;
+  top: 0;
+  width: var(--tk-ball); height: var(--tk-ball);
+  margin-left: calc(var(--tk-ball) / -2);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 4px rgba(60, 45, 25, .22));
+  transition: left .42s cubic-bezier(.34, 1.45, .64, 1);
+}
+.nx-think__tag {
+  position: absolute;
+  top: -22px;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--tk-c);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: left .42s cubic-bezier(.34, 1.45, .64, 1), color .3s ease;
+}
+/* 拖动时跟手, 不回弹 */
+.nx-think.is-dragging .nx-think__fill,
+.nx-think.is-dragging .nx-think__ball,
+.nx-think.is-dragging .nx-think__tag { transition-duration: .12s; transition-timing-function: ease-out; }
+.nx-think--off .nx-think__fill { background: transparent; box-shadow: none; }
+
+/* 极限: 流金; 至臻: 贝母虹光 —— 只有这两档会动 */
+.nx-think--max .nx-think__fill {
+  background: linear-gradient(100deg, #F0B544 0%, #E9B44C 30%, #FBE08E 48%, #FFF6D6 54%, #F7CF5E 62%, #D99A26 86%, #F2C454 100%);
+  background-size: 220% 100%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 10px rgba(242, 190, 70, .5);
+  animation: nx-think-flow 2.2s linear infinite;
+}
+.nx-think--ultra .nx-think__fill {
+  background: linear-gradient(100deg, #F7D6EC 0%, #DCD3FF 22%, #C6EFEA 44%, #FBEAB8 62%, #F3D2F0 80%, #D6DCFF 100%);
+  background-size: 220% 100%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 0 12px rgba(201, 182, 242, .55);
+  animation: nx-think-flow 3s linear infinite;
+}
+.nx-think--max .nx-think__ball { filter: drop-shadow(0 3px 4px rgba(60, 45, 25, .2)) drop-shadow(0 0 6px rgba(242, 190, 70, .6)); }
+.nx-think--ultra .nx-think__ball { filter: drop-shadow(0 3px 4px rgba(60, 45, 25, .2)) drop-shadow(0 0 6px rgba(201, 182, 242, .7)); }
+.nx-think--max .nx-think__tag,
+.nx-thinkchip--max .nx-thinkchip__label {
+  background: linear-gradient(90deg, #B97A12, #E2AE3E 40%, #F6D57A 60%, #C98A1E);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.nx-think--ultra .nx-think__tag,
+.nx-thinkchip--ultra .nx-thinkchip__label {
+  background: linear-gradient(90deg, #C05BB0, #7E6BE0 45%, #2FA8A0 75%, #C99A2E);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+@keyframes nx-think-flow { from { background-position: 0% 0; } to { background-position: 220% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .nx-think__fill, .nx-think__ball, .nx-think__tag { transition: none; }
+  .nx-think--max .nx-think__fill, .nx-think--ultra .nx-think__fill { animation: none; }
+}
+
+/* ── 输入框里的按钮: 火苗图标 + 档位名 ── */
+.neox-shell .atl-composer__thinkchip.nx-thinkchip { gap: 6px; padding: 0 11px 0 8px; }
+.nx-thinkchip__icon { width: 22px; height: 22px; margin: -3px -1px -2px -3px; flex: none; }
+.nx-thinkchip__label { font-weight: 600; color: var(--tk-c); }
+.neox-shell .atl-composer__thinkchip.nx-thinkchip--max {
+  box-shadow: inset 0 0 0 1px rgba(226, 174, 62, .55), 0 0 0 3px rgba(242, 196, 84, .12), 0 0 12px rgba(242, 190, 70, .22);
+}
+.neox-shell .atl-composer__thinkchip.nx-thinkchip--ultra {
+  box-shadow: inset 0 0 0 1px rgba(170, 150, 230, .55), 0 0 0 3px rgba(201, 182, 242, .14), 0 0 12px rgba(201, 182, 242, .25);
+}
+.nx-thinkchip--max .nx-thinkchip__icon { filter: drop-shadow(0 0 3px rgba(242, 190, 70, .7)); }
+.nx-thinkchip--ultra .nx-thinkchip__icon { filter: drop-shadow(0 0 3px rgba(201, 182, 242, .8)); }
+.neox-shell .atl-composer__thinkchip.nx-thinkchip.is-fixed { cursor: default; }
+.neox-shell .atl-composer__thinkchip.nx-thinkchip.is-fixed .nx-thinkchip__label { color: var(--neox-fg-secondary); font-weight: 500; }
+@container atl-composer (max-width: 680px) {
+  .neox-shell .atl-composer--minimal:not(.is-expanded) .atl-composer__thinkchip.nx-thinkchip { padding: 0; }
+}
+
+/* ── 模型菜单后备段: 固定开启 ── */
+.nx-think-fixed { display: flex; align-items: center; gap: 8px; padding: 4px 10px 8px; font-size: 12px; color: var(--neox-fg-secondary); }

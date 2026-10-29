@@ -1,0 +1,962 @@
+
+/* ── 语言段控 ──────────────────────────────────────────────────
+ * 按钮本体复用 .layout-option (底色/边框/选中态全部跟着布局卡走),
+ * 这里只管尺寸和排布, 不碰颜色 —— 碰了就会跟旁边两排脱节。 */
+.appearance-step .lang-switch {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.appearance-step .lang-switch__btn.layout-option {
+  flex: 1;
+  height: 40px;
+  min-height: 40px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+.appearance-step .lang-switch__flag {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.welcome-step .welcome-tips {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  /* 258px: 英文最长那条 ("Make images from the sidebar") 刚好一行 —— 一旦有一条
+   * 折成两行, 同一行的另一条就跟着错位, 四条提示立刻显得歪。 */
+  grid-template-columns: repeat(2, minmax(0, 258px));
+  justify-content: center;
+  gap: 14px 36px;
+}
+.welcome-step .welcome-tip {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  grid-template-areas: 'key title' 'key desc';
+  align-items: center;
+  column-gap: 12px;
+  text-align: left;
+  animation: welcome-tip-in 520ms var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) both;
+}
+.welcome-step .welcome-tip:nth-child(1) { animation-delay: 260ms; }
+.welcome-step .welcome-tip:nth-child(2) { animation-delay: 340ms; }
+.welcome-step .welcome-tip:nth-child(3) { animation-delay: 420ms; }
+.welcome-step .welcome-tip:nth-child(4) { animation-delay: 500ms; }
+
+@keyframes welcome-tip-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-step .welcome-tip { animation: none; }
+}
+
+.welcome-step .welcome-tip__key {
+  grid-area: key;
+  justify-self: stretch;
+  align-self: center;
+  padding: 4px 0;
+  text-align: center;
+  font-family: inherit;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--neox-fg-secondary, var(--text-muted));
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  border-radius: 7px;
+}
+/* 没有快捷键的那条 (图片工作台) 不画空胶囊, 只占住同宽的位置保持竖线对齐。 */
+.welcome-step .welcome-tip__key--none {
+  background: transparent;
+  border-color: transparent;
+}
+.welcome-step .welcome-tip__title {
+  grid-area: title;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+.welcome-step .welcome-tip__desc {
+  grid-area: desc;
+  white-space: nowrap;
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.35;
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+
+/* 副标题原来卡在 max-width:400px, 中文那句正好折成两行且第二行只剩「Key。」。 */
+.welcome-step .welcome-subtitle {
+  max-width: 520px;
+}
+
+@media (max-width: 760px) {
+  .welcome-step .welcome-tips { grid-template-columns: minmax(0, 1fr); }
+  .appearance-step .lang-switch { flex-direction: column; }
+}
+
+
+:root[data-theme] .onboarding-page .appearance-step .layout-option.selected,
+:root[data-theme] .onboarding-page .appearance-step .theme-preset-option.selected,
+:root[data-theme] .onboarding-page .mode-step .mode-card.is-selected,
+:root .onboarding-page .appearance-step .layout-option.selected,
+:root .onboarding-page .appearance-step .theme-preset-option.selected,
+:root .onboarding-page .mode-step .mode-card.is-selected {
+  border: 2px solid var(--neox-primary-600) !important;
+  box-shadow: none !important;
+}
+
+/* ── 主 CTA 永远在视口里 ──────────────────────────────────────
+ * 760px 高的窗口上, 这一屏(语言+布局+主题+强调色)本来就装不下, step-container
+ * 会滚 —— 而「继续」正好落在折线下面: 用户看到的是一屏没有主按钮的设置页。
+ * 钉在容器底部, 窗口再矮也点得到。 */
+.onboarding-content:has(.appearance-step) .step-container {
+  scroll-padding-bottom: 72px;
+}
+.appearance-step .appearance-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin-top: 2px;
+  padding: 4px 0 2px;
+}
+.appearance-step { gap: 10px !important; }
+
+.onboarding-content .step-container {
+  scrollbar-width: none;
+}
+.onboarding-content .step-container::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+
+
+.appearance-step .theme-preset-options {
+  display: flex !important;
+  grid-template-columns: none !important;
+  flex-wrap: nowrap !important;
+  max-height: none !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  gap: 12px !important;
+  padding: 2px 2px 10px !important;
+  scroll-snap-type: x mandatory !important;
+  scroll-behavior: smooth;
+  scrollbar-width: thin !important;
+  scrollbar-color: color-mix(in srgb, var(--neox-primary-600) 40%, transparent) transparent !important;
+  overscroll-behavior-x: contain;
+}
+.appearance-step .theme-preset-options::-webkit-scrollbar {
+  display: block !important;
+  height: 6px !important;
+  width: 0 !important;
+}
+.appearance-step .theme-preset-options::-webkit-scrollbar-thumb {
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--neox-primary-600) 36%, transparent) !important;
+}
+.appearance-step .theme-preset-option {
+  flex: 0 0 calc((100% - 36px) / 4) !important;
+  width: calc((100% - 36px) / 4) !important;
+  min-width: calc((100% - 36px) / 4) !important;
+  scroll-snap-align: start;
+}
+
+/* 标题行: 左「主题」右翻页箭头 */
+.appearance-step .appearance-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.appearance-step .appearance-section__head h3 { margin: 0; }
+.theme-rail-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.theme-rail-count {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  min-width: 34px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.theme-rail-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--neox-fg-primary, var(--text-primary));
+  background: color-mix(in srgb, var(--neox-bg-card, #fff) 26%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  transition: background-color 120ms var(--neox-ease-out, ease-out), opacity 120ms;
+}
+.theme-rail-arrow:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-bg-card, #fff) 46%, transparent);
+  border-color: color-mix(in srgb, var(--neox-primary-600) 38%, transparent);
+}
+.theme-rail-arrow:disabled { opacity: .32; cursor: default; }
+.theme-rail-arrow svg { width: 14px; height: 14px; }
+
+.onboarding-content:has(.mode-step) {
+  justify-content: center;
+}
+.mode-step .mode-chips {
+  min-height: 44px;
+  margin-top: 12px !important;
+}
+.mode-step .mode-chips--static {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.mode-step .mode-chips--static .mode-chips__hint {
+  max-width: 560px;
+  margin: 0;
+}
+.mode-step .features-actions {
+  margin-top: 14px !important;
+}
+
+/* CTA 跟卡片区同宽同边: 原来按钮 620px 比三张卡 (760px) 窄一截又各自居中,
+ * 两条边都对不上。选择器要堆够 —— `.mode-step .features-actions` (0,2,0)
+ * 压不住既有的那条 620px。 */
+:root .onboarding-page .mode-step .features-actions,
+:root .onboarding-page .mode-step .features-actions .continue-btn {
+  width: 100% !important;
+  max-width: 760px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+
+
+/* 三卡文字对齐: 描述固定两行的高度, 标题基线自然就齐了。 */
+.mode-step .mode-card__desc {
+  min-height: 2.9em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* ── 接入模型步 ───────────────────────────────────────────────
+ * 1. 错误条原来只换了个边框色, 底还是那层跟着主题走的绿/紫玻璃 ——
+ *    红字压在主题色上, 既不像错误也不好读。给它一层真正的红底。
+ * 2. 默认模型说明: 非自定义品牌是静默用推荐模型的, 这行小字把它说出来。 */
+.connect-step .connect-status--error {
+  /* 底必须是**不透明**的: 上一版用了 12% danger + 30% bg-card = 通透一片,
+   * 压在带壁纸的主题上直接被染成灰绿, 看着不像报错。 */
+  background: color-mix(in srgb, #fff 84%, var(--neox-danger-500, #e5484d) 16%) !important;
+  border-color: color-mix(in srgb, var(--neox-danger-500, #e5484d) 46%, transparent) !important;
+  color: var(--neox-danger-600, #c62a2f) !important;
+}
+:root[data-theme="dark"] .connect-step .connect-status--error {
+  background: color-mix(in srgb, #000 58%, var(--neox-danger-500, #e5484d) 42%) !important;
+  color: color-mix(in srgb, var(--neox-danger-500, #e5484d) 82%, #fff) !important;
+}
+.connect-step .connect-model-note {
+  margin: 2px 0 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+
+
+/* ── 选服务商: 国内档不要再撑那根空柱子 ────────────────────────
+ * 国内档没有聚合平台, 三栏退化成「官方厂商(6 张) | 自定义(1 张)」, 而自定义那栏
+ * 占满 1fr 高度却只有一张卡 —— 右下角一大片空。改成上下两段:
+ * 官方厂商铺满两列, 自定义作为最后一条整行 (它本来就是兜底出口, 排最后最合理)。 */
+.connect-step .byok-brand-grid--triptych.no-hub {
+  grid-template-columns: minmax(0, 1fr) !important;
+  max-width: 880px;
+}
+
+
+:root .onboarding-page .continue-btn,
+:root .onboarding-page .continue-btn:hover {
+  box-shadow: none !important;
+}
+
+
+.onboarding-page {
+  --ob-glass-bg: color-mix(in srgb, #ffffff 40%, transparent);
+  --ob-glass-bg-hover: color-mix(in srgb, #ffffff 52%, transparent);
+  --ob-glass-border: color-mix(in srgb, var(--neox-fg-primary, #111827) 12%, transparent);
+  --ob-glass-blur: blur(20px) saturate(185%);
+}
+:root[data-theme="dark"] .onboarding-page {
+  --ob-glass-bg: color-mix(in srgb, #0c0d10 42%, transparent);
+  --ob-glass-bg-hover: color-mix(in srgb, #0c0d10 54%, transparent);
+  --ob-glass-border: rgba(255, 255, 255, .11);
+  --ob-glass-blur: blur(20px) saturate(165%);
+}
+
+:root[data-theme] .onboarding-page .appearance-step .layout-option,
+:root[data-theme] .onboarding-page .appearance-step .theme-preset-option,
+:root[data-theme] .onboarding-page .mode-step .mode-card,
+:root[data-theme] .onboarding-page .mode-step .mode-chip,
+:root[data-theme] .onboarding-page .connect-step .byok-brand-card,
+:root[data-theme] .onboarding-page .connect-step .connect-mode-grid,
+:root .onboarding-page .appearance-step .layout-option,
+:root .onboarding-page .appearance-step .theme-preset-option,
+:root .onboarding-page .mode-step .mode-card,
+:root .onboarding-page .mode-step .mode-chip,
+:root .onboarding-page .connect-step .byok-brand-card,
+:root .onboarding-page .connect-step .connect-mode-grid {
+  background: var(--ob-glass-bg) !important;
+  border: 1px solid var(--ob-glass-border) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: var(--ob-glass-blur) !important;
+  backdrop-filter: var(--ob-glass-blur) !important;
+}
+
+:root .onboarding-page .connect-step .connect-mode-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root .onboarding-page .connect-step .connect-mode-card:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 5%, transparent) !important;
+}
+:root .onboarding-page .connect-step .connect-mode-card + .connect-mode-card::before {
+  background: var(--ob-glass-border) !important;
+}
+
+:root[data-theme] .onboarding-page .appearance-step .layout-option:hover,
+:root[data-theme] .onboarding-page .appearance-step .theme-preset-option:hover,
+:root[data-theme] .onboarding-page .mode-step .mode-card:hover,
+:root[data-theme] .onboarding-page .connect-step .byok-brand-card:hover {
+  background: var(--ob-glass-bg-hover) !important;
+}
+
+/* 选中: 一条强调色边, 底稍微实一点。不加 ring / 不加投影。 */
+:root[data-theme] .onboarding-page .appearance-step .layout-option.selected,
+:root[data-theme] .onboarding-page .appearance-step .theme-preset-option.selected,
+:root[data-theme] .onboarding-page .mode-step .mode-card.is-selected,
+:root .onboarding-page .appearance-step .layout-option.selected,
+:root .onboarding-page .appearance-step .theme-preset-option.selected,
+:root .onboarding-page .mode-step .mode-card.is-selected {
+  border: 2px solid var(--neox-primary-600) !important;
+  background: var(--ob-glass-bg-hover) !important;
+  box-shadow: none !important;
+}
+
+/* 主题预览卡的图片区不吃玻璃 —— 它自己就是一张图, 蒙一层反而脏。 */
+:root .onboarding-page .theme-preview-card--pack {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* ── 标题左侧的品牌 mark ─────────────────────────────────── */
+.onboarding-step .step-title-with-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.onboarding-step .step-header--branded .step-title-with-mark {
+  justify-content: center;
+}
+.onboarding-step .step-title-mark {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  object-fit: contain;
+}
+
+
+.mode-step .mode-card__art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 168px;
+  margin: 4px auto 10px;
+}
+.mode-step .mode-card__art img {
+  max-width: 220px;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 220ms var(--neox-ease-out, ease);
+}
+/* 悬停轻抬一下 —— 让这张卡"可以选"的暗示落在画上, 不再靠多加描边 */
+.mode-step .mode-card:hover .mode-card__art img {
+  transform: translateY(-3px);
+}
+
+.mode-step .mode-card {
+  padding: 22px 20px 24px !important;
+  gap: 6px !important;
+}
+
+
+
+/* 厂商头: 官方 mark + 名称 + 一句话 */
+.connect-step .step-header--vendor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.connect-step .step-header--vendor h2 { margin: 0; }
+
+.connect-step .connect-fields {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background: transparent;
+}
+.connect-step .connect-field:first-child { border-radius: 12px 12px 0 0; }
+.connect-step .connect-field:last-child { border-radius: 0 0 12px 12px; }
+.connect-step .connect-field:only-child { border-radius: 12px; }
+/* 下拉面板要浮在字段区之上 */
+.connect-step .connect-field--model { position: relative; z-index: 3; }
+.connect-step .connect-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  min-height: 46px;
+}
+.connect-step .connect-field + .connect-field {
+  border-top: 1px solid var(--ob-glass-border);
+}
+.connect-step .connect-field__label {
+  flex: none;
+  width: 64px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+.connect-step .connect-field__input {
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-size: var(--neox-fs-md, 14px);
+  font-family: inherit;
+}
+.connect-step .connect-field__input::placeholder {
+  color: color-mix(in srgb, var(--neox-fg-primary) 38%, transparent);
+}
+.connect-step .connect-field__select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.connect-step .connect-field__control {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* 模型下拉在字段行内也走同一套"无边框" */
+.connect-step .connect-field__control .connect-combo { flex: 1; min-width: 0; }
+/* combobox 自带一层浅底 + 边框, 在无边框字段行里会露出一个胶囊。 */
+.connect-step .connect-field__control .connect-combo,
+.connect-step .connect-field__control .connect-combo-toggle {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.connect-step .connect-field__control .connect-combo-input {
+  height: 26px !important;
+  padding: 0 22px 0 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: var(--neox-fs-md, 14px) !important;
+}
+.connect-step .connect-field__value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+/* 无边框: 字段行里不该再出现一颗有框的按钮 (框中框)。图标 + 文字, 与行内基线对齐。 */
+.connect-step .connect-inline-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--neox-primary-600);
+  transition: opacity 120ms var(--neox-ease-out, ease-out);
+}
+.connect-step .connect-inline-btn:hover:not(:disabled) { opacity: .7; }
+.connect-step .connect-inline-btn__icon { width: 14px; height: 14px; flex: none; }
+.connect-step .connect-inline-btn__icon.is-spinning {
+  animation: connect-inline-spin 900ms linear infinite;
+}
+@keyframes connect-inline-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .connect-step .connect-inline-btn__icon.is-spinning { animation: none; }
+}
+.connect-step .connect-inline-btn:disabled { opacity: .4; cursor: default; }
+/* 显示/隐藏 Key: 只是个查看开关, 不该跟「获取 Key」一样抢强调色 */
+.connect-step .connect-inline-btn--icon { color: var(--neox-fg-muted, var(--text-muted)); }
+
+.connect-step .connect-model-note--warn {
+  color: color-mix(in srgb, var(--neox-warning-600, #b45309) 88%, var(--neox-fg-primary));
+}
+
+/* 选服务商列表里的官方 mark */
+.connect-step .byok-brand-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.connect-step .byok-brand-logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+}
+
+
+.connect-step .connect-combo-list {
+  background: var(--neox-bg-elevated, var(--neox-bg-card, #fff)) !important;
+  border: 1px solid var(--ob-glass-border) !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, .16) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme="dark"] .connect-step .connect-combo-list {
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .42) !important;
+}
+
+
+/* ── 模型多选下拉 ─────────────────────────────────────────────
+ * 一行摘要 (默认模型 +N) + 一个下拉面板, 面板里勾选要装哪些、谁当默认。
+ * 上一版做成了"卡片里再嵌一张勾选卡", 用户直接骂了 —— 选择器就该是选择器,
+ * 不是又长出一块面板。 */
+.connect-step .model-select {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.connect-step .model-select__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+.connect-step .model-select__text {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+}
+.connect-step .model-select__more {
+  flex: none;
+  font-style: normal;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-primary-600);
+}
+.connect-step .model-select__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -6px;
+  right: -6px;
+  z-index: 40;
+  max-height: 232px;
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: 10px;
+  background: var(--neox-bg-elevated, #fff);
+  border: 1px solid var(--ob-glass-border);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, .16);
+}
+:root[data-theme="dark"] .connect-step .model-select__panel {
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .42);
+}
+.connect-step .model-select__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  border-bottom: 1px solid var(--ob-glass-border);
+  margin-bottom: 4px;
+}
+/* 顶部这行既是搜索也是手填入口 —— 无边框, 跟面板融成一体 */
+.connect-step .model-select__query {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-family: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+}
+.connect-step .model-select__query::placeholder {
+  color: color-mix(in srgb, var(--neox-fg-primary) 36%, transparent);
+}
+.connect-step .model-select__empty {
+  margin: 2px 8px 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+.connect-step .model-select__all,
+.connect-step .model-select__head button {
+  padding: 1px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-primary-600);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--neox-primary-600) 26%, transparent);
+}
+.connect-step .model-opt.is-clickable { cursor: pointer; }
+.connect-step .model-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 7px;
+}
+.connect-step .model-opt,
+:root[data-theme-pack] .onboarding-page .connect-step .model-opt[aria-selected="true"] {
+  /* 那条全局规则带 !important, 这里也得带 (它是 0,3,0 !important, 我们 0,6,0 !important)。 */
+  background: transparent !important;
+  color: inherit !important;
+}
+.connect-step .model-opt:hover,
+:root[data-theme-pack] .onboarding-page .connect-step .model-opt[aria-selected="true"]:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent) !important;
+}
+.connect-step .model-opt__pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+.connect-step .model-opt input[type="checkbox"] {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  accent-color: var(--neox-primary-600);
+  cursor: pointer;
+}
+.connect-step .model-opt__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  color: color-mix(in srgb, var(--neox-fg-primary) 60%, transparent);
+}
+.connect-step .model-opt.is-on .model-opt__name { color: var(--neox-fg-primary, var(--text-primary)); }
+.connect-step .model-opt__badge {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--neox-fg-invert, #fff);
+  background: var(--neox-primary-600);
+}
+.connect-step .model-opt__default {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  background: transparent;
+  border: 1px solid transparent;
+  opacity: 0;
+}
+.connect-step .model-opt:hover .model-opt__default {
+  opacity: 1;
+  border-color: var(--ob-glass-border);
+}
+
+.onboarding-page,
+.onboarding-page * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.onboarding-page ::-webkit-scrollbar,
+.onboarding-page::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+
+
+.connect-step .connect-form {
+  position: relative;
+  z-index: 20;
+}
+.connect-step .connect-actions {
+  position: relative;
+  z-index: 1;
+}
+
+
+:root .onboarding-page .connect-step .connect-test-btn,
+:root .onboarding-page .connect-step .connect-actions .continue-btn {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root .onboarding-page .connect-step .connect-test-btn {
+  background: var(--neox-bg-elevated, #fff) !important;
+  border: 1px solid var(--ob-glass-border) !important;
+}
+
+
+/* 「跟随主题」那颗: 用当前主题包的主色打底, 一眼看出"现在跟的是它"。 */
+.appearance-step .color-theme-btn--auto .color-swatch {
+  background: var(--neox-primary-600) !important;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--neox-bg-canvas, #fff) 70%, transparent);
+}
+
+
+.connect-step .byok-picker {
+  position: relative;
+  width: min(100%, 860px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* 搜索: 收起 = 第一组标题行右端的一枚放大镜; 展开 = 向左长出一条输入框。
+ * 不再单占一行 —— 这一屏的主角是那 12 张卡, 搜索是次要动作。 */
+.connect-step .byok-group__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 2px 6px;
+  min-height: 26px;
+  /* 第一组标题右边给搜索控件让出位置, 免得组名被压 */
+  padding-right: 34px;
+}
+.connect-step .byok-search {
+  /* 钉在右上角, 跟第一组标题同一行 —— 不占额外一行 */
+  position: absolute;
+  top: 0;
+  right: 2px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;      /* 图标在右, 输入框向左展开 */
+  gap: 4px;
+  height: 26px;
+  padding: 0 2px 0 0;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: border-color 180ms var(--neox-ease-out, ease-out),
+              background-color 180ms var(--neox-ease-out, ease-out);
+}
+.connect-step .byok-search.is-open {
+  border-color: var(--ob-glass-border);
+  background: var(--ob-glass-bg);
+}
+.connect-step .byok-search__btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+.connect-step .byok-search__btn:hover { color: var(--neox-fg-primary, var(--text-primary)); }
+.connect-step .byok-search__btn svg { width: 14px; height: 14px; }
+.connect-step .byok-search__input {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  opacity: 0;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-family: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  /* 变长变宽的那段动画 */
+  transition: width 220ms var(--neox-ease-out, cubic-bezier(.22,1,.36,1)),
+              opacity 160ms var(--neox-ease-out, ease-out),
+              padding 220ms var(--neox-ease-out, ease-out);
+}
+.connect-step .byok-search.is-open .byok-search__input {
+  width: 200px;
+  opacity: 1;
+  padding: 0 6px 0 10px;
+}
+.connect-step .byok-search__input::placeholder { color: color-mix(in srgb, var(--neox-fg-primary) 34%, transparent); }
+@media (prefers-reduced-motion: reduce) {
+  .connect-step .byok-search__input { transition: none; }
+}
+
+.connect-step .byok-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 470px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.connect-step .byok-groups[data-scrollable='true'] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
+}
+/* 滚到底就不再渐隐 (没有更多了) —— 用 scroll-driven animation, 不支持的浏览器保持渐隐。 */
+@supports (animation-timeline: scroll(self)) {
+  .connect-step .byok-groups[data-scrollable='true'] {
+    animation: byok-fade-tail linear both;
+    animation-timeline: scroll(self);
+    animation-range: calc(100% - 40px) 100%;
+  }
+  @keyframes byok-fade-tail {
+    to {
+      -webkit-mask-image: linear-gradient(to bottom, #000 100%, #000 100%);
+      mask-image: linear-gradient(to bottom, #000 100%, #000 100%);
+    }
+  }
+}
+.connect-step .byok-group__title {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+/* 三列 + 更紧的卡 —— 英文档有 12 家, 两列要 6 行, 底下的「自定义」整组落在
+ * 折线以下, 用户根本发现不了 (他自己指出的)。三列后中文 7 张 = 3 行、英文 12 张 = 4 行,
+ * 连「自定义」一起一屏看完, 不用滚。 */
+.connect-step .byok-group__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.connect-step .byok-brand-card {
+  padding: 9px 10px !important;
+  gap: 9px !important;
+  border-radius: 11px !important;
+}
+.connect-step .byok-brand-logo { width: 22px; height: 22px; }
+.connect-step .byok-brand-logo img,
+.connect-step .byok-brand-logo svg { width: 22px !important; height: 22px !important; }
+.connect-step .byok-brand-name { font-size: var(--neox-fs-sm, 13px) !important; }
+.connect-step .byok-brand-tagline {
+  font-size: var(--neox-fs-xxs, 11px) !important;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 卡片右侧那枚 chevron 在窄卡里没信息量, 去掉给文字让位 */
+.connect-step .byok-brand-card > svg:last-child { display: none; }
+
+@media (max-width: 900px) {
+  .connect-step .byok-group__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.connect-step .byok-empty {
+  margin: 8px 2px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+
+@media (max-width: 860px) {
+  .connect-step .byok-group__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+
+/* 设置页预热容器 —— 挂着但不可见、不可点。
+ *
+ *   为什么要挂着: 见 AppShell 里 settingsPrewarm 的注释 (首开 191ms 的渲染代价挪到空闲期)。
+ *   为什么**不用 display:none**: 那样元素在预热期不被渲染, 一旦切回可见,
+ *   overlay 的入场动画 (settings-overlay-in) 会从头再播一遍 —— 用户看到的就是
+ *   "打开还要闪烁一下才出现"。改成 visibility+opacity: 元素一直在, 入场动画在预热期
+ *   就播完了, 打开时只是把它显出来, 没有任何重播。 */
+.settings-host--prewarm {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
+.onboarding-page .welcome-actions {
+  display: flex;
+  align-items: center;      /* 两颗按钮垂直居中对齐 */
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: nowrap;
+}
+
+.onboarding-page .welcome-actions .continue-btn {
+  flex: 0 0 auto;           /* 别被拉伸 */
+  width: auto;
+  min-width: 200px;
+  max-width: 280px;
+  height: 40px;
+  padding: 0 24px;
+}
+
+.onboarding-page .welcome-actions .connect-skip {
+  flex: 0 0 auto;
+  white-space: nowrap;      /* 「Skip for now」不许折行 */
+  height: 40px;
+  padding: 0 8px;
+}

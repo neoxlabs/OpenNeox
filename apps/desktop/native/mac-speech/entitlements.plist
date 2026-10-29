@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Neox Mac Speech CLI 独立子进程 entitlements.
+
+  hardened runtime 下, spawn 的子进程若要用 mic/speech 必须自己声明这些 entitlements —
+  否则父进程 (Electron) 的 entitlements 不会自动继承 (2026-07-13 实录).
+-->
+<plist version="1.0">
+<dict>
+    <!-- 麦克风采集: AVAudioEngine / AVCaptureDevice 用 -->
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+</dict>
+</plist>

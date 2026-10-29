@@ -1,0 +1,996 @@
+/* ==================== 项目选择器 ==================== */
+.project-selector {
+  position: relative;
+  z-index: 200;
+}
+
+.project-selector-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.project-selector-btn:hover {
+  background: var(--bg-hover);
+}
+
+.project-avatar {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  background: var(--text-accent);
+}
+
+.project-selector-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-selector-btn svg {
+  width: 10px;
+  height: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.project-selector-btn.editor {
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  gap: 8px;
+  line-height: 1;
+  height: 30px;
+  border-radius: 6px;
+}
+
+.project-selector-btn.editor:hover {
+  background: #4e5054;
+  border-color: transparent;
+}
+
+/* IDEA 风格的彩色项目徽章（editor variant 专用，比默认 avatar 大） */
+.project-avatar.editor-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.project-selector-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: #c4c8d0;
+}
+
+.project-selector-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.project-selector-btn.editor .project-selector-name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: #ffffff;
+  max-width: 180px;
+}
+
+.project-selector-btn.editor .project-selector-chevron {
+  display: inline-flex;
+  align-items: center;
+  color: #9da0a8;
+  margin-left: -2px;
+}
+
+.project-selector-btn.editor .project-selector-chevron svg {
+  width: 14px;
+  height: 14px;
+}
+
+.project-selector-sep {
+  color: #9da0a8;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 400;
+}
+
+.project-selector-segment {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  color: #c4c8d0;
+}
+
+.project-selector-btn.editor svg {
+  width: 14px;
+  height: 14px;
+}
+
+.project-selector-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+}
+
+.project-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 280px;
+  max-width: 340px;
+  max-height: 520px;
+  overflow-y: auto;
+  background: #2b2d30;
+  border: 1px solid #3c3f41;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 1000;
+  animation: dropdown-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+/* 顶部三个操作按钮 */
+.project-dropdown-actions {
+  padding: 6px 6px 4px;
+}
+
+.project-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: #dfe1e5;
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  text-align: left;
+}
+
+.project-action-btn:hover { background: #2f65ca; color: #fff; }
+
+.project-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #9da0a8;
+  font-size: var(--neox-fs-md, 14px);
+}
+.project-action-icon svg { width: 14px; height: 14px; }
+.project-action-btn:hover .project-action-icon { color: #fff; }
+
+.project-dropdown-divider {
+  height: 1px;
+  background: #3c3f41;
+  margin: 4px 0;
+}
+
+.project-dropdown-section-label {
+  padding: 8px 14px 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: #6c707e;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.project-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  text-align: left;
+}
+.project-list-item:hover { background: #393b40; }
+.project-list-item.active { background: #2e436e; }
+
+.project-list-item .project-avatar,
+.project-list-item .editor-avatar {
+  width: 30px;
+  height: 30px;
+  font-size: var(--neox-fs-sm, 13px);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.project-list-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.project-list-name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: #dfe1e5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-list-path {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #6c707e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Branch Dropdown ─────────────────────────────── */
+
+.branch-pill-wrapper {
+  position: relative;
+}
+
+.branch-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 340px;
+  max-height: 480px;
+  display: flex;
+  flex-direction: column;
+  background: #2b2d30;
+  border: 1px solid #3c3f41;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 1000;
+  animation: dropdown-in var(--neox-dur-fast) var(--neox-ease-out);
+  overflow: hidden;
+}
+
+/* 搜索行 */
+.branch-dropdown-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 6px;
+  flex-shrink: 0;
+}
+
+.branch-search-icon { font-size: var(--neox-fs-md, 14px); color: #6c707e; }
+
+.branch-dropdown-search {
+  flex: 1;
+  height: 26px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #dfe1e5;
+  font-size: var(--neox-fs-sm, 13px);
+}
+.branch-dropdown-search::placeholder { color: #6c707e; }
+
+.branch-dropdown-divider {
+  height: 1px;
+  background: #3c3f41;
+  flex-shrink: 0;
+}
+
+/* 操作区 */
+.branch-action-group { padding: 4px 6px; flex-shrink: 0; }
+
+.branch-action-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: #dfe1e5;
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  text-align: left;
+}
+.branch-action-item:hover { background: #393b40; }
+
+.branch-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  color: #9da0a8;
+  font-size: var(--neox-fs-md, 14px);
+  flex-shrink: 0;
+}
+
+.branch-action-label { flex: 1; }
+
+.branch-action-kbd {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #6c707e;
+  flex-shrink: 0;
+}
+
+/* 新建分支输入行 */
+.branch-new-row {
+  display: flex;
+  gap: 6px;
+  padding: 4px 10px 8px;
+}
+
+.branch-new-input {
+  flex: 1;
+  height: 26px;
+  padding: 0 8px;
+  background: #1e1f22;
+  border: 1px solid #3c3f41;
+  border-radius: 4px;
+  color: #dfe1e5;
+  font-size: var(--neox-fs-xs, 12px);
+  outline: none;
+}
+.branch-new-input:focus { border-color: #2f65ca; }
+
+.branch-new-confirm {
+  height: 26px;
+  padding: 0 10px;
+  background: #2f65ca;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+}
+.branch-new-confirm:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* 分支列表 */
+.branch-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0 6px;
+}
+.branch-list-scroll::-webkit-scrollbar { width: 4px; }
+.branch-list-scroll::-webkit-scrollbar-thumb { background: #393b40; border-radius: 2px; }
+
+.branch-list-loading {
+  padding: 10px 14px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #6c707e;
+}
+
+.branch-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 12px 3px;
+  background: transparent;
+  border: none;
+  color: #6c707e;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+.branch-section-header:hover { color: #9da0a8; }
+
+.branch-section-chevron {
+  font-size: var(--neox-fs-sm, 13px);
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+  display: inline-block;
+}
+.branch-section-chevron.expanded { transform: rotate(90deg); }
+
+.branch-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 14px 6px 24px;
+  border: none;
+  background: transparent;
+  color: #dfe1e5;
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  text-align: left;
+}
+.branch-list-item:hover { background: #393b40; }
+.branch-list-item.current { background: #2e436e; color: #fff; }
+.branch-list-item.remote { color: #9da0a8; }
+
+.branch-list-star { font-size: var(--neox-fs-xs, 12px); color: #6c707e; flex-shrink: 0; }
+.branch-list-item.current .branch-list-star { color: #e5a445; }
+.branch-list-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.branch-list-chevron { font-size: var(--neox-fs-sm, 13px); color: #6c707e; flex-shrink: 0; }
+
+.branch-list-empty {
+  padding: 8px 24px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #6c707e;
+}
+
+/* 状态 toast */
+.branch-status-toast {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #2b2d30;
+  border: 1px solid #3c3f41;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #dfe1e5;
+  white-space: nowrap;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  animation: dropdown-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+/* ==================== 模型选择器 ==================== */
+
+/* 模型选择器容器 - 包含思考开关和模型选择 */
+.model-selector-container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* 思考模式开关 */
+.thinking-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.thinking-toggle:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #475569;
+}
+
+.thinking-toggle.active {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: var(--text-accent);
+}
+
+.thinking-toggle svg {
+  width: 14px;
+  height: 14px;
+  color: #f4b740;
+}
+
+.thinking-toggle .thinking-label {
+  font-size: 10px;
+}
+
+.thinking-toggle.active svg {
+  color: var(--text-accent);
+}
+
+/* ==================== Reasoning Effort 选择器 ==================== */
+.effort-selector {
+  position: relative;
+  flex-shrink: 0;
+  margin-left: -4px;
+}
+
+.effort-tier-label {
+  font-size: 9px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.effort-dropdown {
+  min-width: 160px !important;
+}
+
+/* ===== Model Config Panel ===== */
+.model-config-panel {
+  width: 320px;
+  max-width: calc(100vw - 16px);
+  max-height: 480px;
+  overflow-y: auto;
+  border-radius: 12px;
+  background: #2b2d30;
+  border: 1px solid #393b40;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  animation: mcpSlideIn var(--neox-dur-fast) var(--neox-ease-out);
+  z-index: 100000;
+}
+
+@keyframes mcpSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mcp-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px 8px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mcp-header svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.mcp-body {
+  padding: 4px 0 8px;
+}
+
+.mcp-section {
+  padding: 4px 0;
+}
+
+.mcp-section+.mcp-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mcp-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 8px 16px 4px;
+}
+
+.mcp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  min-height: 32px;
+}
+
+.mcp-label {
+  font-size: var(--neox-fs-xs, 12px);
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.mcp-control {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Chip selector group */
+.mcp-select-group {
+  display: flex;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.mcp-chip {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 3px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+}
+
+.mcp-chip:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mcp-chip.active {
+  background: rgba(99, 102, 241, 0.35);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Toggle switch */
+.mcp-toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.mcp-toggle.active {
+  background: rgba(99, 102, 241, 0.6);
+}
+
+.mcp-toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mcp-toggle.active .mcp-toggle-knob {
+  transform: translateX(16px);
+  background: #fff;
+}
+
+/* Number input */
+.mcp-number-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mcp-number {
+  width: 80px;
+  padding: 3px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+  outline: none;
+  transition: border-color 0.15s;
+  text-align: right;
+}
+
+.mcp-number:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.mcp-number::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.mcp-suffix {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.mcp-hint {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 6px 8px 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 4px;
+}
+
+.mcp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 16px;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: var(--neox-fs-xxs, 11px);
+  text-align: center;
+}
+
+.mcp-empty svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.4;
+}
+
+/* Hide number input spinners */
+.mcp-number::-webkit-outer-spin-button,
+.mcp-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Config button in composer */
+.config-btn-wrap {
+  flex-shrink: 0;
+  margin-left: -6px;
+}
+
+.config-btn-wrap .model-selector-btn svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
+}
+
+.config-btn-wrap .model-selector-btn:hover svg {
+  opacity: 1;
+}
+
+/* Scrollbar for config panel */
+.model-config-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.model-config-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.model-config-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.model-config-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== Light theme overrides ==================== */
+:root[data-theme="light"] .project-selector-btn.editor:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+:root[data-theme="light"] .project-avatar.editor-avatar {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1);
+}
+:root[data-theme="light"] .project-selector-icon {
+  color: #64748b;
+}
+:root[data-theme="light"] .project-selector-btn.editor .project-selector-name {
+  color: #0f172a;
+}
+:root[data-theme="light"] .project-selector-btn.editor .project-selector-chevron {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .project-selector-sep {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .project-selector-segment {
+  color: #475569;
+}
+
+/* Project dropdown */
+:root[data-theme="light"] .project-dropdown {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+}
+:root[data-theme="light"] .project-action-btn {
+  color: #334155;
+}
+:root[data-theme="light"] .project-action-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+:root[data-theme="light"] .project-action-icon {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .project-dropdown-divider {
+  background: #e2e8f0;
+}
+:root[data-theme="light"] .project-dropdown-section-label {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .project-list-item:hover {
+  background: #f1f5f9;
+}
+:root[data-theme="light"] .project-list-item.active {
+  background: #dbeafe;
+}
+:root[data-theme="light"] .project-list-name {
+  color: #0f172a;
+}
+:root[data-theme="light"] .project-list-path {
+  color: #94a3b8;
+}
+
+/* Branch dropdown */
+:root[data-theme="light"] .branch-dropdown {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+}
+:root[data-theme="light"] .branch-search-icon,
+:root[data-theme="light"] .branch-dropdown-search::placeholder {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-dropdown-search {
+  color: #0f172a;
+}
+:root[data-theme="light"] .branch-dropdown-divider {
+  background: #e2e8f0;
+}
+:root[data-theme="light"] .branch-action-item {
+  color: #334155;
+}
+:root[data-theme="light"] .branch-action-item:hover {
+  background: #f1f5f9;
+}
+:root[data-theme="light"] .branch-action-icon {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-action-kbd {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-new-input {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+:root[data-theme="light"] .branch-new-input:focus {
+  border-color: #2563eb;
+}
+:root[data-theme="light"] .branch-list-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+:root[data-theme="light"] .branch-list-loading,
+:root[data-theme="light"] .branch-list-empty {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-section-header {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-section-header:hover {
+  color: #64748b;
+}
+:root[data-theme="light"] .branch-list-item {
+  color: #334155;
+}
+:root[data-theme="light"] .branch-list-item:hover {
+  background: #f1f5f9;
+}
+:root[data-theme="light"] .branch-list-item.current {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+:root[data-theme="light"] .branch-list-item.remote {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-list-star,
+:root[data-theme="light"] .branch-list-chevron {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .branch-list-item.current .branch-list-star {
+  color: #d97706;
+}
+:root[data-theme="light"] .branch-status-toast {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+/* Model config panel */
+:root[data-theme="light"] .model-config-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+:root[data-theme="light"] .mcp-header {
+  color: #0f172a;
+  border-bottom: 1px solid #e2e8f0;
+}
+:root[data-theme="light"] .mcp-section + .mcp-section {
+  border-top: 1px solid #e2e8f0;
+}
+:root[data-theme="light"] .mcp-section-title {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .mcp-label {
+  color: #475569;
+}
+:root[data-theme="light"] .mcp-select-group {
+  background: #f1f5f9;
+}
+:root[data-theme="light"] .mcp-chip {
+  color: #64748b;
+}
+:root[data-theme="light"] .mcp-chip:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: #334155;
+}
+:root[data-theme="light"] .mcp-chip.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+:root[data-theme="light"] .mcp-toggle {
+  background: #cbd5e1;
+}
+:root[data-theme="light"] .mcp-toggle.active {
+  background: #10b981;
+}
+:root[data-theme="light"] .mcp-toggle-knob {
+  background: #ffffff;
+}
+:root[data-theme="light"] .mcp-number {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+:root[data-theme="light"] .mcp-number:focus {
+  border-color: #2563eb;
+}
+:root[data-theme="light"] .mcp-number::placeholder {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .mcp-suffix,
+:root[data-theme="light"] .mcp-hint,
+:root[data-theme="light"] .mcp-empty {
+  color: #94a3b8;
+}
+:root[data-theme="light"] .mcp-hint {
+  border-top: 1px solid #e2e8f0;
+}
+:root[data-theme="light"] .model-config-panel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+:root[data-theme="light"] .model-config-panel::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Thinking toggle — default state in light */
+:root[data-theme="light"] .thinking-toggle {
+  background: rgba(15, 23, 42, 0.04);
+  color: #64748b;
+}
+:root[data-theme="light"] .thinking-toggle:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: #475569;
+}
+:root[data-theme="light"] .effort-tier-label {
+  color: #94a3b8;
+}

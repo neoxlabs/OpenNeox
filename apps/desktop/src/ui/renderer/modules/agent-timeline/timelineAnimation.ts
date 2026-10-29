@@ -1,0 +1,1 @@
+export const LAYOUT_ANCHOR_TRANSITION_MS = 460;

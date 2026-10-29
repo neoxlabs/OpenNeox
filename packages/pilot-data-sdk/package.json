@@ -1,0 +1,25 @@
+{
+  "name": "@neoxlabs/pilot-data-sdk",
+  "version": "0.1.0",
+  "description": "Pilot data layer: record types, validation, sync client and batched uploader",
+  "type": "module",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json"
+  },
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/pilot-data-sdk"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox"
+}

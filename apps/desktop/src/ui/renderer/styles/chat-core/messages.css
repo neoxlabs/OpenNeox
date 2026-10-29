@@ -1,0 +1,782 @@
+/* ==================== User Message Card ==================== */
+:root {
+  --chat-user-accent: var(--neox-primary-500, var(--text-accent));
+  --chat-user-surface: color-mix(in srgb, var(--chat-user-accent) 8%, transparent);
+  --chat-user-surface-dark: color-mix(in srgb, var(--chat-user-accent) 12%, rgba(255, 255, 255, 0.035));
+  --chat-agent-accent: color-mix(in srgb, var(--neox-fg-muted, #9ca3af) 58%, var(--chat-user-accent) 42%);
+  --chat-muted-surface: color-mix(in srgb, var(--neox-fg-muted, #94a3b8) 10%, transparent);
+  --chat-muted-surface-hover: color-mix(in srgb, var(--neox-fg-muted, #94a3b8) 15%, transparent);
+  --chat-ok: var(--neox-ok, var(--text-accent));
+  --chat-ok-soft: var(--neox-ok-soft, color-mix(in srgb, var(--chat-ok) 14%, transparent));
+  --chat-ok-ink: var(--neox-ok-ink, var(--chat-ok));
+  --chat-warn: var(--neox-warn, var(--text-accent));
+  --chat-warn-soft: var(--neox-warn-soft, color-mix(in srgb, var(--chat-warn) 14%, transparent));
+  --chat-warn-ink: var(--neox-warn-ink, var(--chat-warn));
+  --chat-error: var(--neox-err, var(--text-accent));
+  --chat-error-soft: var(--neox-err-soft, color-mix(in srgb, var(--chat-error) 13%, transparent));
+  --chat-error-ink: var(--neox-err-ink, var(--chat-error));
+  --chat-code-context: var(--neox-fg-secondary, var(--text-secondary));
+  --chat-code-line-number: var(--neox-fg-hint, var(--text-muted));
+  --chat-code-hover: color-mix(in srgb, var(--chat-user-accent) 12%, transparent);
+  --chat-scroll-thumb: color-mix(in srgb, var(--chat-user-accent) 18%, transparent);
+  --chat-scroll-thumb-hover: color-mix(in srgb, var(--chat-user-accent) 32%, transparent);
+}
+
+:root[data-theme="dark"] {
+  --chat-user-surface: var(--chat-user-surface-dark);
+  --chat-muted-surface: rgba(255, 255, 255, 0.055);
+  --chat-muted-surface-hover: rgba(255, 255, 255, 0.090);
+}
+
+.user-message-card {
+  position: relative;
+  border: none;
+  border-radius: 8px;
+  background: var(--chat-user-surface);
+  padding: 10px 14px;
+  padding-left: 18px;
+  margin-bottom: 2px;
+}
+
+.user-message-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--chat-user-accent), color-mix(in srgb, var(--chat-user-accent) 72%, #000));
+}
+
+/* ==================== Agent Message Card ==================== */
+.agent-message-card {
+  position: relative;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  padding: 4px 14px;
+  padding-left: 18px;
+  margin-bottom: 0;
+}
+
+.agent-message-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--chat-agent-accent), color-mix(in srgb, var(--chat-agent-accent) 60%, transparent));
+  opacity: 0.48;
+}
+
+/* 用户消息：头像/图标 + You + 时间 + 操作按钮 - 新设计 */
+.user-message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  margin-bottom: 2px;
+}
+
+.user-avatar {
+  display: none;
+}
+
+.user-avatar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.user-message-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.user-checkpoint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  min-height: 22px;
+  border-radius: 6px;
+  background: var(--chat-muted-surface);
+  color: var(--text-tertiary);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+}
+
+.user-checkpoint-badge svg {
+  width: 11px;
+  height: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.user-checkpoint-badge span {
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.user-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--chat-user-accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.timeline-time-inline {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 400;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+
+.user-message-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 1;
+  margin-left: auto;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.user-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  min-height: 24px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: background-color var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out), opacity var(--neox-dur-fast) var(--neox-ease-out);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  opacity: 0.96;
+}
+
+.user-action-btn span {
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1;
+}
+
+.user-action-btn:hover {
+  background: var(--chat-muted-surface-hover);
+  color: var(--text-primary);
+}
+
+.user-action-btn.rollback-btn {
+  color: var(--neox-primary-400);
+}
+
+.user-action-btn.rollback-btn:hover {
+  background: color-mix(in srgb, var(--neox-primary-500) 14%, transparent);
+  color: var(--neox-primary-300);
+}
+
+.user-action-btn.reapply-btn {
+  color: var(--neox-ok-ink, var(--neox-ok));
+}
+
+.user-action-btn.reapply-btn:hover {
+  background: var(--neox-ok-soft);
+  color: var(--neox-ok);
+}
+
+.user-action-btn.revert-btn {
+  color: var(--neox-err-ink, var(--neox-err));
+}
+
+.user-action-btn.revert-btn:hover {
+  background: var(--neox-err-soft);
+  color: var(--neox-err);
+}
+
+.user-action-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.timeline-entry.level-warning .timeline-title {
+  color: var(--neox-warn-ink, var(--neox-warn));
+}
+
+.timeline-entry.level-error .timeline-title {
+  color: var(--neox-err-ink, var(--neox-err));
+}
+
+.timeline-entry.live .timeline-title {
+  color: var(--neox-primary-400);
+}
+
+.timeline-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  line-height: 0;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  opacity: 0.7;
+}
+
+.timeline-title-icon svg {
+  width: 10px;
+  height: 10px;
+  display: block;
+}
+
+.timeline-title-icon.tool-result {
+  color: var(--neox-ok);
+  opacity: 0.9;
+}
+
+.timeline-title-icon.tool-error {
+  color: var(--neox-err-ink, var(--neox-err));
+  opacity: 0.9;
+}
+
+.timeline-title-icon.tool-call {
+  color: var(--neox-warn-ink, var(--neox-warn));
+  opacity: 0.9;
+}
+
+.timeline-title-icon.thinking {
+  color: var(--neox-warn-ink, var(--neox-warn));
+  opacity: 0.9;
+}
+
+.timeline-detail {
+  margin-top: 4px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  color: var(--text-secondary);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  max-height: none;
+  overflow: visible;
+}
+
+.timeline-entry.user_message .timeline-detail {
+  background: transparent;
+}
+
+.timeline-entry.assistant_message .timeline-detail,
+.timeline-entry.assistant_prefix .timeline-detail {
+  background: transparent;
+  padding: 0;
+  margin-top: 4px;
+}
+
+/* thinking/reasoning 内容样式 - 紧凑折叠 */
+.timeline-entry.thinking .timeline-detail {
+  background: transparent;
+  border: none;
+  border-left: 2px solid var(--chat-warn-soft);
+  border-radius: 0;
+  padding: 4px 0 4px 10px;
+  margin-top: 2px;
+  margin-left: 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Run completed / log info 样式 - 使用与 assistant 一致的字体 */
+.timeline-entry.log.level-info .timeline-detail {
+  font-family: var(--font-sans);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  background: transparent;
+  padding: 4px 0;
+}
+
+.timeline-code {
+  margin-top: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  font-weight: 450;
+  background: var(--neox-bg-sunken, var(--bg-code));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  white-space: pre-wrap;
+  max-height: 240px;
+  overflow: auto;
+}
+
+.timeline-status-log {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeline-status-entry {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.timeline-status-time {
+  font-family: var(--font-mono);
+  opacity: 0.6;
+}
+
+.timeline-status-entry.level-warning {
+  color: var(--gold-300);
+}
+
+.timeline-status-entry.level-error {
+  color: var(--chat-error-ink);
+}
+
+.timeline-status-entry.live .timeline-status-text {
+  position: relative;
+  padding-left: 12px;
+  animation: pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.timeline-status-entry.live .timeline-status-text::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--chat-warn-ink);
+  transform: translateY(-50%);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--chat-warn-ink) 70%, transparent);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.timeline-diff-indicator {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.diff-add {
+  color: var(--chat-ok-ink);
+}
+
+.diff-remove {
+  color: var(--chat-error-ink);
+}
+
+.timeline-code-block {
+  margin-top: 6px;
+  background: var(--bg-code);
+  border-radius: 6px;
+  padding: 4px 0;
+  max-height: 260px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  width: 100%;
+}
+
+.timeline-code-expand {
+  width: 100%;
+  padding: 4px 8px;
+  border: none;
+  background: var(--bg-code);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xxs, 11px);
+  cursor: pointer;
+  margin-top: 4px;
+  border-top: 1px solid var(--neox-line-subtle, var(--border-subtle));
+}
+
+.timeline-code-expand:hover {
+  background: var(--chat-code-hover);
+  color: var(--chat-user-accent);
+}
+
+.timeline-collapse-btn {
+  margin-left: 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform: rotate(0deg);
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.timeline-collapse-btn svg {
+  width: 10px;
+  height: 10px;
+}
+
+.timeline-collapse-btn:hover {
+  color: var(--gold-400);
+}
+
+.timeline-collapse-btn.collapsed {
+  transform: rotate(-90deg);
+}
+
+.code-line {
+  display: flex;
+  gap: 6px;
+  padding: 1px 8px;
+  align-items: center;
+  min-height: 18px;
+  line-height: 16px;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.code-line-num {
+  width: 28px;
+  text-align: right;
+  color: var(--chat-code-line-number);
+  flex-shrink: 0;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.code-line-text {
+  flex: 1;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 16px;
+}
+
+.code-line.added {
+  background: var(--chat-ok-soft);
+  color: var(--chat-ok-ink);
+}
+
+.code-line.removed {
+  background: var(--chat-error-soft);
+  color: var(--chat-error-ink);
+}
+
+.code-line.context {
+  color: var(--chat-code-context);
+}
+
+/* 白天模式 code-line 适配 */
+:root[data-theme="light"] .code-line.added {
+  background: var(--chat-ok-soft);
+  color: var(--chat-ok-ink);
+}
+
+:root[data-theme="light"] .code-line.removed {
+  background: var(--chat-error-soft);
+  color: var(--chat-error-ink);
+}
+
+:root[data-theme="light"] .code-line.context {
+  color: var(--chat-code-context);
+}
+
+:root[data-theme="light"] .code-line-num {
+  color: var(--chat-code-line-number);
+}
+
+:root[data-theme="light"] .code-line-text {
+  color: inherit;
+}
+
+/* ==================== Progress Timeline ==================== */
+/* ==================== 消息列表 - CLI风格 ==================== */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-primary);
+  font-family: var(--font-sans);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* 底部留白 spacer — 确保最后一条消息能滚动到输入框上方 */
+.chat-messages-bottom-spacer {
+  flex-shrink: 0;
+  height: 40vh;               /* 视口相对高度，确保任何屏幕下都够 */
+  min-height: 280px;
+  pointer-events: none;
+}
+
+.empty-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 24px;
+  padding: 24px 16px;
+  padding-top: 15vh;
+}
+
+.empty-greeting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.empty-greeting-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.empty-greeting-sub {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-tertiary);
+  max-width: 320px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.empty-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.empty-suggestions button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  font-family: var(--font-sans);
+}
+
+.empty-suggestions button svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.empty-suggestions button:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+  background: color-mix(in srgb, var(--chat-user-accent) 10%, transparent);
+}
+
+.empty-suggestions button:hover svg {
+  opacity: 0.8;
+}
+
+/* ==================== 消息 - CLI风格 ==================== */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 100%;
+  animation: message-in 0.2s var(--ease-out-expo);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.chat-message.user {
+  align-self: stretch;
+  flex-direction: column;
+}
+
+.message-avatar {
+  display: none;
+}
+
+.message-content {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.chat-message.user .message-content {
+  background: transparent;
+  border-color: transparent;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.message-role {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.chat-message.user .message-role {
+  color: var(--chat-user-accent);
+}
+
+.chat-message.user .message-role::before {
+  content: "❯ ";
+  color: var(--chat-user-accent);
+}
+
+.chat-message.assistant .message-role {
+  color: var(--chat-agent-accent);
+}
+
+.chat-message.assistant .message-role::before {
+  content: "◆ ";
+  color: var(--chat-agent-accent);
+}
+
+.message-tokens {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.message-text {
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  /* 性能优化 */
+  max-height: 60vh;
+  overflow-y: auto;
+  will-change: contents;
+  contain: content;
+  padding-left: 8px;
+  margin-left: 4px;
+}
+
+.chat-message.user .message-text {
+  border-left: 2px solid var(--border-gold);
+  color: var(--text-secondary);
+}
+
+.chat-message.assistant .message-text {
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.chat-message.pending .message-text {
+  color: var(--text-muted);
+}
+
+.chat-message.pending .message-text::after {
+  content: "▌";
+  animation: cursor-blink 1s step-end infinite;
+  color: var(--chat-user-accent);
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* 消息文本内部滚动条样式 */
+.message-text::-webkit-scrollbar {
+  width: 3px;
+}
+
+.message-text::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.message-text::-webkit-scrollbar-thumb {
+  background: var(--chat-scroll-thumb);
+  border-radius: 2px;
+}
+
+.message-text::-webkit-scrollbar-thumb:hover {
+  background: var(--chat-scroll-thumb-hover);
+}

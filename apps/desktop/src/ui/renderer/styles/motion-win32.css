@@ -1,0 +1,70 @@
+
+/* ── Windows 缓动令牌覆盖 ───────────────────────────────── */
+html[data-platform='win32'],
+html[data-platform='win32'][data-theme],
+html[data-platform='win32'] :root[data-theme] {
+  --neox-ease-out:    cubic-bezier(0.1, 0.9, 0.2, 1);
+  --neox-ease-in-out: cubic-bezier(0.1, 0.9, 0.2, 1);
+
+  /* 强调缓动 —— 出现/消失; 微交互继续用 ease-out */
+  --neox-ease-emphasized: cubic-bezier(0.1, 0.9, 0.2, 1);
+  /* 退场: 起步就快 (Fluent accelerate 近似) */
+  --neox-ease-exit:       cubic-bezier(0.7, 0, 1, 0.5);
+
+  /* 比基线 (160/240/360) 略收, 比 macOS (180/260/380) 更短 —— Win 手感要干脆 */
+  --neox-dur-fast: 150ms;
+  --neox-dur-base: 200ms;
+  --neox-dur-slow: 280ms;
+  --neox-loop-breathe: 1800ms;
+  --neox-loop-shimmer: 1200ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-platform='win32'] .nx-in {
+    opacity: 0;
+    transition:
+      opacity var(--neox-dur-base) var(--neox-ease-emphasized),
+      transform var(--neox-dur-slow) var(--neox-ease-emphasized);
+  }
+  html[data-platform='win32'] .nx-in.is-in { opacity: 1; transform: none; }
+
+  /* 浮层/弹窗: 位移和缩放都比 mac 收一档 —— Win 要干脆, 不要"飘" */
+  html[data-platform='win32'] .nx-in--modal { transform: translateY(8px) scale(0.98); }
+  html[data-platform='win32'] .nx-in--pop {
+    transform: scale(0.96);
+    transform-origin: var(--nx-pop-origin, 50% 0);
+  }
+  html[data-platform='win32'] .neox-taskdetail-popover.nx-in--pop,
+  html[data-platform='win32'] .atl-svc__pop.nx-in--pop { transform-origin: 100% 0; }
+  html[data-platform='win32'] .nx-in--sheet-right { transform: translateX(12px); }
+  html[data-platform='win32'] .nx-in--sheet-left  { transform: translateX(-12px); }
+  html[data-platform='win32'] .nx-in--rise        { transform: translateY(6px); }
+
+  /* 背幕只淡入, 不动 backdrop-filter (同 mac 性能红线) */
+  html[data-platform='win32'] .nx-in--scrim {
+    transition: opacity var(--neox-dur-base) var(--neox-ease-emphasized);
+  }
+
+  html[data-platform='win32'] .nx-in--delay-1 { transition-delay: 40ms; }
+  html[data-platform='win32'] .nx-in--delay-2 { transition-delay: 80ms; }
+  html[data-platform='win32'] .nx-in--delay-3 { transition-delay: 120ms; }
+}
+
+/* ── 按下反馈 ─────────────────────────────────────────────
+ *   Win 按钮反馈更干脆, 时长压到 70ms; 缩放也略轻。 */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-platform='win32'] .nx-press {
+    transition: transform 70ms var(--neox-ease-out);
+  }
+  html[data-platform='win32'] .nx-press:active { transform: scale(0.98); }
+}
+
+/* ── 减弱动效 ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html[data-platform='win32'] .nx-in,
+  html[data-platform='win32'] .nx-in.is-in {
+    transform: none !important;
+    transition: opacity 100ms linear !important;
+  }
+  html[data-platform='win32'] .nx-press:active { transform: none; }
+}

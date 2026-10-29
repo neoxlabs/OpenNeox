@@ -1,0 +1,16 @@
+name: neox_agent_sdk
+description: >-
+  Neox Agent SDK for mobile — a pure-Dart agent runtime (tool-calling loop,
+  event stream, built-in tools) that runs on-device without a desktop.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  http: ^1.2.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0

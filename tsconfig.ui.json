@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist/ui-temp",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": ["apps/desktop/src/ui/*"]
+    },
+    "skipLibCheck": true
+  },
+  "include": [
+    "apps/desktop/src/ui/**/*",
+    "packages/core/src/types/**/*",
+    "vite.config.ui.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
+

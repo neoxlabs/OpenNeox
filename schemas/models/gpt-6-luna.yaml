@@ -1,0 +1,48 @@
+# GPT-6 Luna
+#
+# 推理档 2026-09-28 实测 (relay-b / relay-c / relay-a 三家中转, gpt-6-sol / luna):
+#   · reasoning_effort 认 none / low / medium / high / xhigh / max, 越往上推理越多
+#     (luna: low 116 → max 485 reasoning token); none = 不思考 (直接回答)。
+#   · ultra 三家都 400 ("Supported values are none…max") —— 不给这一档。
+#   上下文 1.05M: 三家中转实测 85 万输入过、100 万拒 (= 1.05M 减 128K 输出预留)。
+id: gpt-6-luna
+display_name: GPT-6 Luna
+family: openai
+released: 2026-09-22
+availability: ga
+
+context_window: 1050000
+max_output_tokens: 128000
+
+upstream_slugs:
+  prov_openrouter: openai/gpt-6-luna
+  prov_openai_direct: gpt-6-luna
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  reasoning_effort:
+    supported: true
+    field: reasoning_effort
+    values: [low, medium, high, xhigh, max]
+    default: high
+  prompt_cache:
+    supported: true
+    type: openai-prompt-cache
+    key_field: prompt_cache_key
+  uses_max_completion_tokens: true
+
+effort_map:
+  off:    { reasoning_effort: none }
+  low:    { reasoning_effort: low }
+  medium: { reasoning_effort: medium }
+  high:   { reasoning_effort: high }
+  xhigh:  { reasoning_effort: xhigh }
+  max:    { reasoning_effort: max }
+
+pricing:
+  input_per_mtok: 0.10
+  cached_input_per_mtok: 0.01
+  output_per_mtok: 0.50
+  currency: USD

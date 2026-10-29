@@ -1,0 +1,26 @@
+.sfc-preview-error {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.sfc-preview-error__hint {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.6;
+  color: var(--neox-fg-muted, #999);
+  text-align: center;
+  max-width: 420px;
+}
+
+.sfc-preview-error__raw {
+  font-family: var(--neox-font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--neox-fg-hint, #777);
+  text-align: center;
+  max-width: 90%;
+  margin: 2px 0 2px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  /* 原始报错是辅助信息, 不跟主文案抢注意力 */
+  opacity: 0.75;
+}

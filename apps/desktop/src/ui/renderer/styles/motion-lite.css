@@ -1,0 +1,46 @@
+
+/* ── 1. 轮级头像 (is-work): 工具在跑时不再重复旋转 ───────────────────
+ * is-work 的语义是「有工具在跑」(liveTurnMark.ts), 而那一行自己的 DotSpinner
+ * 与标题扫光已经在说这件事, 且更具体。环停在静态标上, 位置/形状不变, 所以
+ * "这一轮在跑"仍然看得见 —— 只是不再多一个转的东西。
+ *
+ * think / wait / done 不砍: think 下面单独处理 (只砍贵的那层扫光),
+ * wait 与 done 是真正需要用户看见的信号 (等审批 / 完成落定)。 */
+html[data-motion='standard'][data-low-end] .atl-live-avatar .nx-mk.is-work .nx-mk__ring,
+html[data-motion='standard'][data-low-end] .atl-live-avatar .nx-mk.is-work .nx-mk__sweep {
+  animation: none;
+}
+html[data-motion='standard'][data-low-end] .atl-live-avatar .nx-mk.is-work .nx-mk__sweep {
+  opacity: 0;
+}
+
+/* ── 2. 轮级头像 (is-think): 只砍每帧重绘的扫光, 保留慢转 ─────────────
+ * 思考时 LIVE 头像的环在 6s 慢转 (纯 transform, 便宜) + 一道 conic-gradient
+ * 扫光 (每帧重新光栅化, 贵)。同一行下面就是 LiveShimmerText 的「思考中」,
+ * 走合成器 —— 贵的这层是重复表达, 砍掉它保留慢转: 「在想」依然看得见。 */
+html[data-motion='standard'][data-low-end] .atl-live-avatar .nx-mk.is-think .nx-mk__sweep {
+  animation: none;
+  opacity: 0;
+}
+
+/* ── 3. 空闲 logo: 不为了"活着"而常转 ───────────────────────────────
+ * 首页空态那枚 24s 无限旋转。它没有传达任何状态 —— 空态就是"没有事情在发生"。
+ * 这是静止期仍然满帧出图的直接原因: 空态上它是**唯一**的动画, 停掉之后整个
+ * 空态就没有任何东西要出帧了, 合成器可以真正闲下来。标本身完整保留 (静止的
+ * 漩涡标本来就是常态 —— 跑完的折叠行用的就是静态标)。
+ * 想要它转: 设置里切到「丝滑」即可, 本文件按 [data-motion='standard'] 让位。 */
+html[data-motion='standard'][data-low-end] .nx-mk.is-idle .nx-mk__ring {
+  animation: none;
+}
+
+/* ── 4. 输入框常驻模糊 ─────────────────────────────────────────────
+ * .composer-input-wrap 是 blur(22px) saturate(1.35), 而它常驻可见、打字时高频
+ * 重绘。Retina 下这是约 1800×400 物理像素的实时高斯模糊 —— 背后本来就是实色
+ * 画布, 模糊几乎看不出来, 纯付合成成本。低配机去掉模糊层。
+ * 底色不动 (--composer-surface 本身就是 78% 半透明实色), 所以观感一致,
+ * 不会变透明也不会变实。同理去掉 .running-agents-bar 的 blur(16px)。 */
+html[data-motion='standard'][data-low-end] .composer-input-wrap,
+html[data-motion='standard'][data-low-end] .running-agents-bar {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

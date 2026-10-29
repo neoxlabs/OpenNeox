@@ -1,0 +1,349 @@
+/* 会话全景 (SessionOverview.tsx) 第二版 —— 暖白陶土底 + 大标题 + 彩色字母章的项目卡 */
+
+.neox-ov {
+  --ov-bg: #f3f0eb;
+  --ov-face: #fdfcfa;
+  --ov-edge: rgba(120, 104, 88, 0.13);
+  --ov-ink: #1d1c1a;
+  --ov-soft: rgba(29, 28, 26, 0.58);
+  --ov-faint: rgba(29, 28, 26, 0.4);
+  --ov-hover: rgba(29, 28, 26, 0.045);
+  --ov-blue: #2f6bff;
+  --ov-amber: #d97706;
+  --ov-shadow: 0 1px 1px rgba(60, 45, 30, 0.03), 0 2px 8px rgba(60, 45, 30, 0.05);
+  --ov-shadow-hover: 0 2px 2px rgba(60, 45, 30, 0.04), 0 16px 32px -10px rgba(60, 45, 30, 0.22);
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  display: flex;
+  background: var(--ov-bg);
+  color: var(--ov-ink);
+  animation: neox-ov-in 220ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.neox-ov.is-closing { animation: neox-ov-out 140ms ease-in forwards; }
+@keyframes neox-ov-in { from { opacity: 0; transform: scale(1.012); } to { opacity: 1; transform: none; } }
+@keyframes neox-ov-out { to { opacity: 0; transform: scale(1.008); } }
+:root[data-theme="dark"] .neox-ov {
+  --ov-bg: #1b1a18;
+  --ov-face: #24221f;
+  --ov-edge: rgba(255, 255, 255, 0.07);
+  --ov-ink: #f2efea;
+  --ov-soft: rgba(242, 239, 234, 0.62);
+  --ov-faint: rgba(242, 239, 234, 0.42);
+  --ov-hover: rgba(255, 255, 255, 0.05);
+  --ov-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --ov-shadow-hover: 0 16px 32px -10px rgba(0, 0, 0, 0.6);
+}
+
+.neox-ov__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+  min-height: 0;
+}
+
+/* ── 头: 左边大标题 + 数字, 右边陶土插画 ── */
+.neox-ov__hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 56px 0 22px; /* 顶上留出 mac 红绿灯 */
+  -webkit-app-region: drag;
+}
+.neox-ov__hero-text { display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 auto; }
+.neox-ov__eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--ov-faint); }
+.neox-ov__crumb {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: -6px;
+  padding: 2px 8px 2px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ov-soft);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+.neox-ov__crumb:hover { background: var(--ov-hover); color: var(--ov-ink); }
+.neox-ov__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.neox-ov__stats { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 2px; font-size: 13px; color: var(--ov-soft); }
+.neox-ov__stats span { display: inline-flex; align-items: baseline; gap: 5px; }
+.neox-ov__stats b { font-size: 17px; font-weight: 650; color: var(--ov-ink); font-variant-numeric: tabular-nums; }
+.neox-ov__stats .is-running b { color: var(--ov-blue); }
+.neox-ov__stats .is-waiting b { color: var(--ov-amber); }
+.neox-ov__art {
+  flex: 0 0 auto;
+  height: 104px;
+  margin-right: 36px;
+  user-select: none;
+  pointer-events: none;
+  animation: neox-ov-float 6s ease-in-out infinite;
+}
+@keyframes neox-ov-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+:root[data-theme="dark"] .neox-ov__art { opacity: 0.8; }
+.neox-ov__close {
+  position: absolute;
+  top: 18px;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ov-hover);
+  color: var(--ov-soft);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+}
+.neox-ov__close:hover { background: color-mix(in srgb, var(--ov-ink) 9%, transparent); color: var(--ov-ink); transform: rotate(90deg); }
+
+/* ── 搜索: 一整条暖白胶囊 ── */
+/* 头和搜索条在竖排里不许被压 (内容一多, 搜索条会被挤成 36px) */
+.neox-ov__hero,
+.neox-ov__search { flex-shrink: 0; }
+.neox-ov__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 50px;
+  padding: 0 16px 0 18px;
+  border: 1px solid var(--ov-edge);
+  border-radius: 14px;
+  background: var(--ov-face);
+  box-shadow: var(--ov-shadow);
+  color: var(--ov-faint);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.neox-ov__search:focus-within { border-color: color-mix(in srgb, var(--ov-blue) 40%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ov-blue) 9%, transparent), var(--ov-shadow); }
+.neox-ov__search input { flex: 1 1 auto; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ov-ink); font: inherit; font-size: 15.5px; }
+.neox-ov__search input::placeholder { color: var(--ov-faint); }
+.neox-ov__search-count { font-size: 12.5px; color: var(--ov-soft); font-variant-numeric: tabular-nums; }
+.neox-ov__keys { display: inline-flex; gap: 4px; }
+.neox-ov__keys kbd {
+  padding: 0 6px;
+  border-radius: 5px;
+  background: var(--ov-hover);
+  box-shadow: inset 0 -1px 0 var(--ov-edge);
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 20px;
+  color: var(--ov-faint);
+}
+
+/* ── 内容区 ── */
+.neox-ov__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 -12px;
+  padding: 26px 12px 40px;
+}
+.neox-ov__section + .neox-ov__section { margin-top: 30px; }
+.neox-ov__section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ov-soft);
+}
+.neox-ov__section h2 em { font-style: normal; font-weight: 500; color: var(--ov-faint); font-variant-numeric: tabular-nums; }
+.neox-ov__empty { padding: 80px 0; text-align: center; color: var(--ov-faint); font-size: 14px; }
+
+/* 第二版: 陶土小物件 (proj-*.webp) 放在一块项目色淡底的软垫上, 垫子左上受光 */
+.neox-ov-mono {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: radial-gradient(110% 90% at 30% 20%, color-mix(in srgb, var(--hue) 6%, #fff) 0%, color-mix(in srgb, var(--hue) 16%, var(--ov-face)) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hue) 14%, transparent), inset 0 -2px 0 color-mix(in srgb, var(--hue) 10%, transparent);
+}
+.neox-ov-mono img { width: 74%; height: 74%; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(60, 45, 30, 0.14)); user-select: none; }
+.neox-ov-mono.is-sm { width: 26px; height: 26px; border-radius: 8px; }
+.neox-ov__title .neox-ov-mono { width: 46px; height: 46px; border-radius: 14px; }
+:root[data-theme="dark"] .neox-ov-mono { background: color-mix(in srgb, var(--hue) 18%, var(--ov-face)); }
+
+/* 状态记号 (代替平涂圆点): 闲着 = 项目色的一道短竖条; 在跑 = 钴蓝转圈环; 等你 = 琥珀色发光小胶囊 */
+.neox-ov-mark { flex: 0 0 auto; display: inline-block; }
+.neox-ov-mark.is-idle { width: 3px; height: 12px; border-radius: 2px; background: color-mix(in srgb, var(--hue, var(--ov-faint)) 45%, transparent); }
+.neox-ov-mark.is-running {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.6px solid color-mix(in srgb, var(--ov-blue) 22%, transparent);
+  border-top-color: var(--ov-blue);
+  animation: neox-ov-spin 0.9s linear infinite;
+}
+.neox-ov-mark.is-waiting {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fbbf5a, var(--ov-amber));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ov-amber) 16%, transparent), 0 1px 2px rgba(180, 83, 9, 0.35);
+}
+@keyframes neox-ov-spin { to { transform: rotate(360deg); } }
+
+/* 大项目卡 */
+.neox-ov__projects { columns: 330px; column-gap: 16px; }
+.neox-ov__projects > .neox-ov-proj { width: 100%; margin: 0 0 16px; break-inside: avoid; }
+.neox-ov-proj {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 16px 12px;
+  border: 1px solid var(--ov-edge);
+  border-radius: 16px;
+  /* 顶上一抹项目色的淡光, 往下化进暖白 */
+  background: linear-gradient(180deg, color-mix(in srgb, var(--hue) 7%, var(--ov-face)) 0, var(--ov-face) 72px);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--ov-shadow);
+  animation: neox-ov-rise 320ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 30ms);
+  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 180ms ease, border-color 180ms ease;
+}
+.neox-ov-proj:hover,
+.neox-ov-proj.is-focus { transform: translateY(-3px); box-shadow: var(--ov-shadow-hover); }
+.neox-ov-proj.is-focus { border-color: color-mix(in srgb, var(--hue) 45%, transparent); }
+@keyframes neox-ov-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.neox-ov-proj__head { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.neox-ov-proj__id { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
+.neox-ov-proj__name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15.5px; font-weight: 650; }
+.neox-ov-proj__meta { font-size: 12px; color: var(--ov-faint); font-variant-numeric: tabular-nums; }
+.neox-ov-proj__when { flex: 0 0 auto; align-self: flex-start; margin-top: 2px; font-size: 11.5px; color: var(--ov-faint); font-variant-numeric: tabular-nums; }
+.neox-ov-spark { flex: 0 0 auto; display: inline-flex; align-items: flex-end; gap: 2px; height: 20px; margin-left: auto; }
+.neox-ov-spark i { width: 4px; border-radius: 2px 2px 1px 1px; background: linear-gradient(180deg, color-mix(in srgb, #fff 25%, var(--hue)), var(--hue)); opacity: 0.85; }
+.neox-ov-spark i.is-empty { height: 2px; background: color-mix(in srgb, var(--hue) 20%, transparent); opacity: 1; }
+.neox-ov-proj__foot { display: flex; align-items: center; gap: 6px; min-height: 22px; margin-top: auto; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--ov-edge) 70%, transparent); }
+.neox-ov-proj__foot:empty { display: none; }
+.neox-ov-proj__foot > i { padding: 0 7px; border-radius: 6px; font-style: normal; font-size: 11.5px; font-weight: 600; line-height: 21px; }
+.neox-ov-proj__foot > i.is-running { background: color-mix(in srgb, var(--ov-blue) 10%, transparent); color: var(--ov-blue); }
+.neox-ov-proj__foot > i.is-waiting { background: color-mix(in srgb, var(--ov-amber) 12%, transparent); color: #b45309; }
+.neox-ov-proj__more { font-size: 12px; color: var(--ov-faint); transition: color 140ms ease; }
+.neox-ov-proj:hover .neox-ov-proj__more, .neox-ov-proj.is-focus .neox-ov-proj__more { color: var(--hue); }
+.neox-ov-proj__list { display: flex; flex-direction: column; gap: 2px; margin: 0 -6px; }
+.neox-ov-proj__item { display: flex; align-items: center; gap: 8px; min-width: 0; height: 28px; padding: 0 6px; border-radius: 7px; font-size: 13px; }
+.neox-ov-proj__title { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--ov-ink); }
+.neox-ov-proj__time { flex: 0 0 auto; font-size: 11.5px; color: var(--ov-faint); font-variant-numeric: tabular-nums; }
+
+/* 小项目块 (更早的) */
+.neox-ov__tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; }
+.neox-ov-tile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  animation: neox-ov-rise 280ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: calc(120ms + var(--i, 0) * 12ms);
+  transition: background 140ms ease, border-color 140ms ease;
+}
+.neox-ov-tile .neox-ov-mono { grid-row: 1 / 3; }
+.neox-ov-tile:hover,
+.neox-ov-tile.is-focus { background: var(--ov-face); border-color: var(--ov-edge); box-shadow: var(--ov-shadow); }
+.neox-ov-tile__name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; font-weight: 600; }
+.neox-ov-tile__meta { font-size: 11.5px; color: var(--ov-faint); font-variant-numeric: tabular-nums; }
+
+/* 会话卡 (某个项目散开 / 搜索结果) */
+.neox-ov__cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); grid-auto-rows: 148px; gap: 12px; }
+.neox-ov-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  overflow: hidden;
+  padding: 14px 14px 12px;
+  border: 1px solid var(--ov-edge);
+  border-radius: 14px;
+  background: var(--ov-face);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--ov-shadow);
+  animation: neox-ov-rise 280ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 16ms);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+/* 左上一道项目色的短线, 卡多时一眼分出是哪个项目的 */
+.neox-ov-card::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: color-mix(in srgb, var(--hue) 75%, transparent);
+}
+.neox-ov-card > * { flex-shrink: 0; }
+.neox-ov-card:hover,
+.neox-ov-card.is-focus { transform: translateY(-2px); box-shadow: var(--ov-shadow-hover); }
+.neox-ov-card.is-focus { border-color: color-mix(in srgb, var(--ov-blue) 45%, transparent); }
+.neox-ov-card.is-active { border-color: color-mix(in srgb, var(--ov-blue) 35%, transparent); }
+.neox-ov-card__head { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.neox-ov-card__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.neox-ov-card__line {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ov-soft);
+}
+.neox-ov-card.is-waiting .neox-ov-card__line { color: #b45309; }
+.neox-ov-card__foot { display: flex; align-items: center; gap: 8px; margin-top: auto; min-width: 0; }
+.neox-ov-card__group { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; color: var(--ov-soft); }
+.neox-ov-card__group .neox-ov-mono { width: 20px; height: 20px; border-radius: 6px; }
+.neox-ov-card__time { margin-left: auto; flex: 0 0 auto; font-size: 11.5px; color: var(--ov-faint); font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  .neox-ov, .neox-ov-proj, .neox-ov-tile, .neox-ov-card, .neox-ov__art { animation: none; }
+}

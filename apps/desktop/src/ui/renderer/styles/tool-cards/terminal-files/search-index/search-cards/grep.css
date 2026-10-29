@@ -1,0 +1,383 @@
+/* ==================== Grep File Card ==================== */
+.grep-file-body {
+  padding: 0;
+}
+
+.grep-file-card {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.grep-file-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.grep-file-card.searching {
+  animation: none;
+}
+
+.grep-file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.grep-file-header:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+}
+
+.grep-file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.grep-file-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: transparent;
+  color: #a855f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.grep-file-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.grep-file-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.grep-file-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grep-file-pattern {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--accent-gold);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgba(var(--gold-rgb), 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  max-width: 300px;
+}
+
+.grep-file-pattern::before {
+  content: "Pattern: ";
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.grep-file-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.grep-match-count {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: #a855f7;
+  padding: 2px 8px;
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 4px;
+}
+
+.grep-file-count {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.grep-file-flag {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  background: rgba(168, 85, 247, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.grep-file-status {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.grep-file-status.completed {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.grep-file-status.searching {
+  color: var(--gold-400);
+  background: rgba(var(--gold-500-rgb), 0.1);
+}
+
+.grep-file-status.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.grep-file-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.grep-file-collapse-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out), background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.grep-file-collapse-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.grep-file-collapse-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.grep-file-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+.grep-file-body {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.grep-file-path-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.grep-file-path-row svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-muted);
+}
+
+.grep-file-command-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  word-break: break-all;
+}
+
+.grep-file-command-row svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-muted);
+}
+
+.grep-matches {
+  background: var(--bg-code);
+  max-height: 400px;
+  overflow: auto;
+}
+
+.grep-match-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-code);
+  max-height: 400px;
+  overflow: auto;
+}
+
+.grep-match-group {
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.grep-match-group .grep-matches {
+  max-height: none;
+  overflow: visible;
+}
+
+.grep-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--bg-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+}
+
+.grep-group-file {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grep-group-count {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.grep-read-hints {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+}
+
+.grep-read-hints-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.grep-read-hints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+}
+
+.grep-read-hints-list code {
+  background: var(--bg-code);
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
+.grep-match-line {
+  display: flex;
+  align-items: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.grep-match-line:last-child {
+  border-bottom: none;
+}
+
+.grep-match-line.matched {
+  background: rgba(168, 85, 247, 0.08);
+}
+
+/* 匹配行左侧高亮条 */
+.grep-match-line.matched::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #a855f7;
+}
+
+.grep-match-line.context {
+  background: transparent;
+  opacity: 0.7;
+}
+
+.grep-line-num {
+  flex-shrink: 0;
+  width: 48px;
+  padding: 4px 8px;
+  text-align: right;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  border-right: 1px solid var(--border-subtle);
+  user-select: none;
+}
+
+.grep-match-line.matched .grep-line-num {
+  color: #a855f7;
+  font-weight: 600;
+  padding-left: 11px;
+  /* 补偿左侧高亮条 */
+}
+
+.grep-line-content {
+  flex: 1;
+  padding: 4px 12px;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.grep-highlight {
+  background: rgba(168, 85, 247, 0.3);
+  color: #a855f7;
+  font-weight: 600;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* ==================== Light Theme Overrides ==================== */
+:root[data-theme="light"] .grep-file-card {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+:root[data-theme="light"] .grep-file-header:hover {
+  background: rgba(15, 23, 42, 0.05);
+}

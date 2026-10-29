@@ -1,0 +1,11 @@
+@import './onboarding/base.css';
+
+@import './onboarding/appearance-step.css';
+
+@import './onboarding/connect-step.css';
+
+@import './onboarding/migrate-step.css';
+
+@import './onboarding/mobile-step.css';
+
+@import './onboarding/step-polish.css';

@@ -1,0 +1,385 @@
+/* ==================== IDE Status Bar (底部状态栏) — JetBrains New UI ==================== */
+.ide-status-shell {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  z-index: 50;
+}
+
+.ide-status-shell.has-task .ide-status-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ide-status-bar {
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 8px 0 6px;
+  background: transparent;
+  border-top: none;
+  box-shadow: none;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #b4b8bf;
+  user-select: none;
+  z-index: 50;
+}
+
+
+.ide-status-taskbar {
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 8px 3px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #c6cad2;
+}
+
+.ide-status-task-main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.ide-status-task-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: #ffa657;
+  animation: semantic-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.ide-status-task-dot.state-ready {
+  background: #6dd19a;
+  animation: none;
+}
+
+.ide-status-task-dot.state-error {
+  background: #e55765;
+  animation: none;
+}
+
+.ide-status-task-label {
+  color: #eef2f7;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ide-status-task-detail {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #a7adb8;
+}
+
+.ide-status-task-progress-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ide-status-task-progress {
+  position: relative;
+  width: 144px;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.ide-status-task-progress > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4da3ff 0%, #7cc4ff 100%);
+  transition: width var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.ide-status-task-progress.indeterminate > span {
+  width: 42%;
+  animation: ide-status-indeterminate var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.ide-status-task-progress-text {
+  min-width: 34px;
+  text-align: right;
+  color: #dfe5ec;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes ide-status-indeterminate {
+  0% { left: -42%; }
+  100% { left: 100%; }
+}
+
+.ide-status-left,
+.ide-status-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ide-status-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.ide-status-divider {
+  width: 1px;
+  height: 14px;
+  background: #393b40;
+  margin: 0 4px;
+}
+
+.ide-status-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 20px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #b4b8bf;
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.ide-status-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.ide-status-btn:hover {
+  background: #393b40;
+  color: #dfe1e5;
+}
+
+.ide-status-btn.active {
+  color: #dfe1e5;
+  background: #393b40;
+}
+
+.ide-status-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ide-status-breadcrumb svg {
+  width: 13px;
+  height: 13px;
+  color: #6c707e;
+  flex-shrink: 0;
+}
+
+.ide-status-crumb {
+  font-size: var(--neox-fs-xs, 12px);
+  color: #b4b8bf;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ide-status-crumb.workspace {
+  color: #dfe1e5;
+  font-weight: 400;
+}
+
+.ide-status-crumb.leaf {
+  color: #dfe1e5;
+  font-weight: 400;
+}
+
+.ide-status-crumb-sep {
+  color: #6c707e;
+  font-size: var(--neox-fs-xs, 12px);
+  flex-shrink: 0;
+}
+
+.ide-status-right {
+  flex-shrink: 0;
+}
+
+.ide-status-item {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-variant-numeric: tabular-nums;
+  color: #b4b8bf;
+  cursor: default;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.ide-status-item:hover {
+  background: #393b40;
+  color: #dfe1e5;
+}
+
+.ide-status-item.lang {
+  color: #b4b8bf;
+  font-weight: 400;
+}
+
+/* 浅色主题适配 */
+:root[data-theme="light"] .ide-status-shell {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border-top: 1px solid #e2e8f0;
+}
+
+:root[data-theme="light"] .ide-status-shell.has-task .ide-status-bar {
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+:root[data-theme="light"] .ide-status-bar {
+  background: transparent;
+  border-top: none;
+  box-shadow: none;
+  color: #475569;
+}
+
+
+:root[data-theme="light"] .ide-status-taskbar {
+  color: #334155;
+}
+
+:root[data-theme="light"] .ide-status-task-label {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ide-status-task-detail {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .ide-status-task-progress {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+:root[data-theme="light"] .ide-status-task-progress > span {
+  background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+}
+
+:root[data-theme="light"] .ide-status-task-progress-text {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ide-status-task-dot.state-ready {
+  background: #16a34a;
+}
+
+:root[data-theme="light"] .ide-status-task-dot.state-error {
+  background: #dc2626;
+}
+
+:root[data-theme="light"] .ide-status-divider {
+  background: #e2e8f0;
+}
+
+:root[data-theme="light"] .ide-status-btn {
+  color: #475569;
+}
+
+:root[data-theme="light"] .ide-status-btn:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ide-status-btn.active {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+:root[data-theme="light"] .ide-status-crumb {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .ide-status-crumb.workspace,
+:root[data-theme="light"] .ide-status-crumb.leaf {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ide-status-crumb-sep {
+  color: #cbd5e1;
+}
+
+:root[data-theme="light"] .ide-status-item {
+  color: #475569;
+}
+
+:root[data-theme="light"] .ide-status-item:hover {
+  background: rgba(15, 23, 42, 0.05);
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .ide-status-item.lang {
+  color: #2563eb;
+}
+
+:root[data-theme="light"] .ide-status-breadcrumb svg {
+  color: #2563eb;
+}
+
+/* =========== Semantic Layer 索引状态 pill =========== */
+.ide-status-item.semantic-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.semantic-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8a8e95;
+  flex-shrink: 0;
+}
+
+.semantic-indicator.state-ready .semantic-indicator-dot {
+  background: #6dd19a;
+  box-shadow: 0 0 5px rgba(109, 209, 154, 0.5);
+}
+
+.semantic-indicator.state-bootstrapping .semantic-indicator-dot,
+.semantic-indicator.state-incremental .semantic-indicator-dot {
+  background: #ffa657;
+  animation: semantic-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.semantic-indicator.state-error .semantic-indicator-dot {
+  background: #e55765;
+}
+
+@keyframes semantic-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+:root[data-theme="light"] .semantic-indicator.state-ready .semantic-indicator-dot {
+  background: #16a34a;
+}
+:root[data-theme="light"] .semantic-indicator.state-bootstrapping .semantic-indicator-dot,
+:root[data-theme="light"] .semantic-indicator.state-incremental .semantic-indicator-dot {
+  background: #ea580c;
+}

@@ -1,0 +1,46 @@
+/* 设置 → 通知 · UI 3.0 陶土风 (set-notify3) —— 零 !important, 全部挂在 .nt3 作用域下 */
+
+/* 组标题: 13px/600 放卡外上方 */
+.nt3 .nx-section-title { margin: 22px 0 8px; }
+.nt3 .nx-section-title__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+
+/* 卡: 发丝边 + 16 圆角, 不加阴影 */
+.nt3 .nx-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+  overflow: hidden;
+}
+.nt3 .nx-card + .nx-card { margin-top: 10px; }
+
+/* 行: 最少 52px, 第二行起行间发丝分隔 */
+.nt3 .nx-row { min-height: 52px; padding: 10px 16px; gap: 12px; }
+.nt3 .nx-row + .nx-row { box-shadow: inset 0 1px 0 var(--neox-line-subtle); }
+.nt3 .nx-row__title { font-size: 14px; color: var(--neox-fg-primary); }
+.nt3 .nx-row__desc { font-size: 12px; color: var(--neox-fg-muted); }
+.nt3 .nx-row__control { font-variant-numeric: tabular-nums; }
+
+/* 行首图标: 28 方块 + 16 线条 */
+.nt3 .nt3-glyph {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.nt3 .nt3-glyph svg { width: 16px; height: 16px; }
+.nt3 .nt3-glyph svg,
+.nt3 .nt3-glyph svg * { stroke-width: 1.5px; }
+
+/* 免打扰时段的两个时间框 */
+.nt3 .nt-row { gap: 8px; }
+.nt3 .nt-row__arrow { color: var(--neox-fg-hint); font-size: 13px; }
+.nt3 .nt-row input[type="time"] { font-variant-numeric: tabular-nums; }

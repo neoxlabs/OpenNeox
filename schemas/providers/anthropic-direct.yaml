@@ -1,0 +1,25 @@
+id: prov_anthropic_direct
+slug: anthropic-direct
+display_name: Anthropic Direct
+status: active
+
+base_url: https://api.anthropic.com
+protocol: anthropic-messages   # 直连用 Anthropic 原生协议
+
+auth:
+  env: ANTHROPIC_API_KEY
+  format: x-api-key
+
+# 直连 Anthropic = 原生支持所有 Claude 特性
+features:
+  cache_control_native: true
+  prompt_cache_max_breakpoints: 4
+  thinking_native: true
+  reasoning_blocks: true
+  tool_use_native: true
+
+# 直连不需要 sanitize — Neox 的 AnthropicClient 走 anthropic-messages 协议,
+# 它把 system 抽到顶层 system 字段, 永不踩 messages 中段 system 坑.
+client_obligations:
+  sanitize_system_order_for_families: []
+  inject_cache_control_for_families: [claude]

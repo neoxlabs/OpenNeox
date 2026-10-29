@@ -1,0 +1,622 @@
+/* ==================== 浏览器工具样式 ==================== */
+/* 统一使用 theme-token 变量 */
+
+.browser-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.browser-status-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.browser-status-item.available {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.browser-status-item.unavailable {
+  border-color: rgba(239, 68, 68, 0.2);
+  opacity: 0.6;
+}
+
+.browser-status-item .status-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+}
+
+.browser-status-item .status-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-status-item.available .status-icon {
+  color: #22c55e;
+}
+
+.browser-status-item.unavailable .status-icon {
+  color: #ef4444;
+}
+
+.browser-status-item .status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.browser-status-item .status-label {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.browser-status-item .status-value {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.browser-path {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+}
+
+.browser-path .path-label {
+  color: var(--text-muted);
+  margin-right: 8px;
+}
+
+.browser-path .path-value {
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.browser-debug-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.browser-url-input {
+  flex: 1;
+  padding: 9px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.browser-url-input:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+.browser-debug-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--text-accent, var(--gold-500));
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+}
+
+:root[data-theme="dark"] .browser-debug-btn {
+  color: #000;
+}
+
+.browser-debug-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-debug-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.browser-debug-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 调试选项 */
+.browser-debug-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.debug-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.debug-option input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--text-accent, var(--gold-500));
+}
+
+/* 截图容器 */
+.screenshot-container {
+  margin-top: 8px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.debug-screenshot {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ==================== 调试结果 ==================== */
+.browser-result {
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+}
+
+.browser-result.success {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.browser-result.error {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.browser-result .result-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.browser-result .result-status {
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+}
+
+.browser-result .result-status.success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.browser-result .result-status.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.browser-result .result-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.browser-result .result-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: var(--radius-sm);
+  color: #ef4444;
+  font-size: var(--neox-fs-xs, 12px);
+  margin-bottom: 12px;
+}
+
+.browser-result .result-error svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.browser-result .result-section {
+  margin-top: 14px;
+}
+
+.browser-result .result-section h4 {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+
+.browser-result .result-list {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.browser-result .log-item {
+  display: flex;
+  gap: 8px;
+  padding: 4px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+}
+
+.browser-result .log-item .log-type {
+  color: var(--text-muted);
+  min-width: 50px;
+}
+
+.browser-result .log-item.log-error .log-type { color: #ef4444; }
+.browser-result .log-item.log-warn .log-type { color: #f59e0b; }
+.browser-result .log-item .log-message {
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.browser-result .error-item {
+  display: flex;
+  gap: 8px;
+  padding: 4px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #ef4444;
+}
+
+.browser-result .error-item .error-type {
+  min-width: 70px;
+  opacity: 0.8;
+}
+
+.browser-result .result-more {
+  padding: 6px;
+  text-align: center;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.browser-result .network-list { padding: 0; }
+
+.browser-result .network-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  font-size: var(--neox-fs-xxs, 11px);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+}
+
+.browser-result .network-item:last-child { border-bottom: none; }
+
+.browser-result .network-status {
+  min-width: 32px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.browser-result .network-status.ok { color: #22c55e; }
+.browser-result .network-status.error { color: #ef4444; }
+
+.browser-result .network-method {
+  min-width: 36px;
+  color: var(--text-accent, var(--gold-500));
+  font-weight: 600;
+}
+
+.browser-result .network-url {
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==================== 内嵌浏览器 ==================== */
+.embedded-browser-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.embedded-browser-container {
+  margin-top: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.embedded-browser-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.browser-url-display {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browser-close-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.browser-close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.browser-close-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.embedded-webview {
+  width: 100%;
+  height: 400px;
+  border: none;
+}
+
+/* 元素选择器 */
+.section-desc {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.element-selector-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.element-selector-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.element-selector-btn.active {
+  background: rgba(var(--gold-500-rgb), 0.1);
+  border-color: var(--border-accent, rgba(var(--gold-500-rgb), 0.3));
+  color: var(--text-accent, var(--gold-500));
+}
+
+.element-selector-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.element-selector-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.selected-element-info {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.element-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.info-label {
+  color: var(--text-muted);
+  min-width: 40px;
+  font-weight: 500;
+}
+
+.info-value {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.info-value.copyable {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.info-value.copyable:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ==================== 进程管理样式 ==================== */
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-header-row .refresh-btn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.section-header-row .refresh-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.section-header-row .refresh-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.processes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.process-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.process-item:hover {
+  border-color: var(--border-default);
+}
+
+.process-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.process-name {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.process-status {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.process-status.running {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.process-status.stopped {
+  background: rgba(156, 163, 175, 0.12);
+  color: #9ca3af;
+}
+
+.process-status.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.process-pid {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.process-stats {
+  display: flex;
+  gap: 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.process-output-btn,
+.process-kill-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.process-output-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.process-kill-btn:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+}
+
+.process-output-btn svg,
+.process-kill-btn svg {
+  width: 14px;
+  height: 14px;
+}

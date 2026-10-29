@@ -1,0 +1,422 @@
+/* ==================== Provider Cards ==================== */
+/* 统一使用 theme-token 变量 */
+
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+
+.provider-card-compact {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out), box-shadow var(--neox-dur-fast) var(--neox-ease-out);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 158px;
+}
+
+.provider-card-compact:hover {
+  border-color: var(--border-accent, rgba(var(--gold-500-rgb), 0.3));
+  box-shadow: 0 0 12px rgba(var(--gold-500-rgb), 0.08);
+}
+
+.provider-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.provider-card-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.provider-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: rgba(var(--gold-500-rgb), 0.1);
+  border: 1px solid var(--border-accent, rgba(var(--gold-500-rgb), 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.provider-icon svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-accent, var(--gold-500));
+}
+
+.provider-card-info {
+  min-width: 0;
+}
+
+.provider-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.provider-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 1px;
+  line-height: 1.2;
+}
+
+.provider-card-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.action-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.action-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.provider-card-body {
+  padding: 0 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ==================== 健康状态时间轴 ==================== */
+.provider-health {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 2px;
+  min-height: 30px;
+}
+
+.health-timeline {
+  display: flex;
+  gap: 1px;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  padding: 1px;
+  overflow: hidden;
+}
+
+:root[data-theme="light"] .health-timeline {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.timeline-slot {
+  flex: 1;
+  min-width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--bg-tertiary);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.timeline-slot.empty {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:root[data-theme="light"] .timeline-slot.empty {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.timeline-slot.excellent {
+  background: #22c55e;
+  box-shadow: 0 0 2px rgba(34, 197, 94, 0.5);
+}
+
+.timeline-slot.good {
+  background: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 2px rgba(var(--gold-500-rgb), 0.4);
+}
+
+.timeline-slot.poor {
+  background: #f59e0b;
+  box-shadow: 0 0 2px rgba(245, 158, 11, 0.5);
+}
+
+.timeline-slot.offline {
+  background: #6b7280;
+}
+
+.timeline-slot.error {
+  background: #ef4444;
+  box-shadow: 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+.timeline-slot.testing {
+  background: var(--text-accent, var(--gold-500));
+  animation: slot-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+@keyframes slot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.health-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 16px;
+}
+
+.health-availability {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.health-availability.good {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.health-availability.poor {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.health-availability.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.health-latency {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--gold-400);
+}
+
+.health-latency.excellent { color: #22c55e; }
+.health-latency.good { color: var(--gold-400); }
+.health-latency.poor { color: #f59e0b; }
+.health-latency.offline,
+.health-latency.error,
+.health-latency.testing { color: var(--text-muted); }
+
+.health-status {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.health-status.excellent { color: #22c55e; }
+.health-status.good { color: var(--gold-400); }
+.health-status.poor { color: #f59e0b; }
+.health-status.testing {
+  color: var(--gold-400);
+  animation: provider-health-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+/* 名字必须带前缀 —— 叫 status-pulse 时被 editor-layout.css 里同名的辉光版通吃,
+ * 这行金色的「测试中」外面就会脉动一圈绿光。 */
+@keyframes provider-health-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 手动检测按钮 */
+.manual-check-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  margin-left: 4px;
+}
+
+.manual-check-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.manual-check-btn.testing {
+  color: var(--text-accent, var(--gold-400));
+  cursor: default;
+  animation: spin 1s linear infinite;
+}
+
+.manual-check-btn.stop {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.manual-check-btn.stop:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.manual-check-btn svg {
+  width: 11px;
+  height: 11px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Provider URL */
+.provider-url {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+  min-height: 13px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.provider-url.is-empty {
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 模型 Chips */
+.model-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+  min-height: 42px;
+  max-height: 42px;
+  overflow: hidden;
+}
+
+.model-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding: 2px 7px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1360px) {
+  .provider-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .provider-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .provider-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.model-chip button {
+  width: 12px;
+  height: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+}
+
+.model-chip button:hover {
+  color: #ef4444;
+}
+
+.add-model-compact {
+  display: inline-flex;
+}
+
+.add-model-compact input {
+  width: 60px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px dashed var(--border-default);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 10px;
+  outline: none;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.add-model-compact input:focus {
+  border-color: var(--text-accent, var(--gold-500));
+  border-style: solid;
+  width: 80px;
+}
+
+.add-model-compact input::placeholder {
+  color: var(--text-muted);
+}

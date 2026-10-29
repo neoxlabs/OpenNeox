@@ -1,0 +1,1476 @@
+/* ==================== MCP 服务器管理样式 ==================== */
+/* 统一使用 theme-token 变量，与主界面风格一致 */
+
+.mcp-server-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 10px;
+}
+
+.mcp-server-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "mark info actions"
+    "tools tools tools";
+  column-gap: 12px;
+  row-gap: 0;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--neox-mat-regular-bg);
+  -webkit-backdrop-filter: var(--neox-mat-regular-blur);
+          backdrop-filter: var(--neox-mat-regular-blur);
+  border: 0;
+  border-radius: var(--neox-radius-lg, 14px);
+  transition: box-shadow 180ms ease;
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    var(--neox-mat-shadow-regular);
+}
+.mcp-server-info { grid-area: info; min-width: 0; }
+.mcp-server-actions { grid-area: actions; }
+
+/* ─── 服务器标记 ─── */
+.mcp-server-mark {
+  grid-area: mark;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  font-size: var(--nx-fs-row-title);
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  /* 色相由名字哈希定 (见 McpServerMark.tsx), 明度/饱和度固定 —— 保证任何色相下
+     底片都压得住前景字, 而且明暗主题各自成立。 */
+  color: hsl(var(--mark-h, 220) 62% 46%);
+  background: hsl(var(--mark-h, 220) 62% 46% / 0.14);
+}
+:root[data-theme="dark"] .mcp-server-mark {
+  color: hsl(var(--mark-h, 220) 70% 72%);
+  background: hsl(var(--mark-h, 220) 70% 72% / 0.16);
+}
+.mcp-server-mark--logo {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.mcp-server-mark--logo img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.mcp-server-item:hover {
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    0 6px 18px rgba(0, 0, 0, 0.10);
+}
+
+.mcp-server-item.disabled {
+  opacity: 0.45;
+}
+
+.mcp-server-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.mcp-server-name {
+  font-weight: 600;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-size: var(--neox-fs-md, 14px);
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+/* 服务器名点击 → 详情页 — 配可视化点击亲和 */
+.mcp-server-name--link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  font-weight: 600;
+  font-size: var(--neox-fs-md, 14px);
+  border-radius: 4px;
+  transition: color 140ms ease;
+}
+.mcp-server-name--link:hover {
+  color: var(--neox-primary-600);
+}
+.mcp-server-name--link:focus-visible {
+  outline: 2px solid var(--neox-primary-ring, color-mix(in srgb, var(--neox-primary-600) 30%, transparent));
+  outline-offset: 2px;
+}
+
+.mcp-detail-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  /* 同行卡片等高 (grid 默认 stretch) — 描述长度不一导致底部参差是上一版的问题. */
+}
+.mcp-detail-tool {
+  padding: 14px 16px;
+  border-radius: var(--neox-radius-md, 10px);
+  background: var(--neox-mat-thin-bg);
+  -webkit-backdrop-filter: var(--neox-mat-thin-blur);
+          backdrop-filter: var(--neox-mat-thin-blur);
+  border: 0;
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 180ms ease;
+  /* 短描述卡片被同行长卡撑高时, params 自动沉底对齐 */
+  min-height: 100%;
+}
+.mcp-detail-tool:hover {
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.mcp-detail-tool__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.mcp-detail-tool__name {
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  padding: 3px 9px;
+  border-radius: 5px;
+  letter-spacing: -0.005em;
+}
+.mcp-detail-tool__hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+}
+.mcp-detail-tool__hint--read {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-hint, var(--neox-fg-secondary));
+}
+.mcp-detail-tool__hint--destructive {
+  /* 用主题 warn token 而不是硬红, 主题切换不刺眼 */
+  background: color-mix(in srgb, var(--neox-warn, #d97706) 10%, transparent);
+  color: var(--neox-warn, #d97706);
+}
+.mcp-detail-tool__desc {
+  margin: 0;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.55;
+  color: var(--neox-fg-secondary);
+  word-break: break-word;
+}
+.mcp-detail-tool__params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  /* margin-top: auto 把 params 推到卡片底部, 同行卡片即使 stretch 高度也对齐 */
+  margin-top: auto;
+  padding-top: 4px;
+}
+.mcp-detail-tool__param {
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+}
+.mcp-detail-tool__param.required {
+  /* required 参数用主色 ring 而不是 warn — 不抢眼但能识别 */
+  color: var(--neox-primary-600);
+  background: color-mix(in srgb, var(--neox-primary-600) 8%, transparent);
+  font-weight: 500;
+}
+
+.mcp-scope-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.mcp-scope-badge.workspace {
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  color: var(--neox-primary-600);
+}
+
+.mcp-server-details {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  line-height: 1.4;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.mcp-transport {
+  font-weight: 600;
+  padding: 2px 7px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  border-radius: 5px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--neox-fg-secondary);
+  line-height: 1.4;
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+}
+
+.mcp-command,
+.mcp-url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280px;
+  color: var(--neox-fg-secondary, var(--text-muted));
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.mcp-tools-count {
+  font-size: var(--neox-fs-xs, 12px);
+  color: #16a34a;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.mcp-tools-count--empty {
+  /* connected 但 0 工具 — 中性警告色, 提示用户检查配置 */
+  color: var(--neox-warn, #d97706);
+}
+.mcp-tools-count--clickable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 0;
+  padding: 3px 8px;
+  margin-left: -8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  line-height: 1.4;
+  color: #16a34a;
+  transition: background 140ms ease;
+}
+.mcp-tools-count--clickable:hover {
+  background: color-mix(in srgb, #22c55e 12%, transparent);
+}
+.mcp-tools-count--clickable.expanded {
+  color: color-mix(in srgb, #22c55e 90%, var(--neox-fg-primary) 10%);
+}
+.mcp-tools-list {
+  grid-area: tools;
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  max-height: 360px;
+  overflow-y: auto;
+}
+.mcp-tool-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  transition: background 140ms ease;
+}
+.mcp-tool-item:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.mcp-tool-name {
+  align-self: flex-start;
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--neox-primary-600);
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.mcp-tool-desc {
+  color: var(--neox-fg-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* 连接失败的错误消息 — 比 error dot 更明确, 让用户看到具体原因好排查 */
+.mcp-server-error {
+  margin-top: 5px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-err, #dc2626);
+  line-height: 1.4;
+  max-width: 480px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mcp-server-error-msg {
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  opacity: 0.85;
+}
+
+.mcp-server-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.mcp-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 4px;
+  background: var(--text-muted);
+}
+
+.mcp-status-dot.connected {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+}
+
+.mcp-status-dot.disconnected {
+  background: var(--text-muted);
+  opacity: 0.4;
+}
+
+.mcp-status-dot.connecting {
+  background: #f59e0b;
+  animation: dot-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.mcp-status-dot.error {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.mcp-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mcp-action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.mcp-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mcp-action-btn.connect:hover {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.mcp-action-btn.disconnect:hover {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.mcp-action-btn.delete:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.mcp-action-btn.toggle.enabled {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.mcp-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==================== MCP 模态框 ==================== */
+.mcp-paste-import {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: var(--neox-radius-md, 10px);
+  background: color-mix(in srgb, var(--neox-primary-600) 6%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--neox-primary-600) 22%, transparent);
+}
+.mcp-paste-import > summary {
+  cursor: pointer;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  user-select: none;
+}
+.mcp-paste-import > summary::-webkit-details-marker { display: none; }
+.mcp-paste-import > summary svg {
+  width: 14px;
+  height: 14px;
+  color: var(--neox-primary-600);
+  flex-shrink: 0;
+}
+.mcp-paste-import__textarea {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-mono, 'SF Mono', Menlo, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+.mcp-paste-import__textarea:focus {
+  border-color: var(--neox-primary-600);
+  box-shadow: 0 0 0 3px var(--neox-focus-ring);
+}
+.mcp-paste-import__hint {
+  margin-top: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--neox-fg-secondary);
+}
+
+.mcp-modal {
+  max-width: 520px;
+}
+
+.mcp-modal .form-field label {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* MCP Section 分组 */
+.mcp-section {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mcp-section:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mcp-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.mcp-fields-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mcp-modal textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 56px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+}
+
+.mcp-modal .checkbox-field {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.mcp-modal .checkbox-field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.mcp-modal .checkbox-field input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+}
+
+/* ==================== Skills 管理样式 ==================== */
+.skills-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  flex-wrap: wrap;
+}
+
+.skills-filters .filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skills-filters .filter-group label {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.skills-filters .refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.skills-filters .refresh-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+}
+
+.skills-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: var(--nx-space-4, 16px);
+  padding: 0 4px;
+  flex-wrap: wrap;
+}
+.skills-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.skills-toolbar__label {
+  font-size: var(--nx-fs-row-desc, 12px);
+  color: var(--neox-fg-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Empty state hero — icon + 标题 + 引导文案 + 双 CTA. 替代原"暂无技能"光秃秃 1 行 */
+.skills-empty-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 56px 24px 64px;
+  border-radius: var(--neox-radius-lg, 14px);
+  background: var(--neox-mat-regular-bg);
+  -webkit-backdrop-filter: var(--neox-mat-regular-blur);
+          backdrop-filter: var(--neox-mat-regular-blur);
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    var(--neox-mat-shadow-regular);
+}
+.skills-empty-hero__icon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-primary-600) 12%, transparent);
+  color: var(--neox-primary-600);
+}
+.skills-empty-hero__icon svg {
+  width: 24px;
+  height: 24px;
+}
+.skills-empty-hero__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--neox-fg-primary);
+}
+.skills-empty-hero__desc {
+  margin: 0;
+  max-width: 440px;
+  font-size: var(--nx-fs-row-desc, 12px);
+  line-height: 1.6;
+  color: var(--neox-fg-secondary);
+}
+
+
+/* 分组容器 — 完全透明, 仅承载 title + grid 间距 */
+.skills-group {
+  margin-bottom: 20px;
+}
+.skills-group:last-child {
+  margin-bottom: 0;
+}
+.skills-group__title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 8px 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 550;
+  color: var(--neox-fg-secondary);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+.skills-group__count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--neox-fg-muted);
+  padding: 1px 7px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+
+/* 单层 skill 卡片 grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: 12px;
+}
+
+/* skill-item — Cursor soft 卡 */
+.skill-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 12px;
+  padding: 14px 16px;
+  background: var(--neox-bg-card);
+  background: color-mix(in srgb, var(--neox-bg-card) 96%, var(--neox-primary-600) 4%);
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 11%, transparent);
+  border-radius: 10px;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+  box-shadow: none;
+  min-height: 92px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.skill-item:hover {
+  background: color-mix(in srgb, var(--neox-bg-card) 92%, var(--neox-primary-600) 8%);
+  border-color: color-mix(in srgb, var(--neox-primary-600) 28%, transparent);
+  transform: translateY(-1px);
+}
+.skill-item:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--neox-primary-600) 45%, transparent);
+  outline-offset: 2px;
+}
+.skill-info { min-width: 0; }
+
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  /* 不换行 —— 徽标多的卡片以前会把标题挤成两行, 卡片跟着变高。
+   * 放不下就裁掉: 徽标是辅助信息, 卡片整齐比"每个徽标都露出来"重要。 */
+  flex-wrap: nowrap;
+  overflow: hidden;
+  min-width: 0;
+}
+.skill-header > * {
+  flex-shrink: 0;
+}
+.skill-header > .skill-name {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* skill name — 14px 600, 跟 mcp-server-name 同档 */
+.skill-name {
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-md, 14px);
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+.skill-name--link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  font-weight: 600;
+  font-size: var(--neox-fs-md, 14px);
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  border-radius: 4px;
+  transition: color 140ms ease;
+}
+.skill-name--link:hover {
+  color: var(--neox-primary-600);
+}
+.skill-name--link:focus-visible {
+  outline: 2px solid var(--neox-primary-ring, color-mix(in srgb, var(--neox-primary-600) 30%, transparent));
+  outline-offset: 2px;
+}
+
+/* badges — 字号统一 10/600 uppercase + tracking, bg 跟 mcp 同款 7% tint */
+.skill-source-badge,
+.skill-category-badge,
+.skill-trust-badge,
+.skill-version-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.skill-source-badge.builtin {
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  color: var(--neox-primary-600);
+}
+.skill-source-badge.user {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.skill-source-badge.workspace {
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+  color: var(--neox-primary-600);
+}
+.skill-trust-badge.is-limited {
+  background: color-mix(in srgb, var(--neox-warn, #d97706) 12%, transparent);
+  color: var(--neox-warn, #d97706);
+}
+.skill-trust-badge.is-trusted {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.skill-version-badge {
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+}
+
+/* K4 action button variants — trust / untrust / update (复用 .skill-action-btn 基础样式) */
+.skill-action-btn.trust:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+.skill-action-btn.untrust:hover {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+.skill-action-btn.update:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+/* A2: 装前预览卡片 — Install 弹窗里输 URL → Preview 后渲染 metadata */
+.skill-preview-card {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color, rgba(0,0,0,.08));
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.skill-preview-row {
+  display: flex;
+  gap: 10px;
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.5;
+}
+.skill-preview-label {
+  flex: 0 0 80px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.skill-preview-value {
+  flex: 1;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+.skill-preview-tool {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 4px 2px 0;
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+  border-radius: 3px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+}
+.skill-preview-body {
+  margin-top: 4px;
+}
+.skill-preview-body summary {
+  cursor: pointer;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  user-select: none;
+}
+.skill-preview-body pre {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 180px;
+  overflow: auto;
+}
+.skill-preview-error {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #b91c1c;
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.skill-desc {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  overflow: hidden;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* skill-content-preview / skill-size 不再在列表里渲染 - 详情页才显示完整内容 */
+
+/* actions 列 — 从 absolute 改 grid 同 mcp-server-actions */
+.skill-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.skill-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.skill-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.skill-action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.skill-action-btn.delete:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.skill-action-btn.view:hover {
+  color: var(--text-accent, var(--gold-500));
+  border-color: var(--border-accent, rgba(var(--gold-500-rgb), 0.3));
+  background: rgba(var(--gold-500-rgb), 0.06);
+}
+
+.skill-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==================== Skills 模态框 ==================== */
+.skill-modal {
+  max-width: 500px;
+}
+
+.skill-modal .modal-form {
+  padding: 16px 20px;
+  gap: 14px;
+}
+
+.skill-modal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.skill-modal .field-hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.skill-modal .form-field {
+  gap: 5px;
+}
+
+.skill-modal .form-field label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.skill-modal .form-field input,
+.skill-modal .form-field select {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--neox-fs-sm, 13px);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.skill-modal textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--neox-fs-sm, 13px);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 60px;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.skill-modal textarea:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+.skill-modal .modal-actions {
+  padding: 12px 20px;
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  gap: 8px;
+}
+
+/* Skill Section 分组 */
+.skill-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.skill-section:first-child {
+  padding-top: 0;
+}
+
+.skill-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.skill-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.skill-section .form-grid {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.skill-section textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--neox-fs-sm, 13px);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 70px;
+}
+
+.skill-section textarea:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+.skill-modal .form-field.full-width textarea:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+/* 技能导入弹窗 */
+.skill-import-modal {
+  max-width: 420px;
+}
+
+.skill-import-modal .field-hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* 技能查看弹窗 */
+.skill-viewer-modal {
+  max-width: 640px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-viewer-modal .modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.skill-viewer-modal .skill-content-rendered,
+.skill-viewer-modal .skill-content-raw {
+  height: 300px;
+}
+
+.skill-detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.skill-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-detail-item.full {
+  width: 100%;
+}
+
+.detail-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.detail-value.path {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.skill-detail-section {
+  margin-top: 12px;
+}
+
+.skill-detail-section h4 {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.skill-detail-section p {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.skill-args-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skill-arg-item {
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.arg-name {
+  color: var(--text-accent, var(--gold-500));
+  font-family: var(--font-mono);
+  min-width: 80px;
+  font-weight: 500;
+}
+
+.arg-desc {
+  color: var(--text-secondary);
+}
+
+/* 导入按钮 */
+.import-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.import-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.import-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+
+.skill-create-ai {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skill-create-ai__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.skill-create-ai__title {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+}
+.skill-create-ai__hint {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  color: var(--neox-fg-secondary);
+}
+.skill-create-ai__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 「我自己写」—— 次要路径, 做成一行可展开的文字, 不跟主按钮抢 */
+.skill-create-manual-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 12px;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+.skill-create-manual-toggle:hover { color: var(--neox-fg-primary); }
+.skill-create-manual-toggle svg { transition: transform var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease-out); }
+.skill-create-manual-toggle.is-open svg { transform: rotate(90deg); }
+
+/* 名字下面那行「调用方式 /xxx 改」 */
+.skill-form-cmd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+}
+.skill-form-cmd code {
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-primary);
+  background: transparent;
+  padding: 0;
+}
+.skill-form-cmd .neox-input { max-width: 240px; }
+.skill-form-cmd__edit {
+  border: 0;
+  background: transparent;
+  padding: 0 2px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.skill-form-cmd__edit:hover { color: var(--neox-fg-primary); }
+
+/* ── 导入清单里的一条外部技能 ─────────────────────────────── */
+.skill-ext-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.skill-ext-src {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-secondary);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+  border-radius: 5px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.skill-ext-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.skill-ext-desc__text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* 附带内容 — 图标 + 数字, 只出现有内容的那几个 */
+.skill-ext-assets {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.skill-ext-asset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-secondary);
+}
+.skill-ext-asset svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.85;
+}
+.skill-ext-asset--size {
+  color: var(--neox-fg-hint, var(--neox-fg-secondary));
+}
+
+.skills-toolbar__search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 200px;
+  flex: 1 1 200px;
+  max-width: 320px;
+  padding: 0 10px;
+  height: var(--nx-control-h, 32px);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 5%, transparent));
+  color: var(--neox-fg-secondary);
+}
+.skills-toolbar__search:focus-within {
+  border-color: color-mix(in srgb, var(--neox-primary-500, #6366f1) 45%, transparent);
+}
+.skills-toolbar__search svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.skills-toolbar__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-sm, 13px);
+}
+.skills-toolbar__search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+.skills-toolbar__search-clear:hover { color: var(--neox-fg-primary); }
+
+.skills-pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+.skills-pager__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+.skills-pager__btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--neox-fg-primary);
+}
+.skills-pager__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.skills-pager__label {
+  font-size: var(--neox-fs-xs, 12px);
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-secondary);
+}
+
+.skill-content-editor {
+  width: 100%;
+  min-height: 420px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 11%, transparent);
+  background: color-mix(in srgb, var(--neox-fg-primary) 2.5%, var(--neox-bg-card));
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.6;
+  tab-size: 2;
+  resize: vertical;
+  outline: none;
+}
+.skill-content-editor:focus {
+  border-color: color-mix(in srgb, var(--neox-primary-500, #6366f1) 55%, transparent);
+}
+.skill-saved-tip {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-success, #22c55e);
+}
+
+@media (max-width: 720px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-item {
+    min-height: 88px;
+  }
+}

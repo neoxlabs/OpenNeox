@@ -1,0 +1,27 @@
+
+:root[data-platform="win32"] {
+  --neox-shimmer-base: color-mix(
+    in srgb,
+    var(--neox-fg-hint, #6b7280) 45%,
+    var(--neox-fg-secondary, #9ca3af)
+  );
+}
+
+/* 小字号中文用 YaHei Regular 而不是 Bold: 11-13px 下 Bold 的横竖笔画会并到一起。
+   靠 500 这个档 —— CSS 规则里 ≤500 的诉求向下匹配到 400, 正好落在 Regular。
+   只压这些**小字号状态标签**; 设置页 / 商店的大号标题 (22-86px) 不在此列,
+   那些字号下 Bold 是清楚的, 而且多是拉丁字形的品牌字。 */
+:root[data-platform="win32"] .atl-livestatus__phase,
+:root[data-platform="win32"] .streaming-indicator-text,
+:root[data-platform="win32"] .atl-msg__typing-label,
+:root[data-platform="win32"] .atl-activity__brief-text,
+:root[data-platform="win32"] .atl-activity-child__title,
+:root[data-platform="win32"] .atl-tool__title,
+:root[data-platform="win32"] .atl-compact__title,
+:root[data-platform="win32"] .agent-state-label,
+:root[data-platform="win32"] .neox-text-shimmer,
+:root[data-platform="win32"] .nx-live-shimmer,
+:root[data-platform="win32"] .nx-dock__pill-label,
+:root[data-platform="win32"] .nx-dock__pill-detail {
+  font-weight: 500;
+}

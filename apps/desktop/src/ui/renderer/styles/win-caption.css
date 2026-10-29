@@ -1,0 +1,202 @@
+/* ============================================================
+ * Windows 标题栏 / 窗控全局适配
+ *
+ * 已弃用 OS titleBarOverlay（永远叠在网页上，无法融入 UI）。
+ * Win 用自绘 `.neox-win-controls`；`--neox-win-caption-bg/fg` 仍由
+ * syncWinTitleBar 写入，对齐顶栏实色并关掉假 mac 红绿灯。
+ * ============================================================ */
+
+:root[data-platform="win32"] {
+  --neox-win-caption-height: 44px;
+  --neox-win-caption-bg: var(--neox-bg-canvas, #181818);
+  --neox-win-caption-fg: #f3f4f6;
+}
+
+:root[data-platform="win32"][data-theme="light"] {
+  --neox-win-caption-fg: #1f2937;
+}
+
+/* 窗口底色跟 overlay 同色 — 任何全屏切换间隙也不会透出另一层 */
+:root[data-platform="win32"],
+:root[data-platform="win32"] html,
+:root[data-platform="win32"] body,
+:root[data-platform="win32"] #root {
+  background-color: var(--neox-win-caption-bg) !important;
+}
+
+/* ---------- 假 mac 红绿灯：Win 上全部隐藏 ----------
+   (.settings-chrome__dots 已整体删除 —— 设置弹窗不是窗口, 黄/绿两颗是点了没反应的死点) */
+:root[data-platform="win32"] .editor-traffic-lights {
+  display: none !important;
+}
+
+/* ---------- 主壳顶栏：实色 + 无 blur，跟 overlay 无缝 ---------- */
+:root[data-platform="win32"] .neox-topbar,
+:root[data-platform="win32"] .workspace-header {
+  background-color: var(--neox-win-caption-bg) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+}
+
+/*
+ * 设置：自绘窗控后不再需要全屏实色；Win 恢复居中悬浮大窗（与 Mac 同结构）。
+ * 仅关毛玻璃遮罩（半透 blur 在 Win 上发脏），改用实色 dim。
+ */
+:root[data-platform="win32"] .settings-overlay {
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+}
+
+:root[data-platform="win32"][data-theme="dark"] .settings-overlay,
+:root[data-platform="win32"][data-theme-pack][data-theme="dark"] .settings-overlay {
+  background: rgba(0, 0, 0, 0.55) !important;
+}
+
+:root[data-platform="win32"][data-theme="light"] .settings-overlay,
+:root[data-platform="win32"][data-theme-pack][data-theme="light"] .settings-overlay {
+  background: rgba(15, 23, 42, 0.32) !important;
+}
+
+/* 悬浮态用右上 X 关闭即可，不再需要全屏式「返回」(基样式已 display:none) */
+:root[data-platform="win32"] .settings-chrome__back {
+  display: none !important;
+}
+
+:root[data-platform="win32"] .settings-chrome {
+  justify-content: flex-end;
+  -webkit-app-region: no-drag;
+}
+
+:root[data-platform="win32"] .settings-chrome__close {
+  margin-left: 0;
+}
+
+/* ---------- Win 设置内按钮：去渐变光晕 / 描边发脏 ---------- */
+:root[data-platform="win32"] .settings-page .apiv2-free__btn--primary,
+:root[data-platform="win32"] .settings-page .apiv2-gate__btn--primary,
+:root[data-platform="win32"] .settings-page .nx-btn--primary,
+:root[data-platform="win32"] .settings-page .nx-btn--accent,
+:root[data-platform="win32"] .settings-page .neox-btn--primary {
+  background: var(--neox-primary-600) !important;
+  background-image: none !important;
+  color: var(--neox-fg-invert, #111111) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+:root[data-platform="win32"] .settings-page .apiv2-free__btn--primary:hover,
+:root[data-platform="win32"] .settings-page .apiv2-gate__btn--primary:hover,
+:root[data-platform="win32"] .settings-page .nx-btn--primary:hover,
+:root[data-platform="win32"] .settings-page .nx-btn--accent:hover,
+:root[data-platform="win32"] .settings-page .neox-btn--primary:hover {
+  background: var(--neox-primary-700, var(--neox-primary-600)) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+:root[data-platform="win32"] .settings-page .apiv2-free__btn--ghost,
+:root[data-platform="win32"] .settings-page .nx-btn--ghost,
+:root[data-platform="win32"] .settings-page .nx-btn--secondary {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+/* ---------- Win 自绘窗控 ---------- */
+.neox-win-controls {
+  display: none;
+}
+
+:root[data-platform="win32"] .neox-win-controls {
+  display: flex;
+  align-items: stretch;
+  height: var(--neox-win-caption-height, 44px);
+  -webkit-app-region: no-drag;
+  pointer-events: auto;
+  flex-shrink: 0;
+}
+
+/* 主壳：嵌进顶栏右侧，跟登录同一行，细分隔 + 紧凑按钮 */
+:root[data-platform="win32"] .neox-win-controls--inline {
+  position: static;
+  margin-left: 6px;
+  padding-left: 2px;
+  border-left: 1px solid color-mix(in srgb, var(--neox-fg-primary, #fff) 12%, transparent);
+  height: 28px;
+  align-self: center;
+}
+
+/* 无顶栏页：右上角固定 */
+:root[data-platform="win32"] .neox-win-controls--fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2147483000;
+  height: var(--neox-win-caption-height, 44px);
+}
+
+.neox-win-controls__btn {
+  width: 40px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--neox-win-caption-fg, var(--neox-fg-secondary, #cbd5e1));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  transition: background 80ms ease, color 80ms ease;
+}
+
+:root[data-platform="win32"] .neox-win-controls--inline .neox-win-controls__btn {
+  width: 36px;
+  border-radius: 6px;
+}
+
+.neox-win-controls__btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--neox-fg-primary, #f3f4f6);
+}
+
+:root[data-theme="light"] .neox-win-controls__btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.neox-win-controls__btn--close:hover {
+  background: #e81123 !important;
+  color: #ffffff !important;
+  border-radius: 0;
+}
+
+:root[data-platform="win32"] .neox-win-controls--inline .neox-win-controls__btn--close:hover {
+  border-radius: 6px;
+}
+
+:root[data-platform="win32"] .neox-shell {
+  --nx-win-topbar-padr: var(--neox-win-caption-inset, 120px);
+}
+:root[data-platform="win32"] .neox-topbar {
+  padding-right: var(--nx-win-topbar-padr, 10px) !important;
+}
+
+/* 登录按钮与窗控之间别再额外撑开 */
+:root[data-platform="win32"] .neox-topbar__login-btn {
+  margin-left: 4px;
+  margin-right: 0;
+}
+
+/* 无顶栏表面仍给固定窗控让位（3×40=120） */
+:root[data-platform="win32"] .workspace-header,
+:root[data-platform="win32"] .onboarding-header {
+  padding-right: var(--neox-win-caption-inset, 120px);
+}
+
+
+

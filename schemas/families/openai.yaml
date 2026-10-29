@@ -1,0 +1,43 @@
+# OpenAI GPT 家族能力声明
+#
+# 包括 gpt-*, o1/o2/o3/o4 系列, codex-*
+
+id: openai
+display_name: OpenAI GPT
+
+aliases:
+  - openai
+  - gpt
+
+# protocol/model name 满足这些正则也算 openai family
+# (gpt 已在 aliases 用 includes; o-series 和 codex 用正则更准)
+name_regex:
+  - "^o\\d"           # o1, o2, o3, o4
+  - "^codex"
+  - "^gpt"
+
+capabilities:
+  thinking:
+    native: false
+  reasoning_effort:
+    supported: true
+    field: reasoning_effort
+    # max/ultra = GPT-5.6 新档 (ultra 仅 Sol/Terra 自动任务委派); 老模型档位以各自 model yaml 为准
+    values: [minimal, low, medium, high, xhigh, max, ultra]
+    builder_hint: openai_reasoning_effort
+  vision: true
+  parallel_tool_use: true
+  prompt_cache: true
+  structured_output: true
+  tool_use_shape: openai-function
+  # o-series 不支持 temperature, codex/Responses API 走 system as instructions field
+  fixed_temperature:
+    enabled: false  # default; Responses adapter 会按 model 真删
+
+markdown_constraint: light
+supplement_key: openai
+
+fast_patterns:
+  - /mini/i
+  - /nano/i
+  - /4o-mini/i

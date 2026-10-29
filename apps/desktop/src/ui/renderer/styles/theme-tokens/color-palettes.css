@@ -1,0 +1,392 @@
+/* ==================== 颜色主题：品牌紫 (默认) ==================== */
+:root,
+:root[data-color-theme="violet"] {
+  --accent-50: #efecff;
+  --accent-100: #ddd6ff;
+  --accent-200: #c3b6ff;
+  --accent-300: #a594ff;
+  --accent-400: #8974FF;
+  --accent-500: #6E56FF;
+  --accent-600: #5A44E0;
+  --accent-700: #4a37bd;
+  --accent-800: #3a2c93;
+  --accent-900: #29206b;
+  --text-accent: #a594ff;
+  --border-accent: rgba(110, 86, 255, 0.4);
+  --border-accent-bright: rgba(110, 86, 255, 0.6);
+  --shadow-accent: 0 0 20px rgba(110, 86, 255, 0.18);
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+/* 品牌紫 - 浅色模式调整 (含未指定 color-theme 的浅色默认) */
+:root[data-theme="light"][data-color-theme="violet"],
+:root[data-theme="light"]:not([data-color-theme]) {
+  --accent-400: #7c68ff;
+  --accent-500: #6E56FF;
+  --accent-600: #5A44E0;
+  --text-accent: #5A44E0;
+  --border-accent: rgba(110, 86, 255, 0.32);
+  --border-accent-bright: rgba(110, 86, 255, 0.5);
+  --shadow-accent: 0 0 20px rgba(110, 86, 255, 0.12);
+}
+
+/* ==================== 颜色主题：暗金 ==================== */
+:root[data-color-theme="gold"] {
+  --accent-50: #fef9e7;
+  --accent-100: #fcf0c3;
+  --accent-200: #f9e085;
+  --accent-300: #f5ce47;
+  --accent-400: #e6b91e;
+  --accent-500: #c9a227;
+  --accent-600: #a68521;
+  --accent-700: #85691a;
+  --accent-800: #6b5416;
+  --accent-900: #4a3a10;
+  --text-accent: #ddb52f;
+  --border-accent: rgba(201, 162, 39, 0.4);
+  --border-accent-bright: rgba(201, 162, 39, 0.6);
+  --shadow-accent: 0 0 20px rgba(201, 162, 39, 0.15);
+  /* 兼容旧变量名 */
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+/* 暗金 - 浅色模式调整 */
+:root[data-theme="light"][data-color-theme="gold"] {
+  --accent-400: #d4a51a;
+  --accent-500: #b8941f;
+  --accent-600: #9a7a1a;
+  --text-accent: #9a7a1a;
+  --border-accent: rgba(184, 148, 31, 0.35);
+  --border-accent-bright: rgba(184, 148, 31, 0.55);
+  --shadow-accent: 0 0 20px rgba(184, 148, 31, 0.1);
+}
+
+/* ==================== 颜色主题：粉红 ==================== */
+:root[data-color-theme="pink"] {
+  --accent-50: #fce4ec;
+  --accent-100: #f8bbd9;
+  --accent-200: #f48fb1;
+  --accent-300: #f06292;
+  --accent-400: #ec407a;
+  --accent-500: #e91e63;
+  --accent-600: #d81b60;
+  --accent-700: #c2185b;
+  --accent-800: #ad1457;
+  --accent-900: #880e4f;
+  --text-accent: #f48fb1;
+  --border-accent: rgba(233, 30, 99, 0.4);
+  --border-accent-bright: rgba(233, 30, 99, 0.6);
+  --shadow-accent: 0 0 20px rgba(233, 30, 99, 0.15);
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="pink"] {
+  --text-accent: #c2185b;
+  --border-accent: rgba(194, 24, 91, 0.35);
+  --border-accent-bright: rgba(194, 24, 91, 0.55);
+  --shadow-accent: 0 0 20px rgba(194, 24, 91, 0.1);
+}
+
+/* ==================== 颜色主题：天蓝 ==================== */
+:root[data-color-theme="blue"] {
+  --accent-50: #e3f2fd;
+  --accent-100: #bbdefb;
+  --accent-200: #90caf9;
+  --accent-300: #64b5f6;
+  --accent-400: #42a5f5;
+  --accent-500: #2196f3;
+  --accent-600: #1e88e5;
+  --accent-700: #1976d2;
+  --accent-800: #1565c0;
+  --accent-900: #0d47a1;
+  --text-accent: #64b5f6;
+  --border-accent: rgba(33, 150, 243, 0.4);
+  --border-accent-bright: rgba(33, 150, 243, 0.6);
+  --shadow-accent: 0 0 20px rgba(33, 150, 243, 0.15);
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="blue"] {
+  --text-accent: #1565c0;
+  --border-accent: rgba(21, 101, 192, 0.35);
+  --border-accent-bright: rgba(21, 101, 192, 0.55);
+  --shadow-accent: 0 0 20px rgba(21, 101, 192, 0.1);
+}
+
+/* ==================== 颜色主题：翠绿 ==================== */
+:root[data-color-theme="green"] {
+  --accent-50: #e8f5e9;
+  --accent-100: #c8e6c9;
+  --accent-200: #a5d6a7;
+  --accent-300: #81c784;
+  --accent-400: #66bb6a;
+  --accent-500: #4caf50;
+  --accent-600: #43a047;
+  --accent-700: #388e3c;
+  --accent-800: #2e7d32;
+  --accent-900: #1b5e20;
+  --text-accent: #81c784;
+  --border-accent: rgba(76, 175, 80, 0.4);
+  --border-accent-bright: rgba(76, 175, 80, 0.6);
+  --shadow-accent: 0 0 20px rgba(76, 175, 80, 0.15);
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="green"] {
+  --text-accent: #2e7d32;
+  --border-accent: rgba(46, 125, 50, 0.35);
+  --border-accent-bright: rgba(46, 125, 50, 0.55);
+  --shadow-accent: 0 0 20px rgba(46, 125, 50, 0.1);
+}
+
+/* ==================== 颜色主题：紫罗兰 ==================== */
+:root[data-color-theme="purple"] {
+  --accent-50: #f3e5f5;
+  --accent-100: #e1bee7;
+  --accent-200: #ce93d8;
+  --accent-300: #ba68c8;
+  --accent-400: #ab47bc;
+  --accent-500: #9c27b0;
+  --accent-600: #8e24aa;
+  --accent-700: #7b1fa2;
+  --accent-800: #6a1b9a;
+  --accent-900: #4a148c;
+  --text-accent: #ba68c8;
+  --border-accent: rgba(156, 39, 176, 0.4);
+  --border-accent-bright: rgba(156, 39, 176, 0.6);
+  --shadow-accent: 0 0 20px rgba(156, 39, 176, 0.15);
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="purple"] {
+  --text-accent: #6a1b9a;
+  --border-accent: rgba(106, 27, 154, 0.35);
+  --border-accent-bright: rgba(106, 27, 154, 0.55);
+  --shadow-accent: 0 0 20px rgba(106, 27, 154, 0.1);
+}
+
+/* ==================== 颜色主题：橙色 ==================== */
+:root[data-color-theme="orange"] {
+  --accent-50: #fff3e0;
+  --accent-100: #ffe0b2;
+  --accent-200: #ffcc80;
+  --accent-300: #ffb74d;
+  --accent-400: #ffa726;
+  --accent-500: #ff9800;
+  --accent-600: #fb8c00;
+  --accent-700: #f57c00;
+  --accent-800: #ef6c00;
+  --accent-900: #e65100;
+  --text-accent: #ffb74d;
+  --border-accent: rgba(255, 152, 0, 0.4);
+  --border-accent-bright: rgba(255, 152, 0, 0.6);
+  --shadow-accent: 0 0 20px rgba(255, 152, 0, 0.15);
+  --gold-50: var(--accent-50);
+  --gold-100: var(--accent-100);
+  --gold-200: var(--accent-200);
+  --gold-300: var(--accent-300);
+  --gold-400: var(--accent-400);
+  --gold-500: var(--accent-500);
+  --gold-600: var(--accent-600);
+  --gold-700: var(--accent-700);
+  --gold-800: var(--accent-800);
+  --gold-900: var(--accent-900);
+  --text-gold: var(--text-accent);
+  --border-gold: var(--border-accent);
+  --border-gold-bright: var(--border-accent-bright);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="orange"] {
+  --text-accent: #e65100;
+  --border-accent: rgba(230, 81, 0, 0.35);
+  --border-accent-bright: rgba(230, 81, 0, 0.55);
+  --shadow-accent: 0 0 20px rgba(230, 81, 0, 0.1);
+}
+
+/* ==================== 颜色主题：中国红 ==================== */
+:root[data-color-theme="red"] {
+  --accent-50: #ffebee;
+  --accent-100: #ffcdd2;
+  --accent-200: #ef9a9a;
+  --accent-300: #e57373;
+  --accent-400: #ef5350;
+  --accent-500: #d32f2f;
+  --accent-600: #c62828;
+  --accent-700: #b71c1c;
+  --accent-800: #8e1515;
+  --accent-900: #5d0d0d;
+
+  --text-accent: #ef5350;
+  --border-accent: rgba(211, 47, 47, 0.25);
+  --border-accent-bright: rgba(211, 47, 47, 0.45);
+  --shadow-accent: 0 0 20px rgba(211, 47, 47, 0.15);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="red"] {
+  --text-accent: #c62828;
+  --border-accent: rgba(198, 40, 40, 0.35);
+  --border-accent-bright: rgba(198, 40, 40, 0.55);
+  --shadow-accent: 0 0 20px rgba(198, 40, 40, 0.1);
+}
+
+/* ==================== 颜色主题：青色 ==================== */
+:root[data-color-theme="cyan"] {
+  --accent-50: #e0f7fa;
+  --accent-100: #b2ebf2;
+  --accent-200: #80deea;
+  --accent-300: #4dd0e1;
+  --accent-400: #26c6da;
+  --accent-500: #00bcd4;
+  --accent-600: #00acc1;
+  --accent-700: #0097a7;
+  --accent-800: #00838f;
+  --accent-900: #006064;
+
+  --text-accent: #4dd0e1;
+  --border-accent: rgba(0, 188, 212, 0.25);
+  --border-accent-bright: rgba(0, 188, 212, 0.45);
+  --shadow-accent: 0 0 20px rgba(0, 188, 212, 0.15);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="cyan"] {
+  --text-accent: #00838f;
+  --border-accent: rgba(0, 131, 143, 0.35);
+  --border-accent-bright: rgba(0, 131, 143, 0.55);
+  --shadow-accent: 0 0 20px rgba(0, 131, 143, 0.1);
+}
+
+/* ==================== 颜色主题：靛蓝 ==================== */
+:root[data-color-theme="indigo"] {
+  --accent-50: #e8eaf6;
+  --accent-100: #c5cae9;
+  --accent-200: #9fa8da;
+  --accent-300: #7986cb;
+  --accent-400: #5c6bc0;
+  --accent-500: #3f51b5;
+  --accent-600: #3949ab;
+  --accent-700: #303f9f;
+  --accent-800: #283593;
+  --accent-900: #1a237e;
+
+  --text-accent: #7986cb;
+  --border-accent: rgba(63, 81, 181, 0.3);
+  --border-accent-bright: rgba(63, 81, 181, 0.5);
+  --shadow-accent: 0 0 20px rgba(63, 81, 181, 0.15);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="indigo"] {
+  --text-accent: #283593;
+  --border-accent: rgba(40, 53, 147, 0.35);
+  --border-accent-bright: rgba(40, 53, 147, 0.55);
+  --shadow-accent: 0 0 20px rgba(40, 53, 147, 0.1);
+}
+
+/* ==================== 颜色主题：蓝绿 ==================== */
+:root[data-color-theme="teal"] {
+  --accent-50: #e0f2f1;
+  --accent-100: #b2dfdb;
+  --accent-200: #80cbc4;
+  --accent-300: #4db6ac;
+  --accent-400: #26a69a;
+  --accent-500: #009688;
+  --accent-600: #00897b;
+  --accent-700: #00796b;
+  --accent-800: #00695c;
+  --accent-900: #004d40;
+
+  --text-accent: #4db6ac;
+  --border-accent: rgba(0, 150, 136, 0.3);
+  --border-accent-bright: rgba(0, 150, 136, 0.5);
+  --shadow-accent: 0 0 20px rgba(0, 150, 136, 0.15);
+  --shadow-gold: var(--shadow-accent);
+}
+
+:root[data-theme="light"][data-color-theme="teal"] {
+  --text-accent: #00695c;
+  --border-accent: rgba(0, 105, 92, 0.35);
+  --border-accent-bright: rgba(0, 105, 92, 0.55);
+  --shadow-accent: 0 0 20px rgba(0, 105, 92, 0.1);
+}
+

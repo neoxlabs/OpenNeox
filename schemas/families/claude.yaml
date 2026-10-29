@@ -1,0 +1,38 @@
+# Anthropic Claude 家族能力声明
+#
+# 用途: 替代代码侧分散的 if (lp.includes('anthropic') || lmodel.startsWith('claude')) 链
+#   (见 D12 refactor, providerSupplements.ts / effortController.ts / exploreModelPolicy.ts)
+#
+# 字段语义见 packages/kernel/src/schemas/types.ts FamilySchema.
+
+id: claude
+display_name: Anthropic Claude
+
+# 在 model name / provider name / protocol 字段里出现这些子串则认为是 claude family
+aliases:
+  - claude
+  - anthropic
+
+capabilities:
+  thinking:
+    native: true
+    field: thinking
+    # builder_hint 告诉 effortController 用哪种构造逻辑 (anthropic | openai_reasoning_effort | toggle | none)
+    builder_hint: anthropic
+  reasoning_effort:
+    supported: false
+  vision: true
+  parallel_tool_use: true
+  prompt_cache: true
+  structured_output: false
+  tool_use_shape: anthropic-blocks
+
+# Markdown 约束: kimi / deepseek_example / glm_terse / light
+markdown_constraint: light
+
+# Prompt supplement key, 引用 providerSupplements.ts 的常量名 (anthropic / openai / gemini / deepseek / glm / kimi)
+supplement_key: anthropic
+
+# Fast / cheap 变种的正则模式 — 用于 exploreModelPolicy 自动派遣低开销模型做 explore
+fast_patterns:
+  - /haiku/i

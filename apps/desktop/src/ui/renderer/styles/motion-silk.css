@@ -1,0 +1,177 @@
+
+@media (prefers-reduced-motion: no-preference) {
+  :where(html[data-motion='silk']) :is(button, [role='button'], a[role='button'], .nx-press) {
+    transition-property: scale;
+    transition-duration: var(--nx-press-release, 220ms);
+    transition-timing-function: var(--neox-ease-emphasized, cubic-bezier(0.32, 0.72, 0, 1));
+  }
+  :where(html[data-motion='silk']) :is(button, [role='button'], a[role='button'], .nx-press):active:not(:disabled) {
+    scale: var(--nx-press-scale, 0.972);
+    transition-duration: var(--nx-press-down, 90ms);
+    transition-timing-function: var(--neox-ease-out, cubic-bezier(0.32, 0.72, 0, 1));
+  }
+
+  /* 小于 ~28px 的图标按钮不做缩放 —— 那个尺寸下 2.8% 的形变看起来是**抖动**不是按下。
+     改成压一档透明度, 同样跟手但不晃。判定靠显式类名, CSS 量不了尺寸。 */
+  :where(html[data-motion='silk']) :is(
+    .neox-topbar__iconbtn, .tab-action-btn, .tab-close-btn, .sfc-doc__mode-btn,
+    .md-code-copy, .nrr__act, .atl-msg__footer-btn,
+    .editor-tabs-overflow-btn, .sfc-chrome__tab-close, .sfc-chrome__add-tab
+  ) { --nx-press-scale: 1; }
+  :where(html[data-motion='silk']) :is(
+    .neox-topbar__iconbtn, .tab-action-btn, .tab-close-btn, .sfc-doc__mode-btn,
+    .md-code-copy, .nrr__act, .atl-msg__footer-btn,
+    .editor-tabs-overflow-btn, .sfc-chrome__tab-close, .sfc-chrome__add-tab
+  ):active:not(:disabled) { opacity: 0.62; }
+
+  /* 主行动按钮压得更深一点点 —— 面积大, 同样的比例看起来更浅 */
+  :where(html[data-motion='silk']) .atl-composer__send { --nx-press-scale: 0.955; }
+
+  :where(html[data-motion='silk']) .atl-composer__send {
+    transition-property: scale, background-color, color, opacity, box-shadow;
+  }
+  :where(html[data-motion='silk']) :is(.neox-sidebar__quick-action, .neox-session-item) {
+    transition-property: scale, background-color, color;
+  }
+  :where(html[data-motion='silk']) :is(.theme-surface-toggle__btn, .neox-topbar__mode-btn) {
+    transition-property: scale, background-color, color, box-shadow;
+  }
+  :where(html[data-motion='silk']) :is(.editor-tab, .sfc-chrome__tab) {
+    transition-property: scale, background-color, color, border-color;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :where(html[data-motion='silk']) :is(
+    .atl-ctxpill, .nx-dock__pill, .atl-composer__pill,
+    .neox-status-pill, .apiv2__pill, .npill
+  ) {
+    transition:
+      scale var(--neox-dur-fast, 180ms) var(--neox-ease-emphasized),
+      opacity var(--neox-dur-fast, 180ms) var(--neox-ease-out),
+      background-color var(--neox-dur-fast, 180ms) var(--neox-ease-out),
+      color var(--neox-dur-fast, 180ms) var(--neox-ease-out),
+      border-color var(--neox-dur-fast, 180ms) var(--neox-ease-out);
+  }
+  @starting-style {
+    :where(html[data-motion='silk']) :is(
+      .atl-ctxpill, .file-attachment-pill, .file-attachment-pill-wrap,
+      .atl-mode-pill, .branch-pill, .editor-status-pill, .npill
+    ) { scale: 0.9; opacity: 0; }
+  }
+  /* hover 只改颜色不位移 —— 鼠标扫过一排药丸时位移会触发一连串合成 (性能红线 4) */
+  :where(html[data-motion='silk']) :is(.atl-ctxpill, .nx-dock__pill):hover {
+    background-color: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion='silk'] { interpolate-size: allow-keywords; }
+
+  :where(html[data-motion='silk']) .atl-turnfold__body {
+    transition:
+      height var(--neox-dur-base, 260ms) var(--neox-ease-emphasized),
+      opacity var(--neox-dur-fast, 180ms) var(--neox-ease-out);
+    transition-behavior: allow-discrete;
+  }
+  @starting-style {
+    :where(html[data-motion='silk']) .atl-turnfold__body {
+      height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+  }
+
+  /* 侧栏 / 右栏的"变宽"已经在 shell.css 做过了 (grid-template-columns 320ms, 且拖拽期间
+     用 .is-resizing 关掉过渡)。这里**不要**再加一条 —— 宽度不在 .neox-sidebar 上,
+     而在 shell 的 grid 模板上; 我第一版写的 `.neox-sidebar { transition: width }`
+     选择器没错但属性根本没人改, 是条静默失效的死规则。 */
+}
+
+/* ── 4. 输入框 ────────────────────────────────────────────
+ *
+ *   .atl-composer__box 本来就有 border/shadow 过渡, 但走的是 dur-base (260ms):
+ *   对"点进输入框"来说偏慢 —— 聚焦要跟手, 失焦才该慢慢收。改成非对称。
+ *   多行增高原来是瞬时跳变, 接上面的 interpolate-size。
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :where(html[data-motion='silk']) .atl-composer__box {
+    transition:
+      border-color var(--neox-dur-base, 260ms) var(--neox-ease-out),
+      box-shadow var(--neox-dur-base, 260ms) var(--neox-ease-out),
+      background-color var(--neox-dur-base, 260ms) var(--neox-ease-out);
+  }
+  /* 聚焦快 (180ms), 失焦慢 (260ms, 由上面那条兜) */
+  :where(html[data-motion='silk']) .atl-composer__box:focus-within {
+    transition-duration: var(--neox-dur-fast, 180ms);
+  }
+  /* 输入区高度跟随内容 —— 需要 JS 侧把 height 从写死改成 auto 才生效, 没改的地方无副作用 */
+  :where(html[data-motion='silk']) .atl-composer__input {
+    transition: height var(--neox-dur-fast, 180ms) var(--neox-ease-emphasized);
+  }
+}
+
+/* ── 5. 关闭档 ────────────────────────────────────────────
+ *
+ *   data-motion="off" 的语义跟系统「减弱动态效果」一致: **取消位移和缩放**,
+ *   不是"变快"。前庭敏感的用户受不了的是移动本身。淡入保留。
+ *   同时它是性能对照基线 —— 怀疑掉帧跟动效有关, 切到这一档就能证伪。
+ */
+html[data-motion='off'] *,
+html[data-motion='off'] *::before,
+html[data-motion='off'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+/* 位移/缩放类的入场原语直接落终态, 不做位移 */
+html[data-motion='off'] .nx-in,
+html[data-motion='off'] .nx-in.is-in {
+  transform: none !important;
+  opacity: 1 !important;
+}
+html[data-motion='off'] :is(button, [role='button'], .nx-press):active { scale: 1 !important; }
+
+/* 窗口不可见时停掉 CSS 时钟 —— 切走 Alt-Tab / 最小化后不必继续 60fps。
+ * 合成器动画在后台窗口上仍会要帧; play-state:paused 不改观感, 回来接着播。 */
+html[data-window-hidden] *,
+html[data-window-hidden] *::before,
+html[data-window-hidden] *::after {
+  animation-play-state: paused !important;
+}
+
+/* ── 6. 系统「减弱动态效果」优先级最高 ────────────────────
+ *   用户在系统里关了动效, 应用里选了 silk 也不该动。silk 只在系统允许时生效。 */
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion='silk'] :is(button, [role='button'], .nx-press):active { scale: 1 !important; }
+  html[data-motion='silk'] * { transition-duration: 0.001ms !important; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :where(html[data-motion='silk']) .atl-feed {
+    transition: opacity var(--neox-dur-fast, 180ms) var(--neox-ease-out);
+  }
+  @starting-style {
+    :where(html[data-motion='silk']) .atl-feed { opacity: 0; }
+  }
+
+  /* 骨架: 也要淡入, 否则"加载态"自己先啪一下, 等于多闪一次 */
+  :where(html[data-motion='silk']) .atl-skel {
+    transition: opacity var(--neox-dur-fast, 180ms) var(--neox-ease-out);
+  }
+  @starting-style {
+    :where(html[data-motion='silk']) .atl-skel { opacity: 0; }
+  }
+
+  /* 新建会话的居中空态: 淡入 + 极浅放大。幅度刻意小 (0.985) ——
+     再大就成了"弹窗特效", 系统级动效的高级感来自克制 (见 motion-macos.css)。 */
+  :where(html[data-motion='silk']) .atl-empty-stage {
+    transition:
+      opacity var(--neox-dur-base, 260ms) var(--neox-ease-out),
+      scale var(--neox-dur-slow, 380ms) var(--neox-ease-emphasized);
+  }
+  @starting-style {
+    :where(html[data-motion='silk']) .atl-empty-stage { opacity: 0; scale: 0.985; }
+  }
+}

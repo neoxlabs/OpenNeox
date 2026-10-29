@@ -1,0 +1,242 @@
+/* ==================== 白天模式适配 ==================== */
+:root[data-theme="light"] {
+  --font-sans: var(--neox-font-sans);
+  --font-mono: var(--neox-font-mono, 'Menlo', 'Cascadia Mono', Consolas, monospace);
+}
+
+/* 白天模式下的 diff 代码颜色适配 */
+:root[data-theme="light"] .diff-line.del .diff-line-text {
+  color: #991b1b;
+}
+
+:root[data-theme="light"] .diff-line.add .diff-line-text {
+  color: #1a1a1a;
+}
+
+:root[data-theme="light"] .diff-line.del .diff-line-sign {
+  color: #dc2626;
+}
+
+:root[data-theme="light"] .diff-line.add .diff-line-sign {
+  color: #16a34a;
+}
+
+:root[data-theme="light"] .diff-line.del {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+:root[data-theme="light"] .diff-line.add {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+:root[data-theme="light"] .diff-line-num {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* 白天模式下的 code-diff 组件适配 */
+:root[data-theme="light"] .code-diff-line.add {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+:root[data-theme="light"] .code-diff-line.del {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+:root[data-theme="light"] .code-diff-line.add .code-line-sign {
+  color: #16a34a;
+}
+
+:root[data-theme="light"] .code-diff-line.del .code-line-sign {
+  color: #dc2626;
+}
+
+:root[data-theme="light"] .code-diff-line.add .code-line-content {
+  color: #1a1a1a;
+}
+
+:root[data-theme="light"] .code-diff-line.del .code-line-content {
+  color: #991b1b;
+}
+
+:root[data-theme="light"] .code-diff-line.context .code-line-content {
+  color: #1a1a1a;
+}
+
+:root[data-theme="light"] .code-diff-add {
+  color: #16a34a;
+}
+
+:root[data-theme="light"] .code-diff-del {
+  color: #dc2626;
+}
+
+/* 白天模式下的 diff section 适配 */
+:root[data-theme="light"] .diff-section.removed .diff-section-label {
+  color: #dc2626;
+}
+
+:root[data-theme="light"] .diff-section.added .diff-section-label {
+  color: #16a34a;
+}
+
+:root[data-theme="light"] .diff-section.removed .diff-section-header {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+:root[data-theme="light"] .diff-section.added .diff-section-header {
+  background: rgba(34, 197, 94, 0.05);
+}
+
+/* 白天模式下的代码块字体增强 */
+:root[data-theme="light"] .code-block,
+:root[data-theme="light"] .code-diff-content,
+:root[data-theme="light"] .diff-code,
+:root[data-theme="light"] pre,
+:root[data-theme="light"] code {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* 白天模式下的整体字体优化 */
+:root[data-theme="light"] body {
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* 白天模式下的 edit diff stats 适配 */
+:root[data-theme="light"] .edit-diff-stats .diff-add {
+  color: #16a34a;
+}
+
+:root[data-theme="light"] .edit-diff-stats .diff-del {
+  color: #dc2626;
+}
+
+/* ==================== 语言选择样式 ==================== */
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.settings-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-item-label {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.settings-item-desc {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  max-width: 400px;
+}
+
+.language-selector {
+  display: flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.lang-btn {
+  padding: 8px 16px;
+  border: none;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.lang-btn:hover {
+  background: var(--bg-hover);
+}
+
+.lang-btn.active {
+  background: var(--gold-500);
+  color: #000;
+}
+
+.lang-btn:first-child {
+  border-right: 1px solid var(--border-subtle);
+}
+
+/* 白天模式适配 */
+:root[data-theme="light"] .lang-btn.active {
+  background: var(--gold-500);
+  color: #fff;
+}
+
+/* ==================== Phase 4: 增强工具卡片样式 - 简约版 ==================== */
+
+/* 工具卡片基础样式 */
+.tool-card {
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.tool-card:hover {
+  border-color: rgba(201, 162, 39, 0.15);
+}
+
+/* "等待审批" / "已拒绝" 状态 — 跟 status 类正交，由 isAwaitingApproval /
+   isDeniedApproval 标志位控制。颜色用 JetBrains 暖橙金 #c19a6b 跟 error 红区分。 */
+.tool-card.status-awaiting {
+  border-color: rgba(193, 154, 107, 0.45);
+  box-shadow: 0 0 0 1px rgba(193, 154, 107, 0.18) inset;
+  background: linear-gradient(180deg, rgba(193, 154, 107, 0.05), var(--bg-secondary));
+}
+.tool-card.status-denied {
+  border-color: rgba(193, 154, 107, 0.35);
+  background: rgba(193, 154, 107, 0.04);
+}
+
+.tool-name .tool-awaiting-label,
+.tool-name .tool-denied-label {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 1px 7px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+.tool-name .tool-awaiting-label {
+  color: #c19a6b;
+  background: rgba(193, 154, 107, 0.14);
+  border: 1px solid rgba(193, 154, 107, 0.35);
+  /* 轻微脉动让用户视觉上感到"在等你" */
+  animation: toolAwaitingPulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+.tool-name .tool-denied-label {
+  color: #c19a6b;
+  background: rgba(193, 154, 107, 0.10);
+  border: 1px solid rgba(193, 154, 107, 0.28);
+}
+@keyframes toolAwaitingPulse {
+  0%, 100% { background: rgba(193, 154, 107, 0.14); }
+  50%      { background: rgba(193, 154, 107, 0.30); }
+}
+

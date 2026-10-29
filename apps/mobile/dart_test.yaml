@@ -1,0 +1,6 @@
+# 截图测试不进默认 flutter test: 它们是给人看的图, 不是 CI 断言。
+# 显式跑 (会重新生成 PNG):
+#   flutter test --run-skipped --tags shot --update-goldens test/harness/pilot_im_shot_test.dart
+tags:
+  shot:
+    skip: "截图: 用 --run-skipped --tags shot 显式跑"

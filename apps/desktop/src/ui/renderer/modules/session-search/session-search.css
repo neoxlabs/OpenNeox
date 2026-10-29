@@ -1,0 +1,175 @@
+/* SessionSearchPalette — Spotlight 风格中央 modal.
+ *
+ *   z-index 跟其他 palette 对齐 (CommandPalette 走 .neox-modal-backdrop 系列在 5000+,
+ *   这里 6500 既高过 NotificationMenu 6001, 又低过全局 toast / 错误弹窗 10000+).
+ */
+
+.neox-sessionsearch-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 6500;
+  background: rgba(15, 17, 21, 0.42);
+  /* 不用 backdrop-filter — 避免圆角弹层顶部漏底 */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14vh;
+  animation: neox-sessionsearch-fade var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes neox-sessionsearch-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.neox-sessionsearch {
+  width: min(620px, 92vw);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--neox-bg-canvas, var(--neox-bg-card));
+  border: 1px solid var(--neox-line);
+  border-radius: 12px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.35),
+    0 6px 18px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateZ(0);
+  animation: neox-sessionsearch-slide .16s cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes neox-sessionsearch-slide {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.neox-sessionsearch__input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--neox-line);
+  background: var(--neox-bg-canvas, var(--neox-bg-card));
+  flex-shrink: 0;
+}
+
+.neox-sessionsearch__input {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--neox-fg-primary);
+  font-family: inherit;
+  font-size: var(--neox-fs-md, 14px);
+  caret-color: var(--neox-primary-500);
+}
+.neox-sessionsearch__input::placeholder {
+  color: var(--neox-fg-secondary);
+}
+
+.neox-sessionsearch__count {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.neox-sessionsearch__list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.neox-sessionsearch__empty {
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--neox-fg-secondary);
+  font-size: var(--neox-fs-sm, 13px);
+}
+.neox-sessionsearch__empty p {
+  margin: 0 0 6px;
+}
+.neox-sessionsearch__hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  opacity: 0.7;
+}
+
+.neox-sessionsearch__row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  font-family: inherit;
+  color: var(--neox-fg-primary);
+}
+.neox-sessionsearch__row:hover,
+.neox-sessionsearch__row.is-active {
+  background: var(--neox-bg-hover);
+}
+
+.neox-sessionsearch__row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+}
+
+.neox-sessionsearch__role {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.neox-sessionsearch__role--user      { background: color-mix(in srgb, var(--neox-primary-500, #9298a1) 16%, transparent); color: var(--neox-primary-500); }
+.neox-sessionsearch__role--assistant { background: rgba(95, 180, 106, 0.18); color: var(--neox-ok); }
+.neox-sessionsearch__role--system    { background: var(--neox-bg-hover); color: var(--neox-fg-secondary); }
+
+.neox-sessionsearch__row-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+  font-size: var(--neox-fs-xs, 12px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.neox-sessionsearch__row-time {
+  flex-shrink: 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-secondary);
+}
+
+.neox-sessionsearch__row-snippet {
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: 1.5;
+  color: var(--neox-fg-primary);
+  /* 2 行裁剪, 超出省略 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.neox-sessionsearch__row-snippet mark {
+  /* 命中词高亮 — 跟 primary 色调一致 */
+  background: color-mix(in srgb, var(--neox-primary-500, #9298a1) 22%, transparent);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 600;
+}

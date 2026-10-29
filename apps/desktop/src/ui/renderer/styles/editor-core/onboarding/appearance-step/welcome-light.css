@@ -1,0 +1,284 @@
+.prev-btn,
+.next-btn {
+  display: none;
+}
+
+/* 欢迎步骤 */
+.welcome-step {
+  gap: 32px;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.welcome-animation {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* vortex mark：一次抬升入场，之后静止 — 不要再抖、不要快闪 */
+.glasses-lift .logo-svg {
+  animation: welcome-mark-enter 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+@keyframes welcome-mark-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glasses-lift .logo-svg {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.welcome-logo {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-logo .logo-svg {
+  width: 80px;
+  height: 80px;
+  color: var(--text-primary);
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-logo .logo-svg svg,
+.welcome-logo .logo-svg img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.welcome-logo .logo-svg img {
+  /* 避免 PNG 在 glow 缩放时被当成脏边 */
+  filter: drop-shadow(0 8px 20px color-mix(in srgb, var(--neox-primary-600) 22%, transparent));
+}
+
+/* 光晕慢呼吸；旧 --neox-dur-fast(160ms) infinite = 频闪。contain 隔离 blur 重绘 */
+.welcome-logo .logo-glow.animated {
+  position: absolute;
+  inset: -28%;
+  width: 156%;
+  height: 156%;
+  background: radial-gradient(
+    circle at 50% 45%,
+    color-mix(in srgb, var(--neox-primary-500, #6B5CFF) 42%, transparent) 0%,
+    color-mix(in srgb, var(--neox-primary-600, #8974FF) 18%, transparent) 42%,
+    transparent 72%
+  );
+  filter: blur(28px);
+  opacity: 0.28;
+  animation: welcomeGlow 5.5s var(--neox-ease-in-out, ease-in-out) infinite;
+  z-index: 0;
+  pointer-events: none;
+  will-change: opacity, transform;
+  contain: layout paint;
+}
+
+@keyframes welcomeGlow {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 0.34;
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-logo .logo-glow.animated {
+    animation: none;
+    opacity: 0.24;
+    transform: none;
+  }
+}
+
+.welcome-text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  animation: featureSlideUp 0.6s var(--ease-out-expo) 0.1s backwards;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.welcome-subtitle {
+  font-size: var(--neox-fs-md, 14px);
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.welcome-actions {
+  margin-top: 16px;
+  animation: featureSlideUp 0.6s var(--ease-out-expo) 0.2s backwards;
+}
+
+/* 浅色主题适配 — 全部跟随强调色, 不再硬编码金 */
+:root[data-theme="light"] .step-icon {
+  background: color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+}
+
+:root[data-theme="light"] .language-option.selected,
+:root[data-theme="light"] .mode-option.selected {
+  background: color-mix(in srgb, var(--neox-primary-600) 8%, transparent);
+}
+
+:root[data-theme="light"] .feature-icon {
+  background: color-mix(in srgb, var(--neox-primary-600) 9%, transparent);
+}
+
+:root[data-theme="light"] .welcome-title {
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .welcome-logo .logo-glow.animated {
+  background: radial-gradient(
+    circle at 50% 45%,
+    color-mix(in srgb, var(--neox-primary-600) 36%, transparent) 0%,
+    color-mix(in srgb, var(--neox-primary-600) 12%, transparent) 48%,
+    transparent 72%
+  );
+  filter: blur(28px);
+  opacity: 0.26;
+}
+
+:root[data-theme="light"] .onboarding-bg .bg-gradient {
+  opacity: 0.4;
+}
+
+:root[data-theme="light"] .onboarding-bg .bg-glow {
+  opacity: 0.25;
+}
+
+:root[data-theme="light"] .next-btn {
+  background: color-mix(in srgb, var(--neox-primary-600) 9%, transparent);
+}
+
+:root[data-theme="light"] .start-btn {
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--neox-primary-600) 25%, transparent);
+}
+
+:root[data-theme="light"] .start-btn:hover {
+  box-shadow: 0 8px 30px color-mix(in srgb, var(--neox-primary-600) 35%, transparent);
+}
+
+/* Light theme overrides for Feature Cards */
+:root[data-theme="light"] .feature-card {
+  background: #ffffff;
+  border-color: var(--border-default);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="light"] .feature-card:hover {
+  border-color: var(--neox-primary-600);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .feature-tag {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+  color: var(--text-secondary);
+}
+
+:root[data-theme="light"] .feature-preview {
+  background: #f9f9f9;
+  border-color: #e0e0e0;
+}
+
+/* Light theme overrides for Continue Button — 跟随强调色, 不再硬编码蓝 */
+:root[data-theme="light"] .continue-btn {
+  background: var(--neox-primary-600);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .continue-btn:hover {
+  background: var(--neox-primary-700);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+:root[data-theme="light"] .continue-btn svg {
+  opacity: 1;
+  /* Make icon fully opaque on light/blue bg */
+}
+
+/* Light theme overrides for Preview Content */
+:root[data-theme="light"] .preview-chat-bubble {
+  background: #ffffff;
+  border-color: #e0e0e0;
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .preview-chat-input {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="light"] .layout-block,
+:root[data-theme="light"] .layout-window {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+:root[data-theme="light"] .layout-window::after {
+  background: #f0f0f0;
+}
+
+:root[data-theme="light"] .preview-code-line {
+  color: #333;
+}
+
+:root[data-theme="light"] .code-kw {
+  color: #0000ff;
+}
+
+:root[data-theme="light"] .code-fn {
+  color: #795e26;
+}
+
+:root[data-theme="light"] .code-comment {
+  color: #008000;
+}
+
+:root[data-theme="light"] .code-suggestion {
+  color: #888;
+}
+

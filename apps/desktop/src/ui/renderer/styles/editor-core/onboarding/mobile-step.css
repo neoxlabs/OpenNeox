@@ -1,0 +1,134 @@
+/* 引导页 · 手机端 (MobileAppStep.tsx)
+ *
+ * 左: 等距插画 + 叠在屏幕上的 SVG 界面动画; 右: Android 二维码 + iOS 敬请期待。
+ * 整屏要在 756px 高的窗口里装得下 (同 onboardingStepsMustFit 的教训): 插画固定 440×340。 */
+
+.onboarding-content:has(.mobile-step) {
+  justify-content: center;
+}
+
+.mobile-step .mobile-step__lead {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary, var(--text-secondary));
+}
+
+.mobile-step .mobile-step__body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 18px;
+}
+
+/* ── 插画 + 动画 ── */
+.mob-sync {
+  position: relative;
+  width: 440px;
+  height: 340px;
+  flex: none;
+}
+.mob-sync__art,
+.mob-sync__ui {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.mob-sync__art {
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 屏幕上的静态界面 —— 颜色写死: 屏幕在插画里就是浅色的, 不跟主题走 */
+.mob-sync__ui .mob-ui-muted { fill: #d9d3cd; }
+.mob-sync__ui .mob-ui-side { fill: #e4dfda; }
+.mob-sync__ui .mob-ui-input { fill: #ffffff; stroke: #ddd6cf; stroke-width: 0.6; }
+.mob-sync__ui .mob-line { fill: #cdc6bf; }
+
+/* 按 phase 出现: 消息淡入, 回复行从左往右「打」出来 */
+.mob-sync__ui .mob-el {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: opacity 0.35s var(--neox-ease-out, ease-out), transform 0.45s var(--neox-ease-out, ease-out);
+}
+.mob-sync__ui .mob-el.mob-line { transform: scaleX(0.2); }
+.mob-sync__ui .mob-el.is-on { opacity: 1; transform: none; }
+
+/* 点一下发送: 一圈蓝色波纹 */
+.mob-sync__ui .mob-ripple {
+  fill: none;
+  stroke: #41A0FF;
+  stroke-width: 1.2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.mob-sync__ui .mob-ripple.is-on {
+  animation: mob-ripple 0.5s var(--neox-ease-out, ease-out) forwards;
+}
+@keyframes mob-ripple {
+  from { opacity: 0.9; transform: scale(1); }
+  to { opacity: 0; transform: scale(3.2); }
+}
+
+/* 同步: 虚线 + 沿线飞的点 (点的轨迹由 SVG animateMotion 驱动) */
+.mob-sync__ui .mob-trail {
+  fill: none;
+  stroke: #41A0FF;
+  stroke-width: 2;
+  stroke-dasharray: 3 10;
+  stroke-linecap: round;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.mob-sync__ui .mob-trail.is-on { opacity: 0.45; }
+.mob-sync__ui .mob-packet { opacity: 0; transition: opacity 0.15s ease; }
+.mob-sync__ui .mob-packet.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-sync__ui .mob-el { transition: none; }
+}
+
+/* ── 二维码 ── */
+.mob-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 180px;
+  flex: none;
+}
+.mob-qr__code {
+  width: 132px;
+  height: 132px;
+  padding: 8px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px var(--neox-border-subtle, rgba(0, 0, 0, 0.08));
+}
+.mob-qr__label {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--neox-fg-primary, var(--text-primary));
+  text-align: center;
+}
+.mob-qr__ios {
+  font-size: 12px;
+  color: var(--neox-fg-muted, var(--text-muted));
+  text-align: center;
+}
+
+/* CTA 跟内容区同宽 (同 mode 屏的做法) */
+:root .onboarding-page .mobile-step .mobile-actions,
+:root .onboarding-page .mobile-step .mobile-actions .continue-btn {
+  width: 100% !important;
+  max-width: 660px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.mobile-step .mobile-actions {
+  margin-top: 22px !important;
+}

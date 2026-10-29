@@ -1,0 +1,303 @@
+/* ==================== 设置页面统一样式优化 ==================== */
+
+/* 可折叠区块标题 - 简约风格 */
+.settings-section .section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--st-text-soft, var(--text-muted));
+  padding: 10px 16px 4px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.settings-section .section-title svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.settings-section .section-title .section-desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.section-action-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.section-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.section-action-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Agent 任务分配面板 - 优化样式 */
+.agent-tasks-panel {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  margin-top: 8px;
+}
+
+.agent-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agent-task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.agent-task-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.agent-task-item .task-agent {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--gold-500);
+  min-width: 70px;
+  font-family: var(--font-mono);
+}
+
+.agent-task-item .task-content {
+  flex: 1;
+  color: var(--text-primary);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.4;
+}
+
+.agent-task-item .task-status {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.agent-task-item .task-status.running {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.agent-task-item .task-status.completed {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.agent-task-item .task-status.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+/* Agent 通信日志 - 优化样式 */
+.agent-comm-logs {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.comm-logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comm-log-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.comm-log-item .log-from,
+.comm-log-item .log-to {
+  color: var(--gold-500);
+  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.comm-log-item .log-arrow {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.comm-log-item .log-message {
+  color: var(--text-secondary);
+  flex: 1;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+/* 进程管理页面 - 优化样式 */
+.processes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.process-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.process-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.process-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.process-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.process-status {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.process-status.running {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.process-status.stopped {
+  background: rgba(107, 114, 128, 0.12);
+  color: #6b7280;
+}
+
+.process-pid {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.process-stats {
+  display: flex;
+  gap: 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.process-output-btn,
+.process-kill-btn {
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.process-output-btn:hover {
+  background: var(--bg-hover);
+  color: var(--gold-500);
+}
+
+.process-kill-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.process-output-btn svg,
+.process-kill-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+
+/* 记忆系统页面 - 简约优化 */
+.memory-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.memory-stat-card {
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+
+.memory-stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.memory-stat-value {
+  font-size: var(--neox-fs-xl, 18px);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+

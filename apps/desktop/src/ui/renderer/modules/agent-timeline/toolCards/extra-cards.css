@@ -1,0 +1,46 @@
+/* 10-21 补齐的工具卡 (ExtraCardViews.tsx)。基底 .nx-tc / .nx-tc-line / .nx-tc__foot 在 tool-cards.css */
+
+/* 提交 */
+.nx-xc-commit__row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+.nx-xc-commit__ic { width: 18px; height: 18px; flex: 0 0 auto; color: var(--neox-fg-secondary); }
+.nx-xc-commit__msg { flex: 1 1 auto; min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nx-xc-commit__hash {
+  flex: 0 0 auto; padding: 1px 7px; border-radius: 6px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  font-family: var(--neox-font-mono, ui-monospace, Menlo, monospace); font-size: 11.5px; color: var(--neox-fg-secondary);
+}
+.nx-xc-add { color: #3f9a6a; font-variant-numeric: tabular-nums; }
+.nx-xc-del { color: #d4543f; font-variant-numeric: tabular-nums; }
+
+/* 分支签: 小圆角片 + 分叉图形用前缀点 */
+.nx-xc-branch {
+  display: inline-flex; align-items: center; gap: 5px; padding: 0 8px; height: 20px; border-radius: 10px;
+  background: color-mix(in srgb, #4f84ff 10%, transparent); color: #3a6be0;
+  font-family: var(--neox-font-mono, ui-monospace, Menlo, monospace); font-size: 11.5px;
+}
+.nx-xc-branch::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* 查来历 */
+.nx-xc-blame__row { display: grid; grid-template-columns: 128px 34px minmax(0, 1fr); align-items: baseline; gap: 8px; padding: 3px 14px; font-size: 12px; }
+.nx-xc-blame__row:first-child { padding-top: 10px; }
+.nx-xc-blame__row:not(.is-cont) + .nx-xc-blame__row:not(.is-cont),
+.nx-xc-blame__row.is-cont + .nx-xc-blame__row:not(.is-cont) { box-shadow: 0 -1px 0 var(--neox-line-subtle, rgba(60, 45, 25, .06)); }
+.nx-xc-blame__who { color: var(--neox-fg-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nx-xc-blame__ln { color: var(--neox-fg-hint); text-align: right; font-variant-numeric: tabular-nums; }
+.nx-xc-blame__code { overflow: hidden; text-overflow: ellipsis; white-space: pre; font-family: var(--neox-font-mono, ui-monospace, Menlo, monospace); font-size: 11.5px; }
+.nx-xc-blame .nx-tc__foot { margin-top: 8px; }
+
+/* 盯日志: 一颗会呼吸的绿点 */
+.nx-xc-mon__dot { width: 7px; height: 7px; border-radius: 50%; background: #3f9a6a; align-self: center; animation: nx-xc-breathe 1.8s ease-in-out infinite; }
+@keyframes nx-xc-breathe { 50% { opacity: .35; } }
+
+/* 上下文 */
+.nx-xc-ctx__bar { position: relative; height: 8px; margin: 14px 14px 12px; border-radius: 4px; background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent); }
+.nx-xc-ctx__fill { position: absolute; inset: 0 auto 0 0; border-radius: 4px; background: #4f84ff; transition: width .36s cubic-bezier(.2, .8, .2, 1); }
+.nx-xc-ctx__fill.is-warn { background: #e08a2e; }
+.nx-xc-ctx__mark { position: absolute; top: -3px; bottom: -3px; width: 2px; border-radius: 1px; background: var(--neox-fg-hint); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-xc-mon__dot { animation: none; }
+  .nx-xc-ctx__fill { transition: none; }
+}

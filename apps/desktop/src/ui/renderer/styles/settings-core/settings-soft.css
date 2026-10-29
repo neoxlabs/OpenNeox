@@ -1,0 +1,467 @@
+/* ============================================================
+ * Settings Soft Surface — Cursor-like 统一浅灰卡
+ *
+ * 目标: 设置内所有分组卡 / 行列表 共用极浅软灰面（贴近白底），
+ * 去掉厚玻璃 blur + 重阴影。订阅 Tab 的 --sv-soft 同源。
+ *
+ * 必须在 macos-unified.css 之后 import，才能盖掉 !important 玻璃覆写。
+ * ============================================================ */
+
+.settings-page {
+  --nx-soft-bg: color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card));
+  --nx-soft-accent: color-mix(in srgb, var(--neox-primary-600) 3.5%, var(--neox-bg-card));
+  --nx-soft-divider: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  --nx-soft-radius: 12px;
+  --nx-soft-row-hover: color-mix(in srgb, var(--neox-fg-primary) 2.2%, transparent);
+  /* 设置内全面去 3D：关掉 material 双 hairline / 浮起阴影 */
+  --neox-mat-hairline-top: 0 0 #0000;
+  --neox-mat-hairline-bottom: 0 0 #0000;
+  --neox-mat-shadow-regular: none;
+  --neox-mat-shadow-thick: none;
+}
+
+:root[data-theme="light"] .settings-page,
+:root[data-theme-pack][data-theme="light"] .settings-page,
+:root[data-theme-preset][data-theme="light"] .settings-page {
+  --nx-soft-canvas:    color-mix(in srgb, var(--neox-fg-primary) 4.1%, #fff);
+  --nx-soft-bg:        color-mix(in srgb, var(--neox-fg-primary) 8.2%, #fff);
+  --nx-soft-accent:    color-mix(in srgb, var(--neox-primary-600) 9%, #fff);
+  --nx-soft-divider:   color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  --nx-soft-row-hover: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  /* 块面之上再暗一档 —— 卡片 hover / 输入框聚焦这类"比块面更实"的状态用它。
+   * 不能再用 bg-card 混 (那是白的), 否则 hover 比静止态还亮, 方向反了。 */
+  --nx-soft-hover-fill: color-mix(in srgb, var(--neox-fg-primary) 11%, #fff);
+  --st-bg:    var(--nx-soft-canvas);
+  --st-card:  var(--nx-soft-bg);
+  background: var(--nx-soft-canvas) !important;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+}
+
+/* 订阅页 token 跟全局同源 */
+.settings-page .subv2 {
+  --sv-soft: var(--nx-soft-bg);
+  --sv-soft-accent: var(--nx-soft-accent);
+}
+
+/* ---------- 大卡面：nx SettingsCard / 遗留 settings-section / 常见面板 ---------- */
+.settings-page .nx-card.neox-material--regular,
+.settings-page .nx-card.neox-material--thin,
+.settings-page .settings-section,
+.settings-page .mp-pane,
+.settings-page .mp-section,
+.settings-page .memory-browser-compact,
+.settings-page .keymap-group,
+.settings-page .keymap-footer-hint,
+.settings-page .cloud-agent-tab__stat,
+.settings-page .cloud-agent-tab__empty,
+.settings-page .cloud-agent-tab__item,
+.settings-page .theme-surface-group,
+.settings-page .account-overview__hero,
+.settings-page .account-overview__stat,
+.settings-page .account-overview__panel,
+.settings-page .apiv2__card,
+.settings-page .ppg-card,
+.settings-page .ppg-hero,
+.settings-page .apf-picked,
+.settings-page .apf-card,
+.settings-page .apiv2__add-path-card,
+.settings-page .apiv2-edit-host,
+.settings-page .sub-soft,
+.settings-page .sub-duo__card,
+.settings-page .subv2__compare-col,
+.settings-page .usg-soft {
+  /* --nx-soft-card-bg: UI 3.0 陶土外壳里卡片比泥板白一档 (clay-studio.css 设) */
+  background: var(--nx-soft-card-bg, var(--neox-bg-card)) !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  border: 1px solid var(--nx-card-border, var(--neox-line)) !important;
+  box-shadow: none !important;
+  border-radius: var(--nx-soft-radius) !important;
+}
+
+.settings-page .sub-duo__card--accent,
+.settings-page .subv2__compare-col--sub,
+.settings-page .nx-card.neox-material--thick {
+  background: var(--nx-soft-accent) !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  border: 1px solid color-mix(in srgb, var(--neox-primary-600) 12%, transparent) !important;
+  box-shadow: none !important;
+}
+
+/* ---------- 行分割：轻 hairline，跟订阅 .sub-row 一致 ---------- */
+.settings-page .nx-row + .nx-row {
+  box-shadow: inset 0 1px 0 var(--nx-soft-divider);
+}
+
+.settings-page .setting-row + .setting-row {
+  background-image: linear-gradient(var(--nx-soft-divider), var(--nx-soft-divider));
+  background-size: calc(100% - 32px) 1px;
+  background-position: 16px 0;
+  background-repeat: no-repeat;
+}
+
+.settings-page .nx-row--clickable:hover,
+.settings-page .setting-row:hover {
+  background: var(--nx-soft-row-hover) !important;
+}
+
+/* ---------- 页内小控件：Open / ghost 按钮更贴 Cursor ---------- */
+.settings-page .sub-duo__btn--ghost,
+.settings-page .nx-btn--ghost,
+.settings-page button.nx-btn.nx-btn--secondary {
+  background: color-mix(in srgb, var(--neox-fg-primary) 2%, var(--neox-bg-card)) !important;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent) !important;
+  box-shadow: none !important;
+  font-weight: 550;
+}
+
+.settings-page .sub-duo__btn--ghost:hover:not(:disabled),
+.settings-page .nx-btn--ghost:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, var(--neox-bg-card)) !important;
+}
+
+.settings-page .sub-duo__btn--primary {
+  box-shadow: none !important;
+  font-weight: 550;
+}
+
+/* ---------- section 标题：更接近 Cursor 小灰 label ---------- */
+.settings-page .nx-section-title__title,
+.settings-page .sub-block__label {
+  font-size: var(--nx-fs-section);
+  font-weight: 550;
+  color: var(--neox-fg-secondary);
+  letter-spacing: 0.01em;
+}
+
+.settings-page .section-title {
+  font-size: var(--nx-fs-section);
+  font-weight: 550;
+  color: var(--neox-fg-secondary);
+  padding: 0 2px 8px;
+  background: transparent;
+}
+
+/* 遗留 section 标题若嵌在灰卡内，拉开与第一行的呼吸 */
+.settings-page .settings-section > .section-title:first-child {
+  padding: 14px 16px 4px;
+}
+
+.settings-page .nx-page-title__title {
+  font-size: var(--nx-fs-page);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.settings-page .nx-page-title__subtitle {
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-muted);
+}
+
+/* ---------- 暗夜对齐 Cursor：近黑实底 + 卡只抬一点点；关掉毛玻璃防发雾 ---------- */
+:root[data-theme="dark"] .settings-page,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page,
+:root[data-theme-pack][data-theme="dark"] .settings-page {
+  /* 卡片描边的深色值挂在页面上 —— 这样**任何**卡 (包括没进那份深色清单的)
+   * 都能继承到同一个值, 不必再往清单里补一行 */
+  --nx-card-border: rgba(255, 255, 255, 0.08);
+  --nx-soft-bg: color-mix(in srgb, var(--neox-fg-primary) 2%, var(--neox-bg-card));
+  --nx-soft-accent: color-mix(in srgb, var(--neox-fg-primary) 5%, var(--neox-bg-card));
+  --nx-soft-divider: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  --nx-soft-row-hover: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+  --st-bg: var(--neox-bg-canvas) !important;
+  --st-card: var(--nx-soft-bg) !important;
+  --st-card-2: var(--nx-soft-accent) !important;
+  /* 页面底也交给主题 —— 写死 #171717 时, 带壁纸的主题连壁纸都看不见了 */
+  background: var(--neox-bg-canvas) !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  box-shadow:
+    0 28px 72px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+:root[data-theme="dark"] .settings-overlay,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-overlay,
+:root[data-theme-pack][data-theme="dark"] .settings-overlay {
+  /* 遮罩也压深，避免透出 IDE 把设置染成奶灰 */
+  background: rgba(0, 0, 0, 0.62) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+          backdrop-filter: blur(20px) saturate(120%) !important;
+}
+
+:root[data-theme="dark"] .settings-page .nx-card.neox-material--regular,
+:root[data-theme="dark"] .settings-page .nx-card.neox-material--thin,
+:root[data-theme="dark"] .settings-page .settings-section,
+:root[data-theme="dark"] .settings-page .mp-pane,
+:root[data-theme="dark"] .settings-page .mp-section,
+:root[data-theme="dark"] .settings-page .memory-browser-compact,
+:root[data-theme="dark"] .settings-page .keymap-group,
+:root[data-theme="dark"] .settings-page .keymap-footer-hint,
+:root[data-theme="dark"] .settings-page .keymap-search-bar,
+:root[data-theme="dark"] .settings-page .cloud-agent-tab__stat,
+:root[data-theme="dark"] .settings-page .cloud-agent-tab__empty,
+:root[data-theme="dark"] .settings-page .cloud-agent-tab__item,
+:root[data-theme="dark"] .settings-page .theme-surface-group,
+:root[data-theme="dark"] .settings-page .account-overview__hero,
+:root[data-theme="dark"] .settings-page .account-overview__stat,
+:root[data-theme="dark"] .settings-page .account-overview__panel,
+:root[data-theme="dark"] .settings-page .apiv2__card,
+:root[data-theme="dark"] .settings-page .ppg-card,
+:root[data-theme="dark"] .settings-page .ppg-hero,
+:root[data-theme="dark"] .settings-page .apf-picked,
+:root[data-theme="dark"] .settings-page .apf-card,
+:root[data-theme="dark"] .settings-page .sub-soft,
+:root[data-theme="dark"] .settings-page .sub-duo__card,
+:root[data-theme="dark"] .settings-page .subv2__compare-col,
+:root[data-theme="dark"] .settings-page .usg-soft,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .nx-card.neox-material--regular,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .settings-section,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .keymap-group,
+:root[data-theme-pack][data-theme="dark"] .settings-page .nx-card.neox-material--regular,
+:root[data-theme-pack][data-theme="dark"] .settings-page .settings-section,
+:root[data-theme-pack][data-theme="dark"] .settings-page .keymap-group,
+:root[data-theme-pack][data-theme="dark"] .settings-page .subv2__compare-col {
+  --nx-card-border: rgba(255, 255, 255, 0.08);
+  background: var(--nx-soft-card-bg, var(--neox-bg-card)) !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .settings-page .sub-duo__card--accent,
+:root[data-theme="dark"] .settings-page .subv2__compare-col--sub,
+:root[data-theme="dark"] .settings-page .nx-card.neox-material--thick {
+  background: var(--nx-soft-accent) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 分段按钮：扁平选中态 + 可读字色（避免白字浅底） */
+.settings-page .language-toggle,
+.settings-page .nx-segmented {
+  box-shadow: none !important;
+}
+.settings-page .toggle-btn.active,
+.settings-page .nx-segmented__btn[data-on="true"] {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: var(--neox-fg-primary) !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .settings-page .toggle-btn.active,
+:root[data-theme="light"] .settings-page .nx-segmented__btn[data-on="true"] {
+  background: #fff !important;
+  color: var(--neox-fg-primary, #111) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .settings-page .sub-duo__btn--ghost,
+:root[data-theme="dark"] .settings-page .nx-btn--ghost,
+:root[data-theme="dark"] .settings-page button.nx-btn.nx-btn--secondary {
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent) !important;
+}
+
+:root[data-theme="dark"] .settings-page .sub-duo__btn--ghost:hover:not(:disabled),
+:root[data-theme="dark"] .settings-page .nx-btn--ghost:hover:not(:disabled),
+:root[data-theme="dark"] .settings-page button.nx-btn.nx-btn--secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 15%, transparent) !important;
+}
+
+:root[data-theme="dark"] .settings-page .keymap-shortcut-chip {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+:root[data-theme="dark"] .settings-page .usg-soft--metrics {
+  background: var(--nx-soft-bg) !important;
+}
+:root[data-theme="dark"] .settings-page .usg-soft--metrics .usg-metric {
+  border-right-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+.settings-page .memory-stats-compact,
+.settings-page .memory-stat-item {
+  background: var(--nx-soft-bg) !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.settings-page .memory-stat-item {
+  background: transparent !important;
+}
+
+/* Skills / Keymap — soft 覆盖 macos 玻璃与描边 */
+.settings-page .skill-item {
+  background: var(--nx-soft-bg) !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: var(--nx-soft-radius) !important;
+}
+.settings-page .skill-item:hover,
+.settings-page .apiv2__card:hover {
+  background: var(--nx-soft-hover-fill, color-mix(in srgb, var(--neox-fg-primary) 3.5%, var(--neox-bg-card))) !important;
+  box-shadow: none !important;
+}
+
+.settings-page .keymap-search-bar,
+.settings-page .mp-search {
+  background: var(--nx-soft-bg) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+}
+.settings-page .keymap-search-bar:focus-within,
+.settings-page .mp-search:focus-within {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 核弹：杀掉全局 input 给快捷键搜索叠的第二层底 */
+.settings-page .keymap-search-bar input[type="text"].keymap-search-input,
+.settings-page .keymap-search-bar input.keymap-search-input,
+.settings-page input[type="text"].keymap-search-input,
+.settings-main input[type="text"].keymap-search-input {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.settings-page .keymap-group {
+  background: var(--nx-soft-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  border-radius: 12px !important;
+}
+
+.settings-page .keymap-row {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.settings-page .keymap-row + .keymap-row {
+  box-shadow: inset 0 1px 0 var(--nx-soft-divider) !important;
+}
+.settings-page .keymap-row:hover {
+  background: var(--nx-soft-row-hover) !important;
+  border-radius: 0 !important;
+}
+.settings-page .keymap-row.editing {
+  background: color-mix(in srgb, var(--neox-primary-600) 8%, transparent) !important;
+  border-radius: 0 !important;
+}
+
+.settings-page .keymap-shortcut-chip {
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .settings-page .skill-item {
+  background: var(--nx-soft-bg) !important;
+}
+:root[data-theme="dark"] .settings-page .skill-item:hover {
+  /* 跟着 --nx-soft-accent 走 —— 写死 #262626 时换主题这一行 hover 仍是那块近黑 */
+  background: var(--nx-soft-accent) !important;
+}
+
+/* ---------- CustomSelect：卡内透明触发，避免「软卡 + 输入底」双层 ---------- */
+.settings-page .custom-select {
+  width: 100%;
+  display: block;
+}
+.settings-page .custom-select-trigger {
+  width: 100%;
+  min-height: var(--nx-control-h);
+  padding: 0 12px !important;
+  background: var(--nx-soft-bg) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  color: var(--neox-fg-primary) !important;
+}
+.settings-page .custom-select-trigger:hover,
+.settings-page .custom-select.is-open .custom-select-trigger {
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, var(--nx-soft-bg)) !important;
+  border: none !important;
+}
+
+/* 已在 soft 卡内：触发器透明，只保留一层卡面 */
+.settings-page .nx-card .custom-select-trigger {
+  background: transparent !important;
+  border-radius: 0 !important;
+  min-height: var(--nx-control-h);
+}
+.settings-page .nx-card .custom-select-trigger:hover,
+.settings-page .nx-card .custom-select.is-open .custom-select-trigger {
+  background: transparent !important;
+}
+
+/* 设置页原生 input / select 单层 soft */
+.settings-page input.nx-input:not(.keymap-search-input):not(.nx-row__control *):not(.mp-field__control *),
+.settings-page textarea.nx-input:not(.nx-row__control *):not(.mp-field__control *),
+.settings-page select.nx-input:not(.nx-row__control *):not(.mp-field__control *),
+.settings-page .nx-select:not(.nx-row__control *):not(.mp-field__control *) {
+  background: var(--nx-soft-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+}
+.settings-page .nx-card input.nx-input:not(.keymap-search-input):not(.nx-row__control *):not(.mp-field__control *),
+.settings-page .nx-card select.nx-input:not(.nx-row__control *):not(.mp-field__control *),
+.settings-page .nx-card .nx-select:not(.nx-row__control *):not(.mp-field__control *) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 邮箱 badge：去描边，只留色面 */
+.settings-page .account-overview__email-badge {
+  border: none !important;
+}
+
+/* ---------- 存储管理：外层 section 透明，内容单层 soft ---------- */
+.settings-page .settings-section.storage-cleanup-section,
+.settings-page .settings-section.storage-advanced-section,
+:root[data-theme="dark"] .settings-page .settings-section.storage-cleanup-section,
+:root[data-theme="dark"] .settings-page .settings-section.storage-advanced-section,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .settings-section.storage-cleanup-section,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .settings-section.storage-advanced-section,
+:root[data-theme-pack][data-theme="dark"] .settings-page .settings-section.storage-cleanup-section,
+:root[data-theme-pack][data-theme="dark"] .settings-page .settings-section.storage-advanced-section {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+.settings-page .storage-hero,
+.settings-page .storage-cleanup-card,
+.settings-page .storage-clean-empty,
+.settings-page .storage-advanced-body,
+:root[data-theme="dark"] .settings-page .storage-hero,
+:root[data-theme="dark"] .settings-page .storage-cleanup-card,
+:root[data-theme="dark"] .settings-page .storage-clean-empty,
+:root[data-theme="dark"] .settings-page .storage-advanced-body {
+  background: var(--nx-soft-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  border-radius: var(--nx-soft-radius) !important;
+}

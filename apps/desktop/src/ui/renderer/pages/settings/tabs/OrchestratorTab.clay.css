@@ -1,0 +1,24 @@
+/* 子 Agent 页 (UI 3.0 陶土照稿 set-orc3) —— 零 !important
+ * 结构样式 (.sa2-* / .sa-pair*) 在 layout-nav.css; 这里只管卡片底色与模型搭配行的细节。 */
+
+.orc3 .sa2-hero {
+  padding: 20px 22px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+
+.orc3 .sa2-pair__main,
+.orc3 .sa-pair__main,
+.orc3 .sa-pair__sub {
+  font-variant-numeric: tabular-nums;
+}
+
+.orc3 .sa2-others__label {
+  color: var(--neox-fg-muted);
+}
+
+.orc3 .sa-pair__arrow {
+  color: var(--neox-fg-hint);
+}

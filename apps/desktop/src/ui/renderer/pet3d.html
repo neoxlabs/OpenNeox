@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neox Pet 3D</title>
+  <!-- 3D 桌宠插件窗口入口 — 跟 pet.html 平行的独立 entry (vite input.pet3d).
+       Three.js + r3f + drei 全部打进这个 bundle, 跟核心 pet bundle 隔离.
+       主进程仅当用户启用"立体"插件 + 选 3D 模式时才 loadFile(pet3d.html). -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent !important;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      outline: none;
+    }
+    #pet-root {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="pet-root"></div>
+  <script type="module" src="/pet3d-entry.tsx"></script>
+</body>
+
+</html>

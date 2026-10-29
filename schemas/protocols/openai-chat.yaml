@@ -1,0 +1,34 @@
+# OpenAI Chat Completions 协议
+#
+#   这是事实标准 — 几乎所有 openai-compat 网关 (OpenRouter / selfhosted / DeepSeek /
+#   Kimi / GLM / Doubao / Qwen / together / fireworks 等) 都吃这个 shape.
+#   差异在: streaming chunk 格式 / reasoning_content 透传 / cache_control 接受性 /
+#   tool_call 字段名小细节. 这些差异在各 provider yaml 的 features 字段声明.
+
+id: openai-chat
+display_name: OpenAI Chat Completions
+spec: https://platform.openai.com/docs/api-reference/chat
+
+api_path: /v1/chat/completions
+
+auth:
+  scheme: bearer
+  header: Authorization
+  prefix: "Bearer "
+
+request_shape:
+  messages_field: messages
+  tools_field: tools
+  system_position: any   # 'any' 但实际严格上游 (Anthropic) 拒绝中段 system
+
+streaming:
+  format: sse
+  event_field: data
+  end_marker: "[DONE]"
+
+# 大多数 openai-compat 端点的输出 token field 是 max_tokens.
+# OpenAI 新协议改成 max_completion_tokens (reasoning 模型必须用新名).
+# kernel/openai.ts 已经有 useMaxCompletionTokens 自动判断.
+output_token_field:
+  default: max_tokens
+  reasoning_models: max_completion_tokens

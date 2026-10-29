@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ⚠ 重要前提 — 这份配置**管不到 App 的主要流量**.
+
+  Android 的 network security config 只作用于 Java/Kotlin 层网络栈 (WebView /
+  HttpURLConnection / OkHttp / 走 platform channel 的插件). Flutter 的 dart:io
+  (HttpClient / Socket / WebSocket, 也就是 dio / package:http / web_socket_channel
+  底下那层) 是 Flutter engine 自带的 C++ socket + BoringSSL 实现, **完全不查这个文件**.
+
+  所以:
+    · 这里写 cleartextTrafficPermitted="false" 并不能阻止 Dart 侧发明文 HTTP;
+      LAN 直连桌面 (http:// + ws://) 一直能通, 正是因为走的是 dart:io.
+    · 反过来, 证书固定 (pinning) 也不能靠这个文件的 <pin-set> 实现 —— 对 Dart 流量无效,
+      必须在 Dart 侧做 (见 core/network/cert_pinning.dart).
+
+  留这份配置的意义: 收紧 WebView / 插件侧的流量 (url_launcher 的自定义 tab、
+  未来可能引入的 WebView 支付页等). 所以这里保持全局禁明文, 不开任何例外.
+
+  历史: 原先给 <gateway-host> 开了 cleartext 例外, 注释写"NeoxCloud 还没 HTTPS".
+  现在 kNeoxCloudBaseUrl 默认已是 https://neox-dev.com, 且该例外对 Dart 流量本就无效,
+  属于纯残留 — 删除.
+
+  唯一例外: 127.0.0.1 (2026-10-22)。播电脑上的视频时, 手机在本机起一个只监听 127.0.0.1 的小服务,
+  按播放器要的区间经加密通道去电脑拉块 (remote_media_server.dart); 播放器 (ExoPlayer) 走 Java 网络栈,
+  不放开本机回环它连不上。只限回环地址, 不出手机。
+-->
+<network-security-config>
+  <base-config cleartextTrafficPermitted="false">
+    <trust-anchors>
+      <certificates src="system"/>
+    </trust-anchors>
+  </base-config>
+  <domain-config cleartextTrafficPermitted="true">
+    <domain includeSubdomains="false">127.0.0.1</domain>
+  </domain-config>
+</network-security-config>

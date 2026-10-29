@@ -1,0 +1,109 @@
+/* 设置 → 诊断 · UI 3.0 陶土照稿 (dg3) —— 不加强制覆盖。
+ * 结构/数据沿用 DiagnosticsTab.css 里的 diag-* 类, 这里只覆盖外观。 */
+
+/* 左右 20 跟其他设置页 (.settings-panel-content) 同一条边 */
+.dg3 { padding: 0 20px 32px; }
+
+/* 顶部操作区: 时间段 + 刷新 靠右 */
+.dg3 .diag-bar { justify-content: flex-end; }
+.dg3 .diag-refresh {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-secondary);
+  font-size: 12.5px;
+}
+.dg3 .diag-refresh:hover { color: var(--neox-fg-primary); }
+
+.dg3 .dg3-note {
+  margin: -6px 2px 0;
+  font-size: 12px; line-height: 1.5;
+  color: var(--neox-fg-muted);
+}
+.dg3 .diag-empty { margin: 0; color: var(--neox-fg-muted); font-size: 12.5px; }
+
+/* ---------- 四个概览数字 ---------- */
+.dg3 .diag-stats { gap: 12px; }
+.dg3 .diag-stat {
+  gap: 4px;
+  padding: 16px 16px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+}
+.dg3 .diag-stat__val {
+  font-size: 26px; font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--neox-fg-primary);
+}
+.dg3 .diag-stat__lbl { font-size: 12.5px; color: var(--neox-fg-secondary); }
+.dg3 .diag-stat__sub { font-size: 11.5px; color: var(--neox-fg-muted); }
+.dg3 .diag-stat.is-warn .diag-stat__val,
+.dg3 .diag-stat.is-warn .diag-stat__lbl,
+.dg3 .diag-stat.is-warn .diag-stat__sub { color: #C2492F; }
+
+/* ---------- 分组: 标题在卡外上方, 卡片发丝边 ---------- */
+.dg3 .dg3-group { display: flex; flex-direction: column; gap: 8px; }
+.dg3 .dg3-group__title {
+  margin: 0; padding: 0 2px;
+  font-size: 13px; font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.dg3 .dg3-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  padding: 12px 0;
+  overflow: hidden;
+}
+.dg3 .dg3-card > .diag-empty { margin: 4px 16px; }
+
+/* ---------- 缓存失效原因: 灰底小胶囊, 数字在后 ---------- */
+.dg3 .diag-reasons { margin: 0 16px 12px; gap: 8px; }
+.dg3 .diag-reason {
+  flex-direction: row-reverse;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  font-size: 12.5px;
+  color: var(--neox-fg-secondary);
+}
+.dg3 .diag-reason b { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---------- 事件表: 表头 + 行, 列宽两处一致 ---------- */
+.dg3 .dg3-thead,
+.dg3 .diag-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto 64px;
+  column-gap: 12px;
+}
+.dg3 .dg3-thead {
+  margin: 0 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--neox-line-subtle);
+  font-size: 11.5px;
+  color: var(--neox-fg-hint);
+}
+.dg3 .dg3-thead span:last-child { text-align: right; }
+.dg3 .diag-list { margin: 0 16px; }
+.dg3 .diag-row {
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--neox-line-subtle);
+  font-size: 12.5px;
+}
+.dg3 .diag-row:first-child { border-top: 0; }
+.dg3 .diag-row__num { min-width: 0; font-weight: 500; }
+.dg3 .diag-row.is-warn .diag-row__num { color: #C2492F; }
+.dg3 .diag-row.is-compact { grid-template-columns: minmax(0, 1fr) auto 64px; }
+
+@media (max-width: 720px) {
+  .dg3 .dg3-thead,
+  .dg3 .diag-row { grid-template-columns: 72px minmax(0, 1fr) 56px; }
+  .dg3 .dg3-thead span:nth-child(3),
+  .dg3 .diag-row > .diag-row__meta { display: none; }
+  .dg3 .diag-row.is-compact { grid-template-columns: minmax(0, 1fr) 56px; }
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  🎙️ NeoxMacSpeech CLI Info.plist — Mach-O __info_plist section 内嵌.
+
+  macOS TCC 检查的是**子进程自己**的 Info.plist, 不是父进程 (Electron).
+  Swift CLI 默认无 Info.plist, 一调 SFSpeechRecognizer.requestAuthorization 就 SIGABRT.
+  用 linker -sectcreate 把这个 plist 嵌进 Mach-O 的 __TEXT.__info_plist section 后, TCC 就能读到.
+-->
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.mk-co.neox.mac-speech</string>
+    <key>CFBundleName</key>
+    <string>NeoxMacSpeech</string>
+    <key>CFBundleDisplayName</key>
+    <string>Neox 语音唤醒</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Neox 使用系统语音识别在本地监听唤醒词, 完全离线, 数据不出机器</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Neox 需要使用麦克风来监听你说的唤醒词</string>
+</dict>
+</plist>

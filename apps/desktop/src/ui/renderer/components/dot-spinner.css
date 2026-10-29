@@ -1,0 +1,24 @@
+/* DotSpinner — 3×3 点阵 (见 DotSpinner.tsx) */
+.nx-dots {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16%;
+  flex: 0 0 auto;
+  color: var(--clay-blue, #3b6cf6);
+  vertical-align: middle;
+}
+.nx-dots > i {
+  display: block;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.22;
+  animation: nx-dots-wave 1.1s ease-in-out infinite;
+}
+@keyframes nx-dots-wave {
+  0%, 100% { opacity: 0.22; transform: scale(0.82); }
+  40% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-dots > i { animation: none; opacity: 0.6; }
+}

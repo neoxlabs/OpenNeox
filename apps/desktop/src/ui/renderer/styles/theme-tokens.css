@@ -1,0 +1,20 @@
+@import './theme-tokens/base.css';
+
+@import './theme-tokens/color-palettes.css';
+
+/* Neox 新设计 token —— 最后导入, 覆盖默认 (light) */
+@import './theme-tokens/neox.css';
+
+/* 超级调色盘 (Theme Pack) — 16 张主题包统一渲染管线
+ * 唯一源, 大底卡 + 内嵌子卡架构, 取代了 2026-06 前的
+ * theme-presets.css / liuli-glass.css 两个 legacy 文件 */
+@import './theme-tokens/theme-packs.css';
+
+/* 终端 + Shell 卡片 token —— 必须最后, 让所有 surface/accent token 已就位再 var() */
+@import './theme-tokens/terminal.css';
+
+/* Density tokens — 高度响应式 (Compact ≤900px / Roomy >900px).
+ *   useDensity hook 写 <html data-density-active="..."> 触发,
+ *   --neox-density-* vars + .neox-roomy-only / .neox-compact-only 类配合.
+ *   200ms transition 切换两档, 让窗口拉高时元素呼吸感更强. */
+@import './theme-tokens/density.css';

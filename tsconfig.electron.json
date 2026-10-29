@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist/ui-electron",
+    "rootDir": ".",
+    "types": [
+      "node"
+    ],
+    "declaration": false,
+    "jsx": "react"
+  },
+  "include": [
+    "apps/desktop/src/ui/electron/**/*.ts",
+    "apps/desktop/src/ui/shared/**/*.ts",
+    "apps/desktop/src/ide/**/*.ts",
+    "apps/desktop/src/plugins/**/*.ts",
+    "apps/desktop/src/platform-electron/**/*.ts",
+    "apps/cli/src/components/**/*.tsx",
+    "packages/core/src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/dist/**",
+    "apps/desktop/src/ui/renderer",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts"
+  ]
+}

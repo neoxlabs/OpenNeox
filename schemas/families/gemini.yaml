@@ -1,0 +1,30 @@
+# Google Gemini 家族能力声明
+
+id: gemini
+display_name: Google Gemini
+
+aliases:
+  - gemini
+  - google
+
+capabilities:
+  thinking:
+    native: true
+    field: thinking_config
+    builder_hint: gemini_thinking_budget
+  reasoning_effort:
+    supported: false
+  vision: true
+  parallel_tool_use: false
+  prompt_cache: true
+  structured_output: true
+  tool_use_shape: gemini-function
+  # gemini 字段名特殊
+  search_grounding_supported: true
+
+markdown_constraint: light
+supplement_key: gemini
+
+fast_patterns:
+  - /flash/i
+  - /nano/i

@@ -1,0 +1,23 @@
+{
+  "name": "neox-desktop",
+  "version": "4.1.1",
+  "description": "Neox Desktop · Electron app (closed-source, bundled into dmg/nsis/portable)",
+  "type": "module",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@neoxlabs/cloud": "0.1.0",
+    "@neoxlabs/core": "2.6.0",
+    "@neoxlabs/kernel": "2.6.0",
+    "@neoxlabs/native": "0.1.0",
+    "@neoxlabs/pilot-data-sdk": "0.1.0",
+    "@neoxlabs/platform": "2.6.0",
+    "@neoxlabs/pptx-renderer": "2.6.0",
+    "mammoth": "^1.12.0",
+    "pdfjs-dist": "5.4.624",
+    "xlsx": "^0.18.5"
+  }
+}

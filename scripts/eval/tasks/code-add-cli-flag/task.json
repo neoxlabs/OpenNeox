@@ -1,0 +1,5 @@
+{
+  "title": "给 CLI 加参数 (--tag 过滤 + --json 输出)",
+  "kind": "code",
+  "timeoutSec": 600
+}

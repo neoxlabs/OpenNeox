@@ -1,0 +1,112 @@
+/* ==================== TTS / 实验性 / 运行配置 页面补充样式 ==================== */
+
+/* ===== Range slider (TTS 语速) ===== */
+.range-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.range-min,
+.range-max {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  min-width: 16px;
+}
+
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-accent, var(--gold-500));
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.12s;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* ===== 实验性功能备注 ===== */
+.exp-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--st-accent-soft, rgba(0, 0, 0, 0.03));
+  border-radius: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--st-text-mute);
+}
+
+.exp-note svg {
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+/* ===== RunConfig 模式卡片 ===== */
+.rc-active-mode {
+  border-left: 3px solid var(--text-accent, var(--gold-500)) !important;
+  padding-left: 12px !important;
+}
+
+.rc-mode-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.rc-active-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-accent, var(--gold-500));
+  flex-shrink: 0;
+}
+
+.rc-active-badge {
+  font-size: 9px;
+  padding: 2px 8px;
+  background: var(--text-accent, var(--gold-500));
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+:root[data-theme="dark"] .rc-active-badge {
+  color: #000;
+}
+
+.rc-mode-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.rc-timestamp {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  padding: 4px 0 0;
+  opacity: 0.6;
+}

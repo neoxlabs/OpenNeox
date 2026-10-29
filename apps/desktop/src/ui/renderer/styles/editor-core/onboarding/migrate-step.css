@@ -1,0 +1,481 @@
+
+.migrate-step .migrate-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 520px;
+  margin: 4px auto 0;
+}
+
+.migrate-step .migrate-group__head {
+  font-size: var(--neox-fs-xs);
+  color: var(--neox-fg-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.migrate-step .migrate-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.migrate-step .migrate-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 2px;
+  cursor: pointer;
+  font-size: var(--neox-fs-sm);
+  color: var(--neox-fg-primary);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+/* 行与行之间只有一条发丝线 —— 跟 scanShell 的 .nx-scan__row 同一套 */
+.migrate-step .migrate-row {
+  border-bottom: 1px solid var(--neox-line-soft, color-mix(in srgb, var(--neox-fg-primary) 8%, transparent));
+  /* 行高固定 —— 虚拟化靠它算区间, 不能让内容把行撑高 */
+  height: 42px;
+  box-sizing: border-box;
+}
+
+.migrate-step .migrate-row:hover {
+  background: color-mix(in srgb, var(--neox-primary-600) 6%, transparent);
+}
+
+.migrate-step .migrate-row input[type='checkbox'] {
+  flex: none;
+  accent-color: var(--neox-primary-600);
+}
+
+/* 名字占满剩余宽度并省略, 来源靠右且不被挤掉 */
+.migrate-step .migrate-row__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.migrate-step .migrate-row__src {
+  flex: none;
+  font-size: var(--neox-fs-xxs);
+  color: var(--text-muted);
+}
+
+.migrate-step .migrate-envopt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 520px;
+  margin: 12px auto 0;
+  font-size: var(--neox-fs-xs);
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+
+.migrate-step .migrate-envopt input[type='checkbox'] {
+  accent-color: var(--neox-primary-600);
+}
+
+.migrate-step .migrate-note {
+  max-width: 520px;
+  margin: 12px auto 0;
+  font-size: var(--neox-fs-xxs);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.migrate-step .migrate-result {
+  max-width: 520px;
+  margin: 10px auto 0;
+  font-size: var(--neox-fs-xs);
+  color: var(--neox-fg-primary);
+}
+
+.migrate-step .migrate-result__warn {
+  color: var(--neox-danger-500);
+}
+
+.migrate-step .migrate-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* 次要动作: 纯文字, 不跟主按钮抢 */
+.migrate-step .migrate-skip {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  flex: none;
+  white-space: nowrap;
+  font-size: var(--neox-fs-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.migrate-step .migrate-skip:hover { color: var(--neox-fg-primary); }
+
+.migrate-step .migrate-rescan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  white-space: nowrap;
+  padding: 7px 12px;
+  font-size: var(--neox-fs-sm);
+  line-height: 1;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out),
+              background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.migrate-step .migrate-rescan:hover:not(:disabled) {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+.migrate-step .migrate-rescan:disabled { opacity: .45; cursor: default; }
+.migrate-step .migrate-rescan svg { flex: none; }
+
+.migrate-step .migrate-actions .continue-btn {
+  height: 32px;
+  width: auto;
+  padding: 0 18px;
+  font-size: var(--neox-fs-sm);
+  line-height: 1;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* 「显示最近 N 个」—— 组标题后面的补充, 比标题再弱一档 */
+.migrate-step .migrate-group__hint {
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xxs);
+  margin-left: 4px;
+}
+
+.onboarding-page:has(.migrate-step) .onboarding-content,
+.onboarding-page:has(.migrate-step) .step-container {
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+.onboarding-page:has(.migrate-step) .onboarding-content {
+  width: 100%;
+  max-width: min(1280px, calc(100vw - 96px));
+}
+
+.onboarding-step.migrate-step {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  min-height: 0;
+}
+.migrate-step .migrate-groups {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+/* 外层统一滚了, 组内就不要再套一层滚动条 —— 双层滚动最难用:
+ * 鼠标停在哪一层上滚的是哪一层, 用户完全预期不了。 */
+.migrate-step .migrate-list {
+  max-height: none;
+  overflow-y: visible;
+}
+.migrate-step .migrate-envopt,
+.migrate-step .migrate-note,
+.migrate-step .migrate-result,
+.migrate-step .step-actions.migrate-actions {
+  flex: none;
+}
+
+.migrate-step .migrate-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+  margin: 6px auto 0;
+  flex: none;
+  text-align: left;
+}
+@media (max-width: 820px) {
+  .migrate-step .migrate-cols { grid-template-columns: 1fr; }
+}
+
+.migrate-step .migrate-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* 列头: 图标 + 名字 + 计数。图标是这一列的 identity —— 用户点名要 logo/插画,
+ * 但这屏是回执不是海报, 一个线性符号立得住又不抢内容。 */
+.migrate-step .migrate-col__head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--neox-line-soft, color-mix(in srgb, var(--neox-fg-primary) 10%, transparent));
+  margin-bottom: 2px;
+}
+.migrate-step .migrate-col__icon {
+  display: inline-flex;
+  color: var(--neox-primary-600, var(--neox-accent));
+  flex: none;
+}
+.migrate-step .migrate-col__title {
+  font-size: var(--neox-fs-sm);
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  flex: 1;
+  min-width: 0;
+}
+.migrate-step .migrate-col__count {
+  font-size: var(--neox-fs-xxs);
+  color: var(--text-muted);
+  flex: none;
+}
+/* 批量选择 —— 按列给, 不是整屏一个 (三列默认策略不同) */
+.migrate-step .migrate-col__all {
+  flex: none;
+  background: none;
+  border: none;
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-size: var(--neox-fs-xxs);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  cursor: pointer;
+  transition: color .12s, background .12s;
+}
+.migrate-step .migrate-col__all:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+}
+.migrate-step .migrate-col__list {
+  flex: none;
+  /* 5 行 × 42px —— 这两个数在 OnboardingPage 里也有一份 (MIGRATE_ROW_H /
+   * MIGRATE_VISIBLE_ROWS), 虚拟化按它算区间, 改一处必须改两处。 */
+  max-height: calc(5 * 42px);
+  min-height: 0;
+  overflow-y: auto;
+}
+.migrate-step .migrate-col__empty {
+  padding: 10px 2px;
+  font-size: var(--neox-fs-xxs);
+  color: var(--text-muted);
+}
+
+/* 起手 / 扫描中 / 空态共用的容器 —— 居中一列, 跟其它屏同宽 */
+.migrate-step .migrate-intro {
+  width: 100%;
+  max-width: 520px;
+  margin: 8px auto 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  text-align: left;
+}
+
+.onboarding-step.migrate-step .migrate-intro.migrate-intro--start {
+  --migrate-col-w: 640px;
+  max-width: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  width: var(--migrate-col-w);
+  margin: 0 auto;
+}
+
+.migrate-step .migrate-illu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+.migrate-step .migrate-illu__side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.migrate-step .migrate-illu__node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+.migrate-step .migrate-illu__label {
+  font-size: var(--neox-fs-xxs);
+  color: var(--neox-fg-secondary, var(--text-muted));
+  white-space: nowrap;
+}
+.migrate-step .migrate-illu__node--to .migrate-illu__label {
+  color: var(--neox-fg-primary);
+  font-weight: 600;
+}
+
+/* 数据流 —— 一条通道 + 错开出发的粒子, 带发光拖尾。
+ *   只动 transform / opacity: 合成器线程就能跑完, 不碰布局也不重绘。 */
+.migrate-step .migrate-illu__stream {
+  position: relative;
+  display: block;
+  width: 120px;
+  height: 40px;
+  flex: none;
+  overflow: hidden;
+  /* 两端渐隐 —— 粒子从虚空里来, 到虚空里去, 不会硬生生冒出/消失 */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+}
+.migrate-step .migrate-illu__dot {
+  position: absolute;
+  left: 0;
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--neox-primary-500, #6366f1) 85%, transparent));
+  box-shadow: 0 0 6px color-mix(in srgb, var(--neox-primary-500, #6366f1) 55%, transparent);
+  animation: migrate-stream 1.8s linear infinite;
+  will-change: transform, opacity;
+}
+@keyframes migrate-stream {
+  0%   { transform: translateX(-14px); opacity: 0; }
+  14%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { transform: translateX(120px); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .migrate-step .migrate-illu__dot { animation: none; opacity: .55; }
+}
+
+.migrate-step .migrate-intro__desc {
+  margin: 0;
+  max-width: var(--migrate-col-w);
+  font-size: var(--neox-fs-sm);
+  line-height: 1.85;
+  color: var(--neox-fg-muted, var(--text-muted));
+  /* 居中的一句话折两行时, 默认会在第二行剩一个孤词 ("untouched.") —— 两行等长 */
+  text-wrap: balance;
+}
+.migrate-step .migrate-intro__desc b {
+  color: var(--neox-fg-primary);
+  font-weight: 600;
+}
+.migrate-step .migrate-intro__desc code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-size: .92em;
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-secondary, var(--text-muted));
+}
+
+/* 按来源筛选 —— 一个漏斗 icon, 点一下在"全部 → Codex → Claude Code → 全部"之间轮转。
+ * 选中时把来源名贴在 icon 右边, 免得用户看不出当前筛的是谁。 */
+.migrate-step .migrate-col__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 2px 5px;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color .12s, background .12s;
+}
+.migrate-step .migrate-col__filter:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+}
+.migrate-step .migrate-col__filter.is-on {
+  color: var(--neox-primary-500, var(--neox-accent));
+  background: color-mix(in srgb, var(--neox-primary-500, #2563eb) 12%, transparent);
+}
+.migrate-step .migrate-col__filter-tag {
+  font-size: var(--neox-fs-xxs);
+  white-space: nowrap;
+}
+
+/* env 行恒定占位 —— 没有可迁移的 env 时灰掉但**不消失**, 否则整屏会跳
+ * (这一屏是垂直居中的, 少一行所有内容跟着位移)。 */
+.migrate-step .migrate-envopt.is-idle {
+  opacity: .4;
+  cursor: default;
+}
+.migrate-step .migrate-envopt.is-idle input { cursor: default; }
+
+
+/* 筛选弹窗 —— 按来源 + 按名称搜 */
+.migrate-step .migrate-col__filterwrap { position: relative; flex: none; display: inline-flex; }
+.migrate-step .migrate-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 10px;
+  background: var(--neox-bg-elevated, #1a1a1c);
+  border: 1px solid var(--neox-line, color-mix(in srgb, var(--neox-fg-primary) 14%, transparent));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .45);
+}
+.migrate-step .migrate-menu__search {
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 6px 8px;
+  font-size: var(--neox-fs-xs);
+  border-radius: 7px;
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  border: 1px solid transparent;
+}
+.migrate-step .migrate-menu__search:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--neox-primary-500, #2563eb) 50%, transparent);
+}
+.migrate-step .migrate-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 7px;
+  background: none;
+  font-size: var(--neox-fs-xs);
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  text-align: left;
+}
+.migrate-step .migrate-menu__item:hover { background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent); }
+.migrate-step .migrate-menu__item.is-on { color: var(--neox-primary-500, var(--neox-accent)); }
+.migrate-step .migrate-menu__n { color: var(--text-muted); font-size: var(--neox-fs-xxs); }
+
+
+/* 起手屏的动作栏: 紧跟描述, 不要再空一大片 */
+.onboarding-step.migrate-step .migrate-intro--start + .step-actions.migrate-actions {
+  margin-top: 26px;
+}
+
+
+.migrate-step .migrate-col__title { white-space: nowrap; flex: none; }
+.migrate-step .migrate-col__count { margin-right: auto; }

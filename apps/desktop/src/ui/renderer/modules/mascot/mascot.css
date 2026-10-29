@@ -1,0 +1,437 @@
+/* The body is planted; only the head, eyes and one paw at a time articulate. */
+.neox-mascot {
+  --neox-mascot-h: 150px;
+  position: relative;
+  width: calc(var(--neox-mascot-h) * 480 / 397);
+  height: var(--neox-mascot-h);
+  pointer-events: none;
+  user-select: none;
+  outline-offset: 3px;
+}
+
+.neox-mascot__art,
+.neox-mascot__fallback,
+.neox-mascot__rig,
+.neox-mascot__base,
+.neox-mascot__layer,
+.neox-mascot__spine-host,
+.neox-mascot__spine-canvas,
+.neox-mascot__head-look,
+.neox-mascot__head-act,
+.neox-mascot__arm,
+.neox-mascot__hand,
+.neox-mascot__eyes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.neox-mascot__base,
+.neox-mascot__layer { object-fit: contain; }
+/* The Spine canvas stays invisible until its first frame is drawn; the layered
+   rig (or the static fallback) keeps showing underneath until then. */
+.neox-mascot__spine-canvas { display: block; visibility: hidden; }
+/* The canvas hangs below the box and past both sides so an arm reaching out onto
+   the composer text is not clipped, and rises above it for the head when the pet
+   stands up to run (SPINE_CANVAS_PAD_BOTTOM = 130, SPINE_CANVAS_PAD_X = 200,
+   SPINE_CANVAS_PAD_TOP = 180 skeleton units, box 480 x 397). Same aspect as the
+   camera viewport, so Stretch does not distort. */
+.neox-mascot .neox-mascot__spine-canvas {
+  --mascot-spine-pad-x: calc(100% * 200 / 480);
+  left: calc(-1 * var(--mascot-spine-pad-x));
+  top: calc(-100% * 180 / 397);
+  right: auto;
+  bottom: auto;
+  width: calc(100% + 2 * var(--mascot-spine-pad-x));
+  height: calc(100% * (397 + 130 + 180) / 397);
+}
+.neox-mascot[data-crowded='yes']:not([data-free='yes']):not([data-dragging='yes']) { visibility: hidden; }
+.atl-bottom-float > .neox-mascot,
+.atl-empty-composer > .neox-mascot { pointer-events: none; }
+.neox-mascot__rig { visibility: hidden; }
+.neox-mascot__art[data-rig-ready='yes'] .neox-mascot__rig { visibility: inherit; }
+.neox-mascot__art[data-rig-ready='yes'] .neox-mascot__fallback { visibility: hidden; }
+/* Spine wins over both DOM renderers. Must come after (and outrank) the
+   rig-ready rules: at rest the layers line up with the Spine frame, so a rig
+   left visible underneath only shows up mid-gesture as a second pair of paws. */
+.neox-mascot__art[data-renderer='spine'] .neox-mascot__spine-canvas { visibility: inherit; }
+.neox-mascot__art[data-renderer='spine'] .neox-mascot__rig,
+.neox-mascot__art[data-renderer='spine'] .neox-mascot__fallback,
+.neox-mascot__art[data-renderer='spine'][data-rig-ready] .neox-mascot__rig,
+.neox-mascot__art[data-renderer='spine'][data-rig-ready] .neox-mascot__fallback { visibility: hidden; }
+
+.neox-mascot__head-look,
+.neox-mascot__head-act { transform-origin: 50% 76.07%; }
+.neox-mascot__head-look {
+  transform: rotate(var(--mascot-head-turn, 0deg));
+  transition: transform 380ms cubic-bezier(.2, .8, .3, 1.12);
+}
+.neox-mascot__arm {
+  transform: none;
+  transform-origin: 34.58% 77.33%;
+}
+.neox-mascot__arm--right { transform-origin: 65.63% 77.33%; }
+.neox-mascot__hand--left { transform-origin: 34.58% 85.14%; }
+.neox-mascot__hand--right { transform-origin: 65.63% 85.14%; }
+.neox-mascot[data-species='corgi'] .neox-mascot__arm--left { transform-origin: 34.58% 81.86%; }
+.neox-mascot[data-species='corgi'] .neox-mascot__arm--right { transform-origin: 65.63% 81.86%; }
+.neox-mascot[data-species='corgi'] .neox-mascot__hand--left { transform-origin: 34.58% 90.43%; }
+.neox-mascot[data-species='corgi'] .neox-mascot__hand--right { transform-origin: 65.63% 90.43%; }
+
+.neox-mascot__eyes { overflow: visible; }
+.neox-mascot__eye-ball { fill: #17171b; }
+.neox-mascot__eye-spec { fill: rgba(255, 255, 255, .82); }
+.neox-mascot__eye-shift,
+.neox-mascot__eye-scale,
+.neox-mascot__eye-lid { transform-box: fill-box; }
+.neox-mascot__eye-shift {
+  transform-origin: center;
+  transform: translate(var(--mascot-look-x, 0px), var(--mascot-look-y, 0px));
+  transition: transform 190ms cubic-bezier(.2, .8, .3, 1.1);
+}
+.neox-mascot__eye-scale {
+  transform-origin: center;
+  transform: scale(1);
+  transition: transform 300ms cubic-bezier(.2, .8, .3, 1.12);
+}
+.neox-mascot[data-eyes='wide'] .neox-mascot__eye-scale,
+.neox-mascot[data-mood='watching'] .neox-mascot__eye-scale { transform: scale(1.08, 1.1); }
+.neox-mascot[data-mood='petting'] .neox-mascot__eye-scale { transform: scale(1.05, .9); }
+.neox-mascot__eye-lid {
+  transform-origin: 50% 58%;
+  transform: scaleY(1);
+}
+
+/* Hit testing stops above the composer: the paws never obstruct editor controls. */
+.neox-mascot__touch {
+  appearance: none;
+  position: absolute;
+  left: 25%;
+  top: 25%;
+  width: 50%;
+  height: 48%;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.neox-mascot:focus-visible,
+.neox-mascot__touch:focus-visible {
+  outline: 2px solid var(--neox-primary-600, currentColor);
+  outline-offset: 3px;
+}
+
+:root[data-theme='light'] .neox-mascot[data-species='cat'] .neox-mascot__art {
+  filter:
+    drop-shadow(0 3px 2px color-mix(in srgb, var(--neox-fg-primary) 34%, transparent))
+    drop-shadow(0 12px 22px color-mix(in srgb, var(--neox-fg-primary) 13%, transparent));
+}
+:root[data-theme='dark'] .neox-mascot__art {
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .32));
+}
+
+.atl-empty-mascot,
+.atl-bottom-mascot {
+  position: absolute;
+  right: calc(var(--neox-mascot-h) * -.34);
+  bottom: 100%;
+  margin-bottom: calc(var(--neox-mascot-h) * -.0202 - 14px);
+  z-index: 11;
+}
+.atl-empty-mascot {
+  right: calc(var(--neox-mascot-h) * -.36);
+  margin-bottom: calc(var(--neox-mascot-h) * -.0202 - 18px);
+}
+/* The greeting shares the mascot's band above the composer. Its home spot sits
+   on the right end of the box (face from ~.43 of its width + 22px in from the
+   box's right edge, see useMascotAnchor), so a long greeting wraps before it
+   instead of running under the head. 150px mascot: 110px.
+   UI 3.0 shell hides the mascot (clay-studio.css) but the element stays in the DOM, so
+   the reservation must skip .neox-shell — otherwise the centered greeting sits 55px left
+   of the composer (4.0 screenshot). */
+.atl-empty-stage:not(.neox-shell .atl-empty-stage):has(> .atl-empty-composer > .atl-empty-mascot) > .atl-empty-stage__top {
+  padding-right: calc(150px * 480 / 397 * .43 + 32px);
+}
+
+/* Roaming along the composer edge: layout keeps the docked home spot; the walk
+   is a compositor-only translate (useMascotMotion sets the offset and the time).
+   Dragged off the composer, the free offset moves it anywhere on the page. */
+.neox-mascot {
+  translate: calc(var(--mascot-roam-x, 0px) + var(--mascot-free-x, 0px)) var(--mascot-free-y, 0px);
+  transition: translate var(--mascot-roam-ms, 600ms) cubic-bezier(.42, .02, .3, 1);
+}
+.neox-mascot[data-dragging='yes'] { transition: none; }
+/* 首次引导 (TourOverlay) 期间藏起来: 它蹲的位置正好压住输入框那两步的气泡 */
+html[data-tour] .neox-mascot { visibility: hidden; }
+.neox-mascot[data-dragging='yes'] .neox-mascot__touch { cursor: grabbing; }
+/* Sitting up, the head is above the box: the hit area follows it. */
+.neox-mascot[data-free='yes'] .neox-mascot__touch,
+.neox-mascot[data-dragging='yes'] .neox-mascot__touch { top: -22%; height: 96%; }
+.neox-mascot[data-free='yes'],
+.neox-mascot[data-dragging='yes'] { z-index: 60; }
+.neox-mascot[data-docked='yes'] {
+  position: absolute;
+  top: var(--mascot-dock-top);
+  left: var(--mascot-dock-left);
+  right: auto;
+  bottom: auto;
+  margin: 0;
+}
+/* Stepping beside the approval strip and back (useMascotAnchor): the one time the
+   docked spot itself moves on purpose, so let it slide there. */
+.neox-mascot[data-docked='yes'][data-stepping='yes'] {
+  transition: translate var(--mascot-roam-ms, 600ms) cubic-bezier(.42, .02, .3, 1),
+    left 800ms cubic-bezier(.42, .02, .3, 1);
+}
+
+.neox-mascot__menu {
+  position: absolute;
+  z-index: 40;
+  min-width: 104px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--neox-line, rgba(128, 128, 128, .3));
+  background: var(--neox-bg-elevated, #fff);
+  box-shadow: var(--neox-shadow-3, 0 12px 28px rgba(0, 0, 0, .22));
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  pointer-events: auto;
+  animation: neox-mascot-menu-in 120ms ease-out both;
+}
+@keyframes neox-mascot-menu-in {
+  from { opacity: 0; transform: scale(.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.neox-mascot__menu-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.neox-mascot__menu-item:hover,
+.neox-mascot__menu-item:focus-visible {
+  background: var(--neox-bg-hover, color-mix(in srgb, var(--neox-fg-primary) 8%, transparent));
+}
+.neox-mascot__menu-item::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 6px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.neox-mascot__menu-item.is-on::before { background: var(--neox-primary-600, currentColor); }
+.neox-mascot__menu-sep {
+  height: 1px;
+  margin: 3px 2px;
+  background: var(--neox-line-soft, rgba(128, 128, 128, .2));
+}
+
+/* 表情符号: 头的右上方 (气泡在左上方, 两者不打架)。只是点缀, 不接收指针。 */
+.neox-mascot__emote {
+  position: absolute;
+  z-index: 25;
+  right: 17%;
+  top: 4%;
+  pointer-events: none;
+  color: var(--neox-fg-secondary, #6b6f78);
+  animation: neox-mascot-emote-in 220ms cubic-bezier(.2, .8, .3, 1.3) both;
+}
+@keyframes neox-mascot-emote-in {
+  from { opacity: 0; transform: translateY(6px) scale(.6); }
+  to { opacity: 1; transform: none; }
+}
+/* 想事情: 三个点依次浮起 */
+.neox-mascot__emote.is-think {
+  display: flex;
+  gap: 3px;
+  padding: 4px 6px;
+  border-radius: 9px;
+  background: var(--neox-bg-elevated, #fff);
+  border: 1px solid var(--neox-line, rgba(128, 128, 128, .25));
+}
+.neox-mascot__emote.is-think i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: neox-mascot-think-dot 1.2s ease-in-out infinite;
+}
+.neox-mascot__emote.is-think i:nth-child(2) { animation-delay: .18s; }
+.neox-mascot__emote.is-think i:nth-child(3) { animation-delay: .36s; }
+@keyframes neox-mascot-think-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .45; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+/* 等批准 ! / 等回答 ?: 粗体字符, 轻轻弹 */
+.neox-mascot__emote.is-mark {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--neox-primary-600, #5b5bd6);
+  animation: neox-mascot-emote-in 220ms cubic-bezier(.2, .8, .3, 1.3) both,
+    neox-mascot-mark-bob 1.6s ease-in-out 220ms infinite;
+}
+@keyframes neox-mascot-mark-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(6deg); }
+}
+/* 出错: 一滴汗顺着头侧滑下, 循环 */
+.neox-mascot__emote.is-sweat { right: 20%; top: 20%; width: 11px; }
+.neox-mascot__emote.is-sweat svg {
+  display: block;
+  width: 100%;
+  fill: #8ec5ff;
+  stroke: #4a9be8;
+  stroke-width: .8;
+  animation: neox-mascot-sweat 2.4s ease-in infinite;
+}
+@keyframes neox-mascot-sweat {
+  0% { transform: translateY(-2px); opacity: 0; }
+  15% { opacity: 1; }
+  70% { transform: translateY(7px); opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+/* 跑完: 两颗小星星一闪一闪 */
+.neox-mascot__emote.is-sparkle { width: 26px; height: 22px; }
+.neox-mascot__emote.is-sparkle svg {
+  position: absolute;
+  fill: #ffc53d;
+  animation: neox-mascot-twinkle 1.1s ease-in-out infinite;
+}
+.neox-mascot__emote.is-sparkle svg:nth-child(1) { width: 14px; left: 0; top: 6px; }
+.neox-mascot__emote.is-sparkle svg:nth-child(2) { width: 9px; right: 0; top: 0; animation-delay: .4s; }
+@keyframes neox-mascot-twinkle {
+  0%, 100% { transform: scale(.7) rotate(0deg); opacity: .6; }
+  50% { transform: scale(1.1) rotate(20deg); opacity: 1; }
+}
+/* 睡着: z z z 飘起。常驻在 DOM 里, 只在 data-mood=sleeping 时出现 */
+.neox-mascot__emote.is-zzz {
+  display: none;
+  font-size: 11px;
+  font-weight: 700;
+  font-style: normal;
+  animation: none;
+}
+.neox-mascot[data-mood='sleeping'] .neox-mascot__emote.is-zzz { display: block; }
+.neox-mascot__emote.is-zzz i {
+  position: absolute;
+  font-style: normal;
+  opacity: 0;
+  animation: neox-mascot-zzz 3s ease-out infinite;
+}
+.neox-mascot__emote.is-zzz i:nth-child(2) { animation-delay: 1s; font-size: 13px; }
+.neox-mascot__emote.is-zzz i:nth-child(3) { animation-delay: 2s; font-size: 15px; }
+@keyframes neox-mascot-zzz {
+  0% { transform: translate(0, 0); opacity: 0; }
+  20% { opacity: .85; }
+  100% { transform: translate(10px, -18px); opacity: 0; }
+}
+
+/* 气泡: 贴在头的左上方, 尾巴指向嘴边。右端跟头的左沿对齐, 文字往左长, 不会冲出输入框右端。 */
+.neox-mascot__bubble {
+  appearance: none;
+  position: absolute;
+  z-index: 30;
+  right: 64%;
+  bottom: 60%;
+  max-width: 240px;
+  width: max-content;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--neox-line, rgba(128, 128, 128, .28));
+  background: var(--neox-bg-elevated, #fff);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: var(--neox-fs-sm, 12.5px);
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+  pointer-events: auto;
+  transform-origin: 100% 100%;
+  animation: neox-mascot-bubble-in 180ms cubic-bezier(.2, .8, .3, 1.15) both;
+}
+.neox-mascot__bubble::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  bottom: 7px;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  border-right: inherit;
+  border-bottom: inherit;
+  transform: rotate(-45deg);
+}
+.neox-mascot[data-beside='approval'] .neox-mascot__bubble {
+  right: auto;
+  left: 8%;
+  bottom: 100%;
+  margin-bottom: 4px;
+  transform-origin: 30% 100%;
+}
+.neox-mascot[data-beside='approval'] .neox-mascot__bubble::after {
+  right: auto;
+  left: 18px;
+  bottom: -5px;
+  transform: rotate(45deg);
+}
+.neox-mascot__bubble-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.neox-mascot__bubble.is-approval,
+.neox-mascot__bubble.is-ask {
+  border-color: color-mix(in srgb, var(--neox-primary-600, #5b5bd6) 45%, transparent);
+}
+.neox-mascot__bubble.is-error {
+  border-color: color-mix(in srgb, var(--neox-err, #d14343) 45%, transparent);
+}
+.neox-mascot__bubble.is-status { color: var(--neox-fg-secondary); cursor: default; }
+@keyframes neox-mascot-bubble-in {
+  from { opacity: 0; transform: translateY(4px) scale(.94); }
+  to { opacity: 1; transform: none; }
+}
+
+.neox-mascot[data-motion='off'] .neox-mascot__head-look,
+.neox-mascot[data-motion='off'] .neox-mascot__arm,
+.neox-mascot[data-motion='off'] .neox-mascot__eye-shift,
+.neox-mascot[data-motion='off'] .neox-mascot__eye-scale {
+  transition: none;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .neox-mascot__head-look,
+  .neox-mascot__head-act,
+  .neox-mascot__arm,
+  .neox-mascot__hand,
+  .neox-mascot__eye-lid,
+  .neox-mascot__eye-shift,
+  .neox-mascot__eye-scale,
+  .neox-mascot__menu,
+  .neox-mascot__bubble,
+  .neox-mascot__emote,
+  .neox-mascot__emote i,
+  .neox-mascot__emote svg {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}

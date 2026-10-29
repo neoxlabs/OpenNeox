@@ -1,0 +1,536 @@
+/* ==================== Browser Debug Card - 简约重构版 ==================== */
+.browser-debug-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.browser-debug-card:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.browser-debug-card.detecting,
+.browser-debug-card.launching,
+.browser-debug-card.loading,
+.browser-debug-card.collecting,
+.browser-debug-card.analyzing {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.browser-debug-card.completed {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.browser-debug-card.error {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.browser-debug-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.browser-debug-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.browser-debug-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.browser-debug-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 6px;
+}
+
+.browser-debug-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.browser-debug-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.browser-debug-action {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.browser-debug-url-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-debug-url {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 打开链接按钮 */
+.browser-debug-open-btn {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.browser-debug-open-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.browser-debug-open-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-debug-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.browser-debug-time-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  padding: 3px 7px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+/* 状态标签 - 带图标 */
+.browser-debug-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.browser-debug-status svg {
+  width: 12px;
+  height: 12px;
+}
+
+.browser-debug-status.detecting,
+.browser-debug-status.launching,
+.browser-debug-status.loading,
+.browser-debug-status.collecting,
+.browser-debug-status.analyzing {
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+}
+
+.browser-debug-status.completed {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.browser-debug-status.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.browser-debug-timestamp {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.browser-debug-collapse-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  border-radius: 4px;
+}
+
+.browser-debug-collapse-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.browser-debug-collapse-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.browser-debug-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+/* Body 区域 */
+.browser-debug-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* 错误提示 */
+.browser-debug-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  color: #ef4444;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.browser-debug-error svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* 准备阶段样式 */
+.browser-debug-preparing {
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.browser-debug-preparing-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.browser-debug-preparing-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+}
+
+.browser-debug-preparing-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-debug-preparing-text {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+}
+
+/* Summary 区域 */
+.browser-debug-summary {
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.browser-debug-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+}
+
+.browser-debug-summary-header svg {
+  color: var(--text-muted);
+}
+
+.browser-debug-summary-text {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* 统计信息 - 三列布局 */
+.browser-debug-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.browser-debug-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.browser-debug-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 5px;
+  color: #3b82f6;
+}
+
+.browser-debug-stat-icon.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.browser-debug-stat-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-debug-stat-label {
+  flex: 1;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+}
+
+.browser-debug-stat-value {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.browser-debug-stat-value.error {
+  color: #ef4444;
+}
+
+/* 错误列表 */
+.browser-debug-errors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.browser-debug-errors-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.browser-debug-errors-header svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-debug-errors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.browser-debug-error-item {
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+}
+
+.browser-debug-error-message {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.browser-debug-error-location {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.browser-debug-show-more {
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  align-self: flex-start;
+}
+
+.browser-debug-show-more:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+/* 性能指标 */
+.browser-debug-performance {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.browser-debug-performance-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.browser-debug-performance-header svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browser-debug-performance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.browser-debug-perf-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.browser-debug-perf-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.browser-debug-perf-value {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+/* 加载动画 */
+@keyframes browser-debug-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.browser-debug-status svg.animate-spin,
+.browser-debug-preparing-icon svg.animate-spin {
+  animation: browser-debug-spin 1s linear infinite;
+}
+
+/* Light theme adjustments for Browser Debug card */
+:root[data-theme="light"] .browser-debug-card {
+  border-color: var(--border-default);
+}
+
+:root[data-theme="light"] .browser-debug-header:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+:root[data-theme="light"] .browser-debug-icon {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+:root[data-theme="light"] .browser-debug-open-btn {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+:root[data-theme="light"] .browser-debug-open-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+:root[data-theme="light"] .browser-debug-body {
+  border-top-color: var(--border-subtle);
+}
+
+:root[data-theme="light"] .browser-debug-summary,
+:root[data-theme="light"] .browser-debug-stat-item,
+:root[data-theme="light"] .browser-debug-error-item,
+:root[data-theme="light"] .browser-debug-perf-item,
+:root[data-theme="light"] .browser-debug-preparing {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+:root[data-theme="light"] .browser-debug-stat-icon {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+:root[data-theme="light"] .browser-debug-stat-icon.error {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+:root[data-theme="light"] .browser-debug-collapse-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="light"] .web-search-count {
+  background: var(--accent-100);
+  color: var(--accent-700);
+}
+

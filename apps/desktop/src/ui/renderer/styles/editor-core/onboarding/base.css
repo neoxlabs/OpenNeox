@@ -1,0 +1,580 @@
+/* ==================== 引导页面 (Onboarding) ==================== */
+.onboarding-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn var(--neox-dur-fast) var(--neox-ease-out);
+  /* 锚定到当前主题, 不再依赖继承 — 4 主题下背景/前景始终正确 */
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.onboarding-page.animating-out {
+  animation: fadeOut var(--neox-dur-fast) var(--neox-ease-out) forwards;
+}
+
+/* 「接模型」浮层 (OnboardingPage connectOnly): 同一张引导页, 盖在欢迎页 / 工作台上。
+ * 要压过设置页和各类浮层, 但让 toast / 确认框 (2147483000 那一档) 还能浮在它上面。 */
+.model-connect-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+.onboarding-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.onboarding-bg .bg-grid {
+  display: none;
+}
+
+:root[data-theme="light"] .onboarding-bg .bg-grid {
+  display: none;
+}
+
+/* 顶部固定导航栏 */
+.onboarding-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 10;
+  /* Electron 用这个拖窗; **Tauri/WebKit 不认** —— 所以 JSX 上同时挂了
+   * data-tauri-drag-region, 两个宿主各取所需。 */
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+/* 顶栏里的可交互元素要能点 —— 整条 header 是拖拽区, 但按钮不能被它吃掉点击。
+ * (Electron 靠 app-region:no-drag; Tauri 靠"没有 data-tauri-drag-region 的子元素
+ *  自然可点", 所以这里只需要给 Electron 那条。) */
+.onboarding-header button,
+.onboarding-header a,
+.onboarding-header [role="button"] {
+  -webkit-app-region: no-drag;
+}
+
+/* macOS 红绿灯占位 —— 壳侧已经把红绿灯下移到跟这一行对齐 (traffic_light_position),
+ * 这里只负责给它们让出水平空间。 */
+:root[data-platform="darwin"] .onboarding-header {
+  padding-left: 80px;
+}
+
+/* Windows 三大金刚占位 — 避免步骤指示器/箭头顶到 caption */
+:root[data-platform="win32"] .onboarding-header {
+  padding-right: var(--neox-win-caption-inset, 152px);
+  background: transparent;
+}
+
+/*
+ * Win 引导页必须「整页实色」才能跟 titleBarOverlay 无缝。
+ * Electron 三大金刚背后是 OS 画的实色矩形, 改不了透明度;
+ * 页面再叠 bg-glow / wallpaper 渐变 → 肉眼必出色块/分层。
+ * 所以 Win 上关掉大气光晕, 背景锁 canvas, overlay 同色。
+ */
+:root[data-platform="win32"] .onboarding-page {
+  background: var(--neox-bg-canvas, var(--bg-primary)) !important;
+}
+
+:root[data-platform="win32"] .onboarding-bg {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* 强制实色底 — 图片/渐变 wallpaper 在 Win 上必跟 overlay 实色块打架 */
+  background: var(--neox-bg-canvas, var(--bg-primary)) !important;
+  background-image: none !important;
+  opacity: 1 !important;
+}
+
+:root[data-platform="win32"] .onboarding-bg .bg-glow,
+:root[data-platform="win32"] .onboarding-bg .bg-gradient,
+:root[data-platform="win32"] .onboarding-bg::after {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* 不再单独垫右上角色块 — 整页已是同色, 垫块反而像补丁 */
+:root[data-platform="win32"] .onboarding-page::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* ============================================================
+ * Win 引导 CTA — anye 等 pack 的 primary 是浅银 (#b8b8b8),
+ * 再叠 color:white / 大光晕 → 字看不清、光晕脏。强制对比度 + 去光晕.
+ * ============================================================ */
+:root[data-platform="win32"] .onboarding-page .continue-btn,
+:root[data-platform="win32"] .onboarding-page .features-actions .continue-btn,
+:root[data-platform="win32"] .onboarding-page .appearance-actions .continue-btn,
+:root[data-platform="win32"] .onboarding-page .welcome-actions .continue-btn,
+:root[data-platform="win32"] .onboarding-page .connect-actions .continue-btn {
+  background: var(--neox-primary-600) !important;
+  background-image: none !important;
+  /* fg-invert 在浅色 primary 上是深字; 深色 primary 上是浅字 — 跟 pack 设计对齐 */
+  color: var(--neox-fg-invert, #111111) !important;
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+:root[data-platform="win32"] .onboarding-page .continue-btn span,
+:root[data-platform="win32"] .onboarding-page .continue-btn svg {
+  color: inherit !important;
+  opacity: 1 !important;
+  fill: currentColor;
+}
+
+:root[data-platform="win32"] .onboarding-page .continue-btn:hover {
+  background: var(--neox-primary-700, var(--neox-primary-600)) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+:root[data-platform="win32"] .onboarding-page .appearance-hint,
+:root[data-platform="win32"] .onboarding-page .welcome-subtitle {
+  color: var(--neox-fg-muted, var(--text-muted)) !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+.onboarding-nav {
+  display: flex;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.onboarding-settings-btn {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  -webkit-app-region: no-drag;
+}
+.onboarding-settings-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.onboarding-settings-btn svg { width: 16px; height: 16px; }
+
+.nav-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  -webkit-app-region: no-drag;
+}
+
+.nav-arrow:hover:not(.disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-arrow.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* 首/末步无对应方向时占位, 保持指示器居中不跳动 */
+.nav-arrow--placeholder {
+  display: inline-flex;
+  pointer-events: none;
+}
+
+.nav-arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 步骤指示器 */
+.onboarding-step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 16px;
+}
+
+.onboarding-step-indicator__count {
+  margin-left: 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-secondary, var(--text-muted));
+  opacity: 0.7;
+  letter-spacing: .02em;
+}
+
+.onboarding-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  padding-top: 56px;
+  width: 100%;
+  max-width: 560px;
+}
+
+/* Features 页面特殊宽度 */
+.onboarding-content:has(.features-step) {
+  max-width: 900px;
+  width: 100%;
+}
+
+/* Connect (BYOK) 页面 — triptych 三栏分类布局, 需更多横向空间.
+ * 1280px 让 Official 那一栏的 2 sub-col 卡片有 ~200px+, Hub/Custom 一栏 ~210px. */
+.onboarding-content:has(.connect-step) {
+  max-width: 1280px;
+  width: 100%;
+}
+
+.step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  border: none;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  opacity: 0.25;
+}
+
+.step-dot.active {
+  background: var(--text-primary);
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: none;
+}
+
+.step-dot.completed {
+  background: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* 步骤容器 */
+.step-container {
+  width: 100%;
+  animation: stepSlideIn 0.4s var(--ease-out-expo);
+}
+
+@keyframes stepSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.onboarding-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.step-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.step-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.step-icon svg {
+  width: 24px;
+  height: 24px;
+  opacity: 0.8;
+}
+
+.step-header h2 {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.step-header p {
+  font-size: var(--neox-fs-md, 14px);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.language-step .step-header {
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.language-step .step-icon {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--neox-primary-600);
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.language-step .step-icon svg {
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+}
+
+.language-step .step-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.language-step .step-header p {
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+/* 语言选择 */
+.language-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.language-option {
+  flex: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  position: relative;
+}
+
+.language-option:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.language-option.selected {
+  border-color: var(--neox-primary-600);
+  background: color-mix(in srgb, var(--neox-primary-600) 8%, transparent);
+  box-shadow: 0 0 0 1px var(--neox-primary-600);
+}
+
+.language-option .lang-flag {
+  font-size: var(--neox-fs-xl, 18px);
+  opacity: 1;
+  line-height: 1;
+  /* Windows 不渲染国旗 emoji → 显示成 CN/US 区域指示字母, 给清晰深色避免浅灰看不清 */
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.language-option .lang-name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: left;
+}
+
+.language-option svg {
+  position: static;
+  width: 14px;
+  height: 14px;
+  color: var(--neox-primary-600);
+  opacity: 0;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.language-option.selected svg {
+  opacity: 1;
+}
+
+/* 主题选择 */
+.theme-section {
+  width: 100%;
+}
+
+.theme-section h3 {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.dark-mode-options {
+  display: flex;
+  gap: 12px;
+}
+
+.mode-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mode-option:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-hover);
+}
+
+.mode-option.selected {
+  border-color: var(--neox-primary-600);
+  background: color-mix(in srgb, var(--neox-primary-600) 8%, transparent);
+}
+
+.mode-option svg {
+  width: 24px;
+  height: 24px;
+  color: var(--text-secondary);
+}
+
+.mode-option.selected svg {
+  color: var(--neox-primary-600);
+}
+
+.mode-option span {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* 颜色主题选择 */
+.color-theme-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.color-option {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.color-option:hover {
+  border-color: var(--theme-color);
+  transform: scale(1.05);
+  background: transparent;
+}
+
+.color-option.selected {
+  border-color: var(--theme-color);
+  box-shadow: 0 0 12px var(--theme-color);
+  background: transparent;
+}
+
+.color-option .color-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--theme-color);
+}
+
+.color-option svg {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: white;
+}
+

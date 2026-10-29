@@ -1,0 +1,306 @@
+/* ==================== Context Management Styles ==================== */
+
+/* Token 使用量显示 */
+.context-usage-display {
+  margin-top: 8px;
+}
+
+.usage-bar-container {
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.usage-bar-fill {
+  height: 100%;
+  background: var(--accent-color);
+  border-radius: 4px;
+  transition: width var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.usage-bar-fill.warning {
+  background: var(--warning-color, #eab308);
+}
+
+.usage-stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.usage-current {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.usage-separator {
+  color: var(--text-tertiary);
+}
+
+.usage-max {
+  color: var(--text-secondary);
+}
+
+.usage-percent {
+  color: var(--text-tertiary);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.context-mode-options {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.context-mode-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.context-mode-btn:hover {
+  border-color: var(--accent-color);
+}
+
+.context-mode-btn.active {
+  border-color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.context-mode-btn .mode-icon {
+  font-size: var(--neox-fs-xl, 18px);
+}
+
+.context-mode-btn .mode-name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.context-mode-btn .mode-desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Threshold selector */
+.context-threshold-selector {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.threshold-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.threshold-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.threshold-btn.active {
+  border-color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.threshold-hint {
+  margin-top: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+}
+
+/* ==================== Remote Access Styles ==================== */
+
+.remote-mode-options {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.remote-mode-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.remote-mode-btn:hover:not(:disabled) {
+  border-color: var(--accent-color);
+}
+
+.remote-mode-btn.active {
+  border-color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent-color);
+}
+
+.remote-mode-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.remote-mode-btn .coming-soon {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.port-input-row {
+  margin-top: 8px;
+}
+
+.port-input {
+  width: 120px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--neox-fs-md, 14px);
+}
+
+.port-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.token-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.token-display {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+}
+
+.qr-display {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.qr-data {
+  font-family: monospace;
+  font-size: var(--neox-fs-xxs, 11px);
+  word-break: break-all;
+  color: var(--text-muted);
+}
+
+.option-row {
+  margin-top: 8px;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: var(--neox-fs-md, 14px);
+  color: var(--text-secondary);
+}
+
+/* 远程客户端列表 */
+.remote-clients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.remote-client-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 5px;
+}
+
+.client-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.client-name {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.client-ip {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-tertiary);
+  font-family: monospace;
+}
+
+.client-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.disconnect-btn {
+  padding: 4px;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.disconnect-btn:hover {
+  background: var(--error-bg);
+  color: var(--error-color);
+}
+
+.disconnect-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.empty-state.small {
+  padding: 12px;
+  font-size: var(--neox-fs-xs, 12px);
+}
+

@@ -1,0 +1,420 @@
+/* FileDialogs — IDEA New File / Rename / Delete 弹窗
+ * 跟 IntelliJ IDEA 对话框风格对齐: 居中 + 淡灰底 + 圆角 + 软阴影
+ */
+
+.neox-file-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  /* 背幕只淡入, 不动 backdrop-filter — 动它等于每帧对整屏做一次高斯模糊 (见 motion-macos.css) */
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  backdrop-filter: blur(6px) saturate(120%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483100;
+  animation: neox-dialog-fade-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes neox-dialog-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.neox-file-dialog {
+  /* 玻璃卡: 背幕已经模糊了底下的界面, 卡片自己再模糊一层 + 半透明底色, 才有厚度 */
+  background: color-mix(in srgb, var(--glass-bg, rgba(43, 45, 48, 0.96)) 88%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.10));
+  border-radius: 14px;
+  padding: 20px 24px 16px;
+  min-width: 420px;
+  max-width: 600px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    /* 顶沿高光 — 玻璃的"边" */
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--text-primary, #dfe1e5);
+  -webkit-font-smoothing: antialiased;
+  animation: neox-dialog-slide-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes neox-dialog-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.neox-file-dialog-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  margin-bottom: 4px;
+  letter-spacing: 0;
+}
+
+.neox-file-dialog-subtitle {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #6c707e;
+  margin-bottom: 16px;
+  font-family: 'SF Mono', 'Menlo', 'JetBrains Mono', Consolas, monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.neox-file-dialog-label {
+  display: block;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #b4b8bf;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.neox-file-dialog-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #4b6eaf;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.28);
+  color: #dfe1e5;
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out), box-shadow var(--neox-dur-fast) var(--neox-ease-out);
+  box-sizing: border-box;
+}
+
+.neox-file-dialog-input:focus {
+  border-color: #3574f0;
+  box-shadow: 0 0 0 2px rgba(53, 116, 240, 0.25);
+}
+
+.neox-file-dialog-input.error {
+  border-color: #f87171;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2);
+}
+
+.neox-file-dialog-input::placeholder {
+  color: #6c707e;
+}
+
+.neox-file-dialog-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.neox-file-dialog-error {
+  margin-top: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #f87171;
+  line-height: 1.4;
+}
+
+.neox-file-dialog-message {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary, #b4b8bf);
+  margin: 4px 0 16px;
+  line-height: 1.5;
+}
+
+.neox-file-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.neox-file-dialog-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 18px;
+  /* 次按钮也是玻璃 — 描边 + 极淡底, 不跟主按钮抢注意力 */
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--text-primary, #dfe1e5) 7%, transparent);
+  color: var(--text-primary, #dfe1e5);
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: inherit;
+  font-weight: 450;
+  cursor: pointer;
+  transition:
+    background var(--neox-dur-fast) var(--neox-ease-out),
+    border-color var(--neox-dur-fast) var(--neox-ease-out),
+    transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-file-dialog-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--text-primary, #dfe1e5) 13%, transparent);
+  border-color: color-mix(in srgb, var(--text-primary, #dfe1e5) 22%, transparent);
+}
+
+.neox-file-dialog-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.neox-file-dialog-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.neox-file-dialog-btn:focus-visible {
+  outline: 2px solid var(--neox-focus-ring);
+  outline-offset: 2px;
+}
+
+.neox-file-dialog-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.neox-file-dialog-btn.primary {
+  background: var(--jb-accent-blue, #3574f0);
+  border-color: transparent;
+  color: var(--neox-fg-invert, #ffffff);
+  font-weight: 550;
+  box-shadow: none;
+}
+
+.neox-file-dialog-btn.primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--jb-accent-blue, #3574f0) 88%, #ffffff);
+}
+
+.neox-file-dialog-btn.primary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--jb-accent-blue, #3574f0) 82%, #000000);
+}
+
+/* ============ ConfirmDialog (generic) ============ */
+.neox-confirm-dialog {
+  min-width: 460px;
+  max-width: 540px;
+}
+
+.neox-confirm-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.neox-confirm-dialog-header .neox-file-dialog-title {
+  margin-bottom: 0;
+  flex: 1 1 auto;
+}
+
+.neox-confirm-dialog-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.neox-confirm-dialog-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* default 变体的强调图标 (更新提示等) — 蓝色玻璃圆片 */
+/* 圆片图标 —— 软底 + 同色描边, 不要外扩的 ring.
+ * 那圈 3px ring 在主色是浅灰的主题下跟按钮柔光一个毛病: 圆片外面又晕一层。
+ * 用内描边把边界画清楚, 比向外扩一圈光干净。 */
+.neox-confirm-dialog-icon.accent {
+  background: color-mix(in srgb, var(--jb-accent-blue, #3574f0) 14%, transparent);
+  color: var(--jb-accent-blue, #3574f0);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--jb-accent-blue, #3574f0) 22%, transparent);
+}
+
+.neox-confirm-dialog-icon.danger {
+  background: rgba(239, 68, 68, 0.14);
+  color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+/* Danger 变体: 红色圆形图标已经做了视觉强调, 不再加整卡左红条 (双层框感) */
+.neox-confirm-dialog.danger {
+  /* 留空 - 视觉强调全靠 .neox-confirm-dialog-icon.danger 那枚红色圆形 */
+}
+
+/* Description: 主 message 下面的辅助说明, 不要带卡片背景, 仅作为正文继续 */
+.neox-confirm-dialog-description {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted, #8b8f97);
+  line-height: 1.55;
+  margin: -8px 0 16px;
+}
+
+/* Danger confirm button — 红色，用来替代 primary 蓝色 */
+/* 危险按钮 —— 同样不发光。红色实底 + 白字本身对比就够, 柔光只是让它显脏 */
+.neox-file-dialog-btn.danger {
+  background: #ef4444;
+  border-color: transparent;
+  color: #ffffff;
+  font-weight: 550;
+  box-shadow: none;
+}
+
+.neox-file-dialog-btn.danger:hover:not(:disabled) {
+  background: #f55a5a;
+  border-color: #f55a5a;
+}
+
+.neox-file-dialog-btn.danger:active:not(:disabled) {
+  background: #d93636;
+}
+
+/* Light theme overrides for ConfirmDialog */
+:root[data-theme="light"] .neox-confirm-dialog-icon.danger {
+  background: rgba(239, 68, 68, 0.12);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.06);
+}
+
+:root[data-theme="light"] .neox-confirm-dialog-description {
+  color: #6b7280;
+}
+
+/* light theme */
+:root[data-theme="light"] .neox-file-dialog {
+  /* 亮色下同样是玻璃 — 白得半透, 边缘略亮, 阴影收一档 (亮底上重阴影会脏) */
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #1f2329;
+  box-shadow:
+    0 24px 64px rgba(15, 23, 42, 0.16),
+    0 4px 12px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+:root[data-theme="light"] .neox-file-dialog-title {
+  color: #1f2329;
+}
+
+:root[data-theme="light"] .neox-file-dialog-subtitle {
+  color: #6b7280;
+}
+
+:root[data-theme="light"] .neox-file-dialog-label {
+  color: #4b5563;
+}
+
+:root[data-theme="light"] .neox-file-dialog-input {
+  background: #f9fafb;
+  border-color: #d4d4d4;
+  color: #1f2329;
+}
+
+:root[data-theme="light"] .neox-file-dialog-input::placeholder {
+  color: #9ca3af;
+}
+
+:root[data-theme="light"] .neox-file-dialog-message {
+  color: #4b5563;
+}
+
+:root[data-theme="light"] .neox-file-dialog-btn {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #1f2329;
+}
+
+:root[data-theme="light"] .neox-file-dialog-btn:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+:root[data-theme="light"] .neox-file-dialog-btn.primary {
+  background: #3574f0;
+  border-color: transparent;
+  color: #ffffff;
+}
+
+/* Danger 按钮在 light mode 必须显式覆盖 — 否则被通用 .neox-file-dialog-btn 规则
+ * (background: #ffffff, border: #d4d4d4) 吞掉, 用户看到的 "删除" 跟 "取消" 一模一样. */
+:root[data-theme="light"] .neox-file-dialog-btn.danger {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+}
+:root[data-theme="light"] .neox-file-dialog-btn.danger:hover:not(:disabled) {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+:root[data-theme="light"] .neox-file-dialog-btn.danger:active:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* ============ Inline rename input (在 file-tree 节点内行内编辑) ============ */
+.file-rename-input {
+  flex: 1;
+  height: 20px;
+  padding: 0 4px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #1e1f22;
+  color: #ffffff;
+  border: 1px solid #3574f0;
+  border-radius: 2px;
+  outline: none;
+  margin: 0;
+  min-width: 80px;
+}
+
+.file-rename-input.error {
+  border-color: #f87171;
+}
+
+:root[data-theme="light"] .file-rename-input {
+  background: #ffffff;
+  color: #1f2329;
+  border-color: #3574f0;
+}
+
+/* ==================== promptAsync 输入弹窗 (主题化, 替换原生 window.prompt) ==================== */
+.neox-prompt-overlay {
+  /* 同 file-dialog-backdrop — promptAsync 也可能从任意浮层里触发, 必须最顶.
+   * 两者同值时由 DOM 顺序决定层叠 (后打开的 portal 排 body 末尾 = 在上), 天然 LIFO. */
+  position: fixed; inset: 0; z-index: 2147483100;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: neox-dialog-fade-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neox-prompt-dialog {
+  width: min(420px, calc(100vw - 48px));
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 18px;
+  background: var(--neox-bg-elevated, var(--neox-bg-card, #1c1e22));
+  border: 1px solid var(--neox-line, rgba(127,127,127,.18));
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+}
+.neox-prompt-title { font-size: var(--neox-fs-md, 14px); font-weight: var(--neox-fw-semibold, 600); color: var(--neox-fg-primary, #e8eaed); }
+.neox-prompt-msg { font-size: var(--neox-fs-sm, 13px); color: var(--neox-fg-secondary, #aab); line-height: 1.5; }
+.neox-prompt-input {
+  width: 100%; padding: 9px 12px; font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-primary, #e8eaed);
+  background: var(--neox-bg-canvas, var(--neox-bg-muted, #15171a));
+  border: 1px solid var(--neox-primary-600, #6c5cf2); border-radius: 9px; outline: none;
+}
+.neox-prompt-foot { display: flex; justify-content: flex-end; gap: 8px; }
+.neox-prompt-btn {
+  padding: 7px 15px; border-radius: 9px; font-size: var(--neox-fs-sm, 13px); font-weight: var(--neox-fw-semibold, 600);
+  cursor: pointer; border: 1px solid transparent; transition: filter .12s, background .12s;
+}
+.neox-prompt-btn--ghost { background: transparent; border-color: var(--neox-line, rgba(127,127,127,.22)); color: var(--neox-fg-secondary, #aab); }
+.neox-prompt-btn--ghost:hover { background: var(--neox-bg-hover, rgba(127,127,127,.1)); color: var(--neox-fg-primary, #e8eaed); }
+.neox-prompt-btn--primary { background: var(--neox-primary-600, #6c5cf2); color: var(--neox-fg-invert, #fff); }
+.neox-prompt-btn--primary:hover { filter: brightness(1.08); }

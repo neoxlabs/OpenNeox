@@ -1,0 +1,547 @@
+/* ==================== 存储管理页面 — Cursor soft 单层面 ==================== */
+
+/* ===== Hero: 总占用 + 占比可视化 ===== */
+.storage-hero {
+  margin: 4px 0 18px;
+  padding: 16px 18px 14px;
+  border-radius: var(--nx-soft-radius, 12px);
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card)));
+  border: none;
+  box-shadow: none;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.storage-hero.is-refreshing { opacity: 0.6; }
+
+.storage-hero-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.storage-hero-total {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.storage-hero-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--neox-fg-muted, var(--text-muted));
+}
+
+.storage-hero-value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-variant-numeric: tabular-nums;
+}
+
+.storage-hero-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary, var(--text-secondary));
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+}
+
+.storage-hero-open:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+
+.storage-hero-open svg { width: 13px; height: 13px; }
+
+/* 占比条 */
+.storage-bar {
+  display: flex;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  gap: 2px;
+  background: var(--neox-bg-muted, rgba(0,0,0,0.05));
+}
+
+.storage-bar-seg {
+  height: 100%;
+  min-width: 4px;
+  border-radius: 3px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.storage-bar-seg:first-child { border-radius: 999px 3px 3px 999px; }
+.storage-bar-seg:last-child { border-radius: 3px 999px 999px 3px; }
+
+.storage-bar--empty {
+  background: var(--neox-bg-muted, rgba(0,0,0,0.05));
+}
+
+/* 图例 */
+.storage-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 14px;
+}
+
+.storage-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.lg-clean {
+  margin-left: 2px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary, #111827) 14%, transparent);
+  background: transparent;
+  color: var(--neox-fg-hint);
+  font-size: var(--neox-fs-xxs, 11px);
+  cursor: pointer;
+  transition: color var(--neox-dur-base, .15s) ease, border-color var(--neox-dur-base, .15s) ease;
+}
+.lg-clean:hover:not(:disabled) {
+  color: var(--neox-fg-primary, var(--text-primary));
+  border-color: color-mix(in srgb, var(--neox-fg-primary, #111827) 30%, transparent);
+}
+.lg-clean:disabled { opacity: .5; cursor: default; }
+
+.lg-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.lg-label {
+  color: var(--neox-fg-secondary, var(--text-secondary));
+}
+
+.lg-size {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-variant-numeric: tabular-nums;
+}
+
+/* skeleton */
+.storage-hero--skeleton .sk-line,
+.storage-hero--skeleton .sk-bar,
+.storage-hero--skeleton .sk-legend span {
+  background: linear-gradient(90deg,
+    var(--neox-bg-muted, rgba(0,0,0,0.05)) 25%,
+    var(--neox-bg-hover, rgba(0,0,0,0.09)) 37%,
+    var(--neox-bg-muted, rgba(0,0,0,0.05)) 63%);
+  background-size: 400% 100%;
+  animation: storage-shimmer 1.3s ease infinite;
+  border-radius: 6px;
+}
+.storage-hero--skeleton .sk-line--lg { width: 140px; height: 30px; margin-bottom: 18px; }
+.storage-hero--skeleton .sk-bar { width: 100%; height: 12px; border-radius: 999px; }
+.storage-hero--skeleton .sk-legend { display: flex; gap: 16px; margin-top: 14px; }
+.storage-hero--skeleton .sk-legend span { width: 70px; height: 12px; }
+
+@keyframes storage-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* ===== 备份 / 清理：标题在外，内容单层 soft 卡（禁止套娃） ===== */
+.storage-cleanup-section {
+  padding: 0;
+  margin: 0 0 18px;
+  overflow: visible;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+}
+
+.storage-cleanup-section .section-title {
+  padding: 0 2px 8px !important;
+  margin: 0;
+  line-height: 1.2;
+  background: transparent !important;
+}
+
+.storage-cleanup-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  margin: 0;
+  border-radius: var(--nx-soft-radius, 12px);
+  border: none;
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card)));
+  box-shadow: none;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.storage-cleanup-card:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 2.5%, var(--nx-soft-bg, var(--neox-bg-card)));
+}
+
+.scc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  flex-shrink: 0;
+}
+
+.scc-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.scc-title {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+
+.scc-desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted, var(--text-muted));
+}
+
+.scc-size {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 700;
+  color: var(--neox-fg-primary, var(--text-primary));
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.scc-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: none;
+  background: color-mix(in srgb, #f59e0b 88%, #000);
+  color: #fff;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 550;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+}
+
+.scc-btn:hover { background: #d97706; }
+.scc-btn:disabled { opacity: 0.55; cursor: default; }
+
+.storage-clean-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  margin: 0;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  border-radius: var(--nx-soft-radius, 12px);
+  border: none;
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card)));
+  box-shadow: none;
+  color: var(--neox-fg-muted, var(--text-muted));
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.4;
+}
+
+.storage-clean-empty svg { color: #10b981; flex-shrink: 0; }
+.storage-clean-empty span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ===== 高级折叠区 ===== */
+.storage-advanced-section.settings-section {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+.storage-advanced-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 2px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: var(--neox-fg-primary, var(--text-primary));
+}
+
+.sat-chevron {
+  color: var(--neox-fg-muted, var(--text-muted));
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+}
+.sat-chevron.open { transform: rotate(90deg); }
+
+.sat-label {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+}
+
+.sat-hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted, var(--text-muted));
+  margin-left: 2px;
+}
+
+.storage-advanced-body {
+  padding: 12px 16px 14px;
+  margin-top: 4px;
+  border-radius: var(--nx-soft-radius, 12px);
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card)));
+  border: none;
+  box-shadow: none;
+  animation: storage-fade-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes storage-fade-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sa-block { margin-bottom: 20px; }
+.sa-block:last-child { margin-bottom: 0; }
+
+.sa-block-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--neox-fg-muted, var(--text-muted));
+  margin: 0 0 8px;
+}
+
+.sa-path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: none;
+  box-shadow: inset 0 1px 0 var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+}
+.sa-path-row:first-child { box-shadow: none; }
+
+.sa-path-label {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--neox-fg-primary, var(--text-primary));
+  flex-shrink: 0;
+  min-width: 64px;
+}
+
+.sa-path-value {
+  flex: 1;
+  min-width: 0;
+}
+
+.sa-cp-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 路径文字 */
+.mono-path {
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  opacity: 0.7;
+  word-break: break-all;
+}
+
+/* 大小数值 */
+.storage-size-value {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-accent, var(--gold-500));
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+/* ===== 文件表格 ===== */
+.storage-file-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.storage-file-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: none;
+  box-shadow: inset 0 1px 0 var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.storage-file-row:first-child {
+  box-shadow: none;
+}
+
+.sf-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.sf-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sf-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sf-info:hover .sf-name {
+  color: var(--text-accent, var(--gold-500));
+}
+
+.sf-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: color 0.12s;
+}
+
+.sf-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.sf-size {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 40px;
+  text-align: right;
+}
+
+.sf-action {
+  padding: 3px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+
+.storage-file-row:hover .sf-action {
+  opacity: 1;
+}
+
+.sf-action:hover {
+  color: var(--text-accent, var(--gold-500));
+  background: var(--bg-hover);
+}
+
+.sf-action svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ===== 子文件展开 ===== */
+.sf-children {
+  width: 100%;
+  padding: 4px 0 4px 24px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sf-empty {
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 6px 0;
+}
+
+.sf-child-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: color 0.12s;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.sf-child-row:hover {
+  color: var(--text-accent, var(--gold-500));
+}
+
+.sf-icon-sm {
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.sf-icon-sm svg {
+  width: 11px;
+  height: 11px;
+}
+
+.sf-child-name {
+  flex: 1;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sf-child-row:hover .sf-child-name {
+  color: var(--text-accent, var(--gold-500));
+}

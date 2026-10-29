@@ -1,0 +1,88 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '15.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+# llama_flutter_android 0.2.6 的 iOS 端发版时就编不过: 插件类跟它自己的 pigeon 接口整体对不上
+# (协议名、可见性、回调签名、缺 detectGpu), 带的 llama.cpp 也缺 GGML_VERSION、Metal 头找不到。
+# iOS 版不提供本地模型 (入口按平台隐藏, 见 lib/core/local_llm/local_llm_engine.dart 的
+# kLocalLlmSupported), 所以把插件类换成桩: 注册通道, 任何调用都回 "unsupported";
+# 它带的 C/C++/ObjC++/Metal 源整批不编。幂等, 每次 pod install 重写。
+LLAMA_IOS_STUB = <<~SWIFT
+  // neox stub — 由 apps/mobile/ios/Podfile 写入, 别手改
+  import Flutter
+  import Foundation
+
+  public class LlamaFlutterAndroidPlugin: NSObject, FlutterPlugin, LlamaHostApi {
+      public static func register(with registrar: FlutterPluginRegistrar) {
+          LlamaHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: LlamaFlutterAndroidPlugin())
+      }
+      private func unsupported() -> PigeonError {
+          PigeonError(code: "unsupported", message: "On-device models are not available on iOS", details: nil)
+      }
+      func loadModel(config: ModelConfig, completion: @escaping (Result<Void, Error>) -> Void) { completion(.failure(unsupported())) }
+      func generate(request: GenerateRequest, completion: @escaping (Result<Void, Error>) -> Void) { completion(.failure(unsupported())) }
+      func generateChat(request: ChatRequest, completion: @escaping (Result<Void, Error>) -> Void) { completion(.failure(unsupported())) }
+      func getSupportedTemplates() throws -> [String] { [] }
+      func stop(completion: @escaping (Result<Void, Error>) -> Void) { completion(.success(())) }
+      func dispose(completion: @escaping (Result<Void, Error>) -> Void) { completion(.success(())) }
+      func isModelLoaded() throws -> Bool { false }
+      func getContextInfo() throws -> ContextInfo { throw unsupported() }
+      func clearContext(completion: @escaping (Result<Void, Error>) -> Void) { completion(.success(())) }
+      func setSystemPromptLength(length: Int64) throws {}
+      func registerCustomTemplate(name: String, content: String) throws {}
+      func unregisterCustomTemplate(name: String) throws {}
+      func detectGpu(completion: @escaping (Result<GpuInfo, Error>) -> Void) { completion(.failure(unsupported())) }
+  }
+SWIFT
+
+def patch_llama_ios_plugin
+  file = File.join(__dir__, '.symlinks', 'plugins', 'llama_flutter_android', 'ios', 'Classes', 'LlamaFlutterAndroidPlugin.swift')
+  return unless File.exist?(file)
+  File.write(file, LLAMA_IOS_STUB) unless File.read(file) == LLAMA_IOS_STUB
+end
+
+post_install do |installer|
+  patch_llama_ios_plugin
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    if target.name.start_with?('llama_flutter_android')
+      target.build_configurations.each do |config|
+        config.build_settings['EXCLUDED_SOURCE_FILE_NAMES'] = '*.c *.cpp *.m *.mm *.metal'
+      end
+    end
+  end
+end

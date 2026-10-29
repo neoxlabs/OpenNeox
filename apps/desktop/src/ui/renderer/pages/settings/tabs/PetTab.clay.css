@@ -1,0 +1,198 @@
+
+/* ---------- 页头下的当前宠物条: 压成一行, 不做大插画卡 ---------- */
+.pet3 .pet2-hero {
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+.pet3 .pet2-hero__stage {
+  width: 64px;
+  height: 64px;
+}
+.pet3 .pet2-hero__pet {
+  width: 56px;
+}
+.pet3 .pet2-hero h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.pet3 .pet2-hero p {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.pet3 .pet2-chips span {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 11px;
+  border: 1px solid var(--neox-line-subtle);
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+}
+
+/* ---------- 分组: 组标题在卡外上方, 卡 = 发丝边 16 圆角 ---------- */
+.pet3 .pet2-choose,
+.pet3 .settings-section {
+  padding: 0;
+  margin-bottom: 20px;
+}
+.pet3 .settings-section + .settings-section {
+  margin-top: 0;
+}
+.pet3 .section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+  margin: 0 2px 8px;
+}
+.pet3 .settings-section > .settings-list,
+.pet3 .pet2-choose,
+.pet3 .settings-section > .pet-card-grid,
+.pet3 .settings-section > .pet-action-bar,
+.pet3 .settings-section > .pet-skin-tabs,
+.pet3 .settings-section > .pet-empty,
+.pet3 .settings-section > .pet-preview-stage {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+.pet3 .settings-section > .settings-list {
+  overflow: hidden;
+  padding: 0;
+}
+.pet3 .settings-section > .pet-card-grid {
+  padding: 12px;
+}
+.pet3 .pet2-choose {
+  padding: 14px;
+}
+.pet3 .pet2-choose .section-title {
+  margin: 0 2px 12px;
+}
+.pet3 .pet2-choose > .pet-card-grid {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* 行: 最小高 52, 第二行起发丝分隔 */
+.pet3 .setting-row {
+  min-height: 52px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+}
+.pet3 .setting-row + .setting-row {
+  border-top: 0;
+  box-shadow: inset 0 1px 0 var(--neox-line-subtle);
+}
+.pet3 .setting-row .setting-label {
+  font-size: 14px;
+  color: var(--neox-fg-primary);
+}
+.pet3 .setting-row .setting-desc {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+
+/* 段控件: 灰底胶囊, 选中段白色浮起, 不用实心蓝 */
+.pet3 .seg-control {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 0;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  flex-shrink: 0;
+}
+.pet3 .seg-control__btn {
+  height: 28px;
+  min-width: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 13px;
+  color: var(--neox-fg-muted);
+  font-variant-numeric: tabular-nums;
+  transition: background 120ms ease, color 120ms ease;
+}
+.pet3 .seg-control__btn.is-active {
+  --nx-selected-bg: var(--neox-bg-card, #fff);
+  background: var(--neox-bg-card, #fff);
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 0 0 1px var(--neox-line-subtle);
+}
+
+/* ---------- 选择卡: 未选发丝边; 选中 1.5px 钴蓝边 + 右上蓝底白勾 ---------- */
+.pet3 .pet-card-grid {
+  gap: 10px;
+}
+.pet3 .pet-card {
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 14px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+/* 主题包给选中态钉了灰底 (读 --nx-selected-bg), 这里把它换回卡底; 蓝边用 box-shadow 画, 不跟 border 抢 */
+.settings-page .pet3 .pet-card.is-active,
+.pet3.pet-settings-panel .pet-card.is-active {
+  --nx-selected-bg: var(--nx-soft-card-bg, var(--neox-bg-card));
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  border-color: transparent;
+  box-shadow: 0 0 0 1.5px var(--clay-blue, #2F6BFF);
+}
+.pet3 .pet-card__active-badge {
+  top: 8px;
+  right: 8px;
+  height: 16px;
+  min-width: 16px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--clay-blue, #2F6BFF);
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+}
+.pet3 .pet-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.pet3 .pet-card__sub {
+  font-size: 11px;
+  color: var(--neox-fg-muted);
+}
+
+/* 操作按钮行: 次按钮浅色, 不做实心蓝大按钮 */
+.pet3 .pet-action-bar {
+  padding: 12px 16px;
+}
+.pet3 .pet-action-bar .btn-primary {
+  background: var(--neox-bg-card, #fff);
+  color: var(--neox-fg-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 0 0 1px var(--neox-line-subtle);
+}
+.pet3 .pet-action-bar__hint {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+
+/* 底部重置区: 危险按钮只露红字 */
+.pet3 .setting-row .btn-secondary {
+  color: #C2492F;
+}
+
+@media (max-width: 720px) {
+  .pet3 .pet2-hero {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+  .pet3 .pet2-hero__move {
+    grid-column: 1 / -1;
+  }
+}

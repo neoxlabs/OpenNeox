@@ -1,0 +1,85 @@
+/* 实验功能页 · UI 3.0 陶土风 (作用域 .ex3) —— 零 !important */
+
+/* ---------- 文档解析: 两张选择卡 ---------- */
+.ex3 .ex3-pick {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 16px;
+}
+.ex3 .ex3-pick__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  min-height: 96px;
+  padding: 14px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.ex3 .ex3-pick__card:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+}
+.ex3 .ex3-pick__card.is-on {
+  border: 1.5px solid var(--clay-blue, #2F6BFF);
+}
+.ex3 .ex3-pick__ico {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.ex3 .ex3-pick__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.ex3 .ex3-pick__sub {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--neox-fg-muted);
+}
+.ex3 .ex3-pick__check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--clay-blue, #2F6BFF);
+  color: #fff;
+}
+
+/* ---------- Jev: 密钥输入与状态 ---------- */
+.ex3 .exp-jev__key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ex3 .exp-jev__input {
+  width: 220px;
+  min-width: 0;
+}
+.ex3 .exp-jev__status {
+  font-variant-numeric: tabular-nums;
+}
+.ex3 .exp-jev__status.is-ok { color: var(--color-success, #22a06b); }
+.ex3 .exp-jev__status.is-bad { color: #C2492F; }
+.ex3 .exp-jev__get {
+  color: var(--neox-fg-muted);
+  user-select: text;
+}

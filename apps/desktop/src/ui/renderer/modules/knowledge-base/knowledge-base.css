@@ -1,0 +1,1099 @@
+.neox-knowledge {
+  --kb-row-bg: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  --kb-row-hover: var(--neox-mat-row-hover, color-mix(in srgb, var(--neox-fg-primary) 5%, transparent));
+  --kb-row-active: var(--neox-mat-row-selected, color-mix(in srgb, var(--neox-fg-primary) 8%, transparent));
+  --kb-divider: var(--neox-mat-row-divider, color-mix(in srgb, var(--neox-fg-primary) 7%, transparent));
+  --kb-divider-strong: color-mix(in srgb, var(--neox-line) 78%, transparent);
+  --kb-control-bg: color-mix(in srgb, var(--neox-bg-muted) 76%, transparent);
+  --kb-control-hover: color-mix(in srgb, var(--neox-bg-hover) 80%, transparent);
+  --kb-control-active: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  --kb-control-border: var(--kb-divider);
+  --kb-control-filter: none;
+  --kb-muted: var(--neox-fg-secondary);
+  --kb-faint: var(--neox-fg-muted);
+  --kb-radius: 12px;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 24px 18px;
+  overflow: hidden;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-sans, var(--font-sans, system-ui, sans-serif));
+  -webkit-font-smoothing: antialiased;
+}
+
+.neox-knowledge *,
+.neox-knowledge *::before,
+.neox-knowledge *::after {
+  box-sizing: border-box;
+}
+
+.neox-knowledge__hidden-input {
+  display: none;
+}
+
+.neox-knowledge__header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  min-height: 34px;
+}
+
+.neox-knowledge__summary {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  color: var(--kb-faint);
+  font-size: var(--nx-fs-row-desc, 12px);
+  line-height: 16px;
+}
+
+.neox-knowledge__summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.neox-knowledge__summary span + span::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-muted) 58%, transparent);
+}
+
+.neox-knowledge__actions {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.neox-knowledge__button,
+.neox-knowledge__icon-button,
+.neox-knowledge__collection {
+  font: inherit;
+  -webkit-app-region: no-drag;
+}
+
+.neox-knowledge__button {
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--kb-control-bg);
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-medium, 500);
+  box-shadow: inset 0 0 0 1px var(--kb-control-border);
+  cursor: pointer;
+  -webkit-backdrop-filter: var(--kb-control-filter);
+          backdrop-filter: var(--kb-control-filter);
+  transition:
+    background var(--neox-dur-fast) var(--neox-ease-out),
+    box-shadow var(--neox-dur-fast) var(--neox-ease-out),
+    color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-knowledge__button:hover {
+  background: var(--kb-control-hover);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neox-fg-muted) 30%, var(--kb-control-border));
+}
+
+.neox-knowledge__button--primary {
+  background: var(--kb-control-active);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neox-fg-primary) 14%, var(--kb-control-border));
+}
+
+.neox-knowledge__search {
+  min-width: 260px;
+  max-width: 520px;
+  flex: 1 1 420px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--kb-control-bg);
+  color: var(--kb-faint);
+  box-shadow: inset 0 0 0 1px var(--kb-divider);
+  -webkit-backdrop-filter: var(--kb-control-filter);
+          backdrop-filter: var(--kb-control-filter);
+  transition:
+    background var(--neox-dur-fast) var(--neox-ease-out),
+    box-shadow var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-knowledge__search:focus-within {
+  background: var(--kb-control-hover);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neox-fg-muted) 34%, transparent);
+}
+
+.neox-knowledge__search input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.neox-knowledge__search input::placeholder {
+  color: var(--neox-fg-hint);
+}
+
+.neox-knowledge__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 272px) minmax(0, 1fr);
+  gap: 18px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+}
+
+.neox-knowledge__collections,
+.neox-knowledge__panel {
+  min-height: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.neox-knowledge__collections {
+  padding-right: 0;
+  border-right: 0;
+  overflow: hidden;
+}
+
+.neox-knowledge__panel-title {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 8px;
+  border-bottom: 0;
+  color: var(--kb-muted);
+  font-size: var(--nx-fs-row-desc, 12px);
+  font-weight: var(--neox-fw-medium, 500);
+}
+
+.neox-knowledge__collection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.neox-knowledge__collection {
+  width: calc(100% - 2px);
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--neox-dur-fast) var(--neox-ease-out),
+    color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-knowledge__collection + .neox-knowledge__collection {
+  box-shadow: none;
+}
+
+.neox-knowledge__collection:hover {
+  background: var(--kb-row-hover);
+}
+
+.neox-knowledge__collection.is-active {
+  background: var(--kb-row-active);
+}
+
+.neox-knowledge__collection-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.neox-knowledge__collection-main span {
+  overflow: hidden;
+  color: var(--neox-fg-primary);
+  font-size: var(--nx-fs-row-title, 13px);
+  line-height: 18px;
+  font-weight: var(--neox-fw-medium, 500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.neox-knowledge__collection-main small {
+  overflow: hidden;
+  color: var(--kb-faint);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.neox-knowledge__count {
+  min-width: 24px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--kb-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium, 500);
+}
+
+.neox-knowledge__panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 2px;
+}
+
+.neox-knowledge__panel-head {
+  flex: 0 0 auto;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--kb-divider);
+}
+
+.neox-knowledge__panel-head h2 {
+  margin: 0;
+  color: var(--neox-fg-primary);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.neox-knowledge__panel-head > span {
+  color: var(--kb-faint);
+  font-size: var(--nx-fs-row-desc, 12px);
+  line-height: 17px;
+  white-space: nowrap;
+}
+
+.neox-knowledge__dropzone {
+  flex: 0 0 auto;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--kb-row-bg);
+  color: var(--kb-muted);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-knowledge__dropzone.is-active {
+  background: var(--kb-row-active);
+}
+
+.neox-knowledge__drop-icon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+
+.neox-knowledge__dropzone strong {
+  display: block;
+  color: var(--neox-fg-primary);
+  font-size: var(--nx-fs-row-title, 13px);
+  line-height: 18px;
+  font-weight: var(--neox-fw-medium, 500);
+}
+
+.neox-knowledge__dropzone span {
+  display: block;
+  margin-top: 1px;
+  color: var(--kb-faint);
+  font-size: var(--nx-fs-row-desc, 12px);
+  line-height: 16px;
+}
+
+.neox-knowledge__list-head {
+  flex: 0 0 auto;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 4px 6px;
+  border-bottom: 0;
+  color: var(--kb-faint);
+  font-size: var(--nx-fs-row-desc, 12px);
+  line-height: 18px;
+}
+
+.neox-knowledge__list-head span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.neox-knowledge__list-head span:first-child {
+  flex: 0 0 auto;
+  color: var(--kb-muted);
+  font-weight: var(--neox-fw-medium, 500);
+}
+
+.neox-knowledge__doc-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 0 2px;
+  scrollbar-gutter: stable;
+}
+
+.neox-knowledge__doc-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.neox-knowledge__doc-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.neox-knowledge__doc-list::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  background-color: color-mix(in srgb, var(--neox-fg-muted) 26%, transparent);
+}
+
+.neox-knowledge__doc {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 8px 16px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--neox-fg-primary);
+  box-shadow: inset 0 -1px 0 var(--kb-divider);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-knowledge__doc:hover {
+  background: var(--kb-row-hover);
+}
+
+.neox-knowledge__doc-icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--kb-muted);
+}
+
+.neox-knowledge__doc-main {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.neox-knowledge__doc-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.neox-knowledge__doc-title strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--neox-fg-primary);
+  font-size: var(--nx-fs-row-title, 13px);
+  line-height: 18px;
+  font-weight: var(--neox-fw-medium, 500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.neox-knowledge__doc-title span {
+  flex: 0 0 auto;
+  color: var(--kb-faint);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 15px;
+  font-weight: var(--neox-fw-medium, 500);
+  letter-spacing: 0.02em;
+}
+
+.neox-knowledge__doc-meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  color: var(--kb-faint);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 16px;
+}
+
+.neox-knowledge__doc-meta span {
+  flex: 0 0 auto;
+}
+
+.neox-knowledge__doc-path {
+  min-width: 0;
+  flex: 1 1 auto !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.neox-knowledge__status {
+  height: 22px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--kb-muted);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 18px;
+  font-weight: var(--neox-fw-medium, 500);
+  white-space: nowrap;
+}
+
+/* 失效/变更状态 — 原文件被移走标红, 内容更新标黄 */
+.neox-knowledge__status.is-missing {
+  background: color-mix(in srgb, var(--neox-err, #dc2626) 12%, transparent);
+  color: var(--neox-err-ink, #b91c1c);
+}
+.neox-knowledge__status.is-modified {
+  background: color-mix(in srgb, #b45309 12%, transparent);
+  color: color-mix(in srgb, #b45309 88%, var(--neox-fg-primary));
+}
+.neox-knowledge__doc.is-missing .neox-knowledge__doc-main {
+  opacity: 0.55;
+}
+
+/* 导入/加载结果提示条 */
+.neox-knowledge__notice {
+  margin-top: 10px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--kb-muted);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+}
+
+.neox-knowledge__icon-button {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--kb-faint);
+  cursor: pointer;
+  transition:
+    background var(--neox-dur-fast) var(--neox-ease-out),
+    color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-knowledge__icon-button:hover {
+  background: var(--kb-row-hover);
+  color: var(--neox-fg-primary);
+}
+
+.neox-knowledge__empty {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--kb-faint);
+  text-align: center;
+}
+
+.neox-knowledge__empty strong {
+  color: var(--neox-fg-primary);
+  font-size: var(--nx-fs-row-title, 13px);
+  font-weight: var(--neox-fw-medium, 500);
+  line-height: 18px;
+}
+
+.neox-knowledge__empty span {
+  color: var(--kb-faint);
+  font-size: var(--nx-fs-row-desc, 12px);
+  line-height: 17px;
+}
+
+:root[data-theme-pack] .neox-knowledge {
+  --kb-surface: color-mix(in srgb, var(--pack-tint-card, var(--neox-bg-card)) 62%, transparent);
+  --kb-surface-overlay: linear-gradient(180deg, color-mix(in srgb, var(--neox-fg-invert, white) 10%, transparent), transparent 48%);
+  --kb-surface-filter: var(--neox-glass-card-filter, none);
+  --kb-row-bg: color-mix(in srgb, var(--pack-tint, var(--neox-bg-muted)) 52%, transparent);
+  --kb-row-hover: color-mix(in srgb, var(--pack-tint-strong, var(--neox-bg-hover)) 70%, transparent);
+  --kb-row-active: color-mix(in srgb, var(--pack-tint-strong, var(--neox-mat-row-selected)) 84%, transparent);
+  --kb-divider: var(--pack-edge, var(--neox-line-soft));
+  --kb-divider-strong: var(--pack-edge-strong, var(--neox-line));
+  --kb-control-bg: color-mix(in srgb, var(--pack-tint-card, var(--neox-bg-muted)) 44%, transparent);
+  --kb-control-hover: color-mix(in srgb, var(--pack-tint-strong, var(--neox-bg-hover)) 62%, transparent);
+  --kb-control-active: color-mix(in srgb, var(--pack-tint-strong, var(--neox-bg-hover)) 78%, transparent);
+  --kb-control-border: color-mix(in srgb, var(--pack-edge-strong, var(--neox-line)) 70%, transparent);
+  --kb-control-filter: blur(20px) saturate(112%);
+}
+
+:root[data-theme-pack][data-glass-off] .neox-knowledge {
+  --kb-surface-filter: none;
+  --kb-control-filter: none;
+}
+
+:root[data-theme-pack][data-theme="light"] .neox-knowledge {
+  --kb-surface: color-mix(in srgb, var(--pack-tint-card) 54%, transparent);
+  --kb-surface-overlay: linear-gradient(180deg, color-mix(in srgb, var(--neox-bg-elevated) 28%, transparent), transparent 46%);
+  --kb-row-bg: color-mix(in srgb, var(--pack-tint) 46%, transparent);
+  --kb-row-hover: color-mix(in srgb, var(--pack-tint-strong) 60%, transparent);
+  --kb-row-active: color-mix(in srgb, var(--pack-tint-strong) 76%, transparent);
+  --kb-control-bg: color-mix(in srgb, var(--pack-tint-card) 38%, transparent);
+  --kb-control-hover: color-mix(in srgb, var(--pack-tint-strong) 54%, transparent);
+  --kb-control-active: color-mix(in srgb, var(--pack-tint-strong) 68%, transparent);
+  --kb-control-border: color-mix(in srgb, var(--pack-edge-strong) 54%, transparent);
+  --kb-divider: color-mix(in srgb, var(--pack-edge) 72%, transparent);
+  --kb-divider-strong: color-mix(in srgb, var(--pack-edge-strong) 76%, transparent);
+}
+
+:root[data-theme-pack][data-theme="dark"] .neox-knowledge {
+  --kb-surface: color-mix(in srgb, var(--pack-tint-card) 72%, transparent);
+  --kb-surface-overlay: linear-gradient(180deg, color-mix(in srgb, var(--neox-fg-primary) 5%, transparent), transparent 50%);
+  --kb-row-bg: color-mix(in srgb, var(--pack-tint) 72%, transparent);
+  --kb-row-hover: color-mix(in srgb, var(--pack-tint-strong) 72%, transparent);
+  --kb-row-active: color-mix(in srgb, var(--pack-tint-strong) 88%, transparent);
+  --kb-control-bg: color-mix(in srgb, var(--pack-tint-card) 68%, transparent);
+  --kb-control-hover: color-mix(in srgb, var(--pack-tint-strong) 74%, transparent);
+  --kb-control-active: color-mix(in srgb, var(--pack-tint-strong) 88%, transparent);
+  --kb-control-border: color-mix(in srgb, var(--pack-edge-strong) 76%, transparent);
+}
+
+:root[data-glass-off] .neox-knowledge {
+  padding: 14px 24px 18px;
+}
+
+:root[data-glass-off] .neox-knowledge__body {
+  background: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme-pack][data-glass-off] .neox-knowledge {
+  --kb-surface: color-mix(in srgb, var(--neox-shell-flat-main-bg, var(--neox-bg-card)) 78%, var(--pack-tint-card, transparent));
+  --kb-surface-overlay: linear-gradient(180deg, color-mix(in srgb, var(--pack-tint-strong, var(--neox-bg-hover)) 18%, transparent), transparent 46%);
+}
+
+:root[data-theme-pack][data-glass-off] .neox-knowledge__body {
+  background: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme-pack][data-glass-off][data-theme="light"] .neox-knowledge {
+  --kb-surface: color-mix(in srgb, var(--pack-tint-card) 50%, transparent);
+  --kb-surface-overlay: linear-gradient(180deg, color-mix(in srgb, var(--neox-bg-elevated) 20%, transparent), transparent 44%);
+}
+
+:root[data-theme-pack="anye"][data-theme="dark"] .neox-knowledge {
+  --kb-surface: color-mix(in srgb, var(--anye-panel-bg, var(--neox-bg-panel)) 86%, var(--neox-bg-card));
+  --kb-surface-filter: var(--anye-surface-filter, none);
+  --kb-row-bg: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  --kb-row-hover: var(--anye-row-hover, color-mix(in srgb, white 5%, transparent));
+  --kb-row-active: var(--anye-row-active, color-mix(in srgb, white 8%, transparent));
+  --kb-divider: color-mix(in srgb, var(--neox-line-soft) 82%, transparent);
+  --kb-divider-strong: color-mix(in srgb, var(--neox-line) 86%, transparent);
+}
+
+@media (max-width: 920px) {
+  .neox-knowledge {
+    padding: 18px;
+  }
+
+  .neox-knowledge__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .neox-knowledge__summary,
+  .neox-knowledge__actions {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .neox-knowledge__search {
+    max-width: none;
+    flex-basis: auto;
+  }
+
+  .neox-knowledge__body {
+    grid-template-columns: 1fr;
+  }
+
+  .neox-knowledge__collections {
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .neox-knowledge__collection-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .neox-knowledge__collection + .neox-knowledge__collection {
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .neox-knowledge__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .neox-knowledge__button {
+    width: 100%;
+  }
+
+  .neox-knowledge__collection-list {
+    grid-template-columns: 1fr;
+  }
+
+  .neox-knowledge__collection + .neox-knowledge__collection {
+    box-shadow: none;
+  }
+
+  .neox-knowledge__list-head span:last-child,
+  .neox-knowledge__status {
+    display: none;
+  }
+
+  .neox-knowledge__doc {
+    align-items: flex-start;
+  }
+}
+
+/* ==================== Tabs ==================== */
+.neox-knowledge__tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  flex: 0 0 auto;
+}
+.neox-knowledge__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--kb-muted);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-medium, 500);
+  cursor: pointer;
+  transition: background 120ms, color 120ms;
+  white-space: nowrap;
+}
+.neox-knowledge__tab:hover { color: var(--neox-fg-primary); }
+.neox-knowledge__tab.is-active {
+  background: var(--neox-bg-elevated, #fff);
+  color: var(--neox-fg-primary);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+.neox-knowledge__tab-dot {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 16%, transparent);
+  color: var(--neox-primary-600, #6d4de0);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1;
+}
+
+/* 单栏 tab (知识条目 / 整理) — 不带集合侧栏 */
+.neox-knowledge__body--single {
+  grid-template-columns: 1fr;
+}
+
+.neox-knowledge__aside-actions {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.neox-knowledge__aside-actions .neox-knowledge__button {
+  justify-content: center;
+}
+
+/* ==================== 知识条目 — 玻璃卡片网格 (对齐设置页技能管理) ==================== */
+.neox-knowledge__cards-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 12px;
+}
+.neox-knowledge__select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--kb-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.neox-knowledge__select-all input,
+.neox-knowledge__card-head input[type="checkbox"] {
+  accent-color: var(--neox-primary-500, #7c5cff);
+  cursor: pointer;
+}
+.neox-knowledge__cards-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.neox-knowledge__button--danger {
+  color: var(--neox-err-ink, #b91c1c);
+}
+.neox-knowledge__button--danger:hover {
+  background: color-mix(in srgb, var(--neox-err, #dc2626) 10%, transparent);
+}
+
+.neox-knowledge__cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 12px;
+  align-items: start;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+/* 卡片本体 — 跟 .skill-item 同一套材质语言: 玻璃底 + hairline + 大圆角 */
+.neox-knowledge__card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--neox-mat-regular-bg);
+  -webkit-backdrop-filter: var(--neox-mat-regular-blur);
+          backdrop-filter: var(--neox-mat-regular-blur);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 11%, transparent);
+  border-radius: 12px;
+  box-shadow: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  min-width: 0;
+}
+.neox-knowledge__card.is-selected {
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--neox-primary-500, #7c5cff) 55%, transparent),
+    var(--neox-mat-shadow-regular);
+}
+.neox-knowledge__card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.neox-knowledge__card-title {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+.neox-knowledge__card-title:hover { color: var(--neox-primary-600, #6d4de0); }
+.neox-knowledge__card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.neox-knowledge__card-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  border-radius: var(--neox-radius-sm, 8px);
+  color: var(--kb-muted);
+  cursor: pointer;
+  transition: all 120ms ease-out;
+}
+.neox-knowledge__card-action.is-verify:hover {
+  border-color: color-mix(in srgb, var(--neox-ok, #16a34a) 45%, transparent);
+  color: var(--neox-ok-ink, #15803d);
+  background: color-mix(in srgb, var(--neox-ok, #16a34a) 8%, transparent);
+}
+.neox-knowledge__card-action.is-delete:hover {
+  border-color: color-mix(in srgb, var(--neox-err, #dc2626) 45%, transparent);
+  color: var(--neox-err-ink, #b91c1c);
+  background: color-mix(in srgb, var(--neox-err, #dc2626) 8%, transparent);
+}
+.neox-knowledge__card-desc {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.55;
+  color: var(--kb-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-left: 24px;
+}
+.neox-knowledge__card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: color-mix(in srgb, var(--kb-muted) 80%, transparent);
+  min-width: 0;
+  padding-left: 24px;
+}
+.neox-knowledge__card-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.neox-knowledge__badge {
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  padding: 0 7px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--kb-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-semibold, 600);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.neox-knowledge__badge.is-draft {
+  background: color-mix(in srgb, #b45309 12%, transparent);
+  color: color-mix(in srgb, #b45309 88%, var(--neox-fg-primary));
+}
+.neox-knowledge__badge.is-verified {
+  background: color-mix(in srgb, var(--neox-ok, #16a34a) 12%, transparent);
+  color: var(--neox-ok-ink, #15803d);
+}
+.neox-knowledge__badge.is-always {
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 14%, transparent);
+  color: var(--neox-primary-600, #6d4de0);
+}
+.neox-knowledge__button--small {
+  height: 28px;
+  padding: 0 12px;
+  font-size: var(--neox-fs-xs, 12px);
+  flex: 0 0 auto;
+}
+.neox-knowledge__card-body {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 3.5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+.neox-knowledge__card-body-path {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--kb-muted);
+  margin-bottom: 8px;
+}
+.neox-knowledge__card-body pre {
+  margin: 0;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--neox-font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.65;
+  color: var(--neox-fg-primary);
+}
+
+/* ==================== 整理 tab ==================== */
+.neox-knowledge__curation-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--neox-primary-500, #7c5cff) 14%, transparent);
+  margin-bottom: 14px;
+}
+.neox-knowledge__curation-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.neox-knowledge__curation-hero-text strong {
+  font-size: var(--neox-fs-md, 14px);
+  color: var(--neox-fg-primary);
+}
+.neox-knowledge__curation-hero-text span {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.55;
+  color: var(--kb-muted);
+}
+.neox-knowledge__curation-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 4px 14px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  user-select: none;
+}
+.neox-knowledge__curation-toggle input {
+  accent-color: var(--neox-primary-500, #7c5cff);
+}
+.neox-knowledge__curation-toggle small {
+  color: var(--kb-muted);
+  font-size: var(--neox-fs-xs, 12px);
+}
+.neox-knowledge__curation-toggle.is-unavailable {
+  cursor: not-allowed;
+  color: var(--kb-muted);
+}
+.neox-knowledge__curation-gate {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid var(--neox-line);
+  border-radius: 999px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-style: normal;
+  color: var(--kb-muted);
+  white-space: nowrap;
+}
+
+.neox-knowledge__load-more {
+  margin: 12px auto 4px;
+  justify-content: center;
+}
+
+/* 常驻开关 (Brain) — 开启态紫色高亮 */
+.neox-knowledge__card-action.is-always-toggle.is-on {
+  border-color: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 50%, transparent);
+  color: var(--neox-primary-600, #6d4de0);
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 10%, transparent);
+}
+.neox-knowledge__card-action.is-digest:hover {
+  border-color: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 45%, transparent);
+  color: var(--neox-primary-600, #6d4de0);
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 8%, transparent);
+}
+
+/* 行内编辑 */
+.neox-knowledge__card-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0 2px 24px;
+}
+.neox-knowledge__card-edit label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--kb-muted);
+}
+.neox-knowledge__card-edit label span { flex: 0 0 44px; }
+.neox-knowledge__card-edit input {
+  flex: 1;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--neox-bg-elevated, #fff) 60%, transparent);
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-xs, 12px);
+  outline: none;
+}
+.neox-knowledge__card-edit input:focus {
+  border-color: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 50%, transparent);
+}
+.neox-knowledge__card-edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}

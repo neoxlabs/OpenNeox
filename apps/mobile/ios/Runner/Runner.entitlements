@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- ⚠️ 应用内购买 (StoreKit) **不需要** entitlements 条目, 别往这里加。
+	     com.apple.developer.in-app-payments 是 **Apple Pay 的商户 ID**, 不是内购 ——
+	     加错了会让描述文件校验不过, 而且只在真机签名那一步才炸。
+	     IAP 要做的是: App ID 勾 In-App Purchase capability + App Store Connect
+	     建订阅商品 + 产品 ID 填进 apple_iap_products 表。 -->
+</dict>
+</plist>

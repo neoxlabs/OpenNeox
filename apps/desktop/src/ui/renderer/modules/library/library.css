@@ -1,0 +1,195 @@
+
+.neox-shelf {
+  height: 100%;
+  overflow-y: auto;
+  padding: 32px 40px 48px;
+  box-sizing: border-box;
+}
+.neox-shelf > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+
+/* 返回: 跟设置页左上「‹ 返回」同一个样子, 放在标题上方 */
+.neox-shelf > .neox-shelf__back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  height: 28px;
+  margin-top: -12px;
+  margin-bottom: 8px;
+  margin-left: max(0px, calc((100% - 1080px) / 2));
+  padding: 0 10px 0 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+.neox-shelf > .neox-shelf__back:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--neox-fg-primary); }
+
+.neox-shelf__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.neox-shelf__head { align-items: center; }
+.neox-shelf__title { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.neox-shelf__title h1 { margin: 0; font-size: 28px; font-weight: 700; color: var(--neox-fg-primary); }
+.neox-shelf__title p { margin: 0; font-size: 14px; color: var(--neox-fg-muted); }
+
+.neox-shelf__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  min-width: 240px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--neox-bg-card);
+  box-shadow: inset 0 0 0 1px var(--neox-line);
+  color: var(--neox-fg-muted);
+}
+.neox-shelf__search:focus-within { box-shadow: inset 0 0 0 1px var(--neox-line-strong), 0 0 0 3px color-mix(in srgb, var(--clay-blue, #2f6bff) 18%, transparent); }
+.neox-shelf__search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--neox-fg-primary); font: inherit; font-size: 13px; }
+
+.neox-shelf__kinds { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+.neox-shelf__kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--neox-line-soft);
+  color: var(--neox-fg-secondary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+.neox-shelf__kind em { font-style: normal; font-size: 12px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.neox-shelf__kind:hover { background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent); }
+/* 选中的那一颗是这页唯一的钴蓝 (设计稿「全部 128」) */
+.neox-shelf__kind.is-on { background: var(--clay-blue, #2f6bff); box-shadow: none; color: #fff; }
+.neox-shelf__kind.is-on em { color: rgb(255 255 255 / 0.78); }
+
+.neox-shelf__group { margin-bottom: 32px; }
+.neox-shelf__group h2 { margin: 0 0 12px; font-size: 16px; font-weight: 500; color: var(--neox-fg-secondary); }
+.neox-shelf__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(184px, 1fr)); gap: 16px; }
+
+/* 卡片常驻泥板 (设计稿每件成品都是一张小板), 悬停只浮起 + 露动作 */
+.neox-shelf__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 8px 12px;
+  border-radius: 16px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line-subtle), 0 1px 2px rgb(60 40 20 / 0.04);
+  cursor: pointer;
+  transition: box-shadow 160ms ease, translate 160ms ease;
+}
+.neox-shelf__card:hover {
+  box-shadow: 0 0 0 1px var(--neox-line-subtle), var(--neox-shadow-2);
+  translate: 0 -2px;
+}
+.neox-shelf__card:focus-visible { outline: 2px solid color-mix(in srgb, var(--clay-blue, #2f6bff) 50%, transparent); outline-offset: 2px; }
+
+.neox-shelf__thumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--neox-bg-canvas) 60%, var(--neox-bg-card));
+  box-shadow: inset 0 0 0 1px var(--neox-line-subtle);
+}
+.neox-shelf__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.neox-shelf__tag {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-bg-card) 88%, transparent);
+  box-shadow: 0 0 0 1px var(--neox-line-subtle);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--neox-fg-secondary);
+  backdrop-filter: blur(6px);
+}
+
+.neox-shelf__name {
+  margin-top: 6px;
+  padding: 0 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+.neox-shelf__meta { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 0 4px; font-size: 12px; color: var(--neox-fg-hint); }
+.neox-shelf__from {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+  color: var(--neox-fg-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.neox-shelf__from:hover { color: var(--neox-fg-primary); text-decoration: underline; text-underline-offset: 2px; }
+.neox-shelf__time { padding: 0 4px; font-size: 12px; line-height: 24px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+
+/* 动作条压在时间那一行的位置上, 悬停淡入 —— 卡片高度不跳 */
+.neox-shelf__acts {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 10px;
+  display: flex;
+  gap: 2px;
+  background: var(--neox-bg-card);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+.neox-shelf__card:hover .neox-shelf__acts, .neox-shelf__card:focus-within .neox-shelf__acts { opacity: 1; pointer-events: auto; }
+.neox-shelf__acts button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.neox-shelf__acts button:hover { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--neox-fg-primary); }
+
+.neox-shelf__empty { padding: 80px 20px; text-align: center; color: var(--neox-fg-muted); font-size: 13px; }
+.neox-shelf__empty-title { margin: 0 0 6px; font-size: 16px; font-weight: 500; color: var(--neox-fg-primary); }
+.neox-shelf__empty-hint { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { .neox-shelf__card { transition: none; } }

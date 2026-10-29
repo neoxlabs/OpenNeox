@@ -1,0 +1,20 @@
+{
+  "name": "@neoxlabs/editor-engine",
+  "private": true,
+  "version": "0.0.0-neox",
+  "license": "AGPL-3.0-only AND MIT",
+  "description": "NeoX-owned editor engine runtime based on Monaco, with NeoX diff and theme semantics.",
+  "main": "out/monaco-editor/esm/vs/index.js",
+  "module": "out/monaco-editor/esm/vs/index.js",
+  "types": "out/monaco-editor/monaco.d.ts",
+  "sideEffects": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neoxlabs/OpenNeox.git",
+    "directory": "packages/editor-engine"
+  },
+  "homepage": "https://github.com/neoxlabs/OpenNeox",
+  "scripts": {
+    "prepare-monaco": "node scripts/prepare-monaco.mjs"
+  }
+}

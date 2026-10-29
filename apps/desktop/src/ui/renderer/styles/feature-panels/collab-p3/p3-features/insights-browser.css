@@ -1,0 +1,234 @@
+/* 进程输出对话框 */
+.process-output-modal {
+  width: 600px;
+  max-width: 90vw;
+}
+
+.process-output-content {
+  background: var(--bg-primary);
+  padding: 12px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  max-height: 400px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.process-output-btn {
+  padding: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.process-output-btn:hover {
+  color: var(--accent-color);
+}
+
+/* 费用估算 */
+.cost-estimate-section {
+  margin: 16px 0;
+}
+
+.cost-estimate-section h4 {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.cost-cards {
+  display: flex;
+  gap: 12px;
+}
+
+.cost-card {
+  flex: 1;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.cost-card .cost-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.cost-card .cost-value {
+  font-size: var(--neox-fs-xl, 18px);
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+/* 费用趋势图 */
+.cost-trend-section {
+  margin-top: 16px;
+}
+
+.cost-trend-section h4 {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.trend-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 120px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.trend-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.trend-bar {
+  width: 100%;
+  max-width: 40px;
+  background: linear-gradient(180deg, var(--gold-400), var(--gold-600));
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.trend-bar-group .bar-label {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.trend-bar-group .bar-value {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 内嵌浏览器视图 */
+.embedded-browser-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.embedded-browser-container {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.embedded-browser-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.browser-url-display {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.browser-close-btn {
+  padding: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.browser-close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.embedded-webview {
+  width: 100%;
+  height: 400px;
+  border: none;
+}
+
+/* 元素选择器 */
+.element-selector-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.element-selector-btn:hover:not(:disabled) {
+  border-color: var(--gold-500);
+  color: var(--gold-400);
+}
+
+.element-selector-btn.active {
+  background: rgba(201, 162, 39, 0.15);
+  border-color: var(--gold-500);
+  color: var(--gold-400);
+}
+
+.element-selector-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.selected-element-info {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.element-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.element-info-row .info-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  min-width: 50px;
+}
+
+.element-info-row .info-value {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.element-info-row .info-value.copyable {
+  cursor: pointer;
+}
+
+.element-info-row .info-value.copyable:hover {
+  background: var(--bg-hover);
+  color: var(--gold-400);
+}
+

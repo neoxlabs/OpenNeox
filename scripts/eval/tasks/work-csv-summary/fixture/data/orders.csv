@@ -1,0 +1,13 @@
+region,product,amount,status
+华东,键盘,199,completed
+华东,显示器,1299,completed
+华北,鼠标,89,cancelled
+华南,耳机,499,completed
+华东,鼠标,89,completed
+华北,键盘,199,completed
+华南,显示器,1299,cancelled
+华北,耳机,499,completed
+华东,耳机,499,completed
+华南,键盘,199,completed
+华北,显示器,1299,completed
+华南,鼠标,89,completed

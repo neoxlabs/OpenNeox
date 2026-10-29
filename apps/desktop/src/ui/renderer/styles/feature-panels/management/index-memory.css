@@ -1,0 +1,756 @@
+/* ==================== 代码索引样式 ==================== */
+.index-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.index-status-badge .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  min-height: 24px;
+  white-space: nowrap;
+}
+
+.index-status-badge .badge.success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.index-status-badge .badge.warning {
+  background: rgba(234, 179, 8, 0.12);
+  color: #eab308;
+}
+
+.index-details {
+  display: flex;
+  gap: 20px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+}
+
+.index-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.index-detail-item .detail-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.index-detail-item .detail-value {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.index-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.index-section .index-progress {
+  margin: 12px 16px 0;
+}
+
+.index-progress .progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.index-progress .progress-fill {
+  height: 100%;
+  background: var(--text-accent, var(--gold-500));
+  border-radius: 2px;
+  transition: width var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.index-progress .progress-text {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  min-width: 70px;
+  text-align: right;
+}
+
+.index-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 14px;
+}
+
+.index-section .index-actions {
+  margin: 4px 16px 16px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--st-border, var(--border-subtle)) 70%, transparent);
+}
+
+.index-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 650;
+  line-height: 1;
+  border: 1px solid var(--st-border-strong, var(--border-subtle));
+  background: transparent;
+  color: var(--st-text-soft, var(--text-secondary));
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.index-action-btn:hover:not(:disabled) {
+  background: var(--st-hover, var(--bg-hover));
+  color: var(--st-text, var(--text-primary));
+  border-color: var(--st-border-strong, var(--border-default));
+}
+
+.index-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.index-action-btn.primary {
+  background: var(--neox-primary-600, var(--text-accent, var(--gold-500)));
+  border-color: transparent;
+  color: var(--neox-fg-invert, #fff);
+}
+
+:root[data-theme="dark"] .index-action-btn.primary {
+  color: var(--neox-fg-invert, #fff);
+}
+
+.index-action-btn.primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.index-action-btn.danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+/* ==================== 记忆系统 ==================== */
+.memory-page-compact {
+  width: 100%;
+  padding: 0 !important;
+}
+
+.memory-stats-compact {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-bottom: 18px;
+  padding: 4px 8px 0;
+  border: 1px solid var(--neox-line);
+  border-radius: 10px;
+  background: var(--neox-bg-card);
+  overflow: hidden;
+}
+
+.memory-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  border: 0;
+  border-right: 1px solid var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.memory-stat-item:nth-child(4) {
+  border-right: 0;
+}
+
+.memory-stat-item .stat-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.memory-stat-item.short .stat-icon { color: #f59e0b; }
+.memory-stat-item.session .stat-icon { color: #3b82f6; }
+.memory-stat-item.long .stat-icon { color: #22c55e; }
+.memory-stat-item.pinned .stat-icon { color: #a855f7; }
+
+.memory-stat-item .stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.memory-stat-item .stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.memory-stat-item .stat-num {
+  font-size: 17px;
+  font-weight: 650;
+  color: var(--text-primary);
+  font-family: inherit;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.memory-stat-item .stat-size {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: inherit;
+}
+
+.memory-stat-total {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 12px;
+  background: transparent;
+  border-radius: 0;
+  border-top: 1px solid var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+  font-size: var(--neox-fs-sm, 13px);
+  grid-column: 1 / -1;
+}
+
+.memory-stat-total .total-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.memory-stat-total .total-num {
+  font-weight: 600;
+  color: var(--text-accent, var(--gold-500));
+  font-family: var(--font-mono);
+}
+
+.memory-stat-total .total-size {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* 记忆操作行 */
+.memory-actions-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 0 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--nx-soft-divider, var(--border-subtle));
+  min-height: 36px;
+}
+
+.memory-action-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memory-action-item .action-label {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+}
+
+.mini-toggle {
+  display: flex;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.mini-toggle-btn {
+  padding: 4px 10px;
+  font-size: var(--neox-fs-xxs, 11px);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mini-toggle-btn + .mini-toggle-btn {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.mini-toggle-btn.active {
+  background: var(--text-accent, var(--gold-500));
+  color: #fff;
+}
+
+:root[data-theme="dark"] .mini-toggle-btn.active { color: #000; }
+
+.memory-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  font-size: var(--neox-fs-xxs, 11px);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.memory-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.memory-action-btn.danger:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.memory-action-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* 记忆浏览器 */
+.memory-browser-compact {
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.memory-browser-compact .browser-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--nx-soft-divider, var(--border-subtle));
+  min-height: 44px;
+}
+
+.memory-browser-compact .browser-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 180px;
+  max-width: 280px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+}
+
+.memory-browser-compact .browser-search svg {
+  width: 13px;
+  height: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.memory-browser-compact .browser-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1;
+  height: 100%;
+  color: var(--text-primary);
+  outline: none;
+  padding: 0;
+}
+
+.memory-browser-compact .browser-filters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.memory-browser-compact .filter-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 10px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--nx-soft-divider, var(--border-subtle));
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.memory-browser-compact .filter-chip:hover {
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.memory-browser-compact .filter-chip.active {
+  background: var(--text-accent, var(--gold-500));
+  border-color: transparent;
+  color: #fff;
+}
+
+:root[data-theme="dark"] .memory-browser-compact .filter-chip.active { color: #000; }
+
+/* 「另有 N 条运行记录」的开关 —— 做成一行文字链, 不是按钮:
+ * 它是"还有东西被收起来了"的告知, 不是这一页要你去做的事。带底色/描边的话会跟上面
+ * 那排筛选片抢注意力, 而筛选片才是这块的主控件。 */
+.memory-browser-compact .memory-telemetry-toggle {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  border: 0;
+  background: none;
+  color: var(--neox-fg-muted, #8a8a8a);
+  font: inherit;
+  font-size: var(--neox-fs-xs, 11px);
+  text-align: left;
+  cursor: pointer;
+  transition: color 120ms;
+}
+.memory-browser-compact .memory-telemetry-toggle:hover {
+  color: var(--neox-fg-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.memory-browser-compact .browser-list {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.memory-browser-compact .browser-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.memory-browser-compact .browser-item:hover {
+  background: var(--bg-hover);
+}
+
+.memory-browser-compact .browser-item:last-child {
+  border-bottom: none;
+}
+
+.memory-browser-compact .browser-item .item-type {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+.memory-browser-compact .browser-item .item-type svg {
+  width: 14px;
+  height: 14px;
+}
+
+.memory-browser-compact .browser-item.shortTerm .item-type svg { color: #f59e0b; }
+.memory-browser-compact .browser-item.session .item-type svg { color: #3b82f6; }
+.memory-browser-compact .browser-item.longTerm .item-type svg { color: #22c55e; }
+.memory-browser-compact .browser-item.pinned .item-type svg { color: #a855f7; }
+
+.memory-browser-compact .browser-item .item-content {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.memory-browser-compact .browser-empty {
+  padding: 24px;
+  text-align: center;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+}
+
+/* 记忆预览弹窗 */
+.memory-preview-modal {
+  max-width: 600px;
+  max-height: 80vh;
+}
+
+.memory-preview-content {
+  background: var(--bg-tertiary);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-size: var(--neox-fs-xs, 12px);
+  font-family: var(--font-mono);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  color: var(--text-secondary);
+}
+
+/* 记忆浏览弹窗 */
+.memory-browser-modal {
+  max-width: 700px;
+  max-height: 80vh;
+}
+
+.memory-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.memory-item {
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.memory-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.memory-type-tag {
+  padding: 2px 6px;
+  font-size: 10px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.memory-type-tag.shortTerm { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.memory-type-tag.session { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+.memory-type-tag.longTerm { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
+.memory-type-tag.pinned { background: rgba(168, 85, 247, 0.12); color: #a855f7; }
+
+.memory-time {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.memory-item-content {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.memory-item-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.memory-tag {
+  padding: 1px 6px;
+  font-size: 10px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  color: var(--text-muted);
+}
+
+/* ==================== 索引排除规则弹窗 ==================== */
+.index-exclude-modal {
+  max-width: 520px;
+}
+
+.exclude-hint {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.exclude-add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.exclude-add-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: var(--font-mono);
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.exclude-add-row input:focus {
+  outline: none;
+  border-color: var(--text-accent, var(--gold-500));
+  box-shadow: 0 0 0 2px rgba(var(--gold-500-rgb), 0.1);
+}
+
+.exclude-add-row input::placeholder {
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+.add-pattern-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+}
+
+.add-pattern-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-accent, var(--gold-500));
+  color: var(--text-accent, var(--gold-500));
+}
+
+.add-pattern-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.exclude-patterns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.exclude-pattern-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.exclude-pattern-item:hover {
+  border-color: var(--border-default);
+}
+
+.pattern-text {
+  font-size: var(--neox-fs-sm, 13px);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.remove-pattern-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+}
+
+.remove-pattern-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.remove-pattern-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* 记忆页「清除」按钮在短期/会话档下点不动 (那两档是 worker 里的运行时上下文, 主进程够不着)。
+ * 照全局那套: 降透明 + 禁 hover, 原因写在 title 上。 */
+.memory-action-btn.danger.is-unavailable {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.memory-action-btn.danger.is-unavailable:hover {
+  background: transparent;
+}
+
+@media (max-width: 720px) {
+  .memory-stats-compact {
+    grid-template-columns: repeat(2, 1fr);
+    padding-inline: 4px;
+  }
+
+  .memory-stat-item:nth-child(2) {
+    border-right: 0;
+  }
+
+  .memory-stat-item:nth-child(3) {
+    border-top: 1px solid var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+  }
+
+  .memory-stat-item:nth-child(4) {
+    border-top: 1px solid var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+    border-right: 0;
+  }
+
+  .memory-browser-compact .browser-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .memory-browser-compact .browser-search {
+    width: 100%;
+    max-width: none;
+  }
+}

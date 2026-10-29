@@ -1,0 +1,5 @@
+{
+  "name": "dep-upgrade",
+  "type": "module",
+  "private": true
+}

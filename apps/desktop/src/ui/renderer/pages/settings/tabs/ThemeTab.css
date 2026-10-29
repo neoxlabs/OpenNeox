@@ -1,0 +1,369 @@
+/* ============================================================
+ * 界面 (ThemeTab) — UI 样式
+ *   外观模式 / 界面结构 / 性能档位 三张设置卡 + 主题包分类卡片
+ * ============================================================ */
+
+.theme-surface-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  background: var(--neox-bg-card);
+  box-shadow: none;
+}
+
+.theme-surface-card__copy {
+  min-width: 0;
+}
+
+/* 语言 / 外观 / 结构 / 性能 (+ 单项调整) 收进同一张卡: 行不再各自画框, 行间一条发丝线 */
+.theme-surface-group {
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  background: var(--neox-bg-card);
+  overflow: hidden;
+}
+.theme-surface-group .theme-surface-card {
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.theme-surface-group > .theme-surface-card + .theme-surface-card,
+.theme-surface-group > .theme-perf-details,
+.theme-surface-group .theme-perf-details > .theme-surface-card {
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+.theme-surface-group .theme-perf-details { margin-top: 0; }
+.theme-surface-group .theme-perf-details > .theme-surface-card { margin-top: 0; }
+.theme-surface-group .theme-perf-details__summary { padding: 10px 16px; }
+
+.theme-surface-card__title {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.theme-surface-card__desc {
+  margin-top: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-tertiary);
+}
+
+.theme-surface-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 0;
+  border-radius: var(--neox-radius-md);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  flex: 0 0 auto;
+}
+
+.theme-surface-toggle__btn {
+  appearance: none;
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-surface-toggle__btn:hover {
+  color: var(--text-primary);
+}
+
+.theme-surface-toggle__btn.is-active {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+@media (max-width: 720px) {
+  .theme-surface-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .theme-surface-toggle,
+  .theme-surface-toggle__btn {
+    width: 100%;
+  }
+
+  .theme-surface-toggle__btn {
+    flex: 1 1 0;
+  }
+}
+
+.theme-appearance-head {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.theme-appearance-head__copy h3,
+.theme-more-title {
+  margin: 0;
+  font-size: var(--neox-fs-lg, 16px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.theme-appearance-head__copy p {
+  margin: 4px 0 0;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-secondary);
+}
+.theme-more-title { margin: 32px 0 10px; }
+.theme-more-toggle {
+  align-self: flex-start;
+  margin-top: 14px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+}
+.theme-more-toggle:hover { background: color-mix(in srgb, var(--text-primary) 10%, transparent); color: var(--text-primary); }
+
+.theme-pack-category {
+  margin-top: 18px;
+}
+
+.theme-pack-category.is-auto-dimmed .theme-pack-grid {
+  opacity: 0.72;
+}
+
+.theme-pack-category__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.theme-pack-category__title {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.theme-pack-category__subtitle {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-tertiary);
+}
+
+.theme-pack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.theme-pack-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 200ms var(--ease-out-expo);
+}
+
+.theme-pack-card:hover {
+  transform: translateY(-2px);
+}
+
+.theme-pack-card__art {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  overflow: hidden;
+  transition: border-color 200ms, box-shadow 200ms;
+}
+
+.theme-pack-card:hover .theme-pack-card__art {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 16%, transparent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.theme-pack-card.is-active .theme-pack-card__art {
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1.5px var(--neox-primary-600),
+    0 0 0 4px color-mix(in srgb, var(--neox-primary-600) 14%, transparent),
+    0 4px 14px color-mix(in srgb, var(--neox-primary-600) 10%, transparent);
+}
+
+/* 卡片 art 自带渐变 — 用 swatch 三色 (data via inline style) */
+.theme-pack-card__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    var(--pack-bg, #f5f5f7) 0%,
+    var(--pack-mid, #e8eaf0) 50%,
+    var(--pack-accent, #6b7cff) 100%);
+}
+
+/* logo 字 — 显示 pack 名 */
+.theme-pack-card__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--pack-label, #fff);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.4px;
+}
+
+/* 当前选中角标 */
+.theme-pack-card__badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--text-accent);
+  color: #fff;
+  border-radius: 10px;
+}
+
+.theme-pack-card.is-locked .theme-pack-card__art {
+  filter: saturate(0.55) brightness(0.92);
+}
+.theme-pack-card.is-locked:hover .theme-pack-card__art {
+  filter: saturate(0.9) brightness(0.98);   /* hover 时还原一点, 暗示"这是能拿到的" */
+}
+.theme-pack-card.is-locked .theme-pack-card__name,
+.theme-pack-card.is-locked .theme-pack-card__tagline {
+  opacity: 0.6;
+}
+
+.theme-pack-card__lock {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px 2px 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(6px);
+  border-radius: 10px;
+}
+
+/* v2 文字描述弱化 — 对齐 nx-row title/desc 字号节奏 */
+.theme-pack-card__name {
+  font-size: var(--nx-fs-row-title);
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+  padding: 0 2px;
+  line-height: 1.35;
+}
+
+.theme-pack-card__tagline {
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  padding: 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.005em;
+}
+
+/* "自选颜色" 兜底卡 */
+.theme-pack-card--custom .theme-pack-card__art {
+  background:
+    conic-gradient(from 0deg, #ff5e5b, #ffb84d, #ffe14a, #6dd47e, #4cc1ff, #b966ff, #ff5e5b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-pack-card--custom .theme-pack-card__art::after {
+  content: '+';
+  position: absolute;
+  font-size: 32px;
+  color: #fff;
+  font-weight: 300;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+.theme-perf-details {
+  margin-top: 10px;
+}
+
+.theme-perf-details > .theme-surface-card {
+  margin-top: 10px;
+}
+
+.theme-perf-details__summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 650;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.theme-perf-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* 自绘三角 — 展开时旋转; 动效关掉的用户不该看到它转, 交给全局 data-motion 的 reduce 规则 */
+.theme-perf-details__summary::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 4px solid currentColor;
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+  transition: transform 140ms ease;
+}
+
+.theme-perf-details[open] > .theme-perf-details__summary::before {
+  transform: rotate(90deg);
+}
+
+.theme-perf-details__summary:hover {
+  color: var(--text-primary);
+}
+
+.theme-perf-details__hint {
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.theme-pet-section {
+  margin-top: 24px;
+}

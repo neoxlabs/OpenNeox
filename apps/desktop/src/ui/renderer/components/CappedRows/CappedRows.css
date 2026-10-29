@@ -1,0 +1,23 @@
+.neox-capped-rows__more {
+  appearance: none;
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  text-align: left;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.neox-capped-rows__more:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+
+.neox-git-limit-note {
+  color: var(--neox-warn-ink, #e5984d);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.4;
+  padding: 4px 8px;
+}

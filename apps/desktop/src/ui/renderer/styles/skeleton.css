@@ -1,0 +1,90 @@
+/* ==================== 骨架屏动画 ==================== */
+@keyframes skeleton-shimmer {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-shimmer var(--neox-loop-shimmer) var(--neox-ease-out) infinite;
+}
+
+.skeleton-block {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
+
+
+.atl-skel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 28px 6% 40px;
+  /* 整块一次呼吸, 不做逐行 —— 逐行在 300ms 内看不清, 只是白白多开 N 个动画 */
+  animation: atl-skel-breathe 1.6s ease-in-out infinite;
+}
+
+.atl-skel__row { display: flex; gap: 10px; }
+.atl-skel__row--user  { justify-content: flex-end; }
+.atl-skel__row--agent { justify-content: flex-start; }
+.atl-skel__row--tool  { justify-content: flex-start; align-items: center; }
+
+.atl-skel__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  max-width: 78%;
+}
+.atl-skel__row--user .atl-skel__lines { max-width: 46%; align-items: flex-end; }
+.atl-skel__row--tool .atl-skel__lines { max-width: 40%; }
+
+.atl-skel__line {
+  height: 11px;
+  border-radius: 6px;
+  background: currentColor;
+  opacity: 0.085;
+}
+/* 用户块用一个更"实"的形状, 呼应真实气泡 */
+.atl-skel__row--user .atl-skel__line { height: 30px; border-radius: 14px; opacity: 0.11; }
+
+.atl-skel__dot {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: 6px;
+  background: currentColor;
+  opacity: 0.10;
+}
+
+/* 只动 opacity —— 不用 background-position 扫光: 那个每帧重绘整块, 长列表上很贵,
+   而且亮闪闪的扫光很"网页感", 跟系统级质感相反。 */
+@keyframes atl-skel-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atl-skel { animation: none; opacity: 0.8; }
+}
+
+@keyframes neox-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.neox-spin {
+  animation: neox-spin 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neox-spin { animation-duration: 2.4s; }
+}

@@ -1,0 +1,26 @@
+
+.neox-rightcard--slim {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.neox-slimmeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.neox-slimmeta__item {
+  font-size: var(--neox-fs-xs);
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 42%;
+}
+/* 项与项之间一个细点分隔, 比竖线轻 */
+.neox-slimmeta__item + .neox-slimmeta__item::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--neox-fg-muted);
+}

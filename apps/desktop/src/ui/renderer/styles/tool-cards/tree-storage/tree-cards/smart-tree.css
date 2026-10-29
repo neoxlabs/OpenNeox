@@ -1,0 +1,830 @@
+/* ==================== SmartTreeCard 样式 ==================== */
+.smart-tree-body {
+  padding: 0;
+}
+
+.smart-tree-meta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 2px 8px;
+}
+
+.smart-tree-meta-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.smart-tree-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.smart-tree-meta-badge.loading {
+  background: rgba(234, 179, 8, 0.12);
+  color: #b48c0a;
+  border-color: rgba(180, 140, 10, 0.2);
+}
+
+.smart-tree-meta-badge.completed {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.smart-tree-meta-badge.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.smart-tree-meta-time {
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+}
+
+.smart-tree-card {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.smart-tree-card:hover {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.smart-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(168, 85, 247, 0.06);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  gap: 8px;
+}
+
+.smart-tree-header:hover {
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.smart-tree-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.smart-tree-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #a855f7;
+  flex-shrink: 0;
+}
+
+.smart-tree-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.smart-tree-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.smart-tree-action {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  color: #a855f7;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.smart-tree-name {
+  display: none;
+}
+
+.smart-tree-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.smart-tree-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #94a3b8;
+  font-family: var(--font-mono);
+}
+
+.smart-tree-count svg {
+  width: 14px;
+  height: 14px;
+  color: #94a3b8;
+}
+
+.smart-tree-collapse-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.smart-tree-collapse-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.smart-tree-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+.smart-tree-card .smart-tree-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.smart-tree-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.smart-tree-tag {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 3px 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.smart-tree-tag svg {
+  width: 12px;
+  height: 12px;
+}
+
+.smart-tree-tag.primary {
+  background: rgba(168, 85, 247, 0.12);
+  color: #a855f7;
+  border: 1px solid rgba(168, 85, 247, 0.12);
+}
+
+.smart-tree-tag.neutral {
+  background: rgba(226, 232, 240, 0.6);
+  color: #64748b;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.smart-tree-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #94a3b8;
+  border-left: 1px solid rgba(226, 232, 240, 0.7);
+  padding-left: 8px;
+  margin-left: 4px;
+}
+
+.smart-tree-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+}
+
+.smart-tree-summary-item svg {
+  width: 14px;
+  height: 14px;
+  color: #34d399;
+}
+
+.smart-tree-summary-item.muted svg {
+  display: none;
+}
+
+.smart-tree-summary-item.subtle svg {
+  color: #94a3b8;
+}
+
+.smart-tree-summary-label {
+  color: #94a3b8;
+}
+
+.smart-tree-summary-label.italic {
+  font-style: italic;
+}
+
+.smart-tree-summary-value {
+  color: #64748b;
+}
+
+.smart-tree-summary-value.accent {
+  color: #34d399;
+}
+
+.smart-tree-summary-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  flex-shrink: 0;
+}
+
+.smart-tree-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.smart-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.smart-tree-item:hover {
+  background: var(--bg-hover);
+}
+
+.smart-tree-item.folder {
+  color: var(--gold-400);
+}
+
+.smart-tree-item.file {
+  color: var(--text-secondary);
+}
+
+.smart-tree-item.important {
+  background: rgba(250, 204, 21, 0.08);
+  border-left: 2px solid #facc15;
+}
+
+.smart-tree-item.skipped {
+  opacity: 0.6;
+  color: var(--text-muted);
+}
+
+.smart-tree-item-icon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.smart-tree-item-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.smart-tree-item-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+.smart-tree-item-size {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.smart-tree-show-more {
+  padding: 8px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  text-align: center;
+}
+
+.smart-tree-show-more:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-gold);
+  color: var(--text-primary);
+}
+
+.smart-tree-stats {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+/* 工具卡片状态边框 - 更细腻 */
+.tool-card.status-preparing {
+  border-left: 2px solid var(--gold-300);
+  border-left-style: dashed;
+}
+
+.tool-card.status-executing {
+  border-left: 2px solid var(--gold-500);
+  animation: none;
+}
+
+.tool-card.status-completed {
+  border-left: 2px solid #22c55e;
+}
+
+.tool-card.status-error {
+  border-left: 2px solid #ef4444;
+}
+
+/* 工具卡片头部 - 紧凑版 */
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.tool-card-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tool-status-icon {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tool-status-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.tool-status-icon.preparing {
+  color: var(--gold-300);
+  animation: preparing-spin 1s linear infinite;
+}
+
+.tool-status-icon.executing {
+  color: var(--gold-500);
+}
+
+.tool-status-icon.completed {
+  color: #22c55e;
+}
+
+.tool-status-icon.error {
+  color: #ef4444;
+}
+
+@keyframes preparing-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tool-card-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.tool-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.tool-name .batch-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--gold-400);
+  background: rgba(201, 162, 39, 0.12);
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+.tool-description {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+
+.tool-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tool-duration {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.tool-collapse-btn {
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  opacity: 0.6;
+}
+
+.tool-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gold-400);
+  opacity: 1;
+}
+
+.tool-collapse-btn svg {
+  width: 10px;
+  height: 10px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.tool-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+/* 工具卡片内容区 - 紧凑版 */
+.tool-card-content {
+  padding: 0 8px 6px;
+  overflow: hidden;
+  transition: max-height var(--neox-dur-fast) var(--neox-ease-out), opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.tool-card-content.collapsed {
+  max-height: 0;
+  padding: 0 8px;
+  opacity: 0;
+}
+
+/* 等效命令块 - 紧凑版 */
+.tool-command-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.tool-command-block code {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-command-copy {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.tool-command-copy:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gold-400);
+  opacity: 1;
+}
+
+.tool-command-copy.copied {
+  color: #22c55e;
+  opacity: 1;
+}
+
+.tool-command-copy svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* 批量目标列表 - 紧凑版 */
+.batch-targets-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.batch-target-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.batch-target-item.completed {
+  color: var(--text-primary);
+}
+
+.batch-target-item.completed::before {
+  content: '✓';
+  color: #22c55e;
+  font-weight: bold;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.batch-target-item.pending::before {
+  content: '○';
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.batch-target-item.error::before {
+  content: '✗';
+  color: #ef4444;
+  font-weight: bold;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+/* 批量进度条 - 紧凑版 */
+.batch-progress {
+  margin-top: 6px;
+}
+
+.batch-progress-bar {
+  height: 3px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.batch-progress-fill {
+  height: 100%;
+  background: var(--gold-500);
+  border-radius: 2px;
+  transition: width var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.batch-progress-text {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* 工具结果摘要 - 紧凑版 */
+.tool-result-summary {
+  padding: 5px 8px;
+  background: rgba(34, 197, 94, 0.06);
+  border-radius: 4px;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tool-result-summary.error {
+  background: rgba(239, 68, 68, 0.06);
+  border-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.tool-result-summary svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+/* 目标路径显示 - 紧凑版 */
+.tool-target-path {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  margin-top: 3px;
+  opacity: 0.8;
+}
+
+.tool-target-path svg {
+  width: 10px;
+  height: 10px;
+  color: var(--text-muted);
+}
+
+/* Timeline 中的工具卡片适配 */
+.timeline-entry.tool_call .timeline-body,
+.timeline-entry.tool_result .timeline-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.timeline-entry.tool_call .tool-card,
+.timeline-entry.tool_result .tool-card {
+  margin: 0;
+}
+
+/* 批量操作时间线条目样式 */
+.timeline-entry.batch .timeline-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.timeline-entry.batch .node-dot {
+  background: var(--gold-500);
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.35);
+}
+
+.timeline-entry.batch.completed .node-dot {
+  background: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
+}
+
+/* 工具卡片内部详情 */
+.tool-detail-section {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.tool-detail-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.tool-detail-content {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 8px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* ==================== Light theme ==================== */
+:root[data-theme="light"] .smart-tree-card {
+  background: rgba(168, 85, 247, 0.04);
+  border-color: rgba(168, 85, 247, 0.25);
+}
+
+:root[data-theme="light"] .smart-tree-card:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+:root[data-theme="light"] .smart-tree-header {
+  background: rgba(168, 85, 247, 0.05);
+  border-bottom-color: rgba(168, 85, 247, 0.15);
+}
+
+:root[data-theme="light"] .smart-tree-header:hover {
+  background: rgba(168, 85, 247, 0.1);
+}
+
+:root[data-theme="light"] .smart-tree-count,
+:root[data-theme="light"] .smart-tree-count svg {
+  color: var(--text-tertiary, #94a3b8);
+}
+
+:root[data-theme="light"] .smart-tree-tag.neutral {
+  background: rgba(15, 23, 42, 0.05);
+  color: var(--text-secondary, #475569);
+}
+
+:root[data-theme="light"] .smart-tree-summary {
+  color: var(--text-secondary, #475569);
+  border-left-color: rgba(15, 23, 42, 0.12);
+}
+
+:root[data-theme="light"] .smart-tree-summary-item,
+:root[data-theme="light"] .smart-tree-summary-label {
+  color: var(--text-secondary, #475569);
+}
+
+:root[data-theme="light"] .smart-tree-summary-item.subtle svg {
+  color: var(--text-tertiary, #94a3b8);
+}
+
+:root[data-theme="light"] .smart-tree-summary-value {
+  color: var(--text-primary, #0f172a);
+}
+
+:root[data-theme="light"] .smart-tree-summary-dot {
+  background: #cbd5e1;
+}
+
+:root[data-theme="light"] .tool-card-header:hover {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+:root[data-theme="light"] .tool-collapse-btn:hover,
+:root[data-theme="light"] .tool-command-copy:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+:root[data-theme="light"] .tool-command-block {
+  background: #f1f5f9;
+  color: var(--text-secondary, #475569);
+  border-color: rgba(15, 23, 42, 0.06);
+}
+

@@ -1,0 +1,190 @@
+/* 存储管理页 · UI 3.0 陶土风 (作用域 .st3, 选择器加了页根类以压过全局旧规则) —— 零 !important */
+
+/* ---------- 总占用 hero ---------- */
+.settings-panel-content.st3 .storage-hero {
+  display: block;
+  padding: 18px 20px 16px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  box-shadow: none;
+}
+.settings-panel-content.st3 .storage-hero-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.settings-panel-content.st3 .storage-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.settings-panel-content.st3 .storage-hero-total {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.settings-panel-content.st3 .storage-hero-label {
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.settings-panel-content.st3 .storage-hero-value {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+.settings-panel-content.st3 .storage-hero-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 999px;
+  background: var(--neox-bg-card);
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.settings-panel-content.st3 .storage-hero-open:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, var(--neox-bg-card));
+}
+.settings-panel-content.st3 .storage-hero-open svg { width: 13px; height: 13px; }
+
+/* 占比条: 细条、圆头, 各段之间留一条缝 */
+.settings-panel-content.st3 .storage-bar {
+  display: flex;
+  height: 10px;
+  gap: 2px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.settings-panel-content.st3 .storage-bar-seg {
+  height: 100%;
+  min-width: 4px;
+  border-radius: 999px;
+}
+.settings-panel-content.st3 .storage-bar--empty { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); }
+
+/* 图例: 每项一行 点 · 名 · 大小 · (按钮), 多列自动排 */
+.settings-panel-content.st3 .storage-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px 20px;
+}
+.settings-panel-content.st3 .storage-legend-item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 8px;
+  min-width: 0;
+  font-size: 12.5px;
+}
+.settings-panel-content.st3 .lg-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.settings-panel-content.st3 .lg-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--neox-fg-secondary);
+}
+.settings-panel-content.st3 .lg-size {
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-primary);
+}
+.settings-panel-content.st3 .lg-clean {
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 999px;
+  background: var(--neox-bg-card);
+  font: inherit;
+  font-size: 12px;
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.settings-panel-content.st3 .lg-clean:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, var(--neox-bg-card));
+}
+.settings-panel-content.st3 .lg-clean:disabled { opacity: 0.5; cursor: default; }
+
+/* 加载骨架 */
+.settings-panel-content.st3 .storage-hero--skeleton { display: flex; flex-direction: column; gap: 14px; }
+
+/* ---------- 备份 / 代码回退 行 ---------- */
+.settings-panel-content.st3 .ctx2-danger {
+  height: 28px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, #C2492F 30%, transparent);
+  border-radius: 999px;
+  background: var(--neox-bg-card);
+  font: inherit;
+  font-size: 12.5px;
+  color: #C2492F;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.settings-panel-content.st3 .ctx2-danger:hover {
+  background: color-mix(in srgb, #C2492F 6%, var(--neox-bg-card));
+}
+
+/* ---------- 高级 (折叠) ---------- */
+.settings-panel-content.st3 .storage-advanced-section {
+  margin-top: 22px;
+  padding: 0;
+  border-bottom: none;
+}
+.settings-panel-content.st3 .storage-advanced-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+}
+.settings-panel-content.st3 .sat-hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.settings-panel-content.st3 .storage-advanced-body {
+  margin-top: 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 16px;
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+}
+.settings-panel-content.st3 .sa-block + .sa-block {
+  margin-top: 14px;
+  padding-top: 12px;
+  box-shadow: inset 0 1px 0 var(--neox-line-subtle);
+}
+.settings-panel-content.st3 .sa-block-title {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.settings-panel-content.st3 .storage-size-value,
+.settings-panel-content.st3 .sf-size {
+  font-variant-numeric: tabular-nums;
+  color: var(--neox-fg-muted);
+}

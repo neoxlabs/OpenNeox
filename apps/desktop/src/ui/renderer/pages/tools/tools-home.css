@@ -1,0 +1,35 @@
+/* 「工具」主页: 内容宽 1040, 卡片两列 (窄窗一列) */
+.tools-home { height: 100%; overflow: auto; padding: 26px 56px 40px; box-sizing: border-box; }
+.tools-home__inner { width: min(1040px, 100%); margin: 0 auto; }
+.tools-home__title { margin: 4px 0 0; font-size: 28px; line-height: 1.2; font-weight: 600; color: var(--neox-fg-primary); }
+.tools-home__desc { margin: 6px 0 0; font-size: 14px; line-height: 1.5; color: var(--neox-fg-muted); }
+/* 按主区实际宽度排 (右栏开着时主区只剩一半, 视口媒体查询管不到): 一张卡至少 340, 放不下两张就一列 */
+.tools-home { padding-left: max(24px, min(56px, 5%)); padding-right: max(24px, min(56px, 5%)); }
+.tools-home__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 14px; margin-top: 26px; }
+.tools-home__card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  padding: 20px 20px 20px 18px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1)), 0 2px 8px rgba(60, 45, 25, 0.04);
+  font: inherit;
+  text-align: left;
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+.tools-home__card:hover { box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.14)), 0 8px 22px rgba(60, 45, 25, 0.09); transform: translateY(-1px); }
+.tools-home__card.is-disabled { cursor: default; opacity: 0.55; }
+.tools-home__card.is-disabled:hover { transform: none; box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1)); }
+.tools-home__icon { width: 64px; height: 64px; flex: none; object-fit: contain; }
+.tools-home__text { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.tools-home__name { font-size: 17px; font-weight: 600; }
+.tools-home__card-desc { font-size: 13px; line-height: 1.5; color: var(--neox-fg-muted); }
+.tools-home__status { margin-top: 4px; font-size: 12.5px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.tools-home__status.is-warn { color: #b8700f; }
+.tools-home__chev { flex: none; color: var(--neox-fg-hint); opacity: 0; transition: opacity 140ms ease; }
+.tools-home__card:hover .tools-home__chev { opacity: 1; }

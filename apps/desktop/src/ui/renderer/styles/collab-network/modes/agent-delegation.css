@@ -1,0 +1,343 @@
+/* ==================== AgentDelegationCard — 复用 search-tool-card 样式 ==================== */
+
+/* 节点 icon — 紫色 */
+.agent-delegation-dot {
+  background-color: #a78bfa !important;
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.4);
+}
+
+.agent-delegation-dot svg {
+  width: 10px;
+  height: 10px;
+  color: #fff;
+}
+
+.agent-delegation-body-wrap {
+  width: 100%;
+  padding: 0;
+}
+
+/* Icon box 颜色覆盖 */
+.agent-delegation-icon-box svg {
+  color: #a78bfa !important;
+}
+
+/* AGENT label — 紫色 */
+.card-action-label.agent-delegation {
+  color: #a78bfa;
+}
+
+/* 角色名 */
+.agent-delegation-role {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: #c4b5fd;
+  background: rgba(167, 139, 250, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* PID */
+.agent-delegation-pid {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* ==================== Body ==================== */
+.agent-delegation-body {
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agent-delegation-task {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.agent-delegation-task-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.agent-delegation-model {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.agent-delegation-model-label {
+  font-weight: 600;
+  margin-right: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.agent-delegation-summary {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  padding: 8px 10px;
+  border-radius: 6px;
+  line-height: 1.5;
+
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.agent-delegation-error {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+  padding: 8px 10px;
+  border-radius: 6px;
+  line-height: 1.5;
+
+}
+
+/* ==================== Role-specific colors ==================== */
+.agent-delegation-wrap.role-plan .card-action-label.agent-delegation,
+.agent-delegation-wrap.role-plan .agent-delegation-icon-box svg { color: #c084fc !important; }
+.agent-delegation-wrap.role-plan .agent-delegation-task-inline { color: #d8b4fe; }
+
+.agent-delegation-wrap.role-shell .card-action-label.agent-delegation,
+.agent-delegation-wrap.role-shell .agent-delegation-icon-box svg { color: #fbbf24 !important; }
+.agent-delegation-wrap.role-shell .agent-delegation-task-inline { color: #fde68a; }
+
+.agent-delegation-wrap.role-code .card-action-label.agent-delegation,
+.agent-delegation-wrap.role-code .agent-delegation-icon-box svg { color: #a78bfa !important; }
+
+.agent-delegation-wrap.role-explore .card-action-label.agent-delegation,
+.agent-delegation-wrap.role-explore .agent-delegation-icon-box svg { color: #22d3ee !important; }
+.agent-delegation-wrap.role-explore .agent-delegation-task-inline { color: #a5f3fc; }
+
+/* ==================== Task inline (header) ==================== */
+.agent-delegation-task-inline {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+}
+
+/* ==================== Tool chain (completed) ==================== */
+.agent-delegation-chain {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  padding: 4px 0;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==================== Active tool highlight ==================== */
+.explore-tool-name.tool-active {
+  font-weight: 600;
+  color: #c084fc;
+}
+
+/* Status badge overrides for agent-delegation-wrap */
+.agent-delegation-wrap.completed .search-tool-status-badge {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.agent-delegation-wrap.searching .search-tool-status-badge {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+}
+
+.agent-delegation-wrap.error .search-tool-status-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* ==================== BackgroundAgentLaunchCard — 后台启动回执 ==================== */
+
+/* 左彩条用虚线, 表达"在别处跑着"的非阻塞语义 */
+.agent-delegation-wrap.bg-agent-launch-card {
+  border-left-style: dashed;
+  border-left-width: 2px;
+  border-left-color: rgba(148, 163, 184, 0.35);
+}
+
+/* @handle 徽章 — 让 agentName 一眼可识别, 便于读者复制 SendMessage 目标 */
+.bg-agent-launch-handle {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  margin: 0 8px 0 2px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: var(--neox-fs-xxs, 11px);
+  white-space: nowrap;
+}
+
+/* BACKGROUND 徽章 — 冷色蓝灰, 跟 RUNNING/DONE/ERROR 区分开 */
+.search-tool-status-badge.bg-agent-launch-badge {
+  background: rgba(99, 102, 241, 0.14);
+  color: #a5b4fc;
+}
+
+/* 通信提示行 */
+.bg-agent-launch-hint {
+  padding: 6px 12px 8px 40px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #94a3b8;
+}
+
+.bg-agent-launch-hint code {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+/* 让角色色也给 handle 和 hint 上一点点 tint */
+.agent-delegation-wrap.bg-agent-launch-card.role-plan .bg-agent-launch-handle { color: #d8b4fe; }
+.agent-delegation-wrap.bg-agent-launch-card.role-shell .bg-agent-launch-handle { color: #fde68a; }
+.agent-delegation-wrap.bg-agent-launch-card.role-code .bg-agent-launch-handle { color: #c4b5fd; }
+.agent-delegation-wrap.bg-agent-launch-card.role-explore .bg-agent-launch-handle { color: #a5f3fc; }
+
+/* ==================== TaskAgentMessageCard — 后台 task-agent "发言" ====================
+ * 结构对齐 .agent-message-card (主 AGENT 气泡):
+ * - 左彩条通过 ::before 渲染, 颜色来自 CSS custom property (每个 agent hash 分配)
+ * - 与主 AGENT 的金橙色区分, 且多个 task-agent 之间也能用不同颜色区分
+ */
+
+.task-agent-message-card::before {
+  background: linear-gradient(
+    180deg,
+    var(--task-agent-rail-from, #06b6d4),
+    var(--task-agent-rail-to, #0891b2)
+  ) !important;
+  opacity: 0.85 !important;
+}
+
+/* @agent-name — 用 agent 主色; stats 右侧挂小灰字 */
+.task-agent-message-card .assistant-inline-label {
+  display: flex !important;
+  align-items: baseline;
+  gap: 10px;
+  color: var(--task-agent-label, #22d3ee) !important;
+}
+
+.task-agent-message-card .task-agent-handle {
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.task-agent-message-card .task-agent-stats {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* 时间轴上的节点圆点 — 中性小点,左彩条已经承担识别 */
+.task-agent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #64748b;
+  opacity: 0.6;
+}
+
+/* 信息提示行 — 用于 content 缺失时的降级显示 */
+.task-agent-info-hint {
+  padding: 4px 0;
+  color: #64748b;
+  font-style: italic;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.task-agent-info-hint::before {
+  content: '💡 ';
+  margin-right: 4px;
+  opacity: 0.7;
+}
+
+/* ==================== Light theme ==================== */
+:root[data-theme="light"] .bg-agent-launch-handle {
+  background: rgba(71, 85, 105, 0.1);
+  color: #475569;
+}
+:root[data-theme="light"] .bg-agent-launch-hint {
+  color: #64748b;
+}
+:root[data-theme="light"] .bg-agent-launch-hint code {
+  background: rgba(71, 85, 105, 0.1);
+  color: #475569;
+}
+:root[data-theme="light"] .agent-delegation-wrap.bg-agent-launch-card.role-plan .bg-agent-launch-handle { color: #7c3aed; }
+:root[data-theme="light"] .agent-delegation-wrap.bg-agent-launch-card.role-shell .bg-agent-launch-handle { color: #b45309; }
+:root[data-theme="light"] .agent-delegation-wrap.bg-agent-launch-card.role-code .bg-agent-launch-handle { color: #7c3aed; }
+:root[data-theme="light"] .agent-delegation-wrap.bg-agent-launch-card.role-explore .bg-agent-launch-handle { color: #0891b2; }
+
+:root[data-theme="light"] .task-agent-message-card .task-agent-stats,
+:root[data-theme="light"] .task-agent-info-hint {
+  color: #64748b;
+}
+:root[data-theme="light"] .task-agent-dot {
+  background: #94a3b8;
+}
+
+/* Role-specific colors — light mode 需要更深的饱和色, 否则浅蓝浅紫看不清 */
+:root[data-theme="light"] .agent-delegation-role {
+  color: #5b21b6;
+  background: rgba(139, 92, 246, 0.12);
+}
+:root[data-theme="light"] .agent-delegation-wrap.role-plan .card-action-label.agent-delegation,
+:root[data-theme="light"] .agent-delegation-wrap.role-plan .agent-delegation-icon-box svg { color: #7c3aed !important; }
+:root[data-theme="light"] .agent-delegation-wrap.role-plan .agent-delegation-task-inline { color: #6d28d9; }
+
+:root[data-theme="light"] .agent-delegation-wrap.role-shell .card-action-label.agent-delegation,
+:root[data-theme="light"] .agent-delegation-wrap.role-shell .agent-delegation-icon-box svg { color: #b45309 !important; }
+:root[data-theme="light"] .agent-delegation-wrap.role-shell .agent-delegation-task-inline { color: #92400e; }
+
+:root[data-theme="light"] .agent-delegation-wrap.role-code .card-action-label.agent-delegation,
+:root[data-theme="light"] .agent-delegation-wrap.role-code .agent-delegation-icon-box svg { color: #7c3aed !important; }
+
+:root[data-theme="light"] .agent-delegation-wrap.role-explore .card-action-label.agent-delegation,
+:root[data-theme="light"] .agent-delegation-wrap.role-explore .agent-delegation-icon-box svg { color: #0891b2 !important; }
+:root[data-theme="light"] .agent-delegation-wrap.role-explore .agent-delegation-task-inline { color: #155e75; }
+
+:root[data-theme="light"] .explore-tool-name.tool-active {
+  color: #7c3aed;
+}
+
+:root[data-theme="light"] .agent-delegation-error {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+:root[data-theme="light"] .compaction-method-badge {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}

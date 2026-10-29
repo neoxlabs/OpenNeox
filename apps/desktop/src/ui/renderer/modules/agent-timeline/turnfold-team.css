@@ -1,0 +1,46 @@
+/* 折叠行上的「分工」小签: 品牌小图标叠在一起 + 「3 个子 Agent · deepseek-v4.1-flash · 46 步」
+ * 跟同一行的 +N/−N、已停止 一个量级: 不抢标题, 一眼能扫到。 */
+.atl-turnfold__team {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+  padding: 0 8px 0 5px;
+  border-radius: 10px;
+  background: var(--neox-surface-2, rgba(127, 127, 127, 0.08));
+  color: var(--neox-text-2, inherit);
+  font-size: calc(11.5px * var(--nx-fs-scale, 1));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.atl-turnfold__team.is-failed {
+  background: color-mix(in srgb, var(--neox-err, #ef4444) 10%, transparent);
+}
+.atl-turnfold__team-icons {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+}
+/* 多个模型时图标微叠, 每个带一圈底色描边隔开 */
+.atl-turnfold__team-icons > * {
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--neox-bg, #f7f5f1);
+}
+.atl-turnfold__team-icons > * + * {
+  margin-left: -4px;
+}
+.atl-turnfold__team-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.atl-turnfold__team-text em {
+  font-style: normal;
+  color: var(--neox-text-3, rgba(127, 127, 127, 0.85));
+}
+.atl-turnfold__team-text em::before {
+  content: " · ";
+}

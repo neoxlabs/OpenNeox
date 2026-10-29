@@ -1,0 +1,896 @@
+/* ==================== Memory Card ==================== */
+/* MemoryCard 复用 search-tool-card 的所有 CSS class */
+/* 下面只定义 memory 特有的样式 */
+
+.memory-body {
+  padding: 0 !important;
+}
+
+.timeline-entry.memory.card {
+  min-height: 0;
+  padding: 1px 0;
+}
+
+/* 节点紫色图标 */
+.node-dot-memory {
+  color: #a78bfa !important;
+}
+
+.node-dot-memory svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* MEMORY label — 紫色 */
+.card-action-label.memory {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.15);
+}
+
+/* Memory icon-box 颜色覆盖 (复用 search-tool-icon-box) */
+.timeline-entry.memory .search-tool-icon-box svg {
+  color: #a78bfa;
+}
+
+/* Memory card body content */
+.memory-card-error {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #fca5a5;
+  padding: 6px 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 2px solid #ef4444;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.memory-card-content {
+  display: flex;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  margin-bottom: 8px;
+}
+
+.memory-content-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.memory-content-text {
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memory-card-result {
+  margin: 0;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.write-file-code-preview {
+  margin: 0;
+  padding: 12px;
+  background: rgba(248, 250, 252, 0.4);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: #475569;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.write-file-error {
+  margin: 0;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.05);
+  color: #ef4444;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.write-file-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+/* 亮色模式 write-file-code-block */
+:root[data-theme="light"] .write-file-line-number {
+  color: #94a3b8;
+}
+
+:root[data-theme="light"] .write-file-code-line.added {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+:root[data-theme="light"] .write-file-code-line.added .write-file-line-text {
+  color: #059669;
+}
+
+:root[data-theme="light"] .write-file-code-line.removed {
+  background: rgba(244, 63, 94, 0.12);
+}
+
+:root[data-theme="light"] .write-file-code-line.removed .write-file-line-text {
+  color: #e11d48;
+}
+
+:root[data-theme="light"] .write-file-code-line.context .write-file-line-text {
+  color: #64748b;
+}
+
+/* ==================== Reconnect Card ==================== */
+.reconnect-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+/* Reconnect timeline entry - 移除外层包装的背景 */
+.timeline-entry.reconnect .timeline-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.reconnect-card {
+  border-radius: 5px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+  margin-bottom: 8px;
+  /* 与下一条 timeline entry 保持距离 */
+}
+
+.reconnect-card.pending {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.reconnect-card.complete {
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.reconnect-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.reconnect-card-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reconnect-card.pending .reconnect-card-icon {
+  background: transparent;
+}
+
+.reconnect-card.complete .reconnect-card-icon {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.reconnect-card-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* 圆环倒计时动画 */
+.reconnect-ring {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.reconnect-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.reconnect-ring-bg {
+  stroke: rgba(245, 158, 11, 0.2);
+}
+
+.reconnect-ring-progress {
+  stroke: #f59e0b;
+  transition: stroke-dasharray var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.reconnect-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  color: #f59e0b;
+  font-family: var(--font-mono);
+}
+
+.reconnect-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.reconnect-card-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.2;
+  font-weight: 600;
+  color: #f59e0b;
+  margin-bottom: 0;
+}
+
+.reconnect-card.complete .reconnect-card-title {
+  color: #22c55e;
+}
+
+.reconnect-card-error {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reconnect-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.reconnect-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+/* ==================== Error Card Compact ==================== */
+.error-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+/* Error timeline entry - 移除外层包装的背景 */
+.timeline-entry.error .timeline-body {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+/* 紧凑版 ErrorCard - 与 ReconnectCard 风格一致 */
+.error-card-compact {
+  border-radius: 5px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.error-card-compact.retryable {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.error-card-compact-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+}
+
+.error-card-compact-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.error-card-compact.retryable .error-card-compact-icon {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.error-card-compact-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.error-card-compact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.error-card-compact-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.error-card-compact.fatal .error-card-compact-title {
+  color: #ef4444;
+}
+
+.error-card-compact.retryable .error-card-compact-title {
+  color: #f59e0b;
+}
+
+.error-card-compact-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.error-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+/* Timeline entry error dot */
+.timeline-entry .node-dot.error-dot {
+  background: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* ==================== Tool Error Compact Card ==================== */
+.tool-error-compact {
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+  background: rgba(239, 68, 68, 0.04);
+  padding: 6px 10px;
+  margin: 0;
+}
+
+/* "已拒绝" 变体 — 用户主动 deny 的工具调用，不是真正的 error。
+   颜色用 JetBrains New UI 暖橙金 (#c19a6b) 区别于 error 红 (#ef4444)。 */
+.tool-error-compact.denied {
+  border-left-color: #c19a6b;
+  background: rgba(193, 154, 107, 0.06);
+}
+.tool-error-compact.denied .tool-error-compact-header svg {
+  color: #c19a6b;
+}
+.tool-error-compact.denied .tool-error-compact-title {
+  color: #c19a6b;
+}
+.node-dot.denied-dot {
+  background: #c19a6b;
+}
+
+.tool-error-compact-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tool-error-compact-header svg {
+  width: 12px;
+  height: 12px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.tool-error-compact-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: #ef4444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-error-compact-detail {
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 4px 0 0 18px;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: none;
+  border: none;
+  font-family: var(--font-mono, 'SF Mono', 'Menlo', monospace);
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* ==================== Tool Error Card (structured) ==================== */
+/* 用在 TimelineEntry 里解析 ephemeral JSON 后的卡片形态，替代 plain-text + tiny X icon */
+.tool-error-card {
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  border-left: 3px solid #ef4444;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.06) 0%, rgba(239, 68, 68, 0.025) 100%);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.tool-error-card.denied {
+  border-color: rgba(193, 154, 107, 0.28);
+  border-left-color: #c19a6b;
+  background: linear-gradient(180deg, rgba(193, 154, 107, 0.08) 0%, rgba(193, 154, 107, 0.03) 100%);
+}
+
+.tool-error-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.12);
+}
+
+.tool-error-card.denied .tool-error-card-header {
+  border-bottom-color: rgba(193, 154, 107, 0.16);
+}
+
+.tool-error-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: rgba(239, 68, 68, 0.14);
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.tool-error-card-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.tool-error-card.denied .tool-error-card-icon {
+  background: rgba(193, 154, 107, 0.16);
+  color: #c19a6b;
+}
+
+.tool-error-card-title {
+  flex: 1 1 auto;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: #ef4444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.02em;
+}
+
+.tool-error-card.denied .tool-error-card-title {
+  color: #c19a6b;
+}
+
+.tool-error-card-badge {
+  flex-shrink: 0;
+  padding: 2px 7px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.24);
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.tool-error-card.denied .tool-error-card-badge {
+  color: #c19a6b;
+  background: rgba(193, 154, 107, 0.14);
+  border-color: rgba(193, 154, 107, 0.3);
+}
+
+.tool-error-card-body {
+  padding: 8px 12px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-error-card-summary {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.5;
+  color: var(--text-primary, #d4d4d4);
+  font-weight: 500;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tool-error-card-reason {
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.45;
+  color: var(--text-secondary, #9aa0a6);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tool-error-card-path {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted, #7a7f87);
+  font-family: var(--font-mono, 'SF Mono', 'Menlo', monospace);
+  margin-top: 2px;
+}
+
+.tool-error-card-path svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.tool-error-card-path span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-error-card-hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.45;
+  color: rgba(193, 154, 107, 0.92);
+  background: rgba(193, 154, 107, 0.07);
+  border-left: 2px solid rgba(193, 154, 107, 0.4);
+  padding: 5px 8px;
+  border-radius: 0 3px 3px 0;
+  margin-top: 2px;
+}
+
+
+.code-exec-body {
+  padding: 0;
+}
+
+.code-exec-card {
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.code-exec-card:hover {
+  border-color: rgba(201, 162, 39, 0.15);
+}
+
+.code-exec-card.running {
+  animation: none;
+}
+
+.code-exec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.code-exec-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.code-exec-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.code-exec-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(201, 162, 39, 0.12);
+  color: var(--gold-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.code-exec-card.error .code-exec-icon {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.code-exec-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.code-exec-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.code-exec-action {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--gold-400);
+  opacity: 0.9;
+}
+
+.code-exec-card.error .code-exec-action {
+  color: #ef4444;
+}
+
+.code-exec-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.code-exec-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.code-exec-duration {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.code-exec-exit {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.code-exec-exit.success {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.code-exec-exit.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.code-exec-status {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.code-exec-status.completed {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.code-exec-status.running {
+  color: var(--gold-400);
+  background: rgba(var(--gold-500-rgb), 0.1);
+}
+
+.code-exec-status.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.code-exec-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.code-exec-collapse-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out), background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.code-exec-collapse-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.code-exec-collapse-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.code-exec-collapse-btn.collapsed svg {
+  transform: rotate(-90deg);
+}
+
+.code-exec-body {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.code-exec-section {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.code-exec-section:last-child {
+  border-bottom: none;
+}
+
+.code-exec-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+}
+
+.code-exec-section-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.code-exec-copy-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.code-exec-copy-btn:hover {
+  color: var(--gold-400);
+}
+
+.code-exec-copy-btn.copied {
+  color: #22c55e;
+}
+
+.code-exec-copy-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.code-exec-code,
+.code-exec-command {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--bg-code);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.code-exec-command {
+  color: var(--gold-400);
+}
+
+.code-exec-cwd {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+}
+
+.code-exec-cwd svg {
+  width: 12px;
+  height: 12px;
+}
+
+.code-exec-output {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--bg-code);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.code-exec-output.error {
+  color: #ef4444;
+}
+
+.tool-error-card-header-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.tool-error-card-header-clickable:hover {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.tool-error-card.denied .tool-error-card-header-clickable:hover {
+  background: rgba(193, 154, 107, 0.06);
+}
+
+.tool-error-card-toggle {
+  flex-shrink: 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: rgba(239, 68, 68, 0.6);
+  margin-left: 4px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.tool-error-card.denied .tool-error-card-toggle {
+  color: rgba(193, 154, 107, 0.65);
+}
+
+.tool-error-card-collapsed-body {
+  padding: 6px 12px 8px 40px;
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.45;
+  color: #b35555;
+  opacity: 0.85;
+  max-height: 32px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tool-error-card.collapsed .tool-error-card-header {
+  border-bottom: none;
+}

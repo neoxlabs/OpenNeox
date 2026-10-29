@@ -1,0 +1,163 @@
+/* Work 项目 —— 「最近」右侧下拉 / 项目浮层 / 选中项目时列表顶行 (设计稿 E8jf「Work 项目」) */
+
+/* ── 「最近」标签右侧的触发器: 默认「全部 ▾」灰字; 选了项目白底描边带图标 ── */
+.neox-wb__label.has-wp { display: flex; align-items: center; justify-content: space-between; }
+.wp-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  max-width: 180px;
+  margin-right: -6px;
+  padding: 0 6px 0 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.wp-trigger:hover, .wp-trigger.is-open { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.06)); }
+.wp-trigger.is-set { color: var(--neox-fg-primary); }
+.wp-trigger img { width: 16px; height: 16px; object-fit: contain; flex: none; }
+.wp-trigger span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wp-trigger svg { flex: none; }
+
+/* ── 选中项目时「最近」顶上一行: 图标 + 名字 + 任务数 + 项目主页 › ── */
+.wp-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  margin: 0 0 4px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1));
+  font-size: 13px;
+  color: var(--neox-fg-primary);
+}
+.wp-head img { width: 22px; height: 22px; object-fit: contain; flex: none; }
+.wp-head__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.wp-head__count { flex: none; color: var(--neox-fg-hint); }
+.wp-head__home {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.wp-head__home:hover { color: var(--neox-fg-primary); }
+.wp-empty { padding: 10px 10px 4px; font-size: 12.5px; color: var(--neox-fg-hint); }
+/* 新建按钮上的项目名 */
+.neox-sidebar__newchat-proj { font-weight: 400; color: var(--neox-fg-hint); }
+/* 「最近」行尾的灰色项目名 */
+.neox-wb-row__proj { color: var(--neox-fg-hint); }
+
+/* ── Code 工作区管理卡片 (CodeWorkspaceCard) ── */
+.cw-card { width: 320px; }
+.cw-dot { display: inline-block; flex: none; border-radius: 50%; }
+.cw-title { padding: 10px 10px 2px; font-size: 14px; font-weight: 600; }
+.cw-head--title { padding: 6px 8px 0; gap: 4px; }
+.cw-head--title .cw-title { padding: 0 2px; }
+.cw-sub { padding: 2px 10px 6px; font-size: 12px; line-height: 1.55; color: var(--neox-fg-hint); }
+.cw-ws { height: auto; min-height: 48px; padding-top: 6px; padding-bottom: 6px; }
+.cw-ws__text { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.cw-ws__members { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--neox-fg-hint); }
+.cw-head { display: flex; align-items: center; gap: 10px; padding: 8px 8px 4px; }
+.cw-back { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: none; color: var(--neox-fg-muted); cursor: pointer; }
+.cw-back:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.06)); }
+.cw-name { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 15px; font-weight: 600; color: var(--neox-fg-primary); }
+.cw-name::placeholder { font-weight: 400; color: var(--neox-fg-hint); }
+.cw-swatches { display: flex; gap: 10px; padding: 6px 10px 10px; }
+.cw-swatch { width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; }
+.cw-swatch.is-on { box-shadow: 0 0 0 2px var(--neox-bg-card, #fbfaf7), 0 0 0 4px var(--sw); }
+.cw-list { max-height: 260px; }
+.cw-check { display: inline-flex; flex: none; width: 16px; height: 16px; align-items: center; justify-content: center; border: 1.5px solid var(--neox-line, rgba(60, 45, 25, 0.25)); border-radius: 5px; }
+.cw-proj__icon { display: inline-flex; flex: none; color: var(--neox-fg-hint); }
+.cw-badge { padding: 1px 6px; border-radius: 5px; background: var(--neox-bg-hover, rgba(60, 45, 25, 0.07)); color: var(--neox-fg-muted); }
+.cw-link { border: 0; background: none; padding: 0; font: inherit; color: var(--neox-fg-hint); cursor: pointer; visibility: hidden; }
+.cw-proj:hover .cw-link { visibility: visible; }
+.cw-link:hover { color: var(--neox-fg-primary); }
+.cw-foot { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 10px; }
+.cw-foot__hint { flex: 1; font-size: 12px; color: var(--neox-fg-hint); }
+.cw-danger { border: 0; background: none; padding: 0; font: inherit; font-size: 12.5px; color: #c2410c; cursor: pointer; }
+.cw-save { height: 28px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--clay-blue, #2f6bff); font: inherit; font-size: 12.5px; color: #fff; cursor: pointer; }
+.cw-save:disabled { opacity: 0.45; cursor: default; }
+
+/* ── 浮层 ── */
+.wp-pop {
+  position: fixed;
+  z-index: 1200;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--neox-bg-card, #fbfaf7);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1)), 0 12px 32px rgba(40, 30, 15, 0.14), 0 2px 6px rgba(40, 30, 15, 0.06);
+  font-size: 13px;
+  color: var(--neox-fg-primary);
+}
+.wp-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  margin: 2px 2px 4px;
+  padding: 0 10px;
+  border-radius: 9px;
+  background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05));
+  color: var(--neox-fg-hint);
+}
+.wp-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; color: var(--neox-fg-primary); }
+.wp-search input::placeholder { color: var(--neox-fg-hint); }
+.wp-cap { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px 4px; font-size: 11.5px; color: var(--neox-fg-hint); }
+.wp-cap__pin { display: inline-flex; }
+.wp-sep { height: 1px; margin: 6px 4px; background: var(--neox-line, rgba(60, 45, 25, 0.1)); }
+.wp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.wp-row:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05)); }
+.wp-row.is-selected { background: color-mix(in srgb, var(--clay-blue, #2f6bff) 9%, transparent); }
+.wp-row.is-action { color: var(--neox-fg-muted); }
+.wp-row.is-editing { cursor: default; background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05)); }
+.wp-row__art { width: 22px; height: 22px; object-fit: contain; flex: none; }
+.wp-row__plus { width: 22px; height: 22px; flex: none; display: inline-flex; align-items: center; justify-content: center; color: var(--neox-fg-muted); }
+.wp-row__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wp-row__tail { margin-left: auto; flex: none; display: inline-flex; font-size: 12px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.wp-row.is-selected .wp-row__tail { color: var(--clay-blue, #2f6bff); }
+.wp-row__input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; color: var(--neox-fg-primary); }
+.wp-hl { font-weight: 600; color: var(--clay-blue, #2f6bff); }
+.wp-scroll { max-height: 190px; overflow-y: auto; overscroll-behavior: contain; }
+.wp-foot { display: flex; align-items: center; }
+.wp-foot > .wp-row { flex: 1; }
+.wp-foot__all {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.wp-foot__all:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05)); color: var(--neox-fg-primary); }

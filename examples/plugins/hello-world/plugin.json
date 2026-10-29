@@ -1,0 +1,16 @@
+{
+  "name": "hello-world",
+  "version": "0.1.0",
+  "description": "Minimal plugin — skill + command + tool",
+  "author": {
+    "name": "Neox Examples"
+  },
+  "category": "community",
+  "skills": [
+    "skills"
+  ],
+  "commands": [
+    "commands"
+  ],
+  "permissions": {}
+}

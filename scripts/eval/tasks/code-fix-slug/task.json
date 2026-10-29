@@ -1,0 +1,6 @@
+{
+  "title": "修 slugify 的两个 bug (有现成失败测试)",
+  "kind": "code",
+    "quick": true,
+  "timeoutSec": 600
+}

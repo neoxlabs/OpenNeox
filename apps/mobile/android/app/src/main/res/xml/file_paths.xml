@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FileProvider 可共享路径 — 目前只有 App 内更新用到.
+
+  Android 7 起给别的进程传 file:// 会抛 FileUriExposedException, 系统安装器读不到
+  下载好的 APK。必须经 FileProvider 换成 content:// 才能授权给安装器。
+
+  只暴露 external-files-path 下的 updates/ 一个子目录:
+    · 那是应用私有的外部目录 (getExternalFilesDir), 不需要任何存储权限
+    · 卸载时随应用一起清掉, 不会在用户手机里留垃圾
+    · 范围收到最小 —— 没必要把整个私有目录开放给别的进程
+-->
+<paths>
+    <external-files-path name="neox_updates" path="updates/" />
+</paths>

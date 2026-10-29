@@ -1,0 +1,22 @@
+id: prov_openai_direct
+slug: openai-direct
+display_name: OpenAI Direct
+status: active
+
+base_url: https://api.openai.com
+protocol: openai-chat
+
+auth:
+  env: OPENAI_API_KEY
+  format: bearer
+
+features:
+  cache_control_native: false   # OpenAI 自家不识别 cache_control, 用 prompt_cache_key
+  reasoning_effort_passthrough: true
+  verbosity_passthrough: true
+  prompt_cache_key_supported: true
+
+client_obligations:
+  sanitize_system_order_for_families: []
+  inject_cache_control_for_families: []
+  inject_prompt_cache_key_for_families: [openai]

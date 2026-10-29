@@ -1,0 +1,155 @@
+
+/* ===== Compact (≤900px) 占位 vars - 让其他文件能引用 ===== */
+:root {
+  --neox-density-pad-y-sm: 8px;
+  --neox-density-pad-y-md: 12px;
+  --neox-density-pad-y-lg: 16px;
+  --neox-density-pad-x-sm: 12px;
+  --neox-density-pad-x-md: 16px;
+  --neox-density-pad-x-lg: 20px;
+  --neox-density-title-sm: 14px;
+  --neox-density-title-md: 16px;
+  --neox-density-title-lg: 18px;
+  --neox-density-title-weight: 500;
+  --neox-density-gap-sm: 8px;
+  --neox-density-gap-md: 12px;
+  --neox-density-gap-lg: 16px;
+  --neox-density-input-min-h: 40px;
+  --neox-density-radius: 8px;
+  --neox-density-line-height: 1.5;
+  --neox-density-content-max-w: none;
+  --neox-density-transition: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Roomy auto 触发 — 阈值 800px (跟 hook ROOMY_BREAKPOINT_PX 保持一致).
+ *   MacBook 13" 全屏可用高 ~847px (1440×900 - macOS menubar 25), 800 让 13" 全屏触发. */
+@media (min-height: 800px) {
+  html[data-density="auto"] {
+    --neox-density-pad-y-sm: 16px;
+    --neox-density-pad-y-md: 24px;
+    --neox-density-pad-y-lg: 32px;
+    --neox-density-pad-x-sm: 20px;
+    --neox-density-pad-x-md: 32px;
+    --neox-density-pad-x-lg: 48px;
+    --neox-density-title-sm: 16px;
+    --neox-density-title-md: 22px;
+    --neox-density-title-lg: 28px;
+    --neox-density-title-weight: 600;
+    --neox-density-gap-sm: 16px;
+    --neox-density-gap-md: 24px;
+    --neox-density-gap-lg: 32px;
+    --neox-density-input-min-h: 88px;
+    --neox-density-radius: 12px;
+    --neox-density-line-height: 1.65;
+    --neox-density-content-max-w: 1100px;
+  }
+}
+
+/* 用户强制 Roomy */
+html[data-density="roomy"] {
+  --neox-density-pad-y-sm: 16px;
+  --neox-density-pad-y-md: 24px;
+  --neox-density-pad-y-lg: 32px;
+  --neox-density-pad-x-sm: 20px;
+  --neox-density-pad-x-md: 32px;
+  --neox-density-pad-x-lg: 48px;
+  --neox-density-title-sm: 16px;
+  --neox-density-title-md: 22px;
+  --neox-density-title-lg: 28px;
+  --neox-density-title-weight: 600;
+  --neox-density-gap-sm: 16px;
+  --neox-density-gap-md: 24px;
+  --neox-density-gap-lg: 32px;
+  --neox-density-input-min-h: 88px;
+  --neox-density-radius: 12px;
+  --neox-density-line-height: 1.65;
+  --neox-density-content-max-w: 1100px;
+}
+
+/* ============================================================
+ * 直接选择器 — 强 override 已有规则
+ *   用 html[data-density-active="roomy"] .atl-XXX 链 (优先级 0,0,2,0)
+ *   足以打败 .atl-XXX 直接选择器 (优先级 0,0,1,0)
+ *
+ * 平滑过渡: 切换两档时 height/padding/font-size 都带 220ms 动画
+ * ============================================================ */
+
+/* 全部 atl-* 元素切换时平滑过渡 (compact / roomy 双向) */
+.atl-header,
+.atl-header__title,
+.atl-composer,
+.atl-feed-shell,
+.atl-feed,
+.atl-message-content {
+  transition:
+    height 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    min-height 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    padding 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    margin 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    font-size 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    font-weight 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    line-height 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+html[data-density-active="roomy"] .atl-feed {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+html[data-density-active="roomy"] .atl-shell .atl-feed {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+html[data-density-active="roomy"] .atl-shell {
+  --atl-ctx-content-max: 1100px;
+}
+
+/* line-height — Roomy 模式正文读起来更松 (不放大字号, 只加行高) */
+html[data-density-active="roomy"] .atl-message-content,
+html[data-density-active="roomy"] .atl-feed p {
+  line-height: 1.7;
+}
+
+/* ============================================================
+ * Roomy-only 装饰类 (让 React 组件能用)
+ * ============================================================ */
+.neox-roomy-only {
+  display: none;
+}
+
+html[data-density-active="roomy"] .neox-roomy-only {
+  display: block;
+  animation: neox-density-fade-in 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html[data-density-active="roomy"] .neox-compact-only {
+  display: none;
+}
+
+@keyframes neox-density-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+ * Debug helper — 加个 data 属性让用户能看到当前模式
+ *   按 cmd+shift+d (TODO) 显示 indicator 在右下角
+ * ============================================================ */
+html[data-density-debug="1"]::after {
+  content: "density: " attr(data-density-active) " (pref: " attr(data-density) ")";
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(124, 92, 255, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 11px;
+  z-index: 99999;
+  pointer-events: none;
+}

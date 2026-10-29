@@ -1,0 +1,1010 @@
+
+.atl-shell {
+  position: relative;
+  display: block;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.atl-shell > .agent-timeline {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.atl-shell {
+  /* 右栏本体宽度。下限由**最长那行排得开**决定, 不是拍脑袋:
+   *   scroll 内边距(8+14) + 行内边距(16) + 图标16 + 间隙9 + "Changes"≈58
+   *   + 间隙9 + "+3198 -8"≈60  =  190。留出中文项目名/更大 diff 数字的余量 → 240。 */
+  --atl-ctx-rail-w: 240px;
+  /* 右栏离窗口右缘的内缩 —— 不要贴着边, 否则右侧看起来"挤" */
+  --atl-ctx-rail-inset: 16px;
+  --atl-ctx-gutter: 48px;
+  --atl-ctx-content-max: 1240px;
+  /* 无右栏时 lane 为 0, 公式退化成普通对称居中 */
+  --atl-ctx-lane: 0px;
+}
+
+.atl-shell.has-context-rail {
+  /* 右栏独占的那条 lane (栏宽 + 右内缩), 不含留白 —— 留白由 --atl-ctx-side 统一给, 
+     这样"内容左边的空白"和"内容与栏之间的空白"用的是同一个值。 */
+  --atl-ctx-lane: calc(var(--atl-ctx-rail-w) + var(--atl-ctx-rail-inset));
+  /* 两块空白各分这么多: 窄面板下取 gutter 兜底, 宽面板下等量变大 */
+  --atl-ctx-side: max(
+    var(--atl-ctx-gutter),
+    calc((100% - var(--atl-ctx-lane) - var(--atl-ctx-content-max)) / 2)
+  );
+  /* 所有内容元素共用的两条边距: 右边多让出一条 lane */
+  --atl-ctx-pad-left: var(--atl-ctx-side);
+  --atl-ctx-pad-right: calc(var(--atl-ctx-side) + var(--atl-ctx-lane));
+}
+
+.atl-shell > .agent-timeline,
+:root[data-theme] .atl-shell > .agent-timeline,
+:root[data-theme-pack] .atl-shell > .agent-timeline,
+:root[data-theme-pack][data-theme] .atl-shell > .agent-timeline,
+:root[data-theme-preset][data-theme] .atl-shell > .agent-timeline {
+  --atl-content-max: min(
+    var(--atl-ctx-content-max),
+    calc(100% - var(--atl-ctx-lane) - var(--atl-ctx-gutter) * 2)
+  ) !important;
+}
+
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell {
+  --atl-ctx-gutter: 20px;
+  /* 列宽已被 shell grid 卡住, 再套 1240/1100 封顶只会制造假空白 */
+  --atl-ctx-content-max: 99999px;
+}
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell > .agent-timeline,
+:root[data-theme] .neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell > .agent-timeline,
+:root[data-theme-pack] .neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell > .agent-timeline,
+:root[data-theme-pack][data-theme] .neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell > .agent-timeline,
+:root[data-theme-preset][data-theme] .neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell > .agent-timeline {
+  --atl-content-max: calc(100% - 40px) !important;
+}
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-composer,
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-approve-dock,
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-row-clamp,
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .nx-dock {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-bgtasks,
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-subagents,
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .turn-summary-bar {
+  margin-inline: 0 !important;
+  margin-left: 20px !important;
+  margin-right: 20px !important;
+}
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-row-clamp[data-atl-wide-content],
+.neox-shell.has-surface:is([data-panel-layout='split'], [data-panel-layout='swap']) .atl-shell .atl-row-clamp[data-atl-wide-content] {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .atl-composer,
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .atl-approve-dock,
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .atl-row-clamp,
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .nx-dock {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .atl-bgtasks,
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .atl-subagents,
+.neox-shell.has-surface .atl-shell .agent-timeline--empty-focus .turn-summary-bar {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.neox-shell.has-surface .atl-shell .atl-scroll-bottom {
+  right: 28px;
+}
+.neox-shell.has-surface .atl-shell .nx-dock__menu {
+  right: 20px;
+}
+
+/* ── 内容列: 居中在非 rail 区 ────────────────────────────────────────────
+ * padding 策略 (A) —— 用于自身没有卡片视觉的容器, 见 agent-timeline.css 顶部注释。
+ * 百分比都按各自父级(整幅 timeline 宽)解析, 所以三者外缘严丝合缝。 */
+.atl-shell.has-context-rail .atl-composer,
+.atl-shell.has-context-rail .atl-approve-dock,
+.atl-shell.has-context-rail .atl-row-clamp,
+.atl-shell.has-context-rail .nx-dock {
+  padding-left: var(--atl-ctx-pad-left) !important;
+  padding-right: var(--atl-ctx-pad-right) !important;
+}
+
+/* margin 策略 (B) —— 自身就是卡片的元素 */
+.atl-shell.has-context-rail .atl-bgtasks,
+.atl-shell.has-context-rail .atl-subagents,
+.atl-shell.has-context-rail .turn-summary-bar {
+  margin-inline: 0 !important;
+  margin-left: var(--atl-ctx-pad-left) !important;
+  margin-right: var(--atl-ctx-pad-right) !important;
+}
+
+.atl-shell.has-context-rail .atl-row-clamp[data-atl-wide-content],
+.atl-shell.has-context-rail .atl-row-clamp[data-atl-wide-content] {
+  padding-left: var(--atl-ctx-pad-left) !important;
+  padding-right: var(--atl-ctx-pad-right) !important;
+}
+
+/* 右锚元素: 原公式是对称居中 (100%-max)/2, 在 lane 模式下会跑到右栏底下去 */
+.atl-shell.has-context-rail .atl-scroll-bottom {
+  right: calc(var(--atl-ctx-pad-right) + 8px);
+}
+.atl-shell.has-context-rail .nx-dock__menu {
+  right: var(--atl-ctx-pad-right);
+}
+
+/* Code 空态: 固定列宽那套自己居中, 只需要把整块舞台按 lane 偏一下 */
+.atl-shell.has-context-rail .agent-timeline--empty-focus .atl-empty-stage {
+  padding-left: var(--atl-ctx-pad-left);
+  padding-right: var(--atl-ctx-pad-right);
+  box-sizing: border-box;
+}
+.atl-shell.has-context-rail .agent-timeline--empty-focus .atl-composer,
+.atl-shell.has-context-rail .agent-timeline--empty-focus .atl-approve-dock,
+.atl-shell.has-context-rail .agent-timeline--empty-focus .nx-dock {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.atl-shell.has-context-rail .agent-timeline--empty-focus .atl-bgtasks,
+.atl-shell.has-context-rail .agent-timeline--empty-focus .atl-subagents {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ── 右栏本体 ───────────────────────────────────────────────────────── */
+.atl-ctx-rail {
+  position: absolute;
+  /* 让开会话标题栏(.atl-header 44px), 别跟 IDE/⋯ 那排按钮撞在一起 */
+  top: var(--atl-ctx-rail-top, 44px);
+  right: var(--atl-ctx-rail-inset, 16px);
+  bottom: 0;
+  width: var(--atl-ctx-rail-w, 240px);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 0 !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  outline: none;
+  background: transparent !important;
+  color: var(--neox-fg-primary, #e8e8e8);
+  z-index: 6;
+  /* 整栏不吃事件, 只有真正有内容的 section 打开 —— 否则右侧一整条空白会把
+     timeline 的点击/选中全挡掉 (栏是透明的, 用户根本看不出被挡)。 */
+  pointer-events: none;
+}
+
+.atl-ctx-rail,
+.atl-ctx-rail * {
+  border-color: transparent !important;
+}
+
+.atl-ctx-rail__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px 14px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 18px;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  pointer-events: none;
+  scrollbar-width: none;
+}
+.atl-ctx-rail__scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.atl-ctx-rail__section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  pointer-events: auto; /* section 是 shrink-wrap 的, 只圈住真有内容的那几行 */
+}
+
+.atl-ctx-rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 2px 8px 6px;
+  margin: 0;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  color: var(--neox-fg-muted, #66707a);
+}
+
+.atl-ctx-rail__head-label {
+  font-size: 12px;
+  font-weight: var(--neox-fw-medium, 500);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atl-ctx-rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border: 0 !important;
+  background: transparent;
+}
+
+.atl-ctx-rail__list > li {
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  list-style: none;
+  background: transparent;
+}
+
+.atl-ctx-rail__row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 28px;
+  padding: 4px 8px;
+  margin: 0;
+  border: 0 !important;
+  border-radius: 6px;
+  box-shadow: none !important;
+  background: transparent;
+  color: var(--neox-fg-secondary, #b0b0b0);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease),
+    color var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+
+.atl-ctx-rail__row:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 7%, transparent);
+  color: var(--neox-fg-primary, #e8e8e8);
+}
+
+.atl-ctx-rail__row.is-active {
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 11%, transparent);
+  color: var(--neox-fg-primary, #e8e8e8);
+}
+
+.atl-ctx-rail__row.is-fresh {
+  position: relative;
+  color: var(--neox-fg-primary, #e8e8e8);
+  animation: atl-rail-fresh-bg 1.6s var(--neox-ease-out, ease) 3;
+}
+.atl-ctx-rail__row.is-fresh .atl-ctx-rail__label {
+  font-weight: var(--neox-fw-medium, 500);
+}
+.atl-ctx-rail__row.is-fresh::after {
+  content: '';
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--neox-primary-600);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--neox-primary-600) 55%, transparent);
+  animation: atl-rail-fresh-ping 1.6s var(--neox-ease-out, ease) 3;
+}
+@keyframes atl-rail-fresh-ping {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--neox-primary-600) 55%, transparent); }
+  70%  { box-shadow: 0 0 0 7px color-mix(in srgb, var(--neox-primary-600) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes atl-rail-fresh-bg {
+  0%, 100% { background: transparent; }
+  40%      { background: color-mix(in srgb, var(--neox-primary-600) 12%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atl-ctx-rail__row.is-fresh,
+  .atl-ctx-rail__row.is-fresh::after { animation: none; }
+}
+
+/* 前 3 次的引导气泡: 挂在那一行的左边 (右栏贴着窗口右缘, 往左才有地方), 箭头指向行。
+ * 画在 body 上 (fixed, 位置由 RailHintBubble 量出来) —— 栏内滚动区横向是裁掉的。 */
+.atl-ctx-rail__item {
+  position: relative;
+}
+.atl-ctx-rail__hint {
+  position: fixed;
+  z-index: 9000;
+  transform: translateY(-50%);
+  padding: 7px 11px;
+  border-radius: 8px;
+  background: var(--neox-primary-600);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--neox-primary-600) 28%, transparent);
+  pointer-events: none;
+  animation: atl-rail-hint-in 260ms var(--neox-ease-out, ease) both;
+}
+.atl-ctx-rail__hint::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  transform: translateY(-50%) rotate(45deg);
+  border-radius: 1px;
+}
+@keyframes atl-rail-hint-in {
+  from { opacity: 0; transform: translate(6px, -50%); }
+  to   { opacity: 1; transform: translate(0, -50%); }
+}
+
+.atl-ctx-rail__icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 0.85;
+}
+/* 插件面板行用插件自己的 logo —— 彩色图标不跟着行的 0.85 透明度发灰 */
+.atl-ctx-rail__appicon {
+  width: 14px;
+  height: 14px;
+  display: block;
+  object-fit: contain;
+  border-radius: 3px;
+}
+.atl-ctx-rail__icon.is-app-icon { opacity: 1; }
+
+/* agent 建 tab / 流式生成中: 图标右下角绿点. 点行才展开右栏, 角标替代"自动弹出 Surface". */
+.atl-ctx-rail__live {
+  position: absolute;
+  right: -2px;
+  bottom: -1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--neox-diff-add, #3dd68c);
+  box-shadow: 0 0 0 1.5px var(--neox-bg, #1a1a1a);
+  pointer-events: none;
+}
+
+.atl-ctx-rail__label {
+  flex: 1 1 auto;
+  /* 不给 0: 否则 diff 徽标(flex:0 0 auto)会把标签一路挤成 "C..", 标签才是这行的主体 */
+  min-width: 3.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atl-ctx-rail__count {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--neox-fg-hint, #8a8a8a);
+  font-variant-numeric: tabular-nums;
+}
+
+.atl-ctx-rail__diff {
+  /* 允许收缩: 极端 diff 数字下宁可数字被裁, 也不让 "Changes" 变成 "C.." */
+  flex: 0 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-flex;
+  gap: 6px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--neox-fw-medium, 500);
+}
+
+.atl-ctx-rail__diff-add {
+  color: var(--neox-diff-add, #3fb950);
+}
+
+.atl-ctx-rail__diff-del {
+  color: var(--neox-diff-del, #f85149);
+}
+
+:root[data-theme="light"] .atl-ctx-rail__diff-add {
+  color: #16a34a;
+}
+
+:root[data-theme="light"] .atl-ctx-rail__diff-del {
+  color: #dc2626;
+}
+
+.atl-ctx-rail__empty {
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--neox-fg-hint, #8a8a8a);
+  border: 0 !important;
+}
+
+/* ── 悬停预览卡 ─────────────────────────────────────────────────────────
+ * portal 到 body, 所以定位是 fixed 且**不能**继承右栏的任何盒模型。
+ * 它替代了行上原来的 title 原生 tooltip: 同样是"不打开就想知道里面什么情况",
+ * 但原生 tooltip 只能给一行纯文本, 给不了"服务在不在跑 / 改了哪几个文件"。 */
+.atl-ctx-card {
+  position: fixed;
+  z-index: 60;
+  box-sizing: border-box;
+  padding: 12px 14px 10px;
+  /* 材质走 dock 那套 token —— 这个 app 里所有浮层"必须看起来是一家人"(dock.css 顶部
+   * 那条注释就是用户提的)。自己另调一套半透明玻璃, 换主题包就会跟 composer 差半档。
+   * 两层背景: 下面一层不透明基底负责挡住底下的正文, 上面一层才是观感。 */
+  border-radius: var(--nx-dock-card-radius, 14px);
+  border: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.1));
+  background-color: var(--nx-dock-bg-solid, var(--neox-bg-card, #1e1e1e));
+  background-image: linear-gradient(var(--nx-dock-bg), var(--nx-dock-bg));
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  /* 悬浮卡要"浮起来", 所以比 dock 药丸多一道外投影 + 顶部内高光(玻璃的厚度感) */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 40px color-mix(in srgb, var(--neox-shadow-color, #000) 30%, transparent),
+    0 2px 8px color-mix(in srgb, var(--neox-shadow-color, #000) 18%, transparent);
+  color: var(--nx-dock-fg-strong, var(--neox-fg-primary, #e8e8e8));
+  font-size: 12px;
+  line-height: 1.5;
+  animation: atl-ctx-card-in var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease-out);
+}
+
+@keyframes atl-ctx-card-in {
+  from { opacity: 0; transform: translateY(3px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atl-ctx-card { animation: none; }
+}
+
+.atl-ctx-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 6px;
+}
+
+.atl-ctx-card__title {
+  font-size: 13px;
+  font-weight: var(--neox-fw-semibold, 600);
+  letter-spacing: -0.005em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 头部右侧的一句话总量: "改了多少 / 几个在跑 / 几个标签" —— 卡片必须一眼回答这个 */
+.atl-ctx-card__stat {
+  flex: 0 0 auto;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-hint, #8a8a8a);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 副行: 分支 / 工作区这类"上下文坐标" */
+.atl-ctx-card__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.08));
+  font-size: var(--neox-fs-xs, 12px);
+}
+.atl-ctx-card__branch {
+  flex: 0 0 auto;
+  max-width: 45%;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 8%, transparent);
+  color: var(--neox-fg-secondary, #b0b0b0);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atl-ctx-card__dim {
+  min-width: 0;
+  color: var(--neox-fg-hint, #8a8a8a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.atl-ctx-card__sect {
+  margin: 2px 0 4px;
+  font-size: 11px;
+  color: var(--neox-fg-hint, #8a8a8a);
+}
+
+.atl-ctx-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.atl-ctx-card__kv {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  min-width: 0;
+}
+.atl-ctx-card__k {
+  flex: 0 0 auto;
+  color: var(--neox-fg-hint, #8a8a8a);
+}
+.atl-ctx-card__v {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--neox-fg-secondary, #b0b0b0);
+  overflow-wrap: anywhere;
+}
+.atl-ctx-card__v.is-mono,
+.atl-ctx-card__item-main.is-mono,
+.atl-ctx-card__branch.is-mono,
+.atl-ctx-card__dim.is-mono {
+  font-family: var(--neox-font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.atl-ctx-card__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.atl-ctx-card__item {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  color: var(--neox-fg-secondary, #b0b0b0);
+}
+.atl-ctx-card__item.is-clickable {
+  margin: 0 -6px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.atl-ctx-card__item.is-clickable:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 9%, transparent);
+}
+.atl-ctx-card__item.is-clickable:hover .atl-ctx-card__path-base {
+  color: var(--neox-fg-primary, #e8e8e8);
+}
+.atl-ctx-card__item.is-active .atl-ctx-card__path-base {
+  color: var(--neox-fg-primary, #e8e8e8);
+}
+
+.atl-ctx-card__ficon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neox-fg-hint, #8a8a8a);
+  transform: translateY(2px);   /* baseline 对齐的行里图标要压下来一点 */
+}
+.atl-ctx-card__ficon svg { display: block; }
+
+/* 状态点: 只在"不寻常"的状态挂 (未跟踪/冲突/已暂存)。常态"已修改"不给点 ——
+ * 一列里每行都挂同样的记号等于没有记号。 */
+.atl-ctx-card__dot-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--nx-dock-bg-solid, var(--neox-bg-card, #1b1b1d));
+}
+.atl-ctx-card__dot-badge.is-staged { background: var(--neox-diff-add, #3fb950); }
+.atl-ctx-card__dot-badge.is-untracked { background: var(--neox-warning-500, #d99a2b); }
+.atl-ctx-card__dot-badge.is-conflict { background: var(--neox-diff-del, #f85149); }
+
+/* 文件名亮 + 目录暗: 中间截断的整路径两头都认不出来, 文件名才是身份 */
+.atl-ctx-card__path {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  overflow: hidden;
+}
+.atl-ctx-card__path-base {
+  flex: 0 1 auto;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--neox-fg-secondary, #b0b0b0);
+  font-size: 12px;
+  font-weight: var(--neox-fw-medium, 500);
+}
+.atl-ctx-card__path-dir {
+  /* shrink 权重拉到 200: flex 按 (基准宽 × shrink) 按比例分摊压缩量, 给路径一个
+   * 压倒性的权重, 它就会一路让到只剩省略号, 而文件名几乎不动。
+   * 路径不能整条删掉 —— 同名文件 (三个 Versions/Current) 全靠它区分。 */
+  flex: 0 200 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--neox-fg-hint, #8a8a8a);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.atl-ctx-card__item-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atl-ctx-card__item-tail {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: 7px;
+  color: var(--neox-fg-hint, #8a8a8a);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.atl-ctx-card__diff {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: 5px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--neox-fw-medium, 500);
+}
+.atl-ctx-card__diff .is-add { color: var(--neox-diff-add, #3fb950); }
+.atl-ctx-card__diff .is-del { color: var(--neox-diff-del, #f85149); }
+
+.atl-ctx-card__dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--neox-fg-hint, #8a8a8a);
+  transform: translateY(-1px);
+}
+.atl-ctx-card__dot.is-running {
+  background: var(--neox-diff-add, #3fb950);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--neox-diff-add, #3fb950) 18%, transparent);
+}
+
+.atl-ctx-card__more,
+.atl-ctx-card__empty {
+  color: var(--neox-fg-hint, #8a8a8a);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.atl-ctx-card__hint {
+  margin-top: 10px;
+  padding-top: 7px;
+  border-top: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.08));
+  color: var(--neox-fg-hint, #8a8a8a);
+  font-size: 11px;
+}
+
+.atl-ctx-card__shot {
+  margin: 0 0 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.08));
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 4%, transparent);
+  /* 固定宽高比: 图还没到时不会先撑一个高度再跳 */
+  aspect-ratio: 16 / 10;
+}
+.atl-ctx-card__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* 顶部对齐 —— 网页的信息都在上半屏, 居中裁会把标题裁掉 */
+  object-fit: cover;
+  object-position: top center;
+  user-select: none;
+}
+.atl-ctx-card__shot.is-loading {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--neox-fg-primary, #fff) 4%, transparent) 30%,
+    color-mix(in srgb, var(--neox-fg-primary, #fff) 9%, transparent) 50%,
+    color-mix(in srgb, var(--neox-fg-primary, #fff) 4%, transparent) 70%
+  );
+  background-size: 200% 100%;
+  animation: atl-ctx-shot-shimmer 1.2s ease-in-out infinite;
+}
+@keyframes atl-ctx-shot-shimmer {
+  from { background-position: 160% 0; }
+  to { background-position: -60% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atl-ctx-card__shot.is-loading { animation: none; }
+}
+
+/* 已删除的产物: 保留一行让"东西没了"这件事可见, 但不给点 */
+.atl-ctx-rail__row.is-gone {
+  cursor: default;
+  opacity: 0.5;
+}
+.atl-ctx-rail__row.is-gone .atl-ctx-rail__label {
+  text-decoration: line-through;
+}
+.atl-ctx-rail__row.is-gone:hover {
+  background: transparent;
+}
+
+.atl-ctx-rail__collapse {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin: -2px -4px -2px 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--neox-fg-hint, #8a8a8a);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease),
+    background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.atl-ctx-rail:hover .atl-ctx-rail__collapse,
+.atl-ctx-rail__collapse:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.atl-ctx-rail__collapse:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 10%, transparent);
+  color: var(--neox-fg-primary, #e8e8e8);
+}
+
+/* ── 藏起来之后的回程: 右边缘透明热区, 靠近才浮出 « ──────────────────
+ * 这是**唯一**能把栏找回来的入口。热区本身不可见但要够宽(16px)才好命中;
+ * 把手只在 hover/focus 时显形, 平时一点视觉噪音都不留。 */
+.atl-ctx-reveal {
+  position: absolute;
+  top: var(--atl-ctx-rail-top, 44px);
+  right: 11px;
+  bottom: 0;
+  width: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 6;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.atl-ctx-reveal__chev {
+  /* 位置钉在顶端 —— 跟展开态那颗 » 同一条高度, 收起/展开视觉上是同一个东西在原地翻面。
+   * 不跟光标跑: 常驻显示的东西再跟着鼠标动就成了干扰。 */
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: var(--neox-fg-hint, #8a8a8a);
+  background: transparent;
+  /* 常驻但压得很淡 —— 平时几乎不占注意力, 需要时一眼能找到 */
+  opacity: 0.42;
+  transition: opacity var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease),
+    background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease),
+    color var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.atl-ctx-reveal:hover .atl-ctx-reveal__chev,
+.atl-ctx-reveal:focus-visible .atl-ctx-reveal__chev {
+  opacity: 1;
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 10%, transparent);
+  color: var(--neox-fg-primary, #e8e8e8);
+}
+
+
+.atl-ctx-rail__badge {
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 5px;
+  color: var(--neox-fg-hint, #8a8a8a);
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 8%, transparent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.atl-ctx-rail__badge.is-streaming {
+  color: var(--neox-primary-600, #7c5cff);
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 14%, transparent);
+  animation: atl-ctx-badge-pulse 1.4s ease-in-out infinite;
+}
+@keyframes atl-ctx-badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atl-ctx-rail__badge.is-streaming { animation: none; }
+}
+
+/* 卡片头部的"渲染中"跟角标同色, 两处指同一件事就不该长得像两件事 */
+.atl-ctx-card__stat.is-live {
+  color: var(--neox-primary-600, #7c5cff);
+}
+
+/* 进度行: 只报"已生成多少", 不画百分比进度条 —— 流式没有总量, 分母是编的 */
+.atl-ctx-card__prog {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary, #b0b0b0);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 8px;
+}
+
+/* 内容摘录。等宽 + 不换行 + 横向裁掉: 折行会把一段 markdown 撑成十几行,
+ * 卡片就变成了"半个右栏", 那还不如直接点开。 */
+.atl-ctx-card__excerpt {
+  margin: 0;
+  padding: 8px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.08));
+  background: color-mix(in srgb, var(--neox-fg-primary, #fff) 4%, transparent);
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--neox-fg-secondary, #b0b0b0);
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 168px;
+}
+
+/* 流式尾部: 上边缘渐隐, 表示"上面还有, 这是正在写的那几行" */
+.atl-ctx-card__excerpt.is-tail {
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22px);
+}
+
+/* 浅色主题: 4% 白在白底上等于没有, 底色和描边都要换成"压暗"的一侧 */
+:root[data-theme="light"] .atl-ctx-card__excerpt {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111) 4%, transparent);
+  border-color: color-mix(in srgb, var(--neox-fg-primary, #111) 12%, transparent);
+}
+:root[data-theme="light"] .atl-ctx-rail__badge {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111) 7%, transparent);
+}
+
+.atl-ctx-card__item.is-peeking {
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  border-radius: 6px;
+}
+.atl-ctx-diff {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.08));
+}
+.atl-ctx-diff__head {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  margin-bottom: 5px;
+  font-variant-numeric: tabular-nums;
+}
+.atl-ctx-diff__body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--neox-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 10.5px;
+  line-height: 1.5;
+  white-space: pre;
+  max-height: 240px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 6px;
+}
+/* 滚动条压细 —— 它出现在一张悬浮卡里, 不该比内容还显眼 */
+.atl-ctx-diff__body::-webkit-scrollbar { width: 8px; height: 8px; }
+.atl-ctx-diff__body::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.atl-ctx-diff__body::-webkit-scrollbar-track { background: transparent; }
+/* 整行着底 —— diff 的语义是"这一行怎么了", 只给文字上色读不出块状变化 */
+/* 行不再截断 —— 横向能滚了, 截断只会让人看不到行尾 */
+.atl-ctx-diff__l { padding: 0 6px; flex: none; }
+.atl-ctx-diff__l.is-add {
+  background: color-mix(in srgb, var(--neox-diff-add, #3fb950) 14%, transparent);
+  color: var(--neox-fg-primary);
+}
+.atl-ctx-diff__l.is-del {
+  background: color-mix(in srgb, var(--neox-diff-del, #f85149) 14%, transparent);
+  color: var(--neox-fg-primary);
+}
+.atl-ctx-diff__l.is-ctx { color: var(--neox-fg-secondary); }
+.atl-ctx-diff__l.is-meta { color: var(--neox-fg-hint); }
+/* 浅色主题: 暗底选的 diff 色在白底上偏艳, 用已有的浅色档 (跟右栏 +N −M 同源) */
+:root[data-theme="light"] .atl-ctx-diff__l.is-add { background: color-mix(in srgb, #16a34a 12%, transparent); }
+:root[data-theme="light"] .atl-ctx-diff__l.is-del { background: color-mix(in srgb, #dc2626 12%, transparent); }
+.atl-ctx-diff__loading {
+  height: 60px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+
+.atl-ctx-card__actions {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--nx-dock-line, rgba(255, 255, 255, 0.08));
+  display: flex;
+  gap: 8px;
+}
+.atl-ctx-card__action {
+  appearance: none;
+  flex: 1 1 auto;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  color: var(--neox-fg-secondary);
+  font-family: inherit;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease),
+    color var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease);
+}
+.atl-ctx-card__action:hover {
+  background: color-mix(in srgb, var(--neox-primary-500, #4f7cff) 14%, transparent);
+  color: var(--neox-fg-primary);
+}
+.atl-ctx-card__action:active { transform: translateY(0.5px); }

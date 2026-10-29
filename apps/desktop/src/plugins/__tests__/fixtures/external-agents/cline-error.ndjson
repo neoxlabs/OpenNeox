@@ -1,0 +1,6 @@
+{"ts":"2026-09-26T15:19:12.073Z","type":"hook_event","hookEventName":"agent_start","agentId":"agent_1790435952001_g3u78q","taskId":"conv_1790435952069_lixqldd","parentAgentId":null}
+{"ts":"2026-09-26T15:19:12.075Z","type":"agent_event","event":{"type":"iteration_start","iteration":1}}
+{"ts":"2026-09-26T15:19:13.249Z","type":"error","message":"hook dispatch failed: session.hook requires a valid hook event payload"}
+{"ts":"2026-09-26T15:19:13.408Z","type":"agent_event","event":{"type":"done","reason":"error","text":"Upstream request failed: Model is unavailable.","iterations":1,"usage":{"inputTokens":0,"outputTokens":0,"cacheReadTokens":0,"cacheWriteTokens":0,"totalCost":0}}}
+{"ts":"2026-09-26T15:19:13.409Z","type":"run_result","finishReason":"error","iterations":1,"usage":{"inputTokens":0,"outputTokens":0,"cacheReadTokens":0,"cacheWriteTokens":0,"totalCost":0},"aggregateUsage":{"inputTokens":0,"outputTokens":0,"cacheReadTokens":0,"cacheWriteTokens":0,"totalCost":0},"durationMs":1180,"text":"Upstream request failed: Model is unavailable.","model":{"id":"no-such-model","provider":"openai-compatible"}}
+{"ts":"2026-09-26T15:19:13.409Z","type":"error","message":"Upstream request failed: Model is unavailable."}

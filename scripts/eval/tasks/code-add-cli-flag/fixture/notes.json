@@ -1,0 +1,5 @@
+[
+  { "id": 1, "text": "买牛奶", "tag": "life", "done": false },
+  { "id": 2, "text": "修 bug", "tag": "work", "done": false },
+  { "id": 3, "text": "写周报", "tag": "work", "done": true }
+]

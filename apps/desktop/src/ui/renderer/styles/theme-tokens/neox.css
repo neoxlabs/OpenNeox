@@ -1,0 +1,582 @@
+/* ============================================================
+ * Neox Design Tokens — v2 (Mac Light, cold-white + single-purple)
+ *
+ * 对齐设计稿 design/*_15_07_10 (2).png — 冷白画布 · 紫 Agent · 绿/红/灰状态胶囊
+ * 设计规范: 字阶 12/13/14/16/18 · 8 px 节奏 · 圆角 6/10/14 · 三档阴影
+ *
+ * 约束:
+ *   - 本文件为 Light 默认主题 (暂未做 Dark, 留下一段)
+ *   - 底部保留 legacy --bg-/--text-/--border- 映射, 让老卡片不炸
+ *   - 紫 --neox-primary-* 保留原键名, 值换掉 (之前 indigo #4F46E5 → 设计图 violet #6E56FF)
+ * ============================================================ */
+
+@font-face {
+  font-family: 'Neox Rounded';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../assets/fonts/resource-han-rounded/ResourceHanRoundedCN-Regular.subset.woff2') format('woff2');
+  unicode-range: U+0-2017, U+201E-10FFFF;
+}
+@font-face {
+  font-family: 'Neox Rounded';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../../assets/fonts/resource-han-rounded/ResourceHanRoundedCN-Medium.subset.woff2') format('woff2');
+  unicode-range: U+0-2017, U+201E-10FFFF;
+}
+@font-face {
+  font-family: 'Neox Rounded';
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url('../../assets/fonts/resource-han-rounded/ResourceHanRoundedCN-Bold.subset.woff2') format('woff2');
+  unicode-range: U+0-2017, U+201E-10FFFF;
+}
+
+:root,
+:root[data-theme="light"],
+:root[data-theme="dark"],
+:root[data-theme="midnight"],
+:root[data-theme="high-contrast"] {
+  /* ============================================================
+   * Canvas / Surfaces — 暖石色 (Cursor 取向: 主区最亮, 侧栏略沉)
+   * ============================================================ */
+  --neox-bg-canvas:    #FAFAF9;   /* 主区画布 · 最亮 */
+  --neox-bg-panel:     #F2F2F0;   /* Sidebar / 次级面板 */
+  --neox-bg-card:      #FFFFFF;   /* 卡片面 (主题包里是半透明的玻璃面) */
+  --neox-bg-elevated:  #FFFFFF;   /* 悬浮层的**不透明**面 — 下拉/菜单/气泡/弹窗 */
+  --neox-bg-muted:     #EEEEEC;   /* 标签 / Kbd 软底 */
+  --neox-bg-hover:     rgba(28, 25, 23, 0.055);
+  --neox-bg-sunken:    #F0F0EE;   /* 凹陷底 · 代码块浅底 */
+
+  --neox-bg-subtle:    color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+
+  /* ============================================================
+   * Primary — 紫 (Agent / 主操作 / 进行中 / 选中)
+   * ============================================================ */
+  --neox-primary-900:  #3A2EAE;
+  --neox-primary-800:  #4A3BD1;
+  --neox-primary-700:  #5A44E0;   /* hover / pressed */
+  --neox-primary-600:  #6E56FF;
+  --neox-primary-500:  #8974FF;
+  --neox-primary-400:  #A697FF;
+  --neox-primary-300:  #C4B9FF;
+  --neox-primary-200:  #DCD5FF;
+  --neox-primary-100:  #EBE5FF;   /* 胶囊软底 */
+  --neox-primary-50:   #F1EDFF;
+  --neox-primary-25:   #F6F3FF;   /* 极淡 · 仅 hover 打底 */
+  --neox-primary-ring: rgba(110, 86, 255, .18);  /* 装饰性光晕 / 柔边框, **不是**焦点环 */
+
+  --neox-focus-ring: color-mix(in srgb, var(--neox-fg-primary) 55%, transparent);
+
+  /* ============================================================
+   * Semantic — 状态胶囊 / 状态点
+   *   运行中(绿) / 暂停(灰) / 停止(红) / 已完成(绿)
+   * ============================================================ */
+  --neox-ok:           #22C55E;   /* 运行中 · 已完成 · online dot */
+  --neox-ok-soft:      #E8F7EE;
+  --neox-ok-ink:       #0F7A3A;   /* 绿底上的深绿字 */
+
+  --neox-warn:         #F59E0B;
+  --neox-warn-soft:    #FEF4E1;
+  --neox-warn-ink:     #B06B08;
+
+  --neox-err:          #EF4444;
+  --neox-err-soft:     #FDECEC;
+  --neox-err-ink:      #B21F1F;
+
+  --neox-info:         #3B82F6;
+  --neox-info-soft:    #E6EEFE;
+  --neox-info-ink:     #1E40AF;
+
+  /* ============================================================
+   * Ink / Text
+   * ============================================================ */
+  --neox-fg-primary:   #1C1917;
+  --neox-fg-secondary: #57534E;
+  --neox-fg-muted:     #78716C;
+  --neox-fg-hint:      #A8A29E;
+  --neox-fg-invert:    #FFFFFF;
+  --neox-fg-code:      #3A2EAE;
+  /* 阶梯的第三档在本设计系统里叫 **muted**, 从来没有过 `tertiary` 这个名字。
+   * 但全仓有 45 处写了 var(--neox-fg-tertiary) —— 其中 8 处没写兜底值,
+   * 那些声明在浏览器里是 invalid at computed-value time, 直接作废:
+   *   · color 作废 → 退成继承, 本该弱化的字被渲染成正文色;
+   *   · .atl-activity-child__status 那个 6px 状态点的 background 作废 → 点根本没画出来。
+   * 定成 muted 的别名 = 交付作者本来想要的第三档, 而且**跟着主题包走**
+   * (主题包只写 muted, 写死字面量会在每个暗色包里错色)。 */
+  --neox-fg-tertiary:  var(--neox-fg-muted);
+
+  --neox-ink-soft:     var(--neox-fg-secondary);
+  --neox-ink-faint:    var(--neox-fg-hint);
+
+  /* Chrome CTA — 发送 / 主操作走近黑, Agent 状态仍用 primary 紫 */
+  --neox-cta:          #1C1917;
+  --neox-cta-hover:    #0C0A09;
+  --neox-cta-disabled: #D6D3D1;
+
+  /* ============================================================
+   * Lines / Borders — 低对比暖灰描边 (少画硬线)
+   * ============================================================ */
+  --neox-line:         rgba(28, 25, 23, 0.08);
+  --neox-line-soft:    rgba(28, 25, 23, 0.05);
+  --neox-line-strong:  rgba(28, 25, 23, 0.12);
+
+  /* ============================================================
+   * Radius (6 / 10 / 14 三档 + xl + pill)
+   * ============================================================ */
+  --neox-radius-xs:    6px;
+  --neox-radius-sm:    8px;
+  --neox-radius-md:    10px;
+  --neox-radius-lg:    14px;
+  --neox-radius-xl:    18px;
+  --neox-radius-pill:  999px;
+
+  --neox-space-0:   0;
+  --neox-space-1:   4px;
+  --neox-space-2:   8px;
+  --neox-space-3:   12px;
+  --neox-space-4:   16px;
+  --neox-space-5:   20px;
+  --neox-space-6:   24px;
+  --neox-space-8:   32px;
+  --neox-space-10:  40px;
+  --neox-space-12:  48px;
+
+  /* 行高阶梯 —— 列表行/导航项的高度只允许从这三档里取 */
+  --neox-row-sm:    28px;
+  --neox-row-md:    34px;
+  --neox-row-lg:    40px;
+
+  /* ============================================================
+   * Shadows — 弥散浮层 (Cursor 取向: 远模糊 + 低 alpha)
+   * ============================================================ */
+  --neox-shadow-1:     0 1px 2px rgba(28, 25, 23, .04);
+  --neox-shadow-2:     0 1px 2px rgba(28, 25, 23, .04),
+                       0 8px 24px rgba(28, 25, 23, .06);
+  --neox-shadow-3:     0 12px 40px rgba(28, 25, 23, .10);
+  --neox-shadow-composer:
+                       0 1px 2px rgba(28, 25, 23, .04),
+                       0 12px 32px rgba(28, 25, 23, .08);
+  --neox-shadow-composer-focus:
+                       0 1px 2px rgba(28, 25, 23, .05),
+                       0 16px 40px rgba(28, 25, 23, .10);
+  --neox-shadow-focus: 0 0 0 3px var(--neox-focus-ring);
+
+  /* 兼容旧变量名 */
+  --neox-shadow-card:  var(--neox-shadow-2);
+  --neox-shadow-pop:   var(--neox-shadow-3);
+  --neox-shadow-float: var(--neox-shadow-3);
+
+  /* ============================================================
+   * Typography — Mac 原生小字号
+   *   阶梯: 11 / 12 / 13 / 14 / 16 / 18
+   *   主力: 13 (列表 / 正文 / 按钮), 16 (页标题)
+   * ============================================================ */
+  --neox-font-sans:    'Neox Rounded', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+                       'Segoe UI', 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+                       system-ui, sans-serif;
+  --neox-font-mono:    'Menlo', 'Cascadia Mono', 'JetBrains Mono',
+                       'Consolas', 'MesloLGS NF',
+                       'Sarasa Mono SC', 'Source Han Mono SC', 'Noto Sans Mono CJK SC',
+                       'Microsoft YaHei', monospace;
+
+  --nx-fs-scale:       1;
+
+  --nx-fs-step-xxs:    10px;   /* Kbd · 小 tag · 段标 */
+  --nx-fs-step-xs:     11px;   /* 时间戳 · 辅助 */
+  --nx-fs-step-sm:     12px;
+  --nx-fs-step-md:     13px;   /* 卡片标题 · 品牌字 */
+  --nx-fs-step-lg:     15px;
+  --nx-fs-step-xl:     17px;   /* Donut 中心数 · 大数字 */
+
+  --neox-fs-xxs:       calc(var(--nx-fs-step-xxs) * var(--nx-fs-scale, 1));
+  --neox-fs-xs:        calc(var(--nx-fs-step-xs)  * var(--nx-fs-scale, 1));
+  --neox-fs-sm:        calc(var(--nx-fs-step-sm)  * var(--nx-fs-scale, 1));
+  --neox-fs-md:        calc(var(--nx-fs-step-md)  * var(--nx-fs-scale, 1));
+  --neox-fs-lg:        calc(var(--nx-fs-step-lg)  * var(--nx-fs-scale, 1));
+  --neox-fs-xl:        calc(var(--nx-fs-step-xl)  * var(--nx-fs-scale, 1));
+
+  --neox-fw-regular:   400;
+  --neox-fw-medium:    500;
+  --neox-fw-semibold:  600;
+  --neox-fw-bold:      700;
+
+  --neox-lh-tight:     1.3;
+  --neox-lh-snug:      1.45;
+  --neox-lh-normal:    1.55;
+
+  /* ============================================================
+   * Layout — 三栏尺度 (Mac 1x)
+   *   56 + clamp(280, 1/5 avail, 480) + 2x flex + 2x flex · TopBar 52
+   * ============================================================ */
+  --neox-rail-width:        0px;
+  /* sidebar token 层只是兜底值 — 真实计算在 .neox-shell.has-surface 里走
+   * clamp(280, available/5, 480) 走严格 1:2:2 (sidebar=1 份, main=2 份, surface=2 份).
+   * 这里 token 给个静态 320 作为"没起 has-surface 时"的安全默认 (例如 IDE 模式只有
+   * sidebar 没 surface 的情况). */
+  --neox-sidebar-width:     320px;
+  --neox-rightpanel-width:     clamp(420px, 50vw, 900px);  /* Agent Surface 画布: 占屏幕一半, 大屏不浪费小屏不挤 */
+  --neox-rightpanel-ide-width: clamp(360px, 34vw, 620px);  /* IDE 模式右侧卡片面板: 小窗优先自适应, 大屏保留 Terminal 宽度 */
+  --neox-topbar-height:     44px;        /* 紧凑 Mac 窗口条 · 交通灯 y=14 光学对齐字标 */
+  /* Windows 自绘窗控约 3×40=120px（无顶栏固定条用） */
+  --neox-win-caption-inset: 120px;
+  /* Win caption 实色真相源 — syncWinTitleBar 运行时会覆盖 bg/fg */
+  --neox-win-caption-height: 44px;
+  --neox-win-caption-bg:     var(--neox-bg-canvas);
+  --neox-win-caption-fg:     #f3f4f6;
+  --neox-composer-height:   96px;
+
+  /* ============================================================
+   * Motion — 克制
+   * ============================================================ */
+  --neox-ease-out:     cubic-bezier(0.4, 0, 0.2, 1);   /* Material Standard — 匀速起步、柔和减速 */
+  --neox-ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);   /* 统一用标准缓动, 全局一致 */
+  /* 弹性曲线是"活气"的唯一来源: 末段过冲, 元素到位前冲过终点再落回来。
+   * 它一旦被写成别的 easing 的别名, 所有引用处 (新消息落位、chevron 翻转、按钮回弹)
+   * 会一起变成匀速滑动 —— 页面照样能用, 没有报错, 只是整体"死"掉。
+   * springEasing.test.ts 钉住"必须是过冲曲线", 防止这类静默退化。 */
+  --neox-ease-spring:  cubic-bezier(0.34, 1.35, 0.5, 1);
+  --neox-dur-instant:  90ms;
+  --neox-dur-fast:     160ms;                           /* 140→160, 微交互不再急促 */
+  --neox-loop-breathe: 2000ms;                          /* 呼吸/脉冲: 状态点、停止键、进行中标记 */
+  --neox-loop-shimmer: 1400ms;                          /* 骨架屏/流光: 有节奏但不抢眼 */
+  --neox-dur-base:     240ms;                           /* 180→240, 面板/布局过渡更从容 */
+  --neox-dur-slow:     360ms;                           /* 320→360, 大面积动画更有呼吸感 */
+
+  /* ============================================================
+   * Tool-icon tints — Timeline 步骤 / RightRail Tools 列表
+   * ============================================================ */
+  --neox-tool-file-bg:     #E8EEFE;
+  --neox-tool-file-fg:     #3A63D8;
+  --neox-tool-term-bg:     #E9F6EE;
+  --neox-tool-term-fg:     #2F8A4E;
+  --neox-tool-search-bg:   #FEF1E7;
+  --neox-tool-search-fg:   #C8671A;
+  --neox-tool-db-bg:       #F1EDFF;
+  --neox-tool-db-fg:       #6E56FF;
+  --neox-tool-browser-bg:  #FCEAEA;
+  --neox-tool-browser-fg:  #C23A3A;
+  --neox-tool-doc-bg:      #EEF1F5;
+  --neox-tool-doc-fg:      #5A6072;
+
+  /* ============================================================
+   * Legacy Compatibility Mapping — 让老卡片/编辑器/timeline-old
+   * 不改一行代码也能跑新配色
+   * ============================================================ */
+
+  /* 背景 */
+  --bg-void:      var(--neox-bg-canvas);
+  --bg-primary:   var(--neox-bg-canvas);
+  --bg-secondary: var(--neox-bg-panel);
+  --bg-tertiary:  var(--neox-bg-card);
+  /* 浮层面: 优先用不透明的 bg-elevated; 没有它才回落到 card (老主题/非包环境)。 */
+  --bg-elevated:  var(--neox-bg-elevated, var(--neox-bg-card));
+  --bg-hover:     var(--neox-bg-hover);
+  --bg-code:      var(--neox-bg-sunken);
+
+  /* 文字 */
+  --text-primary:   var(--neox-fg-primary);
+  --text-secondary: var(--neox-fg-secondary);
+  --text-tertiary:  var(--neox-fg-muted);
+  --text-muted:     var(--neox-fg-hint);
+
+  /* 边框 */
+  --border-subtle:  var(--neox-line-soft);
+  --border-default: var(--neox-line);
+
+  /* 阴影 */
+  --shadow-sm: var(--neox-shadow-1);
+  --shadow-md: var(--neox-shadow-2);
+  --shadow-lg: var(--neox-shadow-3);
+
+  /* 卡片 / 玻璃 */
+  --glass-bg:     rgba(255, 255, 255, .9);
+  --glass-border: var(--neox-line);
+  --card-bg:      var(--neox-bg-card);
+  --card-border:  var(--neox-line);
+
+  /* 圆角 */
+  --radius-sm:   var(--neox-radius-sm);
+  --radius-md:   var(--neox-radius-md);
+  --radius-lg:   var(--neox-radius-lg);
+  --radius-pill: var(--neox-radius-pill);
+
+  /* 字体 */
+  --font-sans: var(--neox-font-sans);
+  --font-mono: var(--neox-font-mono);
+
+  /* 布局 */
+  --sidebar-width:   var(--neox-sidebar-width);
+  --header-height:   var(--neox-topbar-height, 44px);
+  --titlebar-height: 8px;
+  --timeline-line:   var(--neox-line);
+
+  /* 旧强调色 —— 重新指回紫主色 (老代码里 text-accent 曾是绿, 现在统一紫) */
+  --text-accent:          var(--neox-primary-600);
+  --border-accent:        rgba(110, 86, 255, .30);
+  --border-accent-bright: rgba(110, 86, 255, .45);
+  --shadow-accent:        0 0 20px rgba(110, 86, 255, .18);
+  --gold-500:             var(--neox-primary-600);
+  --gold-400:             var(--neox-primary-500);
+  --gold-500-rgb:         110, 86, 255;
+
+  /* JetBrains 旧变量 */
+  --jb-accent-blue:          var(--neox-primary-600);
+  --jb-accent-blue-soft:     var(--neox-primary-100);
+  --jb-selected-bg:          var(--neox-primary-600);
+  --jb-selected-bg-inactive: var(--neox-bg-hover);
+  --jb-run-green:            var(--neox-ok);
+  --jb-debug-red:            var(--neox-err);
+
+  --ease-out-expo: var(--neox-ease-out);
+
+  /* 移除: 老的 mint / ink token 不再使用, 但为了防止引用报错保留别名 */
+  --neox-mint-500:  var(--neox-primary-500);
+  --neox-mint-400:  var(--neox-primary-400);
+  --neox-mint-200:  var(--neox-primary-100);
+  --neox-mint-600:  var(--neox-primary-600);
+  --neox-ink-900:   var(--neox-fg-primary);
+  --neox-ink-800:   #1F2330;
+  --neox-ink-700:   #2A2F3D;
+  --neox-ink-600:   #3A3F4E;
+  --neox-ink-950:   #0A0E18;
+
+
+  /* ── 文字 / 墨色 ───────────────────────────────────────── */
+  --neox-fg:              var(--neox-fg-primary);
+  --neox-ink:             var(--neox-fg-primary);
+  --neox-text-primary:    var(--neox-fg-primary);
+  --neox-text-1:          var(--neox-fg-primary);
+  --neox-text-2:          var(--neox-fg-secondary);
+  --neox-text-3:          var(--neox-fg-muted);
+  --neox-text-muted:      var(--neox-fg-muted);
+  --neox-text-accent:     var(--neox-primary-600);
+  --neox-fg-quaternary:   var(--neox-fg-hint);
+  --neox-fg-danger:       var(--neox-err);
+  --neox-fg-warning:      var(--neox-warn);
+  /* 这两个的落点**永远是深色面** (深色浮层 / 紫色填充按钮), 跟主题无关, 所以是写死的浅色 */
+  --neox-fg-on-dark:      #E5E7EB;
+  --neox-on-primary:      #FFFFFF;
+
+  /* ── 背景 / 面 ─────────────────────────────────────────── */
+  --neox-bg:              var(--neox-bg-canvas);
+  --neox-bg-base:         var(--neox-bg-canvas);
+  --neox-bg-primary:      var(--neox-bg-canvas);
+  --neox-bg-secondary:    var(--neox-bg-panel);
+  --neox-bg-tertiary:     var(--neox-bg-muted);
+  --neox-bg-soft:         var(--neox-bg-muted);
+  --neox-bg-surface:      var(--neox-bg-card);
+  --neox-bg-elev:         var(--neox-bg-card);
+  --neox-bg-raised:       var(--neox-bg-card);
+  --neox-surface-2:       var(--neox-bg-subtle);
+  --neox-code-bg:         var(--neox-bg-sunken);
+  --neox-bg-input:        transparent;
+  --neox-bg-active:       color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  --neox-bg-selected:     color-mix(in srgb, var(--neox-primary-600) 14%, transparent);
+  --neox-fill-hover:      var(--neox-bg-hover);
+  --neox-fill-active:     color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+
+  /* ── 描边 ─────────────────────────────────────────────── */
+  --neox-border:          var(--neox-line);
+  --neox-border-default:  var(--neox-line);
+  --neox-border-1:        var(--neox-line);
+  --neox-border-2:        var(--neox-line-strong);
+  --neox-border-subtle:   var(--neox-line-soft);
+  --neox-border-soft:     var(--neox-line-soft);
+  --neox-border-strong:   var(--neox-line-strong);
+
+  /* ── 语义色: 红 (err / danger / error 三种叫法, 同一个东西) ── */
+  --neox-err-fg:          var(--neox-err-ink);
+  --neox-err-700:         color-mix(in srgb, var(--neox-err) 64%, var(--neox-fg-primary));
+  --neox-err-600:         color-mix(in srgb, var(--neox-err) 82%, var(--neox-fg-primary));
+  --neox-err-500:         var(--neox-err);
+  --neox-err-400:         color-mix(in srgb, var(--neox-err) 78%, var(--neox-bg-canvas));
+  --neox-err-300:         color-mix(in srgb, var(--neox-err) 55%, var(--neox-bg-canvas));
+  --neox-err-200:         color-mix(in srgb, var(--neox-err) 34%, var(--neox-bg-canvas));
+  --neox-err-50:          var(--neox-err-soft);
+  --neox-err-25:          color-mix(in srgb, var(--neox-err) 7%, var(--neox-bg-canvas));
+  --neox-err-bg:          var(--neox-err-soft);
+  --neox-danger:          var(--neox-err);
+  --neox-danger-500:      var(--neox-err);
+  --neox-danger-600:      var(--neox-err-600);
+  --neox-danger-700:      var(--neox-err-700);
+  --neox-error-600:       var(--neox-err-600);
+
+  /* ── 语义色: 绿 (ok / success) ─────────────────────────── */
+  --neox-ok-fg:           var(--neox-ok-ink);
+  --neox-ok-700:          color-mix(in srgb, var(--neox-ok) 64%, var(--neox-fg-primary));
+  --neox-ok-600:          color-mix(in srgb, var(--neox-ok) 82%, var(--neox-fg-primary));
+  --neox-ok-50:           var(--neox-ok-soft);
+  --neox-success:         var(--neox-ok);
+  --neox-success-500:     var(--neox-ok);
+  --neox-success-600:     var(--neox-ok-600);
+  --neox-success-700:     var(--neox-ok-700);
+
+  /* ── 语义色: 琥珀 (warn / warning) ─────────────────────── */
+  --neox-warn-700:        color-mix(in srgb, var(--neox-warn) 64%, var(--neox-fg-primary));
+  --neox-warn-600:        color-mix(in srgb, var(--neox-warn) 82%, var(--neox-fg-primary));
+  --neox-warn-500:        var(--neox-warn);
+  --neox-warn-300:        color-mix(in srgb, var(--neox-warn) 55%, var(--neox-bg-canvas));
+  --neox-warn-200:        color-mix(in srgb, var(--neox-warn) 34%, var(--neox-bg-canvas));
+  --neox-warn-100:        color-mix(in srgb, var(--neox-warn) 22%, var(--neox-bg-canvas));
+  --neox-warn-50:         var(--neox-warn-soft);
+  --neox-warn-25:         color-mix(in srgb, var(--neox-warn) 7%, var(--neox-bg-canvas));
+  --neox-warn-fg:         var(--neox-warn-ink);
+  --neox-warn-line:       color-mix(in srgb, var(--neox-warn) 32%, transparent);
+  --neox-warn-border:     color-mix(in srgb, var(--neox-warn) 32%, transparent);
+  /* 警告条上那颗按钮的底 —— 是"卡面"不是"警告色" */
+  --neox-warn-btn-bg:     var(--neox-bg-card);
+  --neox-warning:         var(--neox-warn);
+  --neox-warning-700:     var(--neox-warn-700);
+  --neox-warning-600:     var(--neox-warn-600);
+  --neox-warning-500:     var(--neox-warn);
+  --neox-warning-400:     color-mix(in srgb, var(--neox-warn) 78%, var(--neox-bg-canvas));
+  --neox-warning-200:     var(--neox-warn-200);
+  --neox-warning-25:      var(--neox-warn-25);
+
+  /* ── 语义色: 蓝 (info) ─────────────────────────────────── */
+  --neox-info-700:        color-mix(in srgb, var(--neox-info) 64%, var(--neox-fg-primary));
+  --neox-info-600:        color-mix(in srgb, var(--neox-info) 82%, var(--neox-fg-primary));
+  --neox-info-500:        var(--neox-info);
+  --neox-info-25:         color-mix(in srgb, var(--neox-info) 7%, var(--neox-bg-canvas));
+  --neox-link:            var(--neox-info);
+
+  /* ── 主色 / 强调 ───────────────────────────────────────── */
+  --neox-primary:         var(--neox-primary-600);
+  --neox-primary-650:     color-mix(in srgb, var(--neox-primary-600) 50%, var(--neox-primary-700));
+  --neox-accent-soft:     color-mix(in srgb, var(--neox-primary-600) 12%, transparent);
+  --neox-accent-ink:      var(--neox-primary-700);
+
+  /* ── 滚动条 ───────────────────────────────────────────── */
+  --neox-scrollbar-thumb:       color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+  --neox-scrollbar-thumb-hover: color-mix(in srgb, var(--neox-fg-primary) 30%, transparent);
+
+  /* ── 阴影 ─────────────────────────────────────────────── */
+  /* 投影在明暗两边都是黑的 (暗色下不是"白影"), 所以这个是写死的 */
+  --neox-shadow-color:    #000000;
+  --neox-shadow-soft:     rgba(0, 0, 0, 0.10);
+  --neox-shadow-md:       var(--neox-shadow-2);
+
+  /* ── 字体 ─────────────────────────────────────────────── */
+  --neox-mono:            var(--neox-font-mono);
+  --neox-ff-mono:         var(--neox-font-mono);
+  --neox-font-body:       var(--neox-font-sans);
+  --neox-font-ui:         var(--neox-font-sans);
+  --neox-fw-normal:       var(--neox-fw-regular);
+
+  /* ── diff / git 状态色 ─────────────────────────────────── */
+  --neox-diff-line-add:   color-mix(in srgb, var(--neox-ok) 12%, transparent);
+  --neox-diff-rail-add:   var(--neox-ok);
+  --neox-diff-rail-del:   var(--neox-err);
+  --neox-diff-rail-mod:   var(--neox-info);
+  --neox-git-added:       var(--neox-ok);
+  --neox-git-modified:    var(--neox-info);
+  --neox-git-deleted:     var(--neox-err);
+  --neox-git-untracked:   var(--neox-warn);
+  /* 冲突要跟"未跟踪"分得开 (文件树里常常上下相邻) —— 往红那边偏一点 */
+  --neox-git-conflict:    color-mix(in srgb, var(--neox-warn) 65%, var(--neox-err));
+
+  /* ── 语法高亮 (Material 系, 深底配色) ─────────────────── */
+  --neox-syntax-keyword:  #C792EA;
+  --neox-syntax-string:   #C3E88D;
+  --neox-syntax-number:   #F78C6C;
+  --neox-syntax-comment:  #6B7280;
+  --neox-syntax-tag:      #F07178;
+  --neox-syntax-attr:     #FFCB6B;
+  --neox-syntax-function: #82AAFF;
+  --neox-syntax-punct:    #89929E;
+}
+
+/* ============================================================
+ * 全局基础: 画布底色 / 字色 / 字体 / 抗锯齿
+ * ============================================================ */
+html,
+body {
+  background-color: var(--neox-bg-canvas);
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-sans);
+  font-size: var(--neox-fs-sm);
+  line-height: var(--neox-lh-snug);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 全局数字统一 tabular-nums (时间戳 / Token 统计 / 百分比) */
+.neox-num,
+.neox-shell time,
+.neox-shell .tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+:root[data-theme="light"] {
+  --neox-bg-canvas:    #FAFAF9;
+  --neox-bg-panel:     #F2F2F0;
+  --neox-bg-card:      #FFFFFF;
+  --neox-bg-elevated:  #FFFFFF;
+  --neox-bg-muted:     #EEEEEC;
+  --neox-bg-hover:     rgba(28, 25, 23, 0.055);
+  --neox-bg-sunken:    #F0F0EE;
+
+  --neox-fg-primary:   #1C1917;
+  --neox-fg-secondary: #57534E;
+  --neox-fg-muted:     #78716C;
+  --neox-fg-hint:      #A8A29E;
+
+  --neox-line:         rgba(28, 25, 23, 0.08);
+  --neox-line-soft:    rgba(28, 25, 23, 0.05);
+  --neox-line-strong:  rgba(28, 25, 23, 0.12);
+
+  --neox-cta:          #1C1917;
+  --neox-cta-hover:    #0C0A09;
+  --neox-cta-disabled: #D6D3D1;
+
+  --neox-shadow-1:     0 1px 2px rgba(28, 25, 23, .04);
+  --neox-shadow-2:     0 1px 2px rgba(28, 25, 23, .04),
+                       0 8px 24px rgba(28, 25, 23, .06);
+  --neox-shadow-3:     0 12px 40px rgba(28, 25, 23, .10);
+  --neox-shadow-composer:
+                       0 1px 2px rgba(28, 25, 23, .04),
+                       0 12px 32px rgba(28, 25, 23, .08);
+  --neox-shadow-composer-focus:
+                       0 1px 2px rgba(28, 25, 23, .05),
+                       0 16px 40px rgba(28, 25, 23, .10);
+
+  --glass-bg:          rgba(255, 255, 255, 0.78);
+  --glass-border:      rgba(255, 255, 255, 0.86);
+  --card-bg:           rgba(255, 255, 255, 0.92);
+  --card-border:       rgba(28, 25, 23, 0.06);
+
+  --bg-void:           var(--neox-bg-canvas);
+  --bg-primary:        var(--neox-bg-canvas);
+  --bg-secondary:      var(--neox-bg-panel);
+  --bg-tertiary:       var(--neox-bg-card);
+  --bg-elevated:       #FFFFFF;
+  --bg-hover:          var(--neox-bg-hover);
+  --border-subtle:     var(--neox-line-soft);
+  --border-default:    var(--neox-line);
+  --shadow-sm:         var(--neox-shadow-1);
+  --shadow-md:         var(--neox-shadow-2);
+  --shadow-lg:         var(--neox-shadow-3);
+}
+
+
+html:root[data-platform="darwin"] {
+  --neox-font-mono: 'Menlo', 'Monaco',
+                    'Sarasa Mono SC', 'PingFang SC', monospace;
+}
+
+html:root[data-platform="win32"] {
+  --neox-font-mono: 'Cascadia Mono', 'Cascadia Code', 'MesloLGS NF',
+                    'JetBrains Mono', 'Consolas',
+                    'Sarasa Mono SC', 'Microsoft YaHei', monospace;
+}
+
+html:root[data-platform="linux"] {
+  --neox-font-mono: 'JetBrains Mono', 'DejaVu Sans Mono', 'Noto Sans Mono',
+                    'MesloLGS NF', 'Sarasa Mono SC', monospace;
+}

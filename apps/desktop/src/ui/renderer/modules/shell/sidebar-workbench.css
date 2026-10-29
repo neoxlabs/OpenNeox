@@ -1,0 +1,330 @@
+/* 侧栏「工作台」(SidebarWorkbench.tsx) + 「工作台 | 列表」两段切换 —— 暖白陶土卡, 只有状态点用颜色 */
+
+.neox-sidebar {
+  --wb-face: #fbfaf8;
+  --wb-edge: rgba(120, 104, 88, 0.14);
+  --wb-shadow: 0 1px 1px rgba(60, 45, 30, 0.04), 0 2px 6px rgba(60, 45, 30, 0.05);
+  --wb-shadow-hover: 0 1px 1px rgba(60, 45, 30, 0.05), 0 6px 14px rgba(60, 45, 30, 0.09);
+  --wb-ink: var(--neox-fg-primary);
+  --wb-soft: var(--neox-fg-muted);
+  --wb-faint: var(--neox-fg-hint);
+  --wb-blue: #2f6bff;
+  --wb-amber: #d97706;
+}
+:root[data-theme="dark"] .neox-sidebar {
+  --wb-face: rgba(255, 255, 255, 0.05);
+  --wb-edge: rgba(255, 255, 255, 0.07);
+  --wb-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --wb-shadow-hover: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ── 两段切换: 一枚暖白滑块在两格之间滑 ── */
+.neox-wb-switch {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  height: 26px;
+  padding: 2px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  -webkit-app-region: no-drag;
+}
+.neox-wb-switch__thumb {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc(50% - 2px);
+  border-radius: 6px;
+  background: var(--wb-face);
+  box-shadow: 0 1px 2px rgba(60, 45, 30, 0.12), 0 0 0 0.5px var(--wb-edge);
+  transition: transform 240ms cubic-bezier(0.3, 1.2, 0.4, 1);
+}
+.neox-wb-switch.is-folders .neox-wb-switch__thumb { transform: translateX(100%); }
+.neox-wb-switch button {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 9px;
+  border: 0;
+  background: transparent;
+  color: var(--wb-soft);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+.neox-wb-switch button[aria-selected="true"] { color: var(--wb-ink); }
+/* 列表模式头上的小号: 只露两颗图标 */
+.neox-wb-switch.is-compact { height: 24px; }
+.neox-wb-switch.is-compact button { padding: 0 6px; }
+.neox-wb-switch.is-compact button span { display: none; }
+.neox-wb-switch button:hover { color: var(--wb-ink); }
+
+/* ── 图片列表模式的头: 「‹ 会话」胶囊 + 「图片 N」 ── */
+.neox-img-head { display: flex; align-items: center; gap: 10px; min-width: 0; margin-left: calc(4px - var(--neox-sidebar-row-pad-x, 10px)); }
+.neox-img-head__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 26px;
+  padding: 0 10px 0 6px;
+  border: 1px solid var(--wb-edge);
+  border-radius: 8px;
+  background: var(--wb-face);
+  box-shadow: var(--wb-shadow);
+  color: var(--wb-ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition: box-shadow 140ms ease, transform 140ms ease;
+}
+.neox-img-head__back:hover { box-shadow: var(--wb-shadow-hover); transform: translateX(-1px); }
+.neox-img-head__title { display: inline-flex; align-items: baseline; gap: 6px; font-size: 13px; font-weight: 600; color: var(--wb-ink); }
+.neox-img-head__title em { font-style: normal; font-weight: 500; font-size: 11.5px; color: var(--wb-faint); font-variant-numeric: tabular-nums; }
+
+/* ── 侧栏搜索横条: 头部下面一条暖白输入, 从上面滑下来 ── */
+.neox-sb-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  margin: 2px 4px 8px;
+  padding: 0 6px 0 10px;
+  border: 1px solid var(--wb-edge);
+  border-radius: 10px;
+  background: var(--wb-face);
+  box-shadow: var(--wb-shadow);
+  color: var(--wb-faint);
+  -webkit-app-region: no-drag;
+  animation: neox-sb-search-in 180ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes neox-sb-search-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+/* 在头部原位: 高度等于那一行, 打开/关闭时下面一像素都不动 */
+.neox-sidebar__section-head > .neox-sb-search {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  height: var(--neox-sidebar-row-h, 32px);
+  margin: 0 0 0 calc(4px - var(--neox-sidebar-row-pad-x, 10px));
+  box-shadow: none;
+}
+.neox-sb-search:focus-within { border-color: color-mix(in srgb, var(--wb-blue) 40%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--wb-blue) 9%, transparent); }
+.neox-sb-search input { flex: 1 1 auto; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--wb-ink); font: inherit; font-size: 13px; }
+.neox-sb-search input::placeholder { color: var(--wb-faint); }
+.neox-sb-search__count { flex: 0 0 auto; font-size: 11px; color: var(--wb-faint); font-variant-numeric: tabular-nums; }
+.neox-sb-search__full {
+  flex: 0 0 auto;
+  height: 22px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--wb-soft);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.neox-sb-search__full:hover { color: var(--wb-blue); background: color-mix(in srgb, var(--wb-blue) 10%, transparent); }
+.neox-sb-search__x {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--wb-faint);
+  cursor: pointer;
+}
+.neox-sb-search__x:hover { background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent); color: var(--wb-ink); }
+
+/* ── 工作台 ── */
+.neox-wb {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 calc(-1 * var(--neox-sidebar-scrollbar-slot, 10px)) 0 0;
+  padding: 2px var(--neox-sidebar-scrollbar-slot, 10px) 10px 0;
+  animation: neox-wb-in 220ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes neox-wb-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* 切回列表时同样淡入上浮 (列表是切换时重新挂载的, 动画只在那一下播) */
+.neox-sidebar .neox-sidebar__section > .neox-sidebar__list { animation: neox-wb-in 220ms cubic-bezier(0.2, 0.9, 0.3, 1); }
+@media (prefers-reduced-motion: reduce) { .neox-sidebar .neox-sidebar__section > .neox-sidebar__list { animation: none; } }
+
+.neox-wb__section { display: flex; flex-direction: column; gap: 6px; }
+.neox-wb__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 18px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--wb-faint);
+}
+.neox-wb__label em { font-style: normal; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+.neox-wb-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 10px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  animation: neox-wb-card-in 260ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+  transition: box-shadow 140ms ease, transform 140ms ease;
+}
+@keyframes neox-wb-card-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+.neox-wb-card:hover { background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); }
+.neox-wb-card.is-active { background: var(--neox-bg-card); box-shadow: 0 0 0 1px var(--neox-line-subtle), var(--neox-shadow-1); }
+.neox-wb-card:focus-visible { outline: 2px solid color-mix(in srgb, var(--wb-blue) 55%, transparent); outline-offset: 1px; }
+
+.neox-wb-card__head { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.neox-wb-card__dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--wb-faint); }
+.neox-wb-card__dot.is-running { background: var(--wb-blue); animation: neox-wb-pulse 1.5s ease-in-out infinite; }
+.neox-wb-card__dot.is-waiting { background: var(--wb-amber); }
+.neox-wb-card__dot.is-pinned { background: transparent; box-shadow: inset 0 0 0 1.5px var(--wb-faint); }
+@keyframes neox-wb-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--wb-blue) 45%, transparent); } 60% { box-shadow: 0 0 0 5px transparent; } }
+.neox-wb-card__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wb-ink);
+}
+.neox-wb-card__time { flex: 0 0 auto; font-size: 12px; color: var(--wb-faint); font-variant-numeric: tabular-nums; }
+.neox-wb-card__line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding-left: 14px;
+  font-size: 12px;
+  color: var(--wb-soft);
+}
+.neox-wb-card__line > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.neox-wb-card.is-waiting .neox-wb-card__line > span { color: var(--wb-ink); }
+.neox-wb-card__tag {
+  flex: 0 0 auto;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 17px;
+  background: color-mix(in srgb, var(--wb-amber) 12%, transparent);
+  color: #b45309;
+}
+.neox-wb-card__tag.is-question { background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent); color: var(--wb-soft); }
+.neox-wb-card__group {
+  flex: 0 0 auto;
+  max-width: 34%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--wb-faint);
+  font-size: 12px;
+  line-height: 16px;
+}
+/* 进行中只靠标题前那颗呼吸的蓝点 (UI 3.0 去掉了卡底扫光: 行没有卡片底, 扫光悬在空中) */
+
+.neox-wb__calm {
+  margin: 0 4px;
+  padding: 14px 12px;
+  border: 1px dashed var(--wb-edge);
+  border-radius: 12px;
+  color: var(--wb-faint);
+  font-size: 12px;
+  text-align: center;
+}
+
+.neox-wb__recent { display: flex; flex-direction: column; gap: 1px; }
+.neox-wb-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  animation: neox-wb-card-in 240ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: calc(80ms + var(--i, 0) * 25ms);
+}
+.neox-wb-row:hover { background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); }
+.neox-wb-row.is-active { background: var(--neox-bg-card); box-shadow: 0 0 0 1px var(--neox-line-subtle), var(--neox-shadow-1); }
+.neox-wb-row__title { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; color: var(--wb-ink); }
+.neox-wb-row.is-active .neox-wb-row__title { font-weight: 500; }
+.neox-wb-row__group { flex: 0 0 auto; max-width: 34%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; color: var(--wb-faint); }
+.neox-wb-row__time { flex: 0 0 auto; font-size: 12px; color: var(--wb-faint); font-variant-numeric: tabular-nums; }
+
+.neox-wb__foot { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+.neox-wb__all, .neox-wb__folders {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--wb-faint);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.neox-wb__all { flex: 1 1 auto; justify-content: space-between; }
+.neox-wb__all:hover, .neox-wb__folders:hover { background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent); color: var(--wb-ink); }
+.neox-wb__all kbd {
+  padding: 0 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  font-family: inherit;
+  font-size: 10.5px;
+  line-height: 17px;
+  color: var(--wb-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neox-wb, .neox-wb-card, .neox-wb-row { animation: none; }
+  .neox-wb-card__dot.is-running, .neox-wb-card__progress { animation: none; }
+}
+
+/* 成品缩略图: 一小摞叠放的圆角小方块 (UI 3.0) */
+.neox-wb-out { display: inline-flex; flex: 0 0 auto; align-items: center; padding-left: 4px; }
+.neox-wb-out__tile {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-left: -7px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1.5px var(--neox-bg-canvas), 0 1px 3px rgba(60, 45, 25, 0.14);
+}
+.neox-wb-out__tile:first-child { margin-left: 0; }
+.neox-wb-out__tile img { width: 100%; height: 100%; object-fit: cover; }

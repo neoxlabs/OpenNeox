@@ -1,0 +1,43 @@
+# 字节豆包 Pro — 2026 火山方舟主力
+#
+# 仅有 BYOK 直连 (volces ark API); 暂无 openrouter 路径. 因此用 prov_openrouter 占位
+# 是不准确的, 但 conformance 要求至少 1 个 upstream — 此处占位, 实际路由由
+# adapter 走 doubao native client. 后续加 prov_volces_direct 后替换。
+
+id: doubao-pro
+display_name: Doubao Pro
+family: doubao
+released: 2026-01
+availability: preview
+
+context_window: 256000
+max_output_tokens: 8192
+
+upstream_slugs:
+  prov_openrouter: bytedance/doubao-pro
+
+capabilities:
+  vision: true
+  tool_use: true
+  reasoning_blocks: true
+  thinking:
+    supported: true
+    field: thinking
+    default_level: auto
+  prompt_cache:
+    supported: true
+    type: openai-prompt-cache
+
+# Doubao 的 thinking 字段跟 Anthropic 同构 — 顶层 thinking:{type:'enabled'|'disabled'|'auto'}。
+# 早期 commit 误写 thinking_mode 字段名 (本仓库自创名, doubao API 不识别)。
+# 2026-06-28 改回真实字段名 thinking:{type}, doubao adapter 透传到 /api/v3/responses。
+effort_map:
+  off:    { thinking: { type: disabled } }
+  auto:   { thinking: { type: auto } }
+  on:     { thinking: { type: enabled } }
+
+pricing:
+  input_per_mtok: 0.50
+  cached_input_per_mtok: 0.10
+  output_per_mtok: 2.00
+  currency: USD

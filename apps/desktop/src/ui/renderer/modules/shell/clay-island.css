@@ -1,0 +1,175 @@
+
+.clay-island {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  -webkit-app-region: no-drag;
+}
+
+.clay-island__capsule {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  max-width: 360px;
+  padding: 0 12px 0 9px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line-soft), var(--neox-shadow-1);
+  color: var(--neox-fg-secondary);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+.clay-island__capsule:hover { box-shadow: 0 0 0 1px var(--neox-line), var(--neox-shadow-2); }
+.clay-island__capsule:active { transform: translateY(1px); }
+
+.clay-island__glyph { display: inline-flex; color: var(--neox-fg-muted); }
+.clay-island__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--neox-fg-primary); }
+.clay-island__meta { white-space: nowrap; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+
+/* 状态色只落在字形和字上, 胶囊本体不变色 */
+.clay-island[data-tone="idle"] .clay-island__label { color: var(--neox-fg-muted); }
+.clay-island[data-tone="busy"] .clay-island__glyph { color: var(--clay-blue); }
+.clay-island[data-tone="wait"] .clay-island__glyph,
+.clay-island[data-tone="wait"] .clay-island__label { color: var(--neox-warn, #c98a1e); }
+.clay-island[data-tone="error"] .clay-island__glyph,
+.clay-island[data-tone="error"] .clay-island__label { color: var(--neox-err, #d9534f); }
+.clay-island[data-tone="done"] .clay-island__glyph { color: var(--neox-ok, #3fa36b); }
+
+/* 胶囊底边 2px 进度线 */
+.clay-island__bar {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--clay-blue) var(--p, 0%), color-mix(in srgb, var(--neox-fg-primary) 10%, transparent) var(--p, 0%));
+}
+
+.clay-island__spin { animation: clay-island-spin 900ms linear infinite; }
+@keyframes clay-island-spin { to { transform: rotate(360deg); } }
+
+/* ── 展开浮层 ── */
+.clay-island__panel {
+  position: fixed;   /* portal 到 body, left/top 由组件按胶囊位置给 */
+  z-index: 3000;
+  width: 340px;
+  translate: -50% 0;
+  padding: 14px 6px 6px;
+  border-radius: 18px;
+  background: var(--nx-menu-bg, var(--neox-bg-elevated));
+  border: 1px solid var(--nx-menu-border, var(--neox-line-soft));
+  box-shadow: var(--nx-menu-shadow, var(--neox-shadow-3));
+  animation: nx-menu-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.clay-island__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 0 10px;
+}
+.clay-island__title { flex: 1; min-width: 0; font-size: 13px; font-weight: 500; color: var(--neox-fg-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clay-island__time { font-size: 12px; color: var(--neox-fg-hint); font-variant-numeric: tabular-nums; }
+.clay-island__progress {
+  height: 2px;
+  margin: 10px 10px 8px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--clay-blue) var(--p, 0%), color-mix(in srgb, var(--neox-fg-primary) 9%, transparent) var(--p, 0%));
+}
+
+.clay-island__steps {
+  position: relative;
+  margin: 0;
+  padding: 2px 0;
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+/* 1px 竖线串起每一步 */
+.clay-island__steps::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: var(--neox-line);
+}
+.clay-island__step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.clay-island__step-glyph {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--nx-menu-bg, var(--neox-bg-elevated));
+  color: var(--neox-fg-hint);
+}
+.clay-island__step-kind { display: inline-flex; color: var(--neox-fg-hint); }
+.clay-island__step-title { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clay-island__step-ms { font-size: 11px; color: var(--neox-fg-hint); }
+
+.clay-island__step.is-running { color: var(--neox-fg-primary); font-weight: 500; font-size: 13px; }
+.clay-island__step.is-running .clay-island__step-kind { color: var(--clay-blue); }
+.clay-island__step.is-failed { color: var(--neox-err, #d9534f); }
+.clay-island__step.is-failed .clay-island__step-glyph { color: var(--neox-err, #d9534f); }
+.clay-island__step.is-pending { color: var(--neox-fg-hint); padding-left: 36px; }
+
+/* 正在做的那一步: 一颗带光晕的小蓝点 */
+.clay-island__halo {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--clay-blue);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay-blue) 18%, transparent);
+  animation: clay-island-breathe 1.6s ease-in-out infinite;
+}
+@keyframes clay-island-breathe { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--clay-blue) 8%, transparent); } }
+
+.clay-island__foot {
+  display: flex;
+  gap: 2px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--nx-menu-divider, var(--neox-line-soft));
+}
+.clay-island__act {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neox-fg-secondary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.clay-island__act:hover { background: var(--nx-menu-item-hover, var(--neox-bg-hover)); color: var(--neox-fg-primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .clay-island__spin, .clay-island__halo { animation: none; }
+}

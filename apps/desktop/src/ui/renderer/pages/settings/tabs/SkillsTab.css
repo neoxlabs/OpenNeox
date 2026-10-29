@@ -1,0 +1,395 @@
+
+/* 容器查询: 页根自己做容器, 卡片网格按它的宽度切一列 / 两列 */
+.settings-page .sk3 {
+  container-type: inline-size;
+}
+
+/* ---------- 统计卡 ---------- */
+.settings-page .sk3 .sk3-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--nx-soft-card-bg, var(--neox-bg-card));
+  margin-bottom: 14px;
+}
+.settings-page .sk3 .sk3-stats__nums {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 28px;
+  min-width: 0;
+}
+.settings-page .sk3 .sk3-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-stat b {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+.settings-page .sk3 .sk3-stat span {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--neox-fg-muted);
+}
+/* 可导入数: 整个数字+文字是一个钴蓝文字链接, 不做实心块 */
+.settings-page .sk3 .sk3-stat--link {
+  cursor: pointer;
+}
+.settings-page .sk3 .sk3-stat--link b,
+.settings-page .sk3 .sk3-stat--link span {
+  color: var(--clay-blue, #2F6BFF);
+}
+.settings-page .sk3 .sk3-stat--link:hover span {
+  text-decoration: underline;
+}
+
+.settings-page .sk3 .sk3-stats__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+/* 暖白药丸按钮: 不用实心蓝 */
+.settings-page .sk3 .sk3-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.settings-page .sk3 .sk3-pill:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 22%, transparent);
+}
+.settings-page .sk3 .sk3-pill svg {
+  width: 13px;
+  height: 13px;
+}
+.settings-page .sk3 .sk3-pill:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--clay-blue, #2F6BFF) 45%, transparent);
+  outline-offset: 2px;
+}
+
+/* ---------- 筛选行 ---------- */
+.settings-page .sk3 .sk3-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  min-width: 0;
+}
+.settings-page .sk3 .sk3-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.settings-page .sk3 .sk3-toolbar__search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 220px;
+  flex: 0 0 220px;
+  height: 30px;
+  margin-left: auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-toolbar__search svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.settings-page .sk3 .sk3-toolbar__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--neox-fg-primary);
+}
+.settings-page .sk3 .sk3-toolbar__search input::placeholder {
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-toolbar__search-clear {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.settings-page .sk3 .sk3-toolbar__refresh {
+  flex-shrink: 0;
+}
+
+/* ---------- 卡片网格 ---------- */
+.settings-page .sk3 .sk3-group + .sk3-group {
+  margin-top: 18px;
+}
+.settings-page .sk3 .sk3-group__title {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-group__count {
+  font-variant-numeric: tabular-nums;
+}
+
+.settings-page .sk3 .sk3-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@container (max-width: 560px) {
+  .settings-page .sk3 .sk3-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .settings-page .sk3 .sk3-toolbar__search {
+    width: auto;
+    flex: 1 1 180px;
+  }
+}
+
+/* 单张卡 —— 约 92px 高, 暖白底 + 发丝线 + 14 圆角 */
+.settings-page .sk3 .sk3-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 92px;
+  box-sizing: border-box;
+  padding: 12px 14px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--neox-line-subtle);
+  background: var(--neox-bg-card);
+  box-shadow: none;
+  cursor: pointer;
+  min-width: 0;
+  transition: border-color 140ms ease;
+}
+.settings-page .sk3 .sk3-card:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 20%, transparent);
+}
+.settings-page .sk3 .sk3-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--clay-blue, #2F6BFF) 45%, transparent);
+  outline-offset: 2px;
+}
+
+.settings-page .sk3 .sk3-card__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-right: 6px;
+}
+.settings-page .sk3 .sk3-card__cmd {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+}
+/* 有中文显示名时: 名字当标题, 命令降成灰色小字 (10-21: 自己存的「周报生成」只露 /weekly-report) */
+.settings-page .sk3 .sk3-card__name {
+  flex-shrink: 0;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neox-fg-primary);
+}
+.settings-page .sk3 .sk3-card__name + .sk3-card__cmd {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--neox-fg-tertiary, var(--neox-fg-secondary));
+}
+/* 来源标签: 小灰片, 不上色 */
+.settings-page .sk3 .sk3-chip {
+  flex-shrink: 0;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--neox-fg-muted);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  white-space: nowrap;
+}
+
+.settings-page .sk3 .sk3-card__desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--neox-fg-muted);
+  min-width: 0;
+}
+
+.settings-page .sk3 .sk3-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  min-width: 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.settings-page .sk3 .sk3-card__tag {
+  padding: 0 5px;
+  border-radius: 4px;
+  border: 1px solid var(--neox-line-subtle);
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-card__usage {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 悬停 / 键盘聚焦时才露出的操作: 右上角一排小图标 */
+.settings-page .sk3 .sk3-card__acts {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--neox-bg-card);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.settings-page .sk3 .sk3-card:hover .sk3-card__acts,
+.settings-page .sk3 .sk3-card__acts:focus-within {
+  opacity: 1;
+}
+.settings-page .sk3 .sk3-card .skill-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.settings-page .sk3 .sk3-card .skill-action-btn:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  color: var(--neox-fg-primary);
+}
+.settings-page .sk3 .sk3-card .skill-action-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---------- 底部: 调用记录 ---------- */
+.settings-page .sk3 .sk3-footer {
+  margin-top: 14px;
+}
+.settings-page .sk3 .sk3-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--clay-blue, #2F6BFF);
+  cursor: pointer;
+}
+.settings-page .sk3 .sk3-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 分页 ---------- */
+.settings-page .sk3 .sk3-pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+}
+.settings-page .sk3 .sk3-pager__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--neox-line-subtle);
+  border-radius: 999px;
+  background: var(--neox-bg-card);
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+}
+.settings-page .sk3 .sk3-pager__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* 窄屏: 统计卡与操作换行, 不挤 */
+@media (max-width: 720px) {
+  .settings-page .sk3 .sk3-stats {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .settings-page .sk3 .sk3-stats__actions {
+    justify-content: flex-start;
+  }
+}

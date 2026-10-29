@@ -1,0 +1,553 @@
+/* Timeline 内的 Composer 自适应 — 悬浮定位 */
+.editor-composer-dock {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 12px;
+  z-index: 20;
+  border-radius: 14px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.editor-composer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 0 2px 7px;
+  border-bottom: none;
+  background: transparent;
+  flex-wrap: nowrap;
+}
+
+.editor-composer-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.editor-timeline .editor-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  border: 1px solid #393b40;
+  background: #393b40;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: #dfe1e5;
+  white-space: nowrap;
+}
+
+.editor-timeline .editor-status-pill svg {
+  width: 12px;
+  height: 12px;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.editor-composer-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.editor-composer-controls .model-selector {
+  min-width: 0;
+}
+
+.editor-composer-controls .model-selector-btn {
+  padding: 3px 6px;
+  font-size: 9px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  min-width: 0;
+  max-width: 110px;
+}
+
+.editor-composer-controls .model-selector-btn .model-provider,
+.editor-composer-controls .model-selector-btn .model-divider {
+  display: none;
+}
+
+.editor-composer-controls .model-selector-btn .model-name {
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-composer-controls .toolbar-icon-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border-color: var(--border-subtle);
+}
+
+.editor-control-menu {
+  position: relative;
+}
+
+.editor-control-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.editor-control-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.editor-control-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.editor-control-dropdown {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  min-width: 190px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.45);
+  padding: 8px;
+  z-index: 1200;
+}
+
+.editor-control-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 8px;
+}
+
+.editor-control-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.editor-control-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.editor-control-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.editor-control-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.editor-control-item svg {
+  width: 12px;
+  height: 12px;
+}
+
+.editor-control-item.full {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.editor-control-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.editor-control-item.active {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: #10b981;
+}
+
+.editor-timeline .composer,
+.editor-timeline .chat-composer {
+  margin: 0;
+  padding: 0;
+  border-top: none;
+  background: transparent;
+}
+
+.editor-timeline .composer-wrapper {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.editor-timeline .composer-input-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.editor-timeline .composer-input-wrap {
+  position: relative;
+  padding: 10px 10px 6px;
+  border-radius: 14px;
+  gap: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(15, 23, 42, 0.58);
+  box-shadow: 0 22px 42px -30px rgba(2, 6, 23, 0.95), 0 10px 20px -16px rgba(14, 165, 233, 0.34);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: visible;
+}
+
+.editor-timeline .composer-input-wrap:focus-within {
+  border-color: rgba(56, 189, 248, 0.36);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.22), 0 18px 36px -24px rgba(2, 6, 23, 0.85);
+}
+
+.editor-timeline .composer-top-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 10px 4px;
+}
+
+.editor-timeline .composer-input-wrap textarea {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  min-height: 46px;
+}
+
+.editor-timeline .composer-input-wrap textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.editor-timeline .composer-actions {
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: space-between;
+  margin-top: 2px;
+  padding: 6px 4px 2px;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+  align-items: center;
+}
+
+.editor-timeline .editor-composer-inline-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 0;
+}
+
+.editor-timeline .editor-composer-inline-status-top .editor-status-pill-files {
+  min-height: 26px;
+  padding: 0 11px;
+  border-radius: 9px;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.editor-timeline .editor-composer-inline-status-actions {
+  margin-right: 0;
+}
+
+.editor-timeline .editor-composer-inline-status .editor-status-pill-files {
+  min-height: 20px;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  font-size: 9px;
+}
+
+.editor-timeline .editor-composer-inline-status .editor-status-pill-context {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.editor-timeline .editor-composer-inline-status .editor-status-pill-context svg {
+  width: 14px;
+  height: 14px;
+}
+
+.editor-timeline .composer-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.editor-timeline .composer-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.editor-timeline .toolbar-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.editor-timeline .toolbar-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.editor-timeline .toolbar-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.editor-timeline .send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 10px;
+  padding: 0;
+  background: var(--text-accent);
+  color: #ffffff;
+  box-shadow: 0 4px 12px -4px rgba(16, 185, 129, 0.4);
+}
+
+.editor-timeline .send-btn:hover {
+  filter: brightness(1.1);
+}
+
+.editor-timeline .send-btn span {
+  display: none;
+}
+
+.editor-timeline .send-btn svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* 自定义模式下拉组件 */
+.mode-dropdown-container {
+  position: relative;
+}
+
+.mode-dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-accent);
+  background: transparent;
+  color: var(--text-accent);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mode-dropdown-btn:hover {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.mode-dropdown-btn svg {
+  width: 12px;
+  height: 12px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.editor-composer-controls .mode-dropdown-btn {
+  padding: 4px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.editor-composer-controls .mode-dropdown-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.editor-composer-controls .mode-dropdown-menu {
+  background: var(--bg-elevated);
+  border-color: var(--border-default);
+  box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.4);
+}
+
+.mode-dropdown-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 4px;
+  min-width: 180px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.mode-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mode-dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.mode-dropdown-item.active {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.mode-dropdown-item svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.mode-dropdown-item.active svg {
+  color: var(--text-accent);
+}
+
+.mode-dropdown-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mode-dropdown-item-label {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mode-dropdown-item.active .mode-dropdown-item-label {
+  color: var(--text-accent);
+}
+
+.mode-dropdown-item-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.toolbar-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.toolbar-icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-accent);
+  border-color: var(--border-accent);
+}
+
+.toolbar-icon-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ==================== Light Theme Overrides ==================== */
+:root[data-theme="light"] .editor-timeline .editor-status-pill {
+  border: 1px solid var(--border-default);
+  background: #f1f5f9;
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .editor-timeline .editor-status-pill svg {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .editor-control-dropdown {
+  box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.18);
+}
+
+:root[data-theme="light"] .editor-timeline .composer-input-wrap {
+  border: 1px solid var(--border-default);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 12px 28px -20px rgba(15, 23, 42, 0.18),
+    0 6px 14px -12px rgba(37, 99, 235, 0.18);
+}
+
+:root[data-theme="light"] .editor-timeline .composer-input-wrap:focus-within {
+  border-color: rgba(37, 99, 235, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.22),
+    0 12px 28px -20px rgba(15, 23, 42, 0.18);
+}
+
+:root[data-theme="light"] .editor-timeline .composer-actions {
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .editor-composer-controls .mode-dropdown-menu {
+  box-shadow: 0 10px 24px -18px rgba(15, 23, 42, 0.2);
+}
+
+:root[data-theme="light"] .mode-dropdown-menu {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+}

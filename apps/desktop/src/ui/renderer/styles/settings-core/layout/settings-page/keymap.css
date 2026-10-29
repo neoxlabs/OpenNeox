@@ -1,0 +1,477 @@
+
+.keymap-panel .panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.keymap-panel .panel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.keymap-platform-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--neox-radius-sm);
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  border: none;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.keymap-reset-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border-strong, var(--neox-line));
+  background: transparent;
+  color: var(--st-text-soft, var(--neox-fg-secondary));
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.keymap-reset-all-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.keymap-reset-all-btn:hover {
+  background: var(--st-accent-soft, var(--neox-bg-hover));
+  border-color: color-mix(in srgb, var(--st-accent, var(--neox-primary-500)) 34%, var(--st-border-strong, var(--neox-line-strong)));
+  color: var(--st-text, var(--neox-fg-primary));
+}
+
+/* ── Search bar — 单层 soft，input 必须透明 ── */
+
+.keymap-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  margin: 0 0 18px;
+  width: 100%;
+  border-radius: 10px;
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card)));
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  box-shadow: none;
+  border: none;
+  height: 36px;
+}
+
+.keymap-search-bar:focus-within {
+  box-shadow: none;
+  outline: none;
+}
+
+.keymap-search-bar > svg {
+  width: 15px;
+  height: 15px;
+  color: var(--neox-fg-muted);
+  flex-shrink: 0;
+}
+
+.settings-main input[type="text"].keymap-search-input,
+.settings-page input[type="text"].keymap-search-input,
+.keymap-search-bar input.keymap-search-input,
+.keymap-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  color: var(--neox-fg-primary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.keymap-search-input::placeholder {
+  color: var(--neox-fg-muted);
+}
+
+.settings-main input[type="text"].keymap-search-input:focus,
+.settings-page input[type="text"].keymap-search-input:focus,
+.keymap-search-bar input.keymap-search-input:focus,
+.keymap-search-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none !important;
+}
+
+.keymap-search-clear {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.keymap-search-clear:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+}
+
+.keymap-search-clear svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* ── List：标题在外 + 一整块软卡，行无独立底 ── */
+
+.keymap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.keymap-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keymap-block__label {
+  margin: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 550;
+  color: var(--neox-fg-secondary);
+}
+
+.keymap-empty {
+  padding: 60px 16px;
+  text-align: center;
+  color: var(--neox-fg-muted);
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.keymap-group {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--nx-soft-bg, color-mix(in srgb, var(--neox-fg-primary) 1.6%, var(--neox-bg-card)));
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  border-radius: 12px;
+  box-shadow: none;
+  border: none;
+}
+
+.keymap-group-header { display: none; } /* 标题已外置 */
+
+.keymap-group-rows {
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0;
+}
+
+.keymap-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  min-height: 52px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  transition: background 120ms ease;
+}
+
+.keymap-row + .keymap-row {
+  box-shadow: inset 0 1px 0 var(--nx-soft-divider, color-mix(in srgb, var(--neox-fg-primary) 6%, transparent));
+}
+
+.keymap-row:hover {
+  background: var(--nx-soft-row-hover, color-mix(in srgb, var(--neox-fg-primary) 2.5%, transparent));
+}
+
+.keymap-row.editing {
+  background: color-mix(in srgb, var(--neox-primary-600) 8%, transparent);
+}
+
+.keymap-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* v3 收齐 — name/desc 字号 + weight 跟 nx-row__title / nx-row__desc 像素一致 */
+.keymap-row-name {
+  font-size: var(--nx-fs-row-title);
+  font-weight: 500;
+  color: var(--neox-fg-primary);
+  margin-bottom: 2px;
+  line-height: 1.35;
+}
+
+.keymap-row-desc {
+  font-size: var(--nx-fs-row-desc);
+  color: var(--neox-fg-secondary);
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+}
+
+.keymap-row-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 190px;
+  justify-content: flex-end;
+}
+
+/* ── Shortcut chip ── */
+
+/* v3 chip 跟 nx-segmented 视觉一族 — 灰底 + 不描边 + 26px height + 13 mono 字 */
+.keymap-shortcut-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  padding: 0 10px;
+  border-radius: var(--neox-radius-sm);
+  border: none;
+  background: color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+  color: var(--neox-fg-primary);
+  font-family: var(--font-mono, 'SF Mono', 'Menlo', monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  letter-spacing: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: background 160ms ease, color 160ms ease;
+  height: 26px;
+  white-space: nowrap;
+}
+
+.keymap-shortcut-chip:hover {
+  background: color-mix(in srgb, var(--neox-primary-600) 14%, transparent);
+  color: var(--neox-primary-600);
+}
+
+.keymap-shortcut-chip.empty {
+  color: var(--neox-fg-hint);
+  font-style: italic;
+  font-family: inherit;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--neox-fg-primary) 16%, transparent);
+}
+
+.keymap-shortcut-chip.empty:hover {
+  border-color: color-mix(in srgb, var(--st-accent, var(--neox-primary-500)) 40%, transparent);
+  color: var(--st-accent, var(--neox-primary-600));
+}
+
+/* Row actions */
+.keymap-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out);
+  width: 54px;
+}
+
+.keymap-row:hover .keymap-row-actions,
+.keymap-row.editing .keymap-row-actions {
+  opacity: 1;
+}
+
+.keymap-icon-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--st-text-mute, var(--neox-fg-muted));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.keymap-icon-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.keymap-icon-btn:hover {
+  background: color-mix(in srgb, var(--st-text, #0f172a) 6%, transparent);
+  color: var(--st-text, var(--neox-fg-primary));
+}
+
+/* ── Capture (editing) state ── */
+
+.keymap-capture-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  position: relative;
+}
+
+.settings-main input.keymap-capture-input,
+.settings-page input.keymap-capture-input,
+.keymap-capture-input {
+  width: 200px;
+  padding: 0 12px !important;
+  border-radius: 7px !important;
+  border: 1px solid var(--st-accent, var(--neox-primary-500)) !important;
+  background: var(--st-accent-soft, var(--neox-primary-100)) !important;
+  color: var(--st-text, var(--neox-primary-700)) !important;
+  font-family: var(--font-mono, 'SF Mono', monospace) !important;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  outline: none !important;
+  text-align: center;
+  height: 30px;
+  cursor: default;
+  caret-color: transparent;
+  letter-spacing: 0;
+  box-shadow: 0 0 0 2px var(--st-accent-soft, var(--neox-primary-ring, var(--neox-primary-100))) !important;
+  animation: keymap-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+@keyframes keymap-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--st-accent-soft, var(--neox-primary-ring, var(--neox-primary-100))); }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--st-accent, var(--neox-primary-500)) 18%, transparent); }
+}
+
+.keymap-capture-input::placeholder {
+  color: var(--neox-fg-muted);
+  font-style: italic;
+  font-weight: 400;
+  font-family: inherit;
+}
+
+.keymap-capture-input.has-conflict {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  animation: none;
+}
+
+.keymap-conflict-warn {
+  font-size: 10px;
+  color: #d97706;
+  white-space: nowrap;
+  padding: 0 2px;
+}
+
+.keymap-capture-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.keymap-mini-btn {
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 7px;
+  border: 1px solid var(--st-border-strong, var(--neox-line));
+  background: transparent;
+  color: var(--st-text-soft, var(--neox-fg-secondary));
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.keymap-mini-btn:hover {
+  background: color-mix(in srgb, var(--st-text, #0f172a) 5%, transparent);
+  color: var(--st-text, var(--neox-fg-primary));
+}
+
+.keymap-mini-btn.primary {
+  background: var(--st-accent, var(--neox-primary-600));
+  border-color: var(--st-accent, var(--neox-primary-600));
+  color: var(--neox-fg-invert);
+}
+
+.keymap-mini-btn.primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--st-accent, var(--neox-primary-700)) 82%, #000);
+  border-color: color-mix(in srgb, var(--st-accent, var(--neox-primary-700)) 82%, #000);
+}
+
+.keymap-mini-btn.primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Footer hint ── */
+
+.keymap-scope-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--st-card, rgba(245, 158, 11, 0.06));
+  border: 1px solid var(--st-border, rgba(245, 158, 11, 0.18));
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--st-text-mute, var(--neox-fg-muted));
+  line-height: 1.5;
+}
+.keymap-scope-hint svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #d97706;
+}
+
+.keymap-footer-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--st-card, rgba(245, 158, 11, 0.06));
+  border: 1px solid var(--st-border, rgba(245, 158, 11, 0.18));
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--st-text-mute, var(--neox-fg-muted));
+  line-height: 1.5;
+}
+
+.keymap-footer-hint svg {
+  width: 14px;
+  height: 14px;
+  color: #d97706;
+  flex-shrink: 0;
+}

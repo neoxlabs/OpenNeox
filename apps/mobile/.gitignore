@@ -1,0 +1,85 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Visual Studio Code related
+.classpath
+.project
+.settings/
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS related
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Generated
+# NOTE: 我们 **入库** drift/freezed/json_serializable 的 codegen 产物
+# (.g.dart / .freezed.dart), 这样新 dev / CI clone 后直接 flutter pub get
+# 就能编译, 不必先跑 build_runner. 详见 README 「codegen 入库」.
+# 只忽略 mocks 与本地 generated/ 目录.
+*.mocks.dart
+lib/generated/
+
+# Local
+local.properties
+
+# Release 签名 (绝不入库)
+android/key.properties
+*.jks
+*.keystore
+
+# 发布产物 (APK ~96MB + symbols) — 走 R2, 不进 git
+dist/
+
+# 离线渲染台产物 —— 基准图进版本库 (没有基准图整条测试是红的);
+# 每次改 UI 用 --update-goldens 重生成后肉眼确认, 再连同代码一起提交
+# 不带 --update-goldens 跑渲染台时 flutter_test 写出的差异图
+test/harness/failures/

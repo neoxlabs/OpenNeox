@@ -1,0 +1,7 @@
+{"role":"meta","type":"system.version","version":"2.1.1"}
+{"role":"assistant","content":"I'll read the file first.","tool_calls":[{"type":"function","id":"call_00_77ylvvk8osa9x27u3t1jewak","function":{"name":"Read","arguments":"{\"path\":\"/tmp/repo/math.js\"}"}}]}
+{"role":"tool","tool_call_id":"call_00_77ylvvk8osa9x27u3t1jewak","content":"1\texport function add(a,b){return a+b}"}
+{"role":"assistant","tool_calls":[{"type":"function","id":"call_00_0h6h04fu8ptb7d8jl9brrdwu","function":{"name":"Edit","arguments":"{\"path\":\"/tmp/repo/math.js\",\"old_string\":\"export function add(a,b){return a+b}\",\"new_string\":\"export function add(a,b){return a+b}\\nexport function sub(a,b){return a-b}\\n\"}"}}]}
+{"role":"tool","tool_call_id":"call_00_0h6h04fu8ptb7d8jl9brrdwu","content":"Replaced 1 occurrence in /tmp/repo/math.js"}
+{"role":"assistant","content":"Added and exported `sub(a,b)` in math.js, leaving `add` unchanged."}
+{"role":"meta","type":"session.resume_hint","session_id":"session_e9f23b5e-6710-4324-ba14-8ddab7a20312","command":"kimi -r session_e9f23b5e-6710-4324-ba14-8ddab7a20312","content":"To resume this session: kimi -r session_e9f23b5e-6710-4324-ba14-8ddab7a20312"}

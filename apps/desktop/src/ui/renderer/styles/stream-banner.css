@@ -1,0 +1,50 @@
+/* ============================================================
+ * StreamConnectionBanner — SSE 重连中的全局窄顶条.
+ *
+ *   AppShell 顶层挂载, 仅在 useStreamConnection() !== null 时渲染.
+ *   位置: 顶部居中, fixed, z-index 高于普通内容低于 modal.
+ *   样式: 紫色品牌底 + 白字 + 旋转 spinner, 占用最小垂直空间.
+ * ============================================================ */
+
+.neox-stream-banner {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 92%, transparent);
+  color: var(--neox-fg-invert, #fff);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--neox-primary-700, #5b3fdf) 35%, transparent);
+  z-index: 9990;            /* 低于 quota modal (9999), 高于普通 UI */
+  pointer-events: none;     /* 仅展示, 不拦截点击 */
+  animation: neox-stream-banner-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.neox-stream-banner__spinner {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--neox-fg-invert, #fff) 35%, transparent);
+  border-top-color: var(--neox-fg-invert, #fff);
+  border-radius: 50%;
+  animation: neox-stream-banner-spin 0.8s linear infinite;
+}
+
+.neox-stream-banner__msg {
+  white-space: nowrap;
+}
+
+@keyframes neox-stream-banner-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes neox-stream-banner-in {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}

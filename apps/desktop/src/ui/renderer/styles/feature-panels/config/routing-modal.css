@@ -1,0 +1,843 @@
+/* ==================== 路由配置弹窗 - 简约风格 ==================== */
+
+/* 路由弹窗 - 紧凑简约设计 */
+.modal-content.route-modal {
+  width: 480px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.route-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.route-modal .modal-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.route-modal .modal-header .close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.route-modal .modal-header .close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.route-modal .modal-header .close-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.route-modal .modal-body {
+  flex: 1;
+  padding: 16px 18px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.route-modal .form-group {
+  margin-bottom: 14px;
+}
+
+.route-modal .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.route-modal .form-group>label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.route-modal .form-group input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+  box-sizing: border-box;
+}
+
+.route-modal .form-group input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent-500);
+}
+
+.route-modal .form-group input[type="text"]::placeholder {
+  color: var(--text-muted);
+}
+
+.route-modal .form-group input[type="text"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 路由策略 - 紧凑按钮组 */
+.route-modal .strategy-options {
+  display: flex;
+  gap: 6px;
+}
+
+.route-modal .strategy-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+}
+
+.route-modal .strategy-option:hover {
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.route-modal .strategy-option.active {
+  background: var(--accent-500);
+  border-color: var(--accent-500);
+  color: #fff;
+}
+
+.route-modal .strategy-option input[type="radio"] {
+  display: none;
+}
+
+/* Provider 列表 - 简洁列表 */
+.route-modal .provider-table {
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.route-modal .provider-table-header {
+  display: none;
+}
+
+.route-modal .provider-table-body {
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.route-modal .provider-table-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-primary);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  cursor: grab;
+}
+
+.route-modal .provider-table-row:last-child {
+  border-bottom: none;
+}
+
+.route-modal .provider-table-row:hover {
+  background: var(--bg-hover);
+}
+
+.route-modal .provider-table-row.dragging {
+  opacity: 0.4;
+}
+
+.route-modal .provider-table-row .col-drag {
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.route-modal .provider-table-row .col-provider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.route-modal .provider-table-row .priority-badge {
+  color: var(--accent-500);
+  font-weight: 600;
+  font-size: var(--neox-fs-xxs, 11px);
+  flex-shrink: 0;
+}
+
+.route-modal .provider-table-row .col-model {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route-modal .provider-table-row .col-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.route-modal .provider-table-row .status-indicator {
+  font-size: 8px;
+}
+
+.route-modal .provider-table-row .status-latency {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.route-modal .provider-table-row .col-action {
+  flex-shrink: 0;
+}
+
+.route-modal .provider-table-row .remove-btn {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-md, 14px);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.route-modal .provider-table-row:hover .remove-btn {
+  opacity: 1;
+}
+
+.route-modal .provider-table-row .remove-btn:hover {
+  color: #ef4444;
+}
+
+.route-modal .add-provider-row {
+  padding: 8px 10px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Provider 自定义下拉框 */
+.route-modal .provider-dropdown-container {
+  position: relative;
+  padding: 8px 10px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.route-modal .provider-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px dashed var(--border-subtle);
+  border-radius: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.route-modal .provider-dropdown-trigger:hover {
+  border-color: var(--accent-500);
+  color: var(--accent-500);
+}
+
+.route-modal .provider-dropdown-trigger svg {
+  width: 12px;
+  height: 12px;
+}
+
+.route-modal .provider-dropdown-trigger .dropdown-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.route-modal .provider-dropdown-menu,
+.route-provider-dropdown-menu {
+  position: fixed;
+  max-height: 200px;
+  width: 420px;
+  overflow-y: auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 100001;
+  animation: dropdown-slide-down var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes dropdown-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.route-modal .provider-dropdown-empty,
+.route-provider-dropdown-menu .provider-dropdown-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.route-modal .provider-dropdown-group,
+.route-provider-dropdown-menu .provider-dropdown-group {
+  padding: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.route-modal .provider-dropdown-group:last-child,
+.route-provider-dropdown-menu .provider-dropdown-group:last-child {
+  border-bottom: none;
+}
+
+.route-modal .provider-dropdown-group-label,
+.route-provider-dropdown-menu .provider-dropdown-group-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.route-modal .provider-dropdown-group-label .used-tag,
+.route-provider-dropdown-menu .provider-dropdown-group-label .used-tag {
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 500;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.route-modal .provider-dropdown-models,
+.route-provider-dropdown-menu .provider-dropdown-models {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.route-modal .provider-dropdown-model,
+.route-provider-dropdown-menu .provider-dropdown-model {
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.route-modal .provider-dropdown-model:hover:not(:disabled),
+.route-provider-dropdown-menu .provider-dropdown-model:hover:not(:disabled) {
+  background: var(--accent-500);
+  border-color: var(--accent-500);
+  color: #fff;
+}
+
+.route-modal .provider-dropdown-model:disabled,
+.route-provider-dropdown-menu .provider-dropdown-model:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.route-modal .empty-providers {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.route-modal .empty-providers p {
+  margin: 0;
+}
+
+/* 健康检查 - 单行紧凑布局 */
+.route-modal .health-check-group {
+  padding: 0;
+  margin-top: 0;
+  border: none;
+  background: transparent;
+}
+
+.route-modal .health-check-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.route-modal .health-check-row:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.route-modal .health-check-row .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.route-modal .health-check-row .checkbox-label input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.route-modal .health-check-inputs {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.route-modal .health-check-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.route-modal .health-check-row input[type="number"] {
+  width: 50px;
+  padding: 4px 6px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.route-modal .health-check-row input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent-500);
+}
+
+.route-modal .health-check-row input[type="number"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Modal footer - 固定底部 */
+.route-modal .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.route-modal .modal-footer button {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.route-modal .modal-footer .btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.route-modal .modal-footer .btn-secondary:hover {
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.route-modal .modal-footer .btn-primary {
+  background: var(--accent-500);
+  border: none;
+  color: #fff;
+}
+
+.route-modal .modal-footer .btn-primary:hover {
+  background: var(--accent-600);
+}
+
+.route-modal .modal-footer .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Light theme */
+:root[data-theme="light"] .modal-content.route-modal {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== 路由配置弹窗结束 ==================== */
+
+/* Info box */
+.info-box {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(33, 150, 243, 0.08);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.info-box svg {
+  width: 18px;
+  height: 18px;
+  color: #42a5f5;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-box-content {
+  flex: 1;
+}
+
+.info-box-content p {
+  margin: 0 0 8px 0;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+}
+
+.info-box-content p:last-child {
+  margin-bottom: 0;
+}
+
+.info-box-content ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.info-box-content li {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+/* Empty route state */
+.empty-routes {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-routes svg {
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+  margin-bottom: 12px;
+}
+
+.empty-routes p {
+  margin: 0;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+/* Light theme adjustments for routing */
+:root[data-theme="light"] .route-item {
+  background: #fff;
+  border-color: var(--border-subtle);
+}
+
+:root[data-theme="light"] .info-box {
+  background: rgba(33, 150, 243, 0.05);
+}
+
+
+/* ==================== 多模型协作配置样式 ==================== */
+.empty-rules {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.rule-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.rule-item:hover {
+  border-color: var(--border-default);
+  background: var(--bg-hover);
+}
+
+.rule-content {
+  flex: 1;
+}
+
+.rule-task-type {
+  font-weight: 600;
+  font-size: var(--neox-fs-md, 14px);
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.rule-models {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xs, 12px);
+  margin-top: 4px;
+}
+
+.rule-label {
+  color: var(--text-muted);
+  min-width: 40px;
+}
+
+.rule-value {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.rule-value.preferred {
+  color: var(--accent-500);
+}
+
+.rule-value.fallback {
+  color: var(--text-secondary);
+}
+
+.rule-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.rule-action-btn {
+  padding: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.rule-action-btn:hover {
+  background: var(--bg-elevated);
+}
+
+.rule-action-btn.edit:hover {
+  color: var(--accent-500);
+}
+
+.rule-action-btn.delete:hover {
+  color: #ef5350;
+}
+
+.rule-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.section-title {
+  margin-bottom: 12px;
+}
+
+.section-title h3 {
+  margin: 0;
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.section-title .section-desc {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+}
+
+.model-checkbox-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+}
+
+.model-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  font-size: var(--neox-fs-xs, 12px);
+  font-family: var(--font-mono);
+}
+
+.model-checkbox:hover {
+  background: var(--bg-hover);
+}
+
+.model-checkbox input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent-500);
+}
+
+.no-models-hint {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+/* 路由规则弹窗的自定义下拉框样式 */
+.route-modal .form-select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+
+.route-modal .form-select:hover {
+  border-color: var(--border-default);
+  background-color: var(--bg-hover);
+}
+
+.route-modal .form-select:focus {
+  border-color: var(--gold-500);
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1);
+}
+
+.route-modal .form-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 8px;
+}
+
+/* 亮色主题下拉框箭头调整 */
+:root[data-theme="light"] .route-modal .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* 弹窗关闭按钮样式 */
+.route-modal .modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.route-modal .modal-close:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.route-modal .modal-close svg {
+  width: 16px;
+  height: 16px;
+}

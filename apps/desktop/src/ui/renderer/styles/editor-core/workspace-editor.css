@@ -1,0 +1,8 @@
+@import './workspace-editor/shell-files.css';
+
+@import './workspace-editor/layout-timeline.css';
+
+@import './workspace-editor/terminal-monaco.css';
+
+@import '../components/context-menu.css';
+@import '../components/file-dialogs.css';

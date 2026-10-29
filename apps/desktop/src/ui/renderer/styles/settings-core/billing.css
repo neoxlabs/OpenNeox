@@ -1,0 +1,655 @@
+/* ============================================================
+ * SubscriptionTab + ApiKeysTab 共享样式
+ * ============================================================ */
+
+/* ---------- 通用 head + banner ---------- */
+.sub-tab__head,
+.keys-tab__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 36px 20px;
+  border-bottom: 1px solid var(--neox-line);
+  margin-bottom: 24px;
+}
+.sub-tab__head h1,
+.keys-tab__head h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em;
+}
+.sub-tab__head p,
+.keys-tab__head p {
+  margin: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary);
+  max-width: 540px;
+}
+
+.sub-tab,
+.keys-tab {
+  padding: 0 0 40px;
+  max-width: 880px;
+}
+.sub-tab > section,
+.sub-tab > .sub-banner,
+.keys-tab > section,
+.keys-tab > .sub-banner,
+.keys-tab > .keys-list,
+.keys-tab > .keys-tab__loading,
+.keys-tab > .keys-tab__empty {
+  margin-left: 36px;
+  margin-right: 36px;
+}
+
+.sub-banner {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: var(--neox-radius-md);
+  font-size: var(--neox-fs-sm, 13px);
+}
+.sub-banner--err {
+  background: var(--neox-err-soft);
+  color: var(--neox-err-ink);
+}
+.sub-banner--info {
+  background: var(--neox-ok-soft);
+  color: var(--neox-ok-ink);
+}
+
+.sub-section__title {
+  margin: 24px 0 12px;
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+}
+
+/* ============================================================
+ * 当前订阅卡 (.sub-current)
+ * ============================================================ */
+.sub-current {
+  background: linear-gradient(135deg, var(--neox-primary-50) 0%, var(--neox-bg-card) 100%);
+  border: 1px solid var(--neox-primary-200);
+  border-radius: var(--neox-radius-lg);
+  padding: 22px 24px;
+  box-shadow: var(--neox-shadow-1);
+  margin-bottom: 16px;
+}
+.sub-current__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.sub-current__plan {
+  font-size: 22px;
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.sub-current__desc {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  margin-top: 4px;
+  max-width: 460px;
+  line-height: 1.5;
+}
+.sub-current__status {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.sub-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--neox-radius-pill);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium, 500);
+  letter-spacing: 0.02em;
+}
+.sub-tag--active   { background: var(--neox-ok-soft); color: var(--neox-ok-ink); }
+.sub-tag--past_due { background: var(--neox-warn-soft); color: var(--neox-warn-ink); }
+.sub-tag--canceled { background: var(--neox-err-soft); color: var(--neox-err-ink); }
+.sub-tag--trialing { background: var(--neox-info-soft); color: var(--neox-info-ink); }
+.sub-tag--unknown  { background: var(--neox-bg-muted); color: var(--neox-fg-muted); }
+.sub-tag--warn     { background: var(--neox-warn-soft); color: var(--neox-warn-ink); }
+
+.sub-current__quota {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.sub-current__quota-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+}
+.sub-current__quota-label strong {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+}
+.sub-current__bar {
+  height: 8px;
+  background: var(--neox-bg-muted);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.sub-current__fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.sub-current__fill.is-safe   { background: var(--neox-primary-600); }
+.sub-current__fill.is-warn   { background: var(--neox-warn); }
+.sub-current__fill.is-danger { background: var(--neox-err); }
+.sub-current__quota-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+}
+.sub-current__points {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary);
+}
+.sub-current__points strong {
+  color: var(--neox-fg-primary);
+  font-weight: var(--neox-fw-semibold, 600);
+}
+.sub-current__points-hint { color: var(--neox-fg-hint); font-size: var(--neox-fs-xs, 12px); }
+
+/* ============================================================
+ * Plans 网格 (.sub-plans)
+ * ============================================================ */
+.sub-plans__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.sub-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  padding: 20px 18px;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out), transform var(--neox-dur-fast) var(--neox-ease-out), box-shadow var(--neox-dur-fast) var(--neox-ease-out);
+}
+.sub-plan:hover { border-color: var(--neox-primary-300); transform: translateY(-2px); box-shadow: var(--neox-shadow-2); }
+
+.sub-plan.is-current {
+  border-color: var(--neox-primary-600);
+  box-shadow: 0 0 0 3px var(--neox-primary-ring);
+}
+.sub-plan.is-popular {
+  border-color: var(--neox-primary-400);
+}
+
+.sub-plan__ribbon,
+.sub-plan__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: var(--neox-radius-pill);
+  font-size: 10px;
+  font-weight: var(--neox-fw-semibold, 600);
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+}
+.sub-plan__ribbon { background: linear-gradient(135deg, var(--neox-primary-500), var(--neox-primary-700)); color: var(--neox-fg-invert, #fff); }
+.sub-plan__badge  { background: var(--neox-ok-soft); color: var(--neox-ok-ink); }
+
+.sub-plan__name {
+  font-size: var(--neox-fs-lg, 16px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.sub-plan__price {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary);
+  margin-bottom: 8px;
+}
+.sub-plan__price strong {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.02em;
+  font-family: var(--neox-font-sans, inherit);
+}
+.sub-plan__desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  min-height: 30px;
+}
+.sub-plan__features {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.sub-plan__features li {
+  position: relative;
+  padding-left: 16px;
+  line-height: 1.4;
+}
+.sub-plan__features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--neox-primary-600);
+  font-weight: 700;
+}
+.sub-plan__features strong {
+  color: var(--neox-fg-primary);
+  font-weight: var(--neox-fw-semibold, 600);
+}
+.sub-plan__cta {
+  margin-top: auto;
+  height: 36px;
+  border: 0;
+  border-radius: var(--neox-radius-md);
+  background: linear-gradient(180deg, var(--neox-primary-500), var(--neox-primary-700));
+  color: var(--neox-fg-invert, #fff);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-semibold, 600);
+  cursor: pointer;
+  transition: filter var(--neox-dur-fast) var(--neox-ease-out), transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+.sub-plan__cta:hover:not(:disabled) { filter: brightness(1.06); }
+.sub-plan__cta:active:not(:disabled) { transform: translateY(1px); }
+.sub-plan__cta:disabled {
+  background: var(--neox-bg-muted);
+  color: var(--neox-fg-hint);
+  cursor: not-allowed;
+}
+.sub-plan__cta.is-current {
+  background: var(--neox-primary-50);
+  color: var(--neox-primary-700);
+  border: 1px solid var(--neox-primary-300);
+}
+
+.sub-plan--team .sub-plan__cta { background: var(--neox-bg-card); color: var(--neox-fg-muted); border: 1px dashed var(--neox-line-strong); }
+
+/* ============================================================
+ * 历史订单 (.sub-orders)
+ * ============================================================ */
+.sub-orders__empty {
+  padding: 32px;
+  text-align: center;
+  background: var(--neox-bg-card);
+  border: 1px dashed var(--neox-line);
+  border-radius: var(--neox-radius-md);
+  color: var(--neox-fg-muted);
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.sub-orders__list {
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-md);
+  overflow: hidden;
+}
+.sub-orders__head {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.4fr;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--neox-bg-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.sub-orders__row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.4fr;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--neox-line-soft);
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-primary);
+  align-items: center;
+}
+.sub-orders__id {
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+}
+.sub-orders__status--paid     { color: var(--neox-ok-ink); font-weight: var(--neox-fw-medium, 500); }
+.sub-orders__status--created  { color: var(--neox-warn-ink); }
+.sub-orders__status--expired  { color: var(--neox-fg-muted); }
+.sub-orders__status--refunded { color: var(--neox-info-ink); }
+.sub-orders__status--canceled { color: var(--neox-fg-muted); }
+
+/* ============================================================
+ * 模型权益 (.sub-models) — 服务端权威, 客户端只展示
+ * ============================================================ */
+.sub-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 24px 0 12px;
+  flex-wrap: wrap;
+}
+.sub-section__head .sub-section__title {
+  margin: 0;
+}
+.sub-section__hint {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  font-weight: var(--neox-fw-regular, 400);
+}
+
+.sub-models {
+  margin-bottom: 16px;
+}
+.sub-models__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  padding: 8px;
+}
+
+.sub-model-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  border-radius: var(--neox-radius-md);
+  background: var(--neox-bg-card);
+  border: 1px solid transparent;
+  transition: background-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.sub-model-row:hover {
+  background: var(--neox-bg-muted);
+}
+.sub-model-row--denied {
+  opacity: 0.6;
+}
+.sub-model-row__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.sub-model-row__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: #fff;
+  background: var(--neox-fg-secondary);
+  flex-shrink: 0;
+}
+.sub-model-row__avatar--anthropic { background: #d97706; }
+.sub-model-row__avatar--openai    { background: #10a37f; }
+.sub-model-row__avatar--google    { background: #4285f4; }
+.sub-model-row__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.sub-model-row__name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+}
+.sub-model-row__provider {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+
+.sub-model-row__status {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-medium, 500);
+  padding: 3px 10px;
+  border-radius: var(--neox-radius-pill);
+  letter-spacing: 0.01em;
+}
+.sub-model-row__status--included  { background: var(--neox-ok-soft);   color: var(--neox-ok-ink); }
+.sub-model-row__status--on_demand { background: var(--neox-info-soft); color: var(--neox-info-ink); }
+.sub-model-row__status--denied    { background: var(--neox-bg-muted);  color: var(--neox-fg-hint); }
+
+/* ============================================================
+ * 积分充值 (.sub-topup) — 国内充值包卡片网格
+ * ============================================================ */
+.sub-topup {
+  margin-bottom: 16px;
+}
+.sub-topup__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.sub-topup-card {
+  position: relative;
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  padding: 18px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+.sub-topup-card:hover {
+  border-color: var(--neox-primary-300, var(--neox-primary-200));
+  transform: translateY(-2px);
+  box-shadow: var(--neox-shadow-2, 0 4px 12px rgba(0,0,0,.08));
+}
+.sub-topup-card__ribbon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--neox-primary-600);
+  color: var(--neox-fg-invert, #fff);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: var(--neox-fw-semibold, 600);
+  padding: 3px 8px;
+  border-radius: var(--neox-radius-pill);
+  letter-spacing: 0.02em;
+}
+.sub-topup-card__name {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+}
+.sub-topup-card__price {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-secondary);
+}
+.sub-topup-card__price strong {
+  font-size: 22px;
+  color: var(--neox-fg-primary);
+  font-weight: var(--neox-fw-semibold, 600);
+  font-variant-numeric: tabular-nums;
+  margin-right: 2px;
+}
+.sub-topup-card__points {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+}
+.sub-topup-card__points strong {
+  color: var(--neox-primary-700, var(--neox-primary-600));
+  font-variant-numeric: tabular-nums;
+}
+.sub-topup-card__bonus {
+  display: block;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+}
+.sub-topup-card__desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  line-height: 1.5;
+  flex: 1;
+}
+.sub-topup-card__cta {
+  appearance: none;
+  margin-top: auto;
+  height: 36px;
+  border: 0;
+  background: var(--neox-primary-600);
+  color: var(--neox-fg-invert, #fff);
+  border-radius: var(--neox-radius-md);
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: var(--neox-fw-medium, 500);
+  cursor: pointer;
+  transition: background-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.sub-topup-card__cta:hover:not(:disabled) {
+  background: var(--neox-primary-700, var(--neox-primary-600));
+}
+.sub-topup-card__cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+ * 邀请码卡片 (.sub-referral)
+ * ============================================================ */
+.sub-referral {
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.sub-referral__row {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  gap: 28px;
+  align-items: center;
+}
+.sub-referral__col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sub-referral__label {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sub-referral__code {
+  font-family: var(--neox-font-mono, ui-monospace, monospace);
+  font-size: var(--neox-fs-xl, 18px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-primary-700, var(--neox-primary-600));
+  letter-spacing: 0.06em;
+  user-select: all;
+}
+.sub-referral__num {
+  font-size: var(--neox-fs-xl, 18px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+.sub-referral__hint {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-secondary);
+  line-height: 1.5;
+}
+
+.sub-orders__head, .sub-orders__row {
+  grid-template-columns: 1.2fr 1.2fr 1fr 0.8fr 1fr;
+}
+
+/* ============================================================
+ * DataStaleBanner — 云端数据未刷新提示, 跨 tab 复用
+ * ============================================================ */
+.data-stale-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--neox-radius-md);
+  background: var(--neox-warn-soft, #fff5e0);
+  color: var(--neox-warn-ink, #8a5a00);
+  border: 1px solid var(--neox-warn-line, rgba(170, 110, 0, 0.18));
+  font-size: var(--neox-fs-sm, 13px);
+  margin: 0 0 16px;
+}
+.data-stale-banner__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+.data-stale-banner__text {
+  flex: 1;
+  line-height: 1.45;
+}
+.data-stale-banner__ts {
+  margin-left: 6px;
+  opacity: 0.7;
+  font-size: var(--neox-fs-xs, 12px);
+}
+.data-stale-banner__retry {
+  flex-shrink: 0;
+  appearance: none;
+  border: 1px solid var(--neox-warn-line, rgba(170, 110, 0, 0.28));
+  background: var(--neox-warn-btn-bg, #fff);
+  color: var(--neox-warn-ink, #8a5a00);
+  padding: 4px 12px;
+  border-radius: var(--neox-radius-md);
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.data-stale-banner__retry:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-warn, #d4a017) 22%, transparent);
+}
+.data-stale-banner__retry:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

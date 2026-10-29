@@ -1,0 +1,5 @@
+a1b2c3d feat(api): run() 现在返回 Promise —— BREAKING
+4d5e6f7 fix(slug): 连续空格和重音字符处理错误
+8a9b0c1 fix(retry): 4xx 不再无意义重试
+2d3e4f5 fix(xlsx): 合计行公式引用错行
+6a7b8c9 feat(cli): 新增 --upper 选项

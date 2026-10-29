@@ -1,0 +1,34 @@
+# 百川 Baichuan 家族能力声明
+#
+# OpenAI 兼容协议. Baichuan2 / Baichuan-NPC / Baichuan3-Turbo 等.
+# 国内主流之一, 国产替代场景必备.
+
+id: baichuan
+display_name: 百川 Baichuan
+
+aliases:
+  - baichuan
+  - baichuan2
+  - baichuan3
+  - bc
+
+capabilities:
+  thinking:
+    native: false   # 现版本无独立 thinking 字段
+  reasoning_effort:
+    supported: false
+  vision: false
+  parallel_tool_use: false  # 主力版本 (Baichuan2) function calling 仍单工具
+  prompt_cache: false
+  structured_output: false
+  tool_use_shape: openai-function
+
+# Baichuan 中文输出有时偏长, 用规则型约束 (跟 glm 同档)
+markdown_constraint: glm_terse
+# 暂复用 glm supplement (国内中文优化场景类似); 后续验证有专属 quirks 再加 baichuan supplement
+supplement_key: glm
+
+fast_patterns:
+  - /\bturbo\b/i
+  - /\bspeed\b/i
+  - /\b2-13b\b/i  # 13b 是中档, 53b/192k 才是主力

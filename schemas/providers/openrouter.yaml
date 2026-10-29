@@ -1,0 +1,38 @@
+id: prov_openrouter
+slug: openrouter
+display_name: OpenRouter
+status: active
+
+# 真实接入信息
+base_url: https://openrouter.ai/api
+protocol: openai-chat
+
+auth:
+  env: OPENROUTER_API_KEY
+  format: bearer
+
+# OpenRouter 的"中间层"特性 — 它把 upstream 的协议特性透传/丢弃
+features:
+  # cache_control 字段在 message content block 内出现时, 路由到 Anthropic 上游会透传.
+  # 路由到 OpenAI/Cohere 等不识别的上游时 silently strip. 我们安全注入.
+  cache_control_passthrough: true
+
+  # OpenAI reasoning_effort / verbosity 透传
+  reasoning_effort_passthrough: true
+  verbosity_passthrough: true
+
+  # OpenRouter 通过 model id 前缀路由到具体上游
+  upstream_routing_by_slug_prefix:
+    "anthropic/": claude
+    "openai/": openai
+    "google/": gemini
+    "z-ai/": glm
+    "xiaomi/": mimo
+    "meta-llama/": llama
+    "mistralai/": mistral
+
+# OpenRouter 不严格对 messages.system 顺序检查 (它本身宽容), 但下游 Anthropic 会拒.
+# 所以即使 provider 是 openrouter, 跑 sanitize 仍然必要 (按下游 family 决定).
+client_obligations:
+  sanitize_system_order_for_families: [claude]
+  inject_cache_control_for_families: [claude]

@@ -1,0 +1,898 @@
+/* ============================================================
+ * macOS System Preferences — 统一组件覆写
+ *
+ * 放在 settings-core.css 最后 import, 覆盖各 tab 自定义样式
+ * 让所有设置页面使用一致的组件风格:
+ *   · 按钮: 8px 圆角, 统一高度/字号
+ *   · 卡片: 10px 圆角, 1px 边框, 无阴影
+ *   · Badge: 6px 圆角或 pill
+ *   · 输入框: 8px 圆角, 1px 边框
+ *   · 间距/字号: 紧凑统一
+ * ============================================================ */
+
+/* ==================== 1. 通用按钮规范 ==================== */
+
+/* 主按钮 — 深色填充 */
+.settings-page .btn-primary,
+.settings-page .sub-plan__cta,
+.settings-page .subv2__btn--primary,
+.settings-page .apiv2__btn--primary,
+.settings-page .apiv2-free__btn--primary,
+.settings-page .secv2__btn--primary,
+.settings-page .account-overview__primary,
+.settings-page .sub-topup-card__cta,
+.settings-page .save-api-key-btn,
+.settings-page .account-btn--primary {
+  border-radius: 8px !important;
+  background: var(--st-accent) !important;
+  color: var(--neox-fg-invert, #fff) !important;
+  border: none !important;
+  font-size: var(--neox-fs-sm, 13px) !important;
+  font-weight: 500 !important;
+  height: 32px;
+  padding: 0 16px !important;
+  box-shadow: none !important;
+  transition: opacity 0.15s ease !important;
+}
+.settings-page .btn-primary:hover,
+.settings-page .subv2__btn--primary:hover,
+.settings-page .apiv2__btn--primary:hover,
+.settings-page .secv2__btn--primary:hover,
+.settings-page .account-overview__primary:hover,
+.settings-page .account-btn--primary:hover {
+  opacity: 0.85 !important;
+  transform: none !important;
+}
+
+/* 次按钮 — 灰色边框 */
+.settings-page .btn-secondary,
+.settings-page .subv2__btn--secondary,
+.settings-page .apiv2__btn--outline,
+.settings-page .secv2__btn--outline,
+.settings-page .secv2__row-btn,
+.settings-page .account-btn--secondary,
+.settings-page .add-provider-btn.secondary,
+.settings-page .add-btn,
+.settings-page .setting-action-btn,
+.settings-page .refresh-btn,
+.settings-page .browser-debug-btn,
+.settings-page .rc-disconnect {
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--st-text) !important;
+  border: 1px solid var(--st-border-strong) !important;
+  font-size: var(--neox-fs-sm, 13px) !important;
+  font-weight: 400 !important;
+  height: 32px;
+  padding: 0 14px !important;
+  box-shadow: none !important;
+  transition: background 0.12s ease !important;
+}
+.settings-page .btn-secondary:hover,
+.settings-page .subv2__btn--secondary:hover,
+.settings-page .secv2__btn--outline:hover,
+.settings-page .account-btn--secondary:hover,
+.settings-page .add-btn:hover,
+.settings-page .setting-action-btn:hover,
+.settings-page .browser-debug-btn:hover {
+  background: var(--st-accent-soft) !important;
+}
+
+/* 危险按钮 */
+.settings-page .secv2__danger,
+.settings-page .btn-danger {
+  border-radius: 8px !important;
+  background: #ff3b30 !important;
+  color: #fff !important;
+  border: none !important;
+  font-size: var(--neox-fs-sm, 13px) !important;
+  font-weight: 500 !important;
+  height: 32px;
+  padding: 0 16px !important;
+}
+
+/* Add 按钮 — 带 icon 的 */
+.settings-page .add-provider-btn:not(.secondary) {
+  border-radius: 8px !important;
+  background: var(--st-accent) !important;
+  color: #fff !important;
+  border: none !important;
+  font-size: var(--neox-fs-xs, 12px) !important;
+  font-weight: 500 !important;
+  height: 28px;
+  padding: 0 12px !important;
+}
+:root[data-theme="dark"] .settings-page .add-provider-btn:not(.secondary) {
+  color: #000 !important;
+}
+
+/* 小尺寸 icon-only 按钮 */
+.settings-page .refresh-btn,
+.settings-page .action-btn,
+.settings-page .process-output-btn,
+.settings-page .process-kill-btn,
+.settings-page .manual-check-btn {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--st-border) !important;
+  background: transparent !important;
+  color: var(--st-text-soft) !important;
+}
+.settings-page .refresh-btn:hover,
+.settings-page .action-btn:hover,
+.settings-page .manual-check-btn:hover {
+  background: var(--st-accent-soft) !important;
+  color: var(--st-text) !important;
+}
+
+/* ==================== 2. 通用卡片/容器规范 ==================== */
+
+/* 所有 hero 卡片 — 统一为简洁白卡 (不再用紫色渐变) */
+.settings-page .subv2__hero,
+.settings-page .account-overview__hero,
+.settings-page .secv2__hero,
+.settings-page .apiv2-free__hero {
+  background: var(--st-card) !important;
+  border: 1px solid var(--st-border) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+/* 所有面板/卡片 */
+.settings-page .subv2__plan,
+.settings-page .account-overview__panel,
+.settings-page .account-overview__stat,
+.settings-page .secv2__panel,
+.settings-page .summary-card,
+.settings-page .provider-stat-card,
+.settings-page .browser-status-item,
+.settings-page .process-item,
+.settings-page .sub-current,
+.settings-page .sub-plan,
+.settings-page .sub-topup-card {
+  background: var(--st-card) !important;
+  border: 1px solid var(--st-border) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+/* 列表卡片容器 */
+.settings-page .sub-orders__list,
+.settings-page .subv2__history {
+  border: 1px solid var(--st-border) !important;
+  border-radius: 10px !important;
+  background: var(--st-card) !important;
+}
+
+/* 虚线 → 实线 (macOS 不用 dashed border) */
+.settings-page .sub-plan--team .sub-plan__cta,
+.settings-page .sub-orders__empty,
+.settings-page .usg-export-zone {
+  border-style: solid !important;
+}
+
+/* ==================== 3. 通用 Badge/Tag 规范 ==================== */
+
+/* 标准 badge — 小圆角 */
+.settings-page .subv2__pill,
+.settings-page .secv2__pill,
+.settings-page .status-badge,
+.settings-page .type-badge,
+.settings-page .model-tag,
+.settings-page .account-overview__plan-pill,
+.settings-page .sub-tag {
+  border-radius: 6px !important;
+  font-size: var(--neox-fs-xxs, 11px) !important;
+  font-weight: 500 !important;
+  padding: 2px 8px !important;
+  line-height: 1.4 !important;
+}
+
+/* Pill badge — 圆形 */
+.settings-page .apiv2-free__pill,
+.settings-page .mp-mini-tag,
+.settings-page .mp-count-badge,
+.settings-page .account-overview__email-badge,
+.settings-page .account-overview__session-tag,
+.settings-page .about-version-badge,
+.settings-page .remote-client-count {
+  border-radius: 999px !important;
+  font-size: var(--neox-fs-xxs, 11px) !important;
+  font-weight: 500 !important;
+  padding: 2px 8px !important;
+}
+
+/* ==================== 4. 通用输入框规范 ==================== */
+
+
+.settings-page input[type="text"]:not(.settings-sidebar__search-input):not(.nx-bare-input),
+.settings-page input[type="password"],
+.settings-page input[type="number"],
+.settings-page input[type="url"],
+.settings-page textarea,
+.settings-page .remote-port-input,
+.settings-page .browser-url-input,
+.settings-page .api-key-input,
+.settings-page .mp-search input,
+.settings-page .mp-manual-editor {
+  border-radius: 8px !important;
+  border: 1px solid var(--st-border-strong) !important;
+  background: var(--st-card) !important;
+  color: var(--st-text) !important;
+  font-size: var(--neox-fs-sm, 13px) !important;
+  padding: 6px 10px !important;
+  outline: none !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.settings-page input:focus:not(.settings-sidebar__search-input):not(.nx-bare-input),
+.settings-page textarea:focus {
+  border-color: var(--neox-primary-600, #007aff) !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15) !important;
+}
+:root[data-theme="dark"] .settings-page input:focus:not(.settings-sidebar__search-input):not(.nx-bare-input),
+:root[data-theme="dark"] .settings-page textarea:focus {
+  border-color: var(--neox-primary-600, #e5e5e5) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 20%, transparent) !important;
+}
+
+/* select 下拉 */
+.settings-page select {
+  border-radius: 8px !important;
+  border: 1px solid var(--st-border-strong) !important;
+  background: var(--st-card) !important;
+  color: var(--st-text) !important;
+  font-size: var(--neox-fs-sm, 13px) !important;
+  padding: 6px 10px !important;
+  height: 32px;
+}
+
+/* ==================== 5. 通用 hint/note 区块 ==================== */
+
+.settings-page .exp-note,
+.settings-page .api-key-hint,
+.settings-page .sub-hint,
+.settings-page .privacy-foot {
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: none !important;
+  font-size: var(--neox-fs-xxs, 11px) !important;
+  color: var(--st-text-mute) !important;
+  padding: 4px 0 !important;
+}
+
+/* ==================== 6. 模态框统一 ==================== */
+
+.settings-page .modal-overlay {
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-theme-pack] .settings-page .modal-content {
+  border-radius: 14px !important;
+  background: rgba(28, 28, 30, 0.82) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
+          backdrop-filter: blur(60px) saturate(180%) !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    0 2px 0 rgba(0, 0, 0, 0.24),
+    0 12px 36px rgba(0, 0, 0, 0.42) !important;
+}
+:root[data-theme-pack][data-theme="light"] .settings-page .modal-content {
+  background: rgba(248, 248, 246, 0.86) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(15, 23, 42, 0.06),
+    0 2px 0 rgba(0, 0, 0, 0.06),
+    0 12px 36px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* ==================== 7. 状态颜色统一 (macOS palette) ==================== */
+
+.settings-page .process-status.running,
+.settings-page .health-status.good,
+.settings-page .health-status.excellent,
+.settings-page .health-availability.good {
+  color: #34c759 !important;
+}
+
+.settings-page .process-status.error,
+.settings-page .health-status.error,
+.settings-page .health-status.offline,
+.settings-page .health-availability.error {
+  color: #ff3b30 !important;
+}
+
+.settings-page .health-status.poor,
+.settings-page .health-availability.poor {
+  color: #ff9500 !important;
+}
+
+/* ============================================================
+ * Dark Graphite System Settings — 对齐 macOS 暗夜系统设置材质
+ * 目标不是纯黑/紫色主题，而是低对比石墨灰、细边、分组列表。
+ * ============================================================ */
+:root[data-theme="dark"] .settings-overlay,
+:root[data-theme="dark"] .settings-page {
+  --st-accent: var(--neox-primary-600, #e5e5e5);
+  --st-accent-strong: #ffffff;
+  --st-accent-soft: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 16%, transparent);
+  --st-accent-tint: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 22%, transparent);
+  --st-bg: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 6%, #252a28);
+  --st-card: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 8%, #2b302e);
+  --st-card-2: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 10%, #303532);
+  --st-border: rgba(255, 255, 255, 0.10);
+  --st-border-strong: rgba(255, 255, 255, 0.16);
+  --st-text: rgba(245, 246, 244, 0.92);
+  --st-text-soft: rgba(235, 236, 234, 0.72);
+  --st-text-mute: rgba(235, 236, 234, 0.46);
+}
+
+:root[data-theme="dark"] .settings-overlay {
+  background: rgba(9, 10, 10, 0.44) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(112%) !important;
+  backdrop-filter: blur(10px) saturate(112%) !important;
+}
+
+:root[data-theme="dark"] .settings-page {
+  /* 主背景: 8% primary 淋进深灰渐变. Aurora 绿、Moonlit 紫、Sakura 粉一目了然. */
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 8%, rgba(43, 48, 46, .96)),
+      color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 6%, rgba(38, 43, 41, .96))
+    ) !important;
+  border-color: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 8%, rgba(255, 255, 255, 0.16)) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, .42),
+    0 0 0 .5px color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 6%, rgba(255, 255, 255, .10)) inset !important;
+}
+
+:root[data-theme="dark"] .settings-sidebar,
+:root[data-theme="dark"] .settings-main {
+  background: transparent !important;
+}
+
+:root[data-theme="dark"] .settings-sidebar {
+  border-right-color: rgba(255, 255, 255, .105) !important;
+}
+
+:root[data-theme="dark"] .panel-header h2 {
+  color: rgba(245, 246, 244, .94) !important;
+  font-weight: 720 !important;
+}
+
+:root[data-theme="dark"] .settings-nav__group + .settings-nav__group {
+  border-top: none !important;
+}
+
+:root[data-theme="dark"] .settings-nav__group-title {
+  color: rgba(245, 246, 244, .90) !important;
+}
+:root[data-theme="dark"] .settings-nav__group-sub {
+  color: rgba(235, 236, 234, .62) !important;
+}
+
+:root[data-theme="dark"] .nav-item {
+  color: rgba(235, 236, 234, .72) !important;
+  border-radius: 7px !important;
+  font-weight: 560 !important;
+}
+:root[data-theme="dark"] .nav-item:hover {
+  background: rgba(255, 255, 255, .055) !important;
+  color: rgba(245, 246, 244, .94) !important;
+}
+:root[data-theme="dark"] .nav-item.active {
+  background: rgba(255, 255, 255, .10) !important;
+  color: rgba(245, 246, 244, .98) !important;
+  font-weight: 650 !important;
+}
+:root[data-theme="dark"] .nav-item.active svg {
+  color: inherit !important;
+}
+
+:root[data-theme="dark"] .settings-section,
+:root[data-theme="dark"] .settings-page .subv2__plan,
+:root[data-theme="dark"] .settings-page .account-overview__panel,
+:root[data-theme="dark"] .settings-page .account-overview__stat,
+:root[data-theme="dark"] .settings-page .secv2__panel,
+:root[data-theme="dark"] .settings-page .summary-card,
+:root[data-theme="dark"] .settings-page .provider-stat-card,
+:root[data-theme="dark"] .settings-page .browser-status-item,
+:root[data-theme="dark"] .settings-page .process-item,
+:root[data-theme="dark"] .settings-page .sub-current,
+:root[data-theme="dark"] .settings-page .sub-plan,
+:root[data-theme="dark"] .settings-page .sub-topup-card,
+:root[data-theme="dark"] .settings-page .sub-orders__list,
+:root[data-theme="dark"] .settings-page .subv2__history {
+  background: color-mix(in srgb, #313633 86%, transparent) !important;
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .setting-row + .setting-row {
+  background-image: linear-gradient(rgba(255, 255, 255, .085), rgba(255, 255, 255, .085)) !important;
+  background-size: calc(100% - 16px) 0.5px !important;
+  background-position: 16px 0 !important;
+  background-repeat: no-repeat !important;
+}
+:root[data-theme="dark"] .setting-row:hover {
+  background: rgba(255, 255, 255, .045) !important;
+}
+:root[data-theme="dark"] .setting-label {
+  color: rgba(245, 246, 244, .88) !important;
+  font-weight: 520 !important;
+}
+:root[data-theme="dark"] .setting-desc,
+:root[data-theme="dark"] .panel-desc {
+  color: rgba(235, 236, 234, .50) !important;
+}
+
+:root[data-theme="dark"] .settings-page .btn-primary,
+:root[data-theme="dark"] .settings-page .sub-plan__cta,
+:root[data-theme="dark"] .settings-page .subv2__btn--primary,
+:root[data-theme="dark"] .settings-page .apiv2__btn--primary,
+:root[data-theme="dark"] .settings-page .secv2__btn--primary,
+:root[data-theme="dark"] .settings-page .account-overview__primary,
+:root[data-theme="dark"] .settings-page .account-btn--primary,
+:root[data-theme="dark"] .settings-page .add-provider-btn:not(.secondary) {
+  background: var(--neox-primary-600, #e5e5e5) !important;
+  color: var(--neox-fg-invert, #fff) !important;
+}
+
+:root[data-theme="dark"] .settings-page .btn-secondary,
+:root[data-theme="dark"] .settings-page .setting-action-btn,
+:root[data-theme="dark"] .settings-page .refresh-btn,
+:root[data-theme="dark"] .settings-page .action-btn {
+  background: rgba(255,255,255,.045) !important;
+  border-color: rgba(255,255,255,.13) !important;
+  color: rgba(245,246,244,.82) !important;
+}
+
+:root[data-theme="dark"] .settings-page input[type="text"]:not(.settings-sidebar__search-input):not(.nx-bare-input),
+:root[data-theme="dark"] .settings-page input[type="password"],
+:root[data-theme="dark"] .settings-page input[type="number"],
+:root[data-theme="dark"] .settings-page input[type="url"],
+:root[data-theme="dark"] .settings-page textarea,
+:root[data-theme="dark"] .settings-page select {
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.13) !important;
+  color: rgba(245,246,244,.90) !important;
+}
+
+:root[data-theme="dark"] .settings-overlay,
+:root[data-theme="dark"] .settings-page,
+:root[data-theme-preset="moye"] .settings-overlay,
+:root[data-theme-preset="moye"] .settings-page,
+:root[data-theme-pack="dark"] .settings-overlay,
+:root[data-theme-pack="dark"] .settings-page {
+  --st-bg: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 6%, #262626) !important;
+  --st-card: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 8%, #303030) !important;
+  --st-card-2: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 10%, #343434) !important;
+  /* 分割线永远中性, 不吃强调色色相 */
+  --st-border: rgba(255, 255, 255, 0.10) !important;
+  --st-border-strong: rgba(255, 255, 255, 0.16) !important;
+  --st-accent: var(--neox-primary-600, #e5e5e5) !important;
+  --st-accent-soft: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 14%, transparent) !important;
+  --st-accent-tint: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 20%, transparent) !important;
+}
+
+:root[data-theme="dark"] .settings-page,
+:root[data-theme-preset="moye"] .settings-page,
+:root[data-theme-pack="dark"] .settings-page {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 8%, rgba(47, 47, 47, .97)),
+      color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 6%, rgba(39, 39, 39, .97))
+    ) !important;
+}
+
+:root[data-theme="dark"] .settings-section,
+:root[data-theme="dark"] .settings-page .subv2__plan,
+:root[data-theme="dark"] .settings-page .account-overview__panel,
+:root[data-theme="dark"] .settings-page .account-overview__stat,
+:root[data-theme="dark"] .settings-page .secv2__panel,
+:root[data-theme="dark"] .settings-page .summary-card,
+:root[data-theme="dark"] .settings-page .provider-stat-card,
+:root[data-theme="dark"] .settings-page .browser-status-item,
+:root[data-theme="dark"] .settings-page .process-item,
+:root[data-theme="dark"] .settings-page .sub-current,
+:root[data-theme="dark"] .settings-page .sub-plan,
+:root[data-theme="dark"] .settings-page .sub-topup-card,
+:root[data-theme-preset="moye"] .settings-section {
+  background: rgba(52, 52, 52, .78) !important;
+  border-color: rgba(255,255,255,.115) !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2,
+:root[data-theme-preset="moye"] .settings-page .apiv2,
+:root[data-theme-pack="dark"] .settings-page .apiv2 {
+  --av-accent: var(--neox-primary-600, #e5e5e5) !important;
+  --av-accent-strong: var(--neox-primary-500, #409cff) !important;
+  --av-accent-soft: rgba(255,255,255,.055) !important;
+  --av-card: rgba(52,52,52,.78) !important;
+  --av-border: rgba(255,255,255,.105) !important;
+  --av-border-strong: rgba(255,255,255,.155) !important;
+  --av-text: rgba(245,246,244,.91) !important;
+  --av-text-soft: rgba(235,236,234,.68) !important;
+  --av-text-mute: rgba(235,236,234,.43) !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2-banner,
+:root[data-theme-preset="moye"] .settings-page .apiv2-banner,
+:root[data-theme-pack="dark"] .settings-page .apiv2-banner,
+:root[data-theme="dark"] .settings-page .apiv2__foot,
+:root[data-theme-preset="moye"] .settings-page .apiv2__foot,
+:root[data-theme-pack="dark"] .settings-page .apiv2__foot {
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  color: rgba(235,236,234,.68) !important;
+  box-shadow: none !important;
+}
+:root[data-theme="dark"] .settings-page .apiv2-banner__icon,
+:root[data-theme-preset="moye"] .settings-page .apiv2-banner__icon,
+:root[data-theme-pack="dark"] .settings-page .apiv2-banner__icon,
+:root[data-theme="dark"] .settings-page .apiv2__foot > svg,
+:root[data-theme-preset="moye"] .settings-page .apiv2__foot > svg,
+:root[data-theme-pack="dark"] .settings-page .apiv2__foot > svg {
+  color: rgba(235,236,234,.62) !important;
+}
+:root[data-theme="dark"] .settings-page .apiv2-banner__body strong,
+:root[data-theme-preset="moye"] .settings-page .apiv2-banner__body strong,
+:root[data-theme-pack="dark"] .settings-page .apiv2-banner__body strong {
+  color: rgba(245,246,244,.86) !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2__chip,
+:root[data-theme-preset="moye"] .settings-page .apiv2__chip,
+:root[data-theme-pack="dark"] .settings-page .apiv2__chip {
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: rgba(235,236,234,.70) !important;
+}
+:root[data-theme="dark"] .settings-page .apiv2__chip.is-on,
+:root[data-theme-preset="moye"] .settings-page .apiv2__chip.is-on,
+:root[data-theme-pack="dark"] .settings-page .apiv2__chip.is-on {
+  background: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 14%, transparent) !important;
+  border-color: rgba(10,132,255,.32) !important;
+  color: color-mix(in srgb, var(--neox-primary-500, #8fc7ff) 60%, #fff) !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2__btn--primary,
+:root[data-theme-preset="moye"] .settings-page .apiv2__btn--primary,
+:root[data-theme-pack="dark"] .settings-page .apiv2__btn--primary {
+  background: var(--neox-primary-600, #e5e5e5) !important;
+  color: var(--neox-fg-invert, #fff) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2__card-icon,
+:root[data-theme-preset="moye"] .settings-page .apiv2__card-icon,
+:root[data-theme-pack="dark"] .settings-page .apiv2__card-icon {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+:root[data-theme="dark"] .settings-overlay,
+:root[data-theme="dark"] .settings-page,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-overlay,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page,
+:root[data-theme-pack][data-theme="dark"] .settings-overlay,
+:root[data-theme-pack][data-theme="dark"] .settings-page {
+  /* 背景 token — 全部走中性, 不再淋 primary */
+  --st-bg: rgba(255, 255, 255, 0.04) !important;
+  --st-card: rgba(255, 255, 255, 0.06) !important;
+  --st-card-2: rgba(255, 255, 255, 0.09) !important;
+  --st-border: rgba(255, 255, 255, 0.10) !important;
+  --st-border-strong: rgba(255, 255, 255, 0.16) !important;
+  --st-text: rgba(245, 245, 245, .92) !important;
+  --st-text-soft: rgba(235, 235, 235, .68) !important;
+  --st-text-mute: rgba(235, 235, 235, .42) !important;
+  /* 交互件 token — 仍走 accent, 让选中态/CTA 跟着 accent picker 走 */
+  --st-accent: var(--neox-primary-600, #e5e5e5) !important;
+  --st-accent-soft: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 13%, transparent) !important;
+  --st-accent-tint: color-mix(in srgb, var(--neox-primary-600, #e5e5e5) 20%, transparent) !important;
+}
+
+:root[data-theme="dark"] .settings-overlay,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-overlay,
+:root[data-theme-pack][data-theme="dark"] .settings-overlay {
+  background: rgba(8, 8, 8, .42) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+  backdrop-filter: blur(28px) saturate(150%) !important;
+}
+
+:root[data-theme="dark"] .settings-page,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page,
+:root[data-theme-pack][data-theme="dark"] .settings-page {
+  background:
+    linear-gradient(180deg, rgba(38, 38, 40, .40), rgba(30, 30, 32, .46)) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(180%) !important;
+  backdrop-filter: blur(36px) saturate(180%) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    0 30px 78px rgba(0, 0, 0, .46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+:root[data-theme="dark"] .settings-sidebar,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-sidebar,
+:root[data-theme-pack][data-theme="dark"] .settings-sidebar {
+  background: transparent !important;
+  border-right-color: transparent !important;
+}
+
+:root[data-theme="dark"] .settings-main,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-main,
+:root[data-theme-pack][data-theme="dark"] .settings-main {
+  background: transparent !important;
+}
+
+:root[data-theme="dark"] .settings-section,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-section,
+:root[data-theme-pack][data-theme="dark"] .settings-section {
+  background: var(--neox-mat-regular-bg) !important;
+  -webkit-backdrop-filter: var(--neox-mat-regular-blur) !important;
+          backdrop-filter: var(--neox-mat-regular-blur) !important;
+  border-color: transparent !important;
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom) !important;
+}
+
+:root[data-theme="dark"] .settings-page .subv2__plan,
+:root[data-theme="dark"] .settings-page .account-overview__panel,
+:root[data-theme="dark"] .settings-page .account-overview__stat,
+:root[data-theme="dark"] .settings-page .secv2__panel,
+:root[data-theme="dark"] .settings-page .summary-card,
+:root[data-theme="dark"] .settings-page .provider-stat-card,
+:root[data-theme="dark"] .settings-page .browser-status-item,
+:root[data-theme="dark"] .settings-page .process-item,
+:root[data-theme="dark"] .settings-page .sub-current,
+:root[data-theme="dark"] .settings-page .sub-plan,
+:root[data-theme="dark"] .settings-page .sub-topup-card {
+  background: rgba(54, 54, 54, .36) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2,
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2 {
+  --av-accent: var(--neox-primary-600, #e5e5e5) !important;
+  --av-accent-strong: var(--neox-primary-600, #e5e5e5) !important;
+  --av-accent-soft: rgba(255,255,255,.055) !important;
+  --av-card: rgba(54,54,54,.68) !important;
+  --av-border: rgba(255,255,255,.105) !important;
+  --av-border-strong: rgba(255,255,255,.15) !important;
+  --av-text: rgba(245,245,245,.90) !important;
+  --av-text-soft: rgba(235,235,235,.66) !important;
+  --av-text-mute: rgba(235,235,235,.40) !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2-banner,
+:root[data-theme="dark"] .settings-page .apiv2__foot,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2-banner,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2__foot,
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2-banner,
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2__foot {
+  background: rgba(58, 58, 58, .72) !important;
+  border-color: rgba(255,255,255,.11) !important;
+  color: rgba(235,235,235,.66) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2-banner__icon,
+:root[data-theme="dark"] .settings-page .apiv2__foot > svg,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2-banner__icon,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2__foot > svg,
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2-banner__icon,
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2__foot > svg {
+  color: rgba(235,235,235,.58) !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2__chip.is-on,
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2__chip.is-on,
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2__chip.is-on {
+  background: rgba(255,255,255,.07) !important;
+  border-color: rgba(255,255,255,.13) !important;
+  color: rgba(235,235,235,.78) !important;
+}
+
+:root[data-theme="dark"] .settings-page .apiv2__pin-tag:not(.apiv2__pin-tag--toggle),
+:root[data-theme-preset="moye"][data-theme="dark"] .settings-page .apiv2__pin-tag:not(.apiv2__pin-tag--toggle),
+:root[data-theme-pack][data-theme="dark"] .settings-page .apiv2__pin-tag:not(.apiv2__pin-tag--toggle) {
+  background: rgba(255,255,255,.045) !important;
+  border-color: rgba(255,255,255,.105) !important;
+  color: rgba(235,235,235,.62) !important;
+}
+
+/* ============================================================
+ * Settings nested card flatten pass
+ *
+ * Keep one border on the owning card/control. Inner inputs, rows,
+ * metrics and chips should not paint a second rounded card.
+ * ============================================================ */
+.settings-page {
+  --st-flat-card: color-mix(in srgb, var(--st-card) 38%, transparent);
+  --st-flat-inner: color-mix(in srgb, var(--st-card) 22%, transparent);
+}
+
+:root[data-theme-pack] .settings-page {
+  --st-flat-card: color-mix(in srgb, var(--pack-tint-strong, var(--st-card)) 38%, transparent);
+  --st-flat-inner: color-mix(in srgb, var(--pack-tint, var(--st-card)) 22%, transparent);
+}
+
+.settings-page .settings-section,
+.settings-page .mp-pane,
+.settings-page .mp-section,
+.settings-page .cloud-agent-tab__stat,
+.settings-page .cloud-agent-tab__empty,
+.settings-page .cloud-agent-tab__item,
+.settings-page .keymap-group,
+.settings-page .keymap-footer-hint {
+  background: var(--neox-mat-regular-bg) !important;
+  -webkit-backdrop-filter: var(--neox-mat-regular-blur) !important;
+          backdrop-filter: var(--neox-mat-regular-blur) !important;
+  border: none !important;
+  box-shadow:
+    var(--neox-mat-hairline-top),
+    var(--neox-mat-hairline-bottom),
+    var(--neox-mat-shadow-regular) !important;
+}
+
+.settings-page .pet-empty,
+.settings-page .pet-preview-stage,
+.settings-page .skill-preview-card,
+.settings-page .theme-section,
+.settings-page .theme-card {
+  background: var(--st-flat-card) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+  backdrop-filter: blur(12px) saturate(140%) !important;
+  border: 1px solid var(--st-border) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+.settings-page .setting-row,
+.settings-page .mp-metric,
+.settings-page .account-overview__stat-body,
+.settings-page .skill-detail-item,
+.settings-page .skill-detail-section {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.settings-page .mp-search,
+.settings-page .keymap-search-bar {
+  background: var(--st-flat-inner) !important;
+  border: 1px solid var(--st-border-strong) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.settings-page .mp-search:focus-within,
+.settings-page .keymap-search-bar:focus-within {
+  border-color: var(--st-accent) !important;
+  box-shadow: 0 0 0 2px var(--st-accent-soft) !important;
+}
+
+.settings-page .mp-search input,
+.settings-page input.keymap-search-input,
+.settings-page .keymap-search-input,
+.settings-page .memory-browser-compact .browser-search input {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.settings-page .mp-search input:focus,
+.settings-page input.keymap-search-input:focus,
+.settings-page .keymap-search-input:focus,
+.settings-page .memory-browser-compact .browser-search input:focus {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.settings-page .mp-mini-tag,
+.settings-page .mp-count-badge,
+.settings-page .mp-tool-chip,
+.settings-page .mp-selected-chip,
+.settings-page .memory-browser-compact .filter-chip,
+.settings-page .keymap-shortcut-chip {
+  background: transparent !important;
+  border: 1px solid var(--st-border) !important;
+  box-shadow: none !important;
+}
+
+.settings-page .mp-tool-chip.active,
+.settings-page .mp-selected-chip,
+.settings-page .memory-browser-compact .filter-chip.active {
+  background: var(--st-accent-soft) !important;
+  border-color: color-mix(in srgb, var(--st-accent) 34%, transparent) !important;
+}
+
+.settings-page .keymap-shortcut-chip:hover,
+.settings-page .keymap-row.editing .keymap-shortcut-chip {
+  background: var(--st-accent-soft) !important;
+  border-color: color-mix(in srgb, var(--st-accent) 22%, transparent) !important;
+}
+
+.settings-page .keymap-shortcut-chip {
+  background: var(--st-flat-inner) !important;
+  border-color: color-mix(in srgb, var(--st-accent) 6%, var(--st-border)) !important;
+}
+
+.settings-page .keymap-shortcut-chip.empty {
+  background: transparent !important;
+  border-color: var(--st-border-strong) !important;
+  border-style: dashed !important;
+  color: var(--st-text-mute) !important;
+}
+
+.settings-page .keymap-group-header {
+  color: var(--st-text) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.settings-page .skills-panel {
+  width: min(100%, 980px) !important;
+  max-width: 980px !important;
+  margin-right: auto !important;
+}
+
+.settings-page .skills-panel .panel-header {
+  gap: 16px !important;
+}
+
+.settings-page .skills-panel .panel-header-actions {
+  flex-shrink: 0 !important;
+}
+
+.settings-page .skills-panel .skills-filters {
+  padding: 12px 16px !important;
+  gap: 14px !important;
+}
+
+.settings-page .skills-panel .skills-filters .filter-group {
+  min-width: 168px !important;
+}
+
+.settings-page .skills-panel .skills-filters .filter-group label {
+  min-width: 58px !important;
+  text-align: left !important;
+}
+
+.settings-page .skills-panel .empty-state,
+.settings-page .skills-panel .loading-state {
+  display: flex !important;
+  min-height: 148px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 28px 24px !important;
+  text-align: center !important;
+}
+
+.settings-page .skills-panel .empty-state p,
+.settings-page .skills-panel .loading-state span {
+  max-width: 420px !important;
+  margin: 0 auto !important;
+}
+
+.settings-page .skills-panel .skills-list {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  padding: 0 16px 16px !important;
+}

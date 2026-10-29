@@ -1,0 +1,1966 @@
+/* ==================== Markdown Content Styles ==================== */
+.markdown-content {
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: calc(1.6 * var(--nx-lh-scale, 1));
+  color: var(--text-primary);
+  word-wrap: break-word;
+  /* 包住即时 UI 的 float, 不然下一则消息会绕进来 */
+  display: flow-root;
+}
+
+.markdown-content.timeline-detail {
+  margin-top: 4px;
+}
+
+.markdown-content .md-paragraph {
+  margin: 0 0 0.62em 0;
+}
+
+.markdown-content .md-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* Headings — keep subtle, smaller than role labels */
+.markdown-content .md-heading {
+  margin: 8px 0 4px 0;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: calc(1.4 * var(--nx-lh-scale, 1));
+}
+
+.markdown-content .md-heading:first-child {
+  margin-top: 0;
+}
+
+.markdown-content .md-h1 {
+  font-size: var(--neox-fs-md, 14px);
+}
+
+.markdown-content .md-h2 {
+  font-size: var(--neox-fs-sm, 13px);
+}
+
+.markdown-content .md-h3 {
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+}
+
+.markdown-content .md-h4 {
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.markdown-content .md-inline-code {
+  background: color-mix(in srgb, var(--neox-fg-primary, #000) 6%, transparent);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 1em;
+  color: var(--accent-500);
+  /* 长 chip 要能跟着正文换行, 否则一整句会撑出横向滚动 */
+  overflow-wrap: anywhere;
+}
+
+.markdown-content .md-inline-code--clickable {
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease;
+  user-select: text;
+}
+.markdown-content .md-inline-code--clickable:hover {
+  background: var(--accent-100, rgba(var(--accent-rgb, 34,197,94), 0.15));
+  box-shadow: inset 0 -1px 0 0 var(--accent-500);
+}
+.markdown-content .md-inline-code--clickable:focus-visible {
+  outline: 2px solid var(--accent-500);
+  outline-offset: 1px;
+}
+.markdown-content .md-inline-code--clickable:active {
+  transform: translateY(0.5px);
+}
+
+.markdown-content .md-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  margin: 0 2px;
+  padding: 2px 4px 2px 6px;
+  vertical-align: middle;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-bg-card, #fff) 70%, transparent);
+  color: var(--neox-fg-primary);
+  font-family: inherit;
+  font-size: 0.95em;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.markdown-content .md-file-chip:hover {
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 22%, transparent);
+  background: var(--neox-bg-card, #fff);
+}
+.markdown-content .md-file-chip:focus-visible {
+  outline: 2px solid var(--accent-500);
+  outline-offset: 1px;
+}
+.markdown-content .md-file-chip__name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: var(--neox-fw-medium, 500);
+}
+.markdown-content .md-file-chip__open {
+  flex: none;
+  padding: 0 6px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  color: var(--neox-fg-secondary);
+  font-size: 0.85em;
+}
+.markdown-content .md-file-chip:hover .md-file-chip__open {
+  color: var(--neox-fg-primary);
+}
+
+.markdown-content .md-code-block {
+  position: relative;
+  margin: 12px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 4.5%, transparent);
+  border: 0;
+  /* 跟表格同一个理由: 块盒不会绕开浮卡, 只会被整块压窄。代码更受不了 ——
+   * 压窄之后每一行都横向滚动, 而浮卡下方的空间全程空着 (见 .md-table-wrapper)。 */
+  clear: both;
+}
+
+/* 头部浮在右上角, 不占布局高度 —— 代码块的第一行就是代码 */
+.markdown-content .md-code-header {
+  position: absolute;
+  top: 0; right: 0; left: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px 0;
+  background: transparent;
+  border: 0;
+  pointer-events: none;
+}
+.markdown-content .md-code-header > * { pointer-events: auto; }
+
+.markdown-content .md-code-block .md-code-lang {
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+  transition: opacity 140ms ease;
+}
+.markdown-content .md-code-block:hover .md-code-lang { opacity: 0.75; }
+
+.markdown-content .md-code-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.markdown-content .md-code-selected {
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  color: var(--neox-primary-500, #6e56ff);
+  font-family: var(--font-mono);
+}
+
+/* Copy — 常驻会跟代码抢注意力, 改成 hover / focus 才淡入的幽灵按钮 */
+.markdown-content .md-code-copy {
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  padding: 2px 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 7%, transparent);
+  border: 0;
+  border-radius: 5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  opacity: 0;
+  transition: opacity 140ms ease, background 140ms ease, color 140ms ease;
+}
+.markdown-content .md-code-block:hover .md-code-copy,
+.markdown-content .md-code-copy:focus-visible { opacity: 1; }
+
+.markdown-content .md-code-copy:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 12%, transparent);
+  color: var(--text-primary);
+}
+
+.markdown-content .md-code-block pre {
+  margin: 0;
+  /* 上留白给浮起来的语言名 / Copy 让位 */
+  padding: 22px 0 12px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: calc(11.5px * var(--nx-fs-scale, 1));
+  line-height: calc(1.6 * var(--nx-lh-scale, 1));
+}
+
+.markdown-content .md-code-block code {
+  background: none;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+/* 行号 + 行内容 */
+.markdown-content .md-code-line {
+  display: flex;
+  padding: 0 12px 0 0;
+  min-height: 18px;
+  cursor: pointer;
+  transition: background 0.08s;
+}
+
+.markdown-content .md-code-line:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 3%, transparent);
+}
+
+.markdown-content .md-code-line.selected {
+  background: color-mix(in srgb, var(--neox-primary-500, #6e56ff) 12%, transparent);
+}
+
+.markdown-content .md-code-linenum {
+  width: 34px;
+  text-align: right;
+  padding-right: 12px;
+  color: var(--text-muted);
+  opacity: 0.28;
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  flex-shrink: 0;
+  user-select: none;
+  border-right: 0;
+  margin-right: 6px;
+}
+
+.markdown-content .md-code-block--plain .md-code-linenum { display: none; }
+.markdown-content .md-code-block--plain pre { padding: 9px 0; }
+.markdown-content .md-code-block--plain .md-code-line {
+  padding-left: 12px;
+  /* 给右上角那组 (行数提示 + Copy) 留出净空, 正文再长也不会钻到按钮底下 */
+  padding-right: 92px;
+}
+.markdown-content .md-code-block--plain .md-code-header {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  padding: 0 8px 0 0;
+}
+
+.markdown-content .md-code-line.selected .md-code-linenum {
+  opacity: 0.7;
+  color: var(--text-accent, #c9a227);
+}
+
+.markdown-content .md-code-linetext {
+  flex: 1;
+  white-space: pre;
+}
+
+/* 语法高亮 token 颜色 */
+.markdown-content .hl-keyword { color: #c678dd; }
+.markdown-content .hl-string { color: #98c379; }
+.markdown-content .hl-comment { color: #5c6370; font-style: italic; }
+.markdown-content .hl-number { color: #d19a66; }
+.markdown-content .hl-type { color: #56b6c2; }
+
+:root[data-theme="light"] .markdown-content .hl-keyword { color: #a626a4; }
+:root[data-theme="light"] .markdown-content .hl-string { color: #50a14f; }
+:root[data-theme="light"] .markdown-content .hl-comment { color: #a0a1a7; font-style: italic; }
+:root[data-theme="light"] .markdown-content .hl-number { color: #986801; }
+:root[data-theme="light"] .markdown-content .hl-type { color: #0184bc; }
+
+/* Lists */
+.markdown-content .md-list {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.markdown-content .md-list li {
+  margin: 6px 0;
+}
+
+.markdown-content .md-ul {
+  list-style-type: disc;
+}
+
+.markdown-content .md-ol {
+  list-style: none;
+  counter-reset: md-ol var(--md-ol-start, 0);
+  padding-left: 0;
+}
+.markdown-content .md-ol > li {
+  counter-increment: md-ol;
+  position: relative;
+  padding-left: var(--md-ol-slot, 1.4em);
+}
+.markdown-content .md-ol > li::before {
+  content: counter(md-ol) ".";
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-align: left;
+}
+
+/* Nested lists */
+.markdown-content .md-list .md-list {
+  margin: 4px 0;
+}
+
+/* Blockquote */
+.markdown-content .md-blockquote {
+  margin: 10px 0;
+  padding: 6px 12px;
+  border-left: 3px solid var(--accent-500);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: 0 6px 6px 0;
+}
+
+.markdown-content .md-blockquote p {
+  margin: 0;
+}
+
+/* Links */
+.markdown-content a {
+  color: var(--accent-500);
+  text-decoration: none;
+}
+
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+/* Tables */
+.markdown-content .md-table-wrapper {
+  overflow-x: auto;
+  margin: 14px 0;
+  max-width: 100%;
+  contain: layout style;
+  clear: both;
+}
+
+.markdown-content table {
+  display: table;
+  table-layout: auto;
+  /* 宽度也按内容, 不硬撑满。撑满 (min-width:100%) 的话多出来的宽度会全灌进最长那列,
+   * 离线量过: 1090px 栏里三列变成 161/819/110, 中间空一大片而「能否截屏」被推到天边。
+   * 收缩后同一张表 726px, 三列贴着内容; 放不下时 max-width 兜住, wrapper 横向滚。 */
+  width: max-content;
+  max-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: calc(1.55 * var(--nx-lh-scale, 1));
+  border: 0;
+  border-radius: 0;
+  contain: layout;
+}
+
+.markdown-content th,
+.markdown-content td {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 短值列不折行, 见 Markdown.tsx markShortColumns */
+.markdown-content td[data-nowrap] { white-space: nowrap; }
+
+/* 长内容 cell (如代码片段) 允许横向滚动 — 但只 cell 内, 不影响整表 layout */
+.markdown-content td code,
+.markdown-content th code {
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* thead 不再上底色 —— 表头靠字重 / 字号 / 大写 letter-spacing 区分, 一条实线收底 */
+.markdown-content thead {
+  background: transparent;
+}
+
+.markdown-content th,
+.markdown-content td {
+  padding: 9px 14px;
+  border: 0;
+  text-align: left;
+  vertical-align: top;
+}
+.markdown-content th:first-child,
+.markdown-content td:first-child { padding-left: 2px; }
+
+.markdown-content th {
+  padding-top: 4px;
+  padding-bottom: 8px;
+  font-weight: 600;
+  font-size: var(--neox-fs-xs, 12px);
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: var(--neox-fg-secondary);
+  white-space: nowrap;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+}
+
+/* 行分隔 — 发丝线, 不用斑马纹 (斑马纹在长报告里比网格更吵) */
+.markdown-content tbody tr + tr td {
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.markdown-content tr:nth-child(even) td {
+  background: transparent;
+}
+/* 首列当行标题: 稍重, 一眼能扫下来 */
+.markdown-content tbody td:first-child {
+  color: var(--neox-fg-primary);
+  font-weight: 500;
+}
+
+/* hover 整行高亮 — 阅读长表时跟随光标找行 */
+.markdown-content tbody tr {
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.markdown-content tbody tr:hover td {
+  background: color-mix(in srgb, var(--neox-fg-primary) 3.5%, transparent);
+}
+
+/* ============================================================
+ * Timeline agent 消息内的表格 (.atl-msg__md = TimelineTextRenderer→Markdown)
+ *   只 scope 到 timeline 消息, 不动文档预览等其它 markdown 界面.
+ *   目标: 比正文小、行矮、去竖向网格线 (横线+斑马纹=专业).
+ *   用 .markdown-content.atl-msg__md (双类, 高于基类 .markdown-content) 保证覆盖.
+ * ============================================================ */
+.markdown-content.atl-msg__md .md-table-wrapper { margin: 14px 0 10px; }
+.markdown-content.atl-msg__md table { font-size: calc(13px * var(--nx-fs-scale, 1)); line-height: calc(1.5 * var(--nx-lh-scale, 1)); }
+.markdown-content.atl-msg__md th,
+.markdown-content.atl-msg__md td { padding: 5px 8px; }
+.markdown-content.atl-msg__md th:first-child,
+.markdown-content.atl-msg__md td:first-child { padding-left: 10px; }
+.markdown-content.atl-msg__md td code,
+.markdown-content.atl-msg__md th code { font-size: calc(12px * var(--nx-fs-scale, 1)); padding: 1px 4px; white-space: nowrap; }
+
+/* 极简模式: 表格再小一档, 明显小于 17px 正文 (高优先级压过 .atl-msg__text code 等) */
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md table { font-size: var(--neox-fs-xxs, 11px); line-height: calc(1.32 * var(--nx-lh-scale, 1)); }
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md .md-table-wrapper { margin: 6px 0; }
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md th,
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md td { padding: 3px 10px; }
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md th { font-size: calc(11px * var(--nx-fs-scale, 1)); }
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md td code,
+.agent-timeline.is-density-minimal .markdown-content.atl-msg__md th code { font-size: calc(10px * var(--nx-fs-scale, 1)); }
+
+
+/* ============================================================
+ * Timeline 表格 — 无边框、松散、专业.
+ *   :root 前缀提权 (0,3,x), 压过基类 + light 主题规则.
+ * ============================================================ */
+:root .markdown-content.atl-msg__md table {
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  display: table !important;
+  table-layout: auto !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: var(--neox-fs-xs, 12px) !important;
+  line-height: calc(1.45 * var(--nx-lh-scale, 1)) !important;
+}
+:root .markdown-content.atl-msg__md thead {
+  background: transparent !important;
+}
+:root .markdown-content.atl-msg__md th {
+  color: var(--neox-fg-secondary) !important;
+  font-weight: 600 !important;
+  font-size: calc(11px * var(--nx-fs-scale, 1)) !important;
+  letter-spacing: .03em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  background: transparent !important;
+}
+:root .markdown-content.atl-msg__md th,
+:root .markdown-content.atl-msg__md td {
+  border: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  padding: 6px 14px !important;
+  vertical-align: top !important;
+}
+:root .markdown-content.atl-msg__md thead th {
+  /* --nx-md-head-pad: UI 3.0 陶土外壳按稿收紧 (shell/clay-studio.css) */
+  padding: var(--nx-md-head-pad, 5px 14px 6px) !important;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--neox-fg-primary) 12%, transparent) !important;
+}
+:root .markdown-content.atl-msg__md tbody tr + tr td {
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 5%, transparent) !important;
+}
+:root .markdown-content.atl-msg__md tr:nth-child(even) td {
+  background: transparent !important;
+}
+:root .markdown-content.atl-msg__md tbody tr:hover td {
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent) !important;
+}
+:root .markdown-content.atl-msg__md td .md-inline-code,
+:root .markdown-content.atl-msg__md th .md-inline-code,
+:root .markdown-content.atl-msg__md td code,
+:root .markdown-content.atl-msg__md th code {
+  color: var(--neox-fg-primary) !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-size: 0.92em !important;
+  letter-spacing: -0.01em;
+  /* 必须显式放开 nowrap: 基础规则 (.atl-msg__md td code) 为了让 chip 不断行设了 nowrap,
+     chip 去掉之后它还在 —— 长路径撑宽整表, 直接触发"还有 N 列 →"横滚。 */
+  white-space: normal;
+  word-break: break-word;
+}
+/* 可点的路径: 无框也要看得出能点 — 悬停给一条发丝下划线 + 主色 */
+:root .markdown-content.atl-msg__md td .md-inline-code--clickable,
+:root .markdown-content.atl-msg__md th .md-inline-code--clickable {
+  color: var(--neox-fg-secondary) !important;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  box-shadow: none !important;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+:root .markdown-content.atl-msg__md td .md-inline-code--clickable:hover,
+:root .markdown-content.atl-msg__md th .md-inline-code--clickable:hover {
+  color: var(--neox-primary-500, #6e56ff);
+  background: transparent;
+  text-decoration-color: currentColor;
+}
+
+/* Horizontal rule */
+.markdown-content .md-hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 12px 0;
+}
+
+/* Strong and emphasis */
+.markdown-content strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.markdown-content em {
+  font-style: italic;
+}
+
+/* Task lists (GFM) */
+.markdown-content input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* Strikethrough (GFM) */
+.markdown-content del {
+  color: var(--text-muted);
+}
+
+/* Images */
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+
+/* Light theme adjustments */
+:root[data-theme="light"] .markdown-content .md-inline-code {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .markdown-content .md-code-block {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+:root[data-theme="light"] .markdown-content .md-blockquote {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* ==================== Markdown v2: alerts / mermaid / math / images ==================== */
+
+/* GitHub-style alerts (> [!NOTE] / [!TIP] / [!WARNING] / [!IMPORTANT] / [!CAUTION]) */
+.markdown-content .md-alert {
+  margin: 14px 0;
+  padding: 10px 16px;
+  border-left: 4px solid var(--md-alert-accent, #3b82f6);
+  border-radius: 6px;
+  background: var(--md-alert-bg, rgba(59, 130, 246, 0.08));
+  color: var(--text-secondary);
+}
+.markdown-content .md-alert > p {
+  margin: 6px 0;
+}
+.markdown-content .md-alert > p:last-child {
+  margin-bottom: 0;
+}
+.markdown-content .md-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: var(--neox-fs-sm, 13px);
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+  color: var(--md-alert-accent, #3b82f6);
+}
+.markdown-content .md-alert-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+.markdown-content .md-alert-note {
+  --md-alert-accent: #58a6ff;
+  --md-alert-bg: rgba(56, 139, 253, 0.1);
+}
+.markdown-content .md-alert-note .md-alert-icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75zM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75zM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2z'/%3E%3C/svg%3E");
+}
+.markdown-content .md-alert-tip {
+  --md-alert-accent: #3fb950;
+  --md-alert-bg: rgba(63, 185, 80, 0.1);
+}
+.markdown-content .md-alert-tip .md-alert-icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.75.75 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.75.75 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'/%3E%3C/svg%3E");
+}
+.markdown-content .md-alert-important {
+  --md-alert-accent: #a371f7;
+  --md-alert-bg: rgba(163, 113, 247, 0.1);
+}
+.markdown-content .md-alert-important .md-alert-icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
+}
+.markdown-content .md-alert-warning {
+  --md-alert-accent: #d29922;
+  --md-alert-bg: rgba(210, 153, 34, 0.1);
+}
+.markdown-content .md-alert-warning .md-alert-icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
+}
+.markdown-content .md-alert-caution {
+  --md-alert-accent: #f85149;
+  --md-alert-bg: rgba(248, 81, 73, 0.1);
+}
+.markdown-content .md-alert-caution .md-alert-icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+}
+
+/* Mermaid diagrams */
+.markdown-content .md-mermaid {
+  --mm-panel: color-mix(in srgb, var(--neox-fg-primary) 2.5%, var(--neox-bg-canvas));
+  margin: 16px 0;
+  padding: 24px 20px;
+  background-color: var(--mm-panel);
+  background-image: radial-gradient(color-mix(in srgb, var(--neox-fg-primary) 14%, transparent) 1.1px, transparent 1.6px);
+  background-size: 16px 16px;
+  background-position: 8px 8px;
+  border: 1px solid var(--neox-line);
+  border-radius: 14px;
+  overflow-x: auto;
+  text-align: center;
+}
+.markdown-content .md-mermaid svg {
+  max-width: 100%;
+  height: auto;
+  overflow: visible;   /* 节点阴影别被 svg 视口裁掉 */
+}
+:is(.md-mermaid, .sfc-diagram__stage) :is(.node rect, .node .label-container, .node path, .node circle, .node polygon) {
+  fill: var(--neox-bg-canvas) !important;
+  stroke: color-mix(in srgb, var(--neox-fg-primary) 13%, transparent) !important;
+  stroke-width: 1px !important;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 10px rgb(0 0 0 / 0.05));
+}
+:is(.md-mermaid, .sfc-diagram__stage) :is(.node rect, .node .label-container, .cluster rect) {
+  rx: 10px;
+  ry: 10px;
+}
+/* 判断 (菱形) —— 全图唯一带颜色的地方 */
+:is(.md-mermaid, .sfc-diagram__stage) .node polygon {
+  fill: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 7%, var(--neox-bg-canvas)) !important;
+  stroke: color-mix(in srgb, var(--neox-primary-500, #7c5cff) 38%, transparent) !important;
+}
+:is(.md-mermaid, .sfc-diagram__stage) :is(.nodeLabel, .node .label) {
+  color: var(--neox-fg-primary) !important;
+  /* 不加粗: mermaid 按常规字重量宽, 加粗会把长标签再次挤出框 */
+}
+:is(.md-mermaid, .sfc-diagram__stage) .cluster rect {
+  fill: color-mix(in srgb, var(--neox-fg-primary) 2%, transparent) !important;
+  stroke: color-mix(in srgb, var(--neox-fg-primary) 12%, transparent) !important;
+  stroke-dasharray: 4 3;
+}
+:is(.md-mermaid, .sfc-diagram__stage) :is(.flowchart-link, .edgePath .path, .messageLine0, .messageLine1, .relation) {
+  stroke: color-mix(in srgb, var(--neox-fg-primary) 30%, transparent) !important;
+  stroke-width: 1.25px !important;
+}
+:is(.md-mermaid, .sfc-diagram__stage) :is(.arrowheadPath, marker path) {
+  fill: color-mix(in srgb, var(--neox-fg-primary) 38%, transparent) !important;
+  stroke: none !important;
+}
+:is(.md-mermaid, .sfc-diagram__stage) .edgeLabel {
+  color: var(--neox-fg-secondary) !important;
+  font-size: 12px;
+}
+:is(.md-mermaid, .sfc-diagram__stage) .edgeLabel :is(p, span, .label) {
+  background: var(--mm-panel, var(--neox-bg-canvas)) !important;
+}
+/* 暗色: 阴影换成更深更散, 白卡片换成抬高一档的面 */
+:root[data-theme="dark"] :is(.md-mermaid, .sfc-diagram__stage) :is(.node rect, .node .label-container, .node path, .node circle) {
+  fill: color-mix(in srgb, var(--neox-fg-primary) 7%, var(--neox-bg-canvas)) !important;
+  filter: drop-shadow(0 2px 8px rgb(0 0 0 / 0.35));
+}
+.markdown-content .md-mermaid-loading {
+  color: var(--text-muted);
+  font-size: var(--neox-fs-xs, 12px);
+  text-align: center;
+  padding: 24px;
+}
+.markdown-content .md-mermaid-error {
+  background: rgba(248, 81, 73, 0.06);
+  border-color: rgba(248, 81, 73, 0.3);
+  text-align: left;
+}
+.markdown-content .md-mermaid-error-title {
+  color: #f85149;
+  font-weight: 600;
+  font-size: var(--neox-fs-xs, 12px);
+  margin-bottom: 8px;
+}
+.markdown-content .md-mermaid-error-msg,
+.markdown-content .md-mermaid-error-src {
+  margin: 4px 0 0;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+}
+
+/* Frontmatter block — a more subdued code block */
+.markdown-content .md-code-frontmatter {
+  opacity: 0.75;
+}
+.markdown-content .md-code-frontmatter .md-code-lang {
+  text-transform: lowercase;
+  font-style: italic;
+}
+
+/* Images: click-to-zoom lightbox */
+.markdown-content .md-image {
+  cursor: zoom-in;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+.markdown-content .md-image-broken {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px dashed rgba(248, 81, 73, 0.4);
+  color: #f85149;
+  font-size: var(--neox-fs-xs, 12px);
+  border-radius: 6px;
+  background: rgba(248, 81, 73, 0.06);
+}
+.md-image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  cursor: zoom-out;
+  animation: md-lightbox-fade var(--neox-dur-fast) var(--neox-ease-out);
+}
+.md-image-lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+/* 灯箱工具条 —— 复制 / 关闭。放右上角固定位, 不跟图片一起缩放。 */
+.md-lightbox__bar {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  display: flex;
+  gap: 8px;
+  cursor: default;
+}
+.md-lightbox__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: var(--neox-fs-sm, 13px);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.md-lightbox__btn:hover { background: rgba(255, 255, 255, 0.2); }
+.md-lightbox__btn:disabled { opacity: 0.6; cursor: default; }
+@keyframes md-lightbox-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* KaTeX block math — center and add margin */
+.markdown-content .katex-display {
+  margin: 16px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+}
+.markdown-content .katex-display > .katex {
+  font-size: 1.1em;
+}
+.markdown-content .katex {
+  font-size: 1em;
+}
+
+/* H5 / H6 that weren't styled before */
+.markdown-content .md-h5 {
+  font-size: var(--neox-fs-md, 14px);
+  font-weight: 600;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+.markdown-content .md-h6 {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ==================== Legacy HTML align attribute (README-style) ==================== */
+/* Modern browsers no longer honor <p align="center"> so we wire it in CSS ourselves.
+   This is important for GitHub-style READMEs that wrap images/badges in aligned blocks. */
+.markdown-content [align="center"] {
+  text-align: center;
+}
+.markdown-content [align="right"] {
+  text-align: right;
+}
+.markdown-content [align="left"] {
+  text-align: left;
+}
+.markdown-content [align="justify"] {
+  text-align: justify;
+}
+.markdown-content p[align="center"] > img,
+.markdown-content div[align="center"] > img {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==================== Heading anchor links (rehype-slug + autolink) ==================== */
+.markdown-content .md-heading {
+  position: relative;
+}
+/* heading 自动 anchor (rehype-autolink-headings wrap) — 必须用 a.md-heading-link
+ *   提一档特异性 (0,2,1), 不然下方 .markdown-preview-surface .markdown-content a
+ *   的 #58a6ff 会反向覆盖 inherit, 让所有标题被染成 GitHub 蓝, 跟主题不搭. */
+.markdown-content a.md-heading-link {
+  color: inherit;
+  text-decoration: none;
+}
+.markdown-content a.md-heading-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.markdown-content .md-heading:hover .md-heading-link::before {
+  content: "#";
+  position: absolute;
+  left: -1em;
+  top: 0;
+  width: 1em;
+  color: var(--md-alert-accent, #58a6ff);
+  opacity: 0.55;
+  font-weight: 400;
+  text-align: right;
+  padding-right: 0.25em;
+}
+
+/* ==================== Inline HTML elements (kbd / mark / sub / sup / details) ==================== */
+.markdown-content kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: calc(14px * var(--nx-fs-scale, 1) * var(--nx-lh-scale, 1));
+  color: var(--text-primary);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06));
+  border: 1px solid rgba(255,255,255,0.15);
+  border-bottom-color: rgba(255,255,255,0.3);
+  border-radius: 4px;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.15);
+}
+:root[data-theme="light"] .markdown-content kbd {
+  background: linear-gradient(180deg, #fafbfc, #eaecef);
+  border-color: #d1d5da;
+  border-bottom-color: #959da5;
+  box-shadow: inset 0 -1px 0 #959da5;
+  color: #24292e;
+}
+
+.markdown-content mark {
+  background: rgba(255, 214, 0, 0.18);
+  color: inherit;
+  padding: 0.08em 0.3em;
+  border-radius: 3px;
+}
+:root[data-theme="light"] .markdown-content mark {
+  background: rgba(255, 214, 0, 0.35);
+}
+
+.markdown-content sub,
+.markdown-content sup {
+  font-size: 0.78em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-content sup { top: -0.5em; }
+.markdown-content sub { bottom: -0.25em; }
+
+.markdown-content details {
+  margin: 12px 0;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+}
+.markdown-content details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+  user-select: none;
+  padding: 2px 0;
+  outline: none;
+}
+.markdown-content details > summary:hover {
+  color: var(--md-alert-accent, #58a6ff);
+}
+.markdown-content details[open] > summary {
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 6px;
+}
+:root[data-theme="light"] .markdown-content details {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+:root[data-theme="light"] .markdown-content details[open] > summary {
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+
+/* ==================== Task list checkboxes ==================== */
+.markdown-content .md-list li.task-list-item,
+.markdown-content ul li > input[type="checkbox"] {
+  list-style: none;
+}
+.markdown-content li > input[type="checkbox"] {
+  margin-right: 6px;
+  margin-left: -1.3em;
+  vertical-align: middle;
+  accent-color: var(--md-alert-accent, #58a6ff);
+}
+.markdown-content li.task-list-item {
+  list-style: none;
+  margin-left: -1.3em;
+  padding-left: 1.3em;
+}
+
+/* ==================== Status marks (rehypeStatusMarks) ====================
+   Check / cross / empty-box emoji from the model, drawn as quiet line marks in the theme's colours
+   instead of glossy platform emoji: a tinted disc with a thin glyph; to-do is a
+   hairline ring. */
+.markdown-content .md-mark {
+  --md-mark-color: var(--text-secondary);
+  position: relative;
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  vertical-align: -0.17em;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--md-mark-color) 15%, transparent);
+}
+.markdown-content .md-mark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--md-mark-color);
+  -webkit-mask: var(--md-mark-glyph) center / 68% no-repeat;
+  mask: var(--md-mark-glyph) center / 68% no-repeat;
+}
+.markdown-content .md-mark--done {
+  --md-mark-color: var(--neox-success, #16a34a);
+  --md-mark-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.2 8.4l3 3 6.6-6.8' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.markdown-content .md-mark--fail {
+  --md-mark-color: var(--neox-danger, #e5484d);
+  --md-mark-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 4.5l7 7M11.5 4.5l-7 7' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.markdown-content .md-mark--todo {
+  --md-mark-color: var(--text-tertiary, var(--text-secondary));
+  background: none;
+  box-shadow: inset 0 0 0 1.25px color-mix(in srgb, var(--md-mark-color) 70%, transparent);
+}
+.markdown-content .md-mark--todo::before { content: none; }
+
+/* ==================== Footnotes (remark-gfm) ==================== */
+.markdown-content .footnotes {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+}
+.markdown-content .footnotes ol {
+  padding-left: 20px;
+}
+.markdown-content .footnotes li {
+  margin-bottom: 6px;
+}
+.markdown-content .data-footnote-backref,
+.markdown-content a[data-footnote-backref] {
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+}
+
+/* ==================== Horizontal scroll polish for tables ==================== */
+.markdown-content .md-table-wrapper {
+  scrollbar-width: thin;
+}
+.markdown-content .md-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.markdown-content .md-table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+}
+:root[data-theme="light"] .markdown-content .md-table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+}
+
+/* 宽表格"右边还有列"的可视提示。
+   macOS overlay 滚动条平时不显示 —— 没有这层提示, 一张 10 列的表只露出 6 列时
+   跟"回答不完整"长得一模一样。data-overflow 由 MarkdownTable 量出来后打上, 滚到底自动摘掉。 */
+.markdown-content .md-table-scroller {
+  position: relative;
+}
+.markdown-content .md-table-wrapper[data-overflow="true"] {
+  /* 右缘渐隐 —— 明确"这里被裁掉了", 而不是"表就这么宽" */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent 100%);
+          mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent 100%);
+  /* 溢出时滚动条常驻, 不再等用户先滚一下才看得见 */
+  scrollbar-color: rgba(255,255,255,0.28) transparent;
+}
+.markdown-content .md-table-wrapper[data-overflow="true"]::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.28);
+}
+:root[data-theme="light"] .markdown-content .md-table-wrapper[data-overflow="true"] {
+  scrollbar-color: rgba(0,0,0,0.26) transparent;
+}
+:root[data-theme="light"] .markdown-content .md-table-wrapper[data-overflow="true"]::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.26);
+}
+.markdown-content .md-table-more {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  transform: translateY(-50%);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  line-height: 1.5;
+  white-space: nowrap;
+  pointer-events: none;
+  color: var(--neox-text-2, rgba(255,255,255,0.72));
+  background: var(--neox-surface-2, rgba(38,38,42,0.9));
+  border: 1px solid var(--neox-border-1, rgba(255,255,255,0.12));
+  box-shadow: 0 1px 4px rgba(0,0,0,0.28);
+}
+:root[data-theme="light"] .markdown-content .md-table-more {
+  color: rgba(0,0,0,0.6);
+  background: rgba(255,255,255,0.94);
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* ==================== Inline badges (shields.io etc.) alignment ==================== */
+.markdown-content p > img[src*="shields.io"],
+.markdown-content p > a > img[src*="shields.io"],
+.markdown-content p > img[src*="badge"],
+.markdown-content p > a > img[src*="badge"] {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 2px 3px;
+  cursor: default;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * Preview-specific overrides — 在 markdown preview pane 里用文档级字号
+ * (GitHub 风格), 不受 timeline message 的紧凑字号影响.
+ * 选择器作用域: .markdown-preview-surface .markdown-content ...
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ============================================================
+ * Markdown Preview — macOS 风格
+ *   Apple SF Pro 字体 + 宽松行高 + 柔和色阶 + 毛玻璃代码块
+ * ============================================================ */
+.markdown-preview-surface {
+  padding: 24px 32px 56px;
+}
+.markdown-preview-surface .markdown-content {
+  max-width: 76ch;
+  font-family: var(--neox-font-sans);
+  font-size: var(--neox-fs-md, 14px);
+  line-height: calc(1.7 * var(--nx-lh-scale, 1));
+  color: var(--neox-fg-primary);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.003em;
+}
+
+.markdown-preview-surface .markdown-content .md-code-block {
+  margin: 18px 0;
+  border-radius: 12px;
+  border: 0;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 4.5%, transparent);
+  box-shadow: none;
+  overflow: hidden;
+  font-size: var(--neox-fs-sm, 13px);
+}
+.markdown-preview-surface .markdown-content .md-code-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px 0;
+  min-height: 0;
+  background: transparent;
+  border: 0;
+}
+.markdown-preview-surface .markdown-content .md-code-lang {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-muted);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.markdown-preview-surface .markdown-content .md-code-copy {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 2px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.markdown-preview-surface .markdown-content .md-code-copy:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--neox-fg-primary);
+}
+.markdown-preview-surface .markdown-content .md-code-block pre {
+  padding: 26px 0 14px;
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+  line-height: calc(1.6 * var(--nx-lh-scale, 1));
+}
+.markdown-preview-surface .markdown-content .md-code-line {
+  padding: 0 16px 0 0;
+}
+.markdown-preview-surface .markdown-content .md-code-line:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+.markdown-preview-surface .markdown-content .md-code-line.selected {
+  background: rgba(99, 102, 241, 0.08);
+}
+.markdown-preview-surface .markdown-content .md-code-linenum {
+  width: 40px;
+  padding-right: 14px;
+  margin-right: 8px;
+  border-right: 0;
+  opacity: 0.26;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+/* blockquote — 柔和左色条 */
+.markdown-preview-surface .markdown-content .md-blockquote {
+  border-left-color: rgba(0, 0, 0, 0.12);
+  border-radius: 0 8px 8px 0;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 6px 14px;
+}
+
+/* alerts — 毛玻璃底 */
+.markdown-preview-surface .markdown-content .md-alert {
+  border-radius: 10px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Headings — 紧凑但有层次, h1/h2 下划线用 neox token */
+.markdown-preview-surface .markdown-content .md-heading {
+  margin-top: 28px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  line-height: calc(1.3 * var(--nx-lh-scale, 1));
+  letter-spacing: -0.015em;
+}
+.markdown-preview-surface .markdown-content .md-heading:first-child {
+  margin-top: 0;
+}
+.markdown-preview-surface .markdown-content .md-h1 {
+  font-size: 1.75em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--neox-line);
+}
+.markdown-preview-surface .markdown-content .md-h2 {
+  font-size: 1.35em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--neox-line);
+}
+.markdown-preview-surface .markdown-content .md-h3 {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+.markdown-preview-surface .markdown-content .md-h4 {
+  font-size: 1em;
+  font-weight: 600;
+}
+.markdown-preview-surface .markdown-content .md-h5 {
+  font-size: 0.9em;
+  font-weight: 600;
+}
+.markdown-preview-surface .markdown-content .md-h6 {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--neox-fg-muted);
+}
+
+/* Paragraphs / lists / blockquote */
+.markdown-preview-surface .markdown-content .md-paragraph {
+  margin: 0 0 14px 0;
+}
+.markdown-preview-surface .markdown-content .md-list {
+  margin: 0 0 14px 0;
+  padding-left: 1.6em;
+}
+.markdown-preview-surface .markdown-content .md-list li {
+  margin: 4px 0;
+}
+.markdown-preview-surface .markdown-content .md-blockquote {
+  margin: 0 0 14px 0;
+  padding: 2px 1em;
+  color: var(--neox-fg-secondary);
+  border-left: 3px solid var(--neox-line);
+  background: transparent;
+}
+.markdown-preview-surface .markdown-content .md-blockquote > p {
+  margin: 6px 0;
+}
+
+/* Inline code — 圆润小胶囊 */
+.markdown-preview-surface .markdown-content .md-inline-code {
+  font-size: 0.88em;
+  padding: 0.15em 0.45em;
+  background: var(--neox-bg-muted);
+  border-radius: 5px;
+  color: inherit;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* Code blocks — 大圆角, 更宽敞 */
+.markdown-preview-surface .markdown-content .md-code-block {
+  margin: 16px 0;
+  font-size: calc(13px * var(--nx-fs-scale, 1));
+  border-radius: 10px;
+  overflow: hidden;
+}
+.markdown-preview-surface .markdown-content .md-code-block pre {
+  padding: 26px 0 14px;
+}
+.markdown-preview-surface .markdown-content .md-code-line {
+  padding: 0 16px;
+}
+
+.markdown-preview-surface .markdown-content table {
+  display: table;
+  font-size: var(--neox-fs-sm, 13px);
+  border-collapse: collapse;
+  border: 0;
+  border-radius: 0;
+  margin: 18px 0;
+  width: 100%;
+  max-width: 100%;
+}
+.markdown-preview-surface .markdown-content th {
+  padding: 6px 14px 9px;
+  background: transparent;
+  font-weight: 600;
+  font-size: var(--neox-fs-xs, 12px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--neox-fg-secondary);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--neox-fg-primary) 14%, transparent);
+}
+.markdown-preview-surface .markdown-content td {
+  padding: 9px 14px;
+  border: 0;
+  vertical-align: top;
+}
+.markdown-preview-surface .markdown-content tbody tr + tr td {
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+.markdown-preview-surface .markdown-content tbody tr:hover td {
+  background: color-mix(in srgb, var(--neox-fg-primary) 3%, transparent);
+}
+.markdown-preview-surface .markdown-content tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* Horizontal rule — 细线 */
+.markdown-preview-surface .markdown-content .md-hr {
+  height: 1px;
+  margin: 24px 0;
+  padding: 0;
+  background: var(--neox-line);
+  border: 0;
+}
+
+/* Image */
+.markdown-preview-surface .markdown-content .md-image {
+  max-width: 100%;
+  margin: 8px 0;
+  border-radius: 8px;
+}
+
+/* Links */
+.markdown-preview-surface .markdown-content a {
+  color: var(--neox-primary-600, #007aff);
+  text-decoration: none;
+}
+.markdown-preview-surface .markdown-content a:hover {
+  text-decoration: underline;
+}
+
+.markdown-preview-surface .markdown-content .md-mermaid {
+  margin: 18px 0;
+  padding: 20px;
+}
+
+/* ==================== User & Assistant Message Styles ==================== */
+/* User message content */
+.user-message-content {
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  font-size: var(--neox-fs-sm, 13px);
+  line-height: calc(1.45 * var(--nx-lh-scale, 1));
+  max-width: 90%;
+  color: var(--text-secondary);
+}
+
+.user-message-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 4px;
+}
+
+.user-attachment-item {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.user-attachment-image {
+  display: block;
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out), box-shadow var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.user-attachment-image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.user-attachment-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(201, 162, 39, 0.1);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #c9a227;
+}
+
+.user-attachment-url {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #06b6d4;
+  text-decoration: none;
+}
+
+.user-attachment-url:hover {
+  background: rgba(6, 182, 212, 0.15);
+  text-decoration: underline;
+}
+
+/* Assistant message header - 新设计 */
+.assistant-message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.assistant-avatar {
+  display: none;
+}
+
+.assistant-avatar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.assistant-message-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.assistant-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.assistant-name {
+  font-weight: 600;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-accent);
+  letter-spacing: 0;
+}
+
+/* Assistant elapsed time badge - 简约版 */
+.assistant-elapsed-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: calc(9px * var(--nx-fs-scale, 1));
+  font-weight: 500;
+  font-family: var(--font-mono);
+  opacity: 0.8;
+}
+
+.assistant-elapsed-time.running {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.assistant-elapsed-time.completed {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.elapsed-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: elapsedPulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+@keyframes elapsedPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* 浅色主题 */
+:root[data-theme="light"] .assistant-elapsed-time.running {
+  background: rgba(180, 140, 10, 0.12);
+  color: #b48c0a;
+}
+
+:root[data-theme="light"] .assistant-elapsed-time.completed {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+/* Assistant message content */
+.assistant-message-content {
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  font-size: var(--neox-fs-md, 14px);
+  line-height: calc(1.55 * var(--nx-lh-scale, 1));
+  color: var(--text-primary);
+  max-width: 100%;
+  box-shadow: none;
+}
+
+.assistant-message-content> :first-child {
+  margin-top: 0;
+}
+
+/* Agent inline label — displayed on its own line before content */
+.assistant-inline-label {
+  display: block;
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f59e0b;
+  margin-bottom: 1px;
+  white-space: nowrap;
+}
+
+.assistant-memory-summary {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assistant-memory-summary-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.assistant-memory-summary-card.progress {
+  border-color: rgba(59, 130, 246, 0.28);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.assistant-memory-summary-card.project {
+  border-color: rgba(16, 185, 129, 0.28);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.assistant-memory-summary-icon {
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.assistant-memory-summary-label {
+  flex-shrink: 0;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.assistant-memory-summary-value {
+  min-width: 0;
+  flex: 1;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Thinking section expand/collapse animation */
+.timeline-detail.thinking-text {
+  overflow: hidden;
+  animation: thinking-expand var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes thinking-expand {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  to {
+    max-height: 2000px;
+    opacity: 1;
+  }
+}
+
+.assistant-run-summary {
+  margin-top: 6px;
+  font-size: calc(10px * var(--nx-fs-scale, 1));
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+.timeline-entry.pending:not(.user_message):not(.assistant_message):not(.assistant_prefix):not(.agent_message):not(.auto-collapsed) .timeline-body::after {
+  content: '';
+  display: block;
+  width: min(220px, 62%);
+  height: 7px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.12) 25%, rgba(148, 163, 184, 0.28) 50%, rgba(148, 163, 184, 0.12) 75%);
+  background-size: 220% 100%;
+  animation: timelinePendingShimmer 1.25s linear infinite;
+}
+
+/* ==================== Streaming Inline Status ==================== */
+.streaming-inline-status {
+  padding: 8px 12px;
+  min-height: 20px;
+}
+
+.streaming-inline-text {
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--text-muted);
+  animation: inlineTextPulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+.streaming-inline-text::after {
+  content: '';
+  animation: ellipsis 1.5s steps(4, end) infinite;
+}
+
+@keyframes inlineTextPulse {
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes ellipsis {
+  0% {
+    content: '';
+  }
+
+  25% {
+    content: '.';
+  }
+
+  50% {
+    content: '..';
+  }
+
+  75% {
+    content: '...';
+  }
+
+  100% {
+    content: '';
+  }
+}
+
+@keyframes timelinePendingShimmer {
+  0% {
+    background-position: 180% 0;
+  }
+
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+@keyframes assistantCursorBlink {
+
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+/* Assistant 消息中的有序列表样式 */
+.assistant-message-content ol {
+  counter-reset: list-counter;
+  list-style: none;
+  padding-left: 0;
+  margin: 4px 0;
+}
+
+.assistant-message-content ol li {
+  counter-increment: list-counter;
+  position: relative;
+  display: block;
+  margin-bottom: 4px;
+  padding-left: 28px;
+  line-height: calc(1.55 * var(--nx-lh-scale, 1));
+}
+
+.assistant-message-content ol li::before {
+  content: "0" counter(list-counter);
+  position: absolute;
+  left: 0;
+  top: 0.08em;
+  width: 22px;
+  text-align: left;
+  color: var(--text-accent);
+  font-size: calc(9px * var(--nx-fs-scale, 1));
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 避免长路径 inline-code 在窄容器里撑爆或挤压正文 */
+.assistant-message-content .md-inline-code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Timeline entry type styles for messages */
+.timeline-entry.user_message {
+  background: transparent;
+}
+
+.timeline-entry.assistant_message,
+.timeline-entry.assistant_prefix {
+  background: transparent;
+}
+
+.timeline-entry.assistant_message .timeline-body,
+.timeline-entry.assistant_prefix .timeline-body {
+  padding: 8px 0;
+}
+
+/* Light theme adjustments for messages */
+:root[data-theme="light"] .user-message-content,
+:root[data-theme="light"] .assistant-message-content {
+  background: transparent;
+}
+
+/* Timeline 消息正文: 强制继承 .atl-msg__text 的 font-size,
+ * 覆盖基类 .markdown-content { font-size: calc(12px * var(--nx-fs-scale, 1)) }. */
+.markdown-content.atl-msg__md {
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  letter-spacing: inherit !important;
+}
+
+
+.markdown-content .md-list li,
+.markdown-content ul li,
+.markdown-content ol li {
+  line-height: calc(1.72 * var(--nx-lh-scale, 1));           /* 跟段落对齐 —— 中文正文低于 1.7 就开始压迫 */
+}
+/* 行内代码: 竖直内边距归零 (它会把行盒撑高, 一行多个 chip 时上下相撞),
+   靠 0.12em 的左右外边距让它跟中文之间有呼吸。字号跟正文一致 (1em),
+   不再故意缩到 0.9em —— 对话区缩放后 chip 会明显掉队。 */
+.markdown-content code:not(pre code) {
+  padding: 0 5px !important;
+  margin: 0 0.12em;
+  line-height: inherit !important;
+  font-size: 0.92em !important;
+  background: color-mix(in srgb, currentColor 7%, transparent) !important;
+  border-radius: 4px;
+}
+.markdown-content a:not(.md-heading-link) {
+  color: var(--neox-link, #6ea8fe);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 38%, transparent);
+  text-underline-offset: 2px;
+}
+.markdown-content a:not(.md-heading-link):hover {
+  text-decoration-color: currentColor;
+}
+:root[data-theme="light"] .markdown-content a:not(.md-heading-link) {
+  color: var(--neox-link, #1a66c9);   /* 浅色底要更深, 否则对比度不够 */
+}
+
+
+.markdown-content .md-mermaid--clickable {
+  cursor: zoom-in;
+  transition: background-color var(--neox-dur-fast, .12s) ease, border-color var(--neox-dur-fast, .12s) ease;
+}
+/* 只动底色和边线 —— 用 background 简写会把点阵画布一起抹掉 */
+.markdown-content .md-mermaid--clickable:hover,
+.markdown-content .md-mermaid--clickable:focus-visible {
+  background-color: color-mix(in srgb, var(--neox-fg-primary) 4%, var(--neox-bg-canvas));
+  border-color: color-mix(in srgb, var(--neox-fg-primary) 18%, transparent);
+  outline: none;
+}
+/* 灯箱: 复用图片那套遮罩, 但图表是 svg, 要单独给 stage 撑满 */
+.md-mermaid-lightbox {
+  cursor: zoom-out;
+}
+.md-mermaid-lightbox .md-mermaid-lightbox__stage {
+  box-sizing: border-box;
+  width: min(88vw, 1400px);
+  height: 84vh;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--neox-bg-elevated, #1a1a1a);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+}
+:root[data-theme="light"] .md-mermaid-lightbox .md-mermaid-lightbox__stage {
+  background: #fff;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.2);
+}
+.md-mermaid-lightbox .md-mermaid-lightbox__stage svg {
+  display: block;
+  width: 100% !important;
+  height: 100%;
+  max-width: none !important;
+}
+
+.nx-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 7%, transparent);
+  color: var(--text-muted, var(--neox-fg-hint));
+  font-size: calc(11px * var(--nx-fs-scale, 1));
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, opacity 140ms ease;
+}
+.nx-copy-btn:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary, #111827) 12%, transparent);
+  color: var(--text-primary, var(--neox-fg-primary));
+}
+.nx-copy-btn.is-done { color: var(--neox-ok-ink, #1a7f37); }
+
+/* 表格: 右上角, hover 表格才出现 (跟代码块的 Copy 同一个规矩) */
+.markdown-content .md-table-scroller { position: relative; }
+.markdown-content .md-table-copy {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  opacity: 0;
+}
+.markdown-content .md-table-scroller:hover .md-table-copy,
+.markdown-content .md-table-copy:focus-visible,
+.markdown-content .md-table-copy.is-done { opacity: 1; }
+
+.markdown-preview-surface .markdown-content table,
+.sfc-doc .markdown-content table {
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  /* 12px 而不是 8px: 小圆角在一张通栏的大表上几乎看不出来, 只有"没对齐"的感觉;
+   * Apple 的分组列表 (设置 / App Store) 都在 10~13px 这一档 */
+  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+.markdown-preview-surface .markdown-content th,
+.sfc-doc .markdown-content th {
+  background: transparent;
+  text-transform: none;      /* 全大写在中英混排的报告里只会让表头更难读 */
+  letter-spacing: 0;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 590;
+  color: var(--neox-fg-secondary);
+  padding-top: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--neox-fg-primary) 11%, transparent);
+}
+/* 行分隔只留**横向发丝线**, 一条竖线都不画 —— 竖线是网格表的来源 */
+.markdown-preview-surface .markdown-content tbody tr + tr td,
+.sfc-doc .markdown-content tbody tr + tr td {
+  border-top: 1px solid color-mix(in srgb, var(--neox-fg-primary) 7%, transparent);
+}
+/* 首列当行标题: 颜色和字重比其余格重一档, 扫读时一眼找得到行 */
+.markdown-preview-surface .markdown-content tbody td:first-child,
+.sfc-doc .markdown-content tbody td:first-child {
+  color: var(--neox-fg-primary);
+  font-weight: 510;
+}
+/* 斑马纹去掉 —— 有了外框和行线之后它只是噪点; 数字列等宽, 竖着看才对得齐 */
+.markdown-preview-surface .markdown-content tr:nth-child(even) td,
+.sfc-doc .markdown-content tr:nth-child(even) td { background: transparent; }
+.markdown-preview-surface .markdown-content td,
+.sfc-doc .markdown-content td { font-variant-numeric: tabular-nums; }
+
+.markdown-content .nx-figs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 26px;
+  margin: 18px 0;
+  align-items: start;
+}
+.markdown-content .nx-fig > *:first-child { margin-top: 0; }
+.markdown-content .nx-fig > *:last-child { margin-bottom: 0; }
+/* 窄屏 / 窄右栏回落单列 —— 半宽再对折就挤不下类别标签了 */
+@media (max-width: 760px) {
+  .markdown-content .nx-figs { grid-template-columns: 1fr; gap: 10px; }
+}

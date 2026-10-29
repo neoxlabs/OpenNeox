@@ -1,0 +1,93 @@
+/* ============================================================
+ * CloudHealthBanner — Neox 云端不可达时的全局顶部提示
+ *
+ *   AppShell 顶层挂载, 仅在 useCloudHealth().state === unreachable/offline 时渲染.
+ *   位置: 顶部居中, fixed; z-index 低于 stream-banner 让 SSE 重连提示可叠加显示.
+ *   配色: 警示橘 (warning), 跟 .data-stale-banner 对齐, 不用红色避免恐慌.
+ *   交互: 用户可点重试 / 关闭.
+ * ============================================================ */
+
+.cloud-health-banner {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(720px, calc(100vw - 24px));
+  padding: 8px 12px 8px 14px;
+  border-radius: 12px;
+  background: var(--neox-warn-soft, #fff5e0);
+  color: var(--neox-warn-ink, #8a5a00);
+  border: 1px solid var(--neox-warn-line, rgba(170, 110, 0, 0.2));
+  box-shadow: 0 6px 24px rgba(91, 63, 0, 0.18);
+  font-size: var(--neox-fs-xs, 12px);
+  z-index: 9985;  /* 低于 stream-banner 9990, 高于普通 UI */
+  animation: cloud-health-banner-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.cloud-health-banner__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.cloud-health-banner__text {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.4;
+}
+
+.cloud-health-banner__text strong {
+  font-weight: 600;
+}
+
+.cloud-health-banner__detail {
+  font-size: var(--neox-fs-xxs, 11px);
+  opacity: 0.78;
+}
+
+.cloud-health-banner__btn {
+  flex-shrink: 0;
+  appearance: none;
+  border: 1px solid var(--neox-warn-line, rgba(170, 110, 0, 0.28));
+  background: var(--neox-warn-btn-bg, #fff);
+  color: var(--neox-warn-ink, #8a5a00);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 500;
+  cursor: pointer;
+}
+.cloud-health-banner__btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.7);
+}
+.cloud-health-banner__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cloud-health-banner__close {
+  flex-shrink: 0;
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--neox-warn-ink, #8a5a00);
+  opacity: 0.65;
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+}
+.cloud-health-banner__close:hover {
+  opacity: 1;
+}
+
+@keyframes cloud-health-banner-in {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}

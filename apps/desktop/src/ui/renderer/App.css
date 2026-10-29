@@ -1,0 +1,74 @@
+@import './styles/skeleton.css';
+
+@import './styles/theme-tokens.css';
+
+/* macOS / Windows 系统级动效 —— 必须排在 theme-tokens 之后: 靠**覆盖** --neox-ease-*
+ * 令牌值来一次性升级全仓 1300+ 处过渡, 排在前面会被基线值盖回去。
+ * 两套曲线不同 (Apple 贴住 vs Fluent 干脆), 见各自文件头。 */
+@import './styles/motion-macos.css';
+@import './styles/motion-win32.css';
+
+@import './styles/base-reset.css';
+
+@import './styles/welcome.css';
+
+@import './styles/workspace-shell.css';
+
+@import './styles/ask-user.css';
+
+@import './styles/runtime-panels.css';
+
+@import './styles/chat-core.css';
+
+@import './styles/settings-core.css';
+
+@import './styles/tool-cards.css';
+
+@import './styles/editor-core.css';
+
+@import './styles/feature-panels.css';
+
+@import './styles/collab-network.css';
+
+/* modules/pet/pet-assistant.css 在 Phase-0 清理时已删 (旧 3D 浮窗版),
+ *   新 3D 桌宠 (Three.js Canvas) 不需要全局样式表, 样式跟组件同文件 inline. */
+
+/* ---- Neox 新设计 ---- */
+@import './modules/shell/shell.css';
+@import './modules/home/home.css';
+@import './modules/agent-timeline/agent-timeline.css';
+@import './modules/agent-timeline/simple-diff.css';
+@import './modules/agent-timeline/research-card.css';
+@import './modules/agent-timeline/work-change.css';
+@import './modules/ide-workspace/ide-workspace.css';
+@import './modules/knowledge-base/knowledge-base.css';
+@import './styles/neox-plugins.css';
+@import './styles/plugin-detail.css';
+@import './styles/billing-quota.css';
+@import './styles/tour-overlay.css';
+@import './styles/theme-tokens/anye-flat.css';
+
+/* Settings soft 卡必须在 anye-flat 之后: 否则 anye 会把 settings-section / 对比卡
+ * 又盖回 material hairline 3D。 */
+@import './styles/settings-core/settings-soft.css';
+
+/* Cursor soft 菜单面：必须在 shell / timeline / anye-flat 之后，才能盖掉毛玻璃与杂边框 */
+@import './styles/components/context-menu.css';
+/* Win titleBarOverlay 全局适配：必须最后，压过 settings soft / shell 材质 */
+@import './styles/win-caption.css';
+/* Win 小字号中文可读性：必须在 timeline / chat-core 之后才压得住那边的字重 */
+@import './styles/win-cjk.css';
+/* 输入框上方浮层的统一皮肤 (药丸条 + 卡片) 与简约输入框：必须最后，
+ * 它要压过 agent-timeline.css 里 .atl-composer 那几层历史覆写 */
+@import './modules/agent-timeline/dock/dock.css';
+
+/* 微交互层 (按下反馈 / 药丸进出场 / 尺寸过渡 / 输入框) —— **必须排在全部组件样式之后**。
+ * 里面「高频交互点名单」那几条是 (0,1,0), 跟组件自己的 `.atl-composer__send` 同级,
+ * 靠**顺序**取胜; 排在前面就会被组件的 transition 顶掉, 按下反馈静默失效。
+ * 全部规则挂 html[data-motion="silk"], 关档时本文件完全不参与 (见文件头)。 */
+@import './styles/motion-silk.css';
+
+/* 低配档的动画收敛 —— 必须排在最后, 它要压过组件自己的 animation 声明。
+ * 只对 `html[data-motion='standard'][data-low-end]` 生效 (见文件头),
+ * 强机器 / 用户手选 silk 时本文件完全不参与。 */
+@import './styles/motion-lite.css';

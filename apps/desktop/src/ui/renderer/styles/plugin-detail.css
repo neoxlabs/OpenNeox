@@ -1,0 +1,307 @@
+
+.npd {
+  --npd-line: color-mix(in srgb, var(--neox-fg-primary) 9%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 4px 2px 32px;
+}
+
+.npd-back {
+  align-self: flex-start;
+  padding: 4px 8px 4px 4px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--np-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.npd-back:hover { background: var(--np-surface); color: var(--neox-fg-primary); }
+
+/* ---------- 头部 ---------- */
+
+.npd-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 商店图标是圆角方块, 比卡片上 7px 的小圆角大一号 */
+.npd-hero .neox-plugin-logo { border-radius: 22%; }
+.npd-hero .neox-plugin-logo.is-monogram,
+.npd-hero .neox-plugin-logo.is-emoji { box-shadow: inset 0 0 0 1px var(--npd-line); }
+
+.npd-hero__text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+.npd-hero__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  color: var(--neox-fg-primary);
+}
+
+.npd-hero__desc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--np-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.npd-hero__chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+
+.npd-hero__action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 132px;
+}
+
+.npd-get { min-width: 108px; height: 32px; border-radius: 999px; font-weight: 600; }
+
+.npd-installed { display: flex; align-items: center; gap: 12px; font-size: 12.5px; }
+.npd-installed__state { color: var(--np-accent); font-weight: 600; }
+.npd-installed__btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.npd-uninstall:hover { color: color-mix(in srgb, #d0503a 88%, var(--neox-fg-primary) 12%); }
+
+.npd-switch { display: inline-flex; align-items: center; gap: 6px; color: var(--np-muted); cursor: pointer; }
+.npd-switch input { accent-color: var(--np-accent); margin: 0; }
+
+.npd-progress { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.npd-progress__bar {
+  display: block;
+  width: 120px;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 10%, transparent);
+  overflow: hidden;
+}
+.npd-progress__bar i {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--np-accent);
+  animation: npd-indeterminate 1.1s ease-in-out infinite;
+}
+/* 不定量进度 —— 装多久取决于包大小和网络, 假装知道百分比是骗人 */
+@keyframes npd-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+.npd-progress__text { font-size: 11px; color: var(--np-muted); }
+
+.npd-result { display: flex; align-items: center; gap: 8px; font-size: 12px; max-width: 320px; }
+.npd-result.is-err { color: color-mix(in srgb, #d0503a 88%, #fff 12%); }
+
+/* ---------- 数据条 ---------- */
+
+.npd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  margin: 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--npd-line);
+  border-bottom: 1px solid var(--npd-line);
+}
+.npd-stats__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  min-width: 0;
+}
+.npd-stats__cell + .npd-stats__cell { border-left: 1px solid var(--npd-line); }
+.npd-stats__cell dt { font-size: 11px; color: var(--np-faint); }
+.npd-stats__cell dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 620;
+  color: var(--neox-fg-primary);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 截图 ---------- */
+
+.npd-gallery__strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+.npd-gallery__shot {
+  flex: 0 0 auto;
+  height: 280px;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 1px solid var(--npd-line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--np-surface);
+  cursor: zoom-in;
+  scroll-snap-align: start;
+}
+.npd-gallery__shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.npd-gallery__shot:hover { border-color: color-mix(in srgb, var(--neox-fg-primary) 20%, transparent); }
+
+@media (max-width: 900px) {
+  .npd-gallery__shot { height: 200px; }
+}
+
+.npd-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(8, 10, 14, .72);
+  backdrop-filter: blur(6px);
+  cursor: zoom-out;
+}
+.npd-lightbox img {
+  max-width: 92vw;
+  max-height: 84vh;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+  cursor: default;
+}
+.npd-lightbox__dots { display: flex; gap: 8px; cursor: default; }
+.npd-lightbox__dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .35);
+  cursor: pointer;
+}
+.npd-lightbox__dots button.is-on { background: #fff; }
+
+/* ---------- 双栏 ---------- */
+
+.npd-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 14px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .npd-body { grid-template-columns: minmax(0, 1fr); }
+}
+.npd-main, .npd-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+.npd-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--np-surface);
+}
+.npd-block__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 620;
+  color: var(--np-faint);
+}
+
+.npd-asks { display: flex; flex-wrap: wrap; gap: 8px; }
+.npd-ask {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  max-width: 100%;
+  padding: 7px 12px;
+  border: 1px solid var(--npd-line);
+  border-radius: 10px;
+  background: var(--neox-bg-elevated, transparent);
+  color: var(--neox-fg-primary);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+.npd-ask:hover { border-color: color-mix(in srgb, var(--np-accent) 55%, transparent); }
+.npd-ask__q { color: var(--np-accent); font-weight: 700; }
+
+.npd-features { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.npd-features li { display: flex; flex-direction: column; gap: 2px; }
+.npd-features__title { font-size: 13px; font-weight: 600; color: var(--neox-fg-primary); }
+.npd-features__detail { font-size: 12.5px; line-height: 1.55; color: var(--np-muted); }
+
+.npd-about { margin: 0; font-size: 13px; line-height: 1.7; color: var(--neox-fg-primary); }
+.npd-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* ---------- 设置表单 ---------- */
+
+.npd-form { display: flex; flex-direction: column; gap: 12px; }
+.npd-field { display: flex; flex-direction: column; gap: 5px; }
+.npd-field.is-inline { flex-direction: row-reverse; justify-content: flex-end; align-items: center; gap: 8px; }
+.npd-field__label { font-size: 12px; line-height: 1.45; color: var(--np-muted); }
+.npd-input {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--npd-line);
+  border-radius: 7px;
+  background: var(--neox-bg-elevated, transparent);
+  color: var(--neox-fg-primary);
+  font-size: 13px;
+  outline: none;
+}
+.npd-input:focus { border-color: color-mix(in srgb, var(--np-accent) 60%, transparent); }
+.npd-input::placeholder { color: var(--np-faint); }
+.npd-form__actions { display: flex; justify-content: flex-end; }
+
+/* ---------- 权限 / 信息 ---------- */
+
+.npd-perms { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+.npd-perms li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--neox-fg-primary);
+}
+.npd-perms li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: .55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--np-accent);
+}
+
+.npd-meta { display: flex; flex-direction: column; gap: 7px; margin: 0; }
+.npd-meta__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+.npd-meta__row dt { color: var(--np-faint); flex: none; }
+.npd-meta__row dd { margin: 0; color: var(--neox-fg-primary); text-align: right; min-width: 0; overflow-wrap: anywhere; }
+.npd-meta__row a { color: var(--np-accent); text-decoration: none; }
+.npd-meta__row a:hover { text-decoration: underline; }

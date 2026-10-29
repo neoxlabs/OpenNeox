@@ -1,0 +1,55 @@
+/* GitHub 页 (UI 3.0 陶土照稿, set-github) —— 零 !important */
+
+/* 行: 52px 高, 10/16 内边距 */
+.gh3 .nx-row {
+  min-height: 52px;
+  padding: 10px 16px;
+  gap: 12px;
+}
+
+/* 左边 28px 软方块 + 16px 线条图标 */
+.gh3 .gh3-ico {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+  color: var(--neox-fg-secondary);
+}
+.gh3 .gh3-ico svg { width: 16px; height: 16px; }
+
+/* 开关下面的状态行 */
+.gh3 .gh3-state { font-size: 12px; color: var(--neox-fg-muted); }
+.gh3 .gh3-state.is-warn { color: #C2492F; }
+
+/* 仓库本机路径: 等宽灰字 */
+.gh3 .gh3-path {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--neox-fg-muted);
+  overflow-wrap: anywhere;
+}
+
+/* 添加仓库一行 */
+.gh3 .gh3-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  box-shadow: inset 0 1px 0 var(--neox-line-subtle);
+}
+.gh3 .gh3-add__repo { flex: 1 1 180px; min-width: 160px; }
+.gh3 .gh3-add__path { flex: 2 1 260px; min-width: 200px; display: flex; gap: 6px; }
+
+/* 右侧输入框宽度 */
+.gh3 .gh3-input { min-width: 0; }
+.gh3 .gh3-input--mention { width: 160px; }
+.gh3 .gh3-input--users { width: 240px; }
+.gh3 .gh3-input--model { min-width: 300px; }
+
+/* 「查看全部」右侧箭头 */
+.gh3 .gh3-go { display: inline-flex; color: var(--neox-fg-hint); }
+.gh3 .gh3-go svg { width: 14px; height: 14px; }

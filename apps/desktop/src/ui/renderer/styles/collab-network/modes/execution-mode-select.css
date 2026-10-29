@@ -1,0 +1,273 @@
+/* ==================== Agent Execution 卡片 (优化版) ==================== */
+.agent-execution-card {
+  border-radius: 8px;
+  border: 1px solid rgba(147, 112, 219, 0.2);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.agent-execution-card:hover {
+  border-color: rgba(147, 112, 219, 0.4);
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.1);
+}
+
+.agent-execution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(147, 112, 219, 0.05);
+  border-bottom: 1px solid rgba(147, 112, 219, 0.1);
+}
+
+.execution-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.execution-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.execution-status-icon {
+  display: flex;
+  align-items: center;
+}
+
+.execution-status-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.execution-node-name {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.execution-status-text {
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(147, 112, 219, 0.15);
+  color: rgba(147, 112, 219, 0.9);
+  font-weight: 500;
+}
+
+.execution-duration {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.agent-execution-body {
+  padding: 12px 14px;
+}
+
+.agent-execution-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.execution-info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.info-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.info-value {
+  color: rgba(147, 112, 219, 0.9);
+  font-weight: 600;
+}
+
+.agent-execution-output {
+  background: rgba(147, 112, 219, 0.05);
+  border: 1px solid rgba(147, 112, 219, 0.1);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-top: 12px;
+}
+
+.output-label {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: rgba(147, 112, 219, 0.8);
+  margin-bottom: 6px;
+}
+
+.output-content {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.agent-execution-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+  font-size: var(--neox-fs-sm, 13px);
+  color: #ef4444;
+}
+
+.agent-execution-error svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ==================== Mode Select 卡片 (简约风格) ==================== */
+/* ==================== ModeSelectCard 样式 ==================== */
+.mode-select-card {
+  border-radius: 8px;
+  border: 1px solid rgba(147, 112, 219, 0.2);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.mode-select-card:hover {
+  border-color: rgba(147, 112, 219, 0.4);
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.1);
+}
+
+.mode-select-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(147, 112, 219, 0.05);
+  border-bottom: 1px solid rgba(147, 112, 219, 0.1);
+}
+
+.mode-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-icon {
+  font-size: var(--neox-fs-lg, 16px);
+}
+
+.mode-title {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mode-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: rgba(147, 112, 219, 0.9);
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(147, 112, 219, 0.15);
+}
+
+.mode-select-body {
+  padding: 12px 14px;
+}
+
+.mode-select-section {
+  margin-bottom: 12px;
+}
+
+.mode-select-reason {
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.mode-select-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(147, 112, 219, 0.1);
+}
+
+.mode-meta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--neox-fs-xs, 12px);
+}
+
+.mode-select-agents svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==================== Light theme overrides ==================== */
+/* Agent Execution / Mode Select 卡片 - 紫色 accent 在浅色下需要更高对比度 */
+:root[data-theme="light"] .agent-execution-card,
+:root[data-theme="light"] .mode-select-card {
+  border-color: rgba(147, 112, 219, 0.3);
+}
+
+:root[data-theme="light"] .agent-execution-card:hover,
+:root[data-theme="light"] .mode-select-card:hover {
+  border-color: rgba(147, 112, 219, 0.5);
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.12);
+}
+
+:root[data-theme="light"] .agent-execution-header,
+:root[data-theme="light"] .mode-select-header {
+  background: rgba(147, 112, 219, 0.08);
+  border-bottom-color: rgba(147, 112, 219, 0.18);
+}
+
+/* 紫色状态 badge / 文字 - 深色替换 rgba(147,112,219,0.9) */
+:root[data-theme="light"] .execution-status-text,
+:root[data-theme="light"] .mode-name {
+  background: rgba(147, 112, 219, 0.12);
+  color: #5b21b6;
+}
+
+:root[data-theme="light"] .info-value {
+  color: #5b21b6;
+}
+
+/* Output block */
+:root[data-theme="light"] .agent-execution-output {
+  background: rgba(147, 112, 219, 0.06);
+  border-color: rgba(147, 112, 219, 0.15);
+}
+
+:root[data-theme="light"] .output-label {
+  color: #6d28d9;
+}
+
+/* Error */
+:root[data-theme="light"] .agent-execution-error {
+  background: rgba(239, 68, 68, 0.08);
+  color: #b91c1c;
+}
+
+/* Mode select meta divider */
+:root[data-theme="light"] .mode-select-meta {
+  border-top-color: rgba(147, 112, 219, 0.18);
+}
+

@@ -1,0 +1,1158 @@
+/* ==================== Read File Card ==================== */
+.read-file-body {
+  padding: 0;
+}
+
+.read-file-body .timeline-meta {
+  padding: 0 0 4px 0;
+}
+
+.read-file-card {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+  box-shadow: none;
+  max-width: 100%;
+}
+
+.read-file-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.read-file-card.pending {
+  animation: none;
+}
+
+.read-file-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  min-width: 0;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.read-file-card-header:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+}
+
+/* 左侧图标 - 紧凑内联 */
+.read-file-card-icon-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: transparent;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.read-file-card-icon-box svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 单行布局 */
+.read-file-card-grid {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.read-file-card-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 保留旧样式兼容 */
+.read-file-card-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.read-file-card-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.read-file-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.read-file-card-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.read-file-card-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: #1e293b;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 新增：统计数字样式 */
+.read-file-card-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.read-file-card-stat .stat-value {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.read-file-card-grid>.read-file-card-stat:first-of-type .stat-value {
+  color: #16a34a;
+}
+
+.read-file-card-stat .stat-label {
+  display: none;
+}
+
+/* 新增：操作按钮区域 */
+.read-file-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 680px) {
+  .read-file-card-grid {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .read-file-card-actions {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .read-file-card-info {
+    order: 3;
+    flex: 1 1 100%;
+  }
+}
+
+.read-file-card-stats {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.read-file-card-stats .stat-lines {
+  color: #22c55e;
+}
+
+.read-file-card-range {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.read-file-card-size {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.read-file-card-strategy {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  background: rgba(34, 197, 94, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.read-file-card-path {
+  display: none;
+}
+
+.read-file-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* 通用文件卡片类型标识 */
+.file-card-type-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.file-card-type-badge.read {
+  color: #17a85a;
+  background: #e9f9f0;
+  border: 1px solid #c7f0dc;
+}
+
+.file-card-type-badge.read.reading {
+  color: #d18810;
+  background: #fff6e5;
+  border: 1px solid #f3deb7;
+}
+
+.file-card-type-badge.write {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.file-card-type-badge.edit {
+  color: var(--gold-400);
+  background: rgba(201, 162, 39, 0.15);
+}
+
+.read-file-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+/* Read file open in editor button */
+.read-file-open-editor-btn {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 4px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.read-file-open-editor-btn:hover {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+.read-file-open-editor-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.read-file-collapse-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.read-file-collapse-btn:hover {
+  color: var(--text-primary);
+}
+
+.read-file-collapse-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.read-file-collapse-btn:not(.collapsed) svg {
+  transform: none;
+}
+
+.read-file-collapse-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.read-file-collapse-btn.collapsed svg {
+  transform: none;
+}
+
+.read-file-card-body {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 0;
+  background: transparent;
+}
+
+.read-file-code-preview {
+  margin: 0;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 500px;
+  overflow: auto;
+  border-radius: 0;
+}
+
+.read-file-code-preview.json-content {
+  background: rgba(34, 197, 94, 0.03);
+  border-left: 2px solid rgba(34, 197, 94, 0.3);
+  padding-left: 14px;
+  color: #d4d4d8;
+}
+
+.read-file-match-summary,
+.read-file-range-summary {
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.01);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.read-file-summary-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(34, 197, 94, 0.8);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.read-file-summary-title::before {
+  content: '';
+  width: 3px;
+  height: 12px;
+  background: rgba(34, 197, 94, 0.5);
+  border-radius: 2px;
+}
+
+.read-file-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.read-file-summary-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.read-file-summary-item:hover {
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.read-file-summary-item .summary-line {
+  min-width: 52px;
+  text-align: right;
+  color: rgba(34, 197, 94, 0.7);
+  font-weight: 500;
+  font-size: var(--neox-fs-xxs, 11px);
+}
+
+.read-file-summary-item .summary-text {
+  flex: 1;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.read-file-raw-block {
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.read-file-raw-toggle {
+  font-size: var(--neox-fs-xxs, 11px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.read-file-raw-preview {
+  margin: 0;
+  padding: 8px;
+  background: var(--bg-code);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+/* ==================== Read File Batch Card ==================== */
+.read-file-card.batch .read-file-card-icon.batch-icon svg {
+  color: #22c55e;
+}
+
+.file-card-type-badge.read.batch {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.read-file-batch-files {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 4px;
+}
+
+.batch-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  background: transparent;
+}
+
+.batch-file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.batch-file-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.batch-file-item svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.batch-file-name {
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.batch-file-open-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.batch-file-item:hover .batch-file-open-btn {
+  opacity: 1;
+}
+
+.batch-file-open-btn:hover {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.batch-file-open-btn svg {
+  width: 12px;
+  height: 12px;
+  color: #22c55e;
+}
+
+/* ==================== Write File Card - 简约版 ==================== */
+.write-file-body {
+  padding: 0;
+}
+
+.write-file-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.write-file-meta-title {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.write-file-lines-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 999px;
+}
+
+.write-file-lines-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #10b981;
+}
+
+.write-file-card {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.write-file-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.write-file-card.writing {
+  border-color: rgba(245, 158, 11, 0.35);
+  animation: write-card-border-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+
+/* 等待审批 / 已拒绝 — 跟 status 类正交，由 isAwaitingApproval / isDeniedApproval
+   旁路 flag 触发。颜色统一用 JetBrains New UI 暖橙金 #c19a6b。
+   覆盖 .writing 的橙色脉动 — 等待审批时不应该有"在跑"的视觉感。 */
+.write-file-card.awaiting-approval {
+  border-color: rgba(193, 154, 107, 0.55) !important;
+  background: linear-gradient(180deg, rgba(193, 154, 107, 0.06), rgba(255, 255, 255, 0.02));
+  animation: write-card-awaiting-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite !important;
+}
+.write-file-card.denied-approval {
+  border-color: rgba(193, 154, 107, 0.4) !important;
+  background: rgba(193, 154, 107, 0.04);
+  animation: none !important;
+}
+.write-file-card .file-card-type-badge.awaiting-approval,
+.write-file-card .file-card-type-badge.denied-approval {
+  color: #c19a6b !important;
+  background: rgba(193, 154, 107, 0.14) !important;
+  border: 1px solid rgba(193, 154, 107, 0.35) !important;
+}
+.write-file-card .write-file-status .write-file-awaiting,
+.write-file-card .write-file-status .write-file-denied {
+  display: inline-flex;
+  align-items: center;
+  color: #c19a6b;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(193, 154, 107, 0.12);
+  border: 1px solid rgba(193, 154, 107, 0.3);
+}
+
+/* Body 在 denied 时显示的金色提示 */
+.write-file-card .write-file-denied-body {
+  padding: 10px 14px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #c19a6b;
+  font-style: italic;
+}
+.write-file-card .write-file-status .write-file-awaiting {
+  animation: write-card-awaiting-chip-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+@keyframes write-card-awaiting-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 154, 107, 0); }
+  50%      { box-shadow: 0 0 0 2px rgba(193, 154, 107, 0.18); }
+}
+@keyframes write-card-awaiting-chip-pulse {
+  0%, 100% { background: rgba(193, 154, 107, 0.12); }
+  50%      { background: rgba(193, 154, 107, 0.30); }
+}
+
+@keyframes write-card-border-pulse {
+
+  0%,
+  100% {
+    border-color: rgba(var(--gold-500-rgb), 0.3);
+  }
+
+  50% {
+    border-color: rgba(var(--gold-500-rgb), 0.5);
+  }
+}
+
+.write-file-card.error {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.write-file-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.write-file-card-header:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+}
+
+.write-file-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.write-file-card-header-left>svg {
+  width: 14px;
+  height: 14px;
+  min-width: 18px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.write-file-card-path {
+  font-size: var(--neox-fs-xs, 12px);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.write-file-line-stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.write-file-line-stats .stat-added {
+  color: #22c55e;
+}
+
+.write-file-line-stats .stat-removed {
+  color: #ef4444;
+}
+
+.write-file-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Write file status indicator (Writing.../Done/Error) */
+.write-file-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.write-file-status svg {
+  width: 12px;
+  height: 12px;
+}
+
+.write-file-status.writing {
+  color: var(--gold-400);
+  background: rgba(var(--gold-500-rgb), 0.1);
+}
+
+.write-file-status.writing svg {
+  animation: spin 1s linear infinite;
+}
+
+.write-file-status.completed {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.write-file-status.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.file-card-type-badge.write.writing {
+  color: #d18810;
+  background: #fff6e5;
+  border: 1px solid #f3deb7;
+}
+
+.write-file-card-body {
+  padding: 0;
+}
+
+.write-file-code-block {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  font-family: var(--font-mono, 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace);
+  font-size: var(--neox-fs-xs, 12px);
+  width: 100%;
+  line-height: 1.55;
+  background: rgba(15, 18, 22, 0.35);
+  border-radius: 0 0 5px 5px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.write-file-code-line {
+  display: flex;
+  align-items: stretch;
+  min-height: 20px;
+  padding: 0;
+}
+
+.write-file-code-line:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.write-file-line-number {
+  width: 44px;
+  min-width: 44px;
+  padding: 1px 10px 1px 4px;
+  text-align: right;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(0, 0, 0, 0.38);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  margin-right: 0;
+  user-select: none;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.write-file-line-text {
+  flex: 1;
+  white-space: pre;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding: 1px 10px 1px 10px;
+  color: var(--text-primary, #d4d4d4);
+}
+
+/* WebStorm-style deep green for added / red for removed lines */
+.write-file-code-line.added {
+  background: rgba(46, 160, 67, 0.22);
+}
+
+.write-file-code-line.added:hover {
+  background: rgba(46, 160, 67, 0.28);
+}
+
+.write-file-code-line.added .write-file-line-number {
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  border-right-color: rgba(255, 255, 255, 0.12);
+}
+
+.write-file-code-line.added .write-file-line-text {
+  color: #d1f0d3;
+}
+
+.write-file-code-line.removed {
+  background: rgba(248, 81, 73, 0.18);
+}
+
+.write-file-code-line.removed:hover {
+  background: rgba(248, 81, 73, 0.24);
+}
+
+.write-file-code-line.removed .write-file-line-number {
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  border-right-color: rgba(255, 255, 255, 0.12);
+}
+
+.write-file-code-line.removed .write-file-line-text {
+  color: #f5c9c7;
+  text-decoration: line-through;
+  text-decoration-color: rgba(248, 81, 73, 0.35);
+}
+
+.write-file-code-line.context .write-file-line-text,
+.write-file-code-line.unchanged .write-file-line-text {
+  color: rgba(212, 212, 212, 0.85);
+}
+
+/* ==================== Create Directory Card - Single Line Display ==================== */
+.create-dir-body {
+  padding: 0;
+}
+
+.create-dir-card {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.create-dir-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.create-dir-card.creating {
+  animation: none;
+}
+
+.create-dir-card.error {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.create-dir-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+}
+
+.create-dir-card-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.create-dir-card-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(168, 85, 247, 0.12);
+  color: #a855f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.create-dir-card-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+.create-dir-card-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.create-dir-card-path {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.create-dir-card-badge {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.create-dir-card-badge.success {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.create-dir-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.file-card-type-badge.create {
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.15);
+}
+
+.create-dir-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.create-dir-status.completed {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.create-dir-status.creating {
+  color: var(--gold-400);
+  background: rgba(var(--gold-500-rgb), 0.1);
+}
+
+.create-dir-status.error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.create-dir-time {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+}
+
+.create-dir-card-body {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 8px;
+}
+
+.create-dir-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 2px solid #ef4444;
+  border-radius: 4px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #fca5a5;
+}
+
+.create-dir-error svg {
+  width: 12px;
+  height: 12px;
+  color: #ef4444;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ==================== Light theme ==================== */
+:root[data-theme="light"] .read-file-card,
+:root[data-theme="light"] .write-file-card,
+:root[data-theme="light"] .create-dir-card {
+  background: #ffffff;
+  border-color: var(--border-default, #e2e8f0);
+}
+
+:root[data-theme="light"] .read-file-card:hover,
+:root[data-theme="light"] .write-file-card:hover,
+:root[data-theme="light"] .create-dir-card:hover {
+  border-color: var(--border-strong, #cbd5e1);
+}
+
+:root[data-theme="light"] .read-file-card-header:hover,
+:root[data-theme="light"] .write-file-card-header:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .read-file-card-name {
+  color: var(--text-primary, #0f172a);
+}
+
+:root[data-theme="light"] .read-file-card-stat .stat-value {
+  color: var(--text-secondary, #475569);
+}
+
+:root[data-theme="light"] .read-file-batch-files {
+  color: var(--text-tertiary, #94a3b8);
+}
+
+:root[data-theme="light"] .read-file-card-body {
+  border-top-color: rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme="light"] .read-file-code-preview {
+  background: #f8fafc;
+  color: var(--text-primary, #0f172a);
+}
+
+:root[data-theme="light"] .read-file-code-preview.json-content {
+  background: rgba(34, 197, 94, 0.05);
+  border-left-color: rgba(34, 197, 94, 0.35);
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .read-file-match-summary,
+:root[data-theme="light"] .read-file-range-summary {
+  background: rgba(15, 23, 42, 0.03);
+  border-bottom-color: rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme="light"] .read-file-summary-item {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+:root[data-theme="light"] .read-file-summary-item:hover {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+:root[data-theme="light"] .read-file-raw-block {
+  border-top-color: rgba(15, 23, 42, 0.06);
+  background: rgba(15, 23, 42, 0.03);
+}
+
+:root[data-theme="light"] .read-file-raw-toggle {
+  border-color: rgba(15, 23, 42, 0.1);
+  background: rgba(15, 23, 42, 0.04);
+  color: var(--text-secondary, #475569);
+}
+
+:root[data-theme="light"] .batch-file-item {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .batch-file-item:hover {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+:root[data-theme="light"] .write-file-code-block {
+  background: #f8fafc;
+  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .write-file-code-line:hover {
+  background-color: rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .write-file-line-number {
+  color: var(--text-tertiary, #94a3b8);
+  background: rgba(15, 23, 42, 0.04);
+  border-right-color: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .write-file-line-text {
+  color: var(--text-primary, #0f172a);
+}
+
+:root[data-theme="light"] .write-file-code-line.added {
+  background: rgba(46, 160, 67, 0.12);
+}
+
+:root[data-theme="light"] .write-file-code-line.added:hover {
+  background: rgba(46, 160, 67, 0.18);
+}
+
+:root[data-theme="light"] .write-file-code-line.added .write-file-line-number {
+  background: rgba(46, 160, 67, 0.18);
+  color: #0f172a;
+  border-right-color: rgba(46, 160, 67, 0.3);
+}
+
+:root[data-theme="light"] .write-file-code-line.added .write-file-line-text {
+  color: #14532d;
+}
+
+:root[data-theme="light"] .write-file-code-line.removed {
+  background: rgba(248, 81, 73, 0.1);
+}
+
+:root[data-theme="light"] .write-file-code-line.removed:hover {
+  background: rgba(248, 81, 73, 0.16);
+}
+
+:root[data-theme="light"] .write-file-code-line.removed .write-file-line-number {
+  background: rgba(248, 81, 73, 0.18);
+  color: #0f172a;
+  border-right-color: rgba(248, 81, 73, 0.3);
+}
+
+:root[data-theme="light"] .write-file-code-line.removed .write-file-line-text {
+  color: #7f1d1d;
+}
+
+:root[data-theme="light"] .write-file-code-line.context .write-file-line-text,
+:root[data-theme="light"] .write-file-code-line.unchanged .write-file-line-text {
+  color: rgba(15, 23, 42, 0.75);
+}
+
+:root[data-theme="light"] .create-dir-card-body {
+  border-top-color: rgba(15, 23, 42, 0.06);
+}

@@ -1,0 +1,345 @@
+/* ============================================================
+ * GitBranchChip styles
+ *   两种 variant 共享内核 (.neox-git-chip), 外壳 .--header / .--statusbar
+ *   控制颜色 / padding / 边框.
+ * ============================================================ */
+
+.neox-git-chip {
+  appearance: none;
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: 0;
+  transition: background var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease-out),
+              color var(--neox-dur-fast, 120ms) var(--neox-ease-out, ease-out);
+}
+
+.neox-git-chip:disabled,
+.neox-git-chip.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.neox-git-chip__glyph {
+  display: inline-flex;
+  align-items: center;
+  color: currentColor;
+  opacity: 0.85;
+}
+
+.neox-git-chip__name {
+  font-variant-numeric: tabular-nums;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* dirty 点 — 橙色, 紧贴分支名右侧 */
+.neox-git-chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #F0A020;
+  flex-shrink: 0;
+}
+
+/* ahead/behind 数字 — 比分支名小一号, 偏低饱和 */
+.neox-git-chip__delta {
+  font-size: 10px;
+  color: var(--neox-fg-hint, #9099a8);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ────────────── variant: header (Agent 顶部) ────────────── */
+.neox-git-chip--header {
+  font-size: var(--neox-fs-xxs, 11px);
+  height: 22px;
+  padding: 0 6px;
+  color: var(--neox-fg-muted);
+  border-radius: 5px;
+}
+.neox-git-chip--header:hover:not(:disabled) {
+  background: var(--neox-bg-secondary);
+  color: var(--neox-fg-primary);
+}
+.neox-git-chip--header.is-open {
+  background: var(--neox-bg-secondary);
+  color: var(--neox-fg-primary);
+}
+.neox-git-chip--header .neox-git-chip__name {
+  max-width: 120px;
+}
+
+/* ────────────── variant: statusbar (IDE 底部) ────────────── */
+.neox-git-chip--statusbar {
+  font-size: var(--neox-fs-xxs, 11px);
+  height: 22px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 6px;
+  color: inherit;
+  border-radius: 3px;
+}
+.neox-git-chip--statusbar:hover:not(:disabled) {
+  background: var(--neox-bg-secondary);
+}
+.neox-git-chip--statusbar.is-open {
+  background: var(--neox-bg-secondary);
+}
+.neox-git-chip--statusbar .neox-git-chip__name {
+  max-width: clamp(72px, 18vw, 180px);
+}
+
+/* ============================================================
+ * BranchPopover — 主题色对齐 TaskDetailPopover (var(--neox-bg-card) + var(--neox-line)).
+ *   早期版本用了 rgba(28,30,38,0.96) fallback 偏蓝 — 跟墨夜真中性灰冲突.
+ * ============================================================ */
+.neox-branch-popover {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  background: var(--neox-bg-card, #fff);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  font-size: var(--neox-fs-sm, 13px);
+  color: var(--neox-fg-primary);
+  overflow: hidden;
+  animation: neox-branch-popover-slide-down .2s var(--neox-ease-out);
+}
+@keyframes neox-branch-popover-slide-down {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.neox-branch-popover__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.neox-branch-popover__search {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  font-size: var(--neox-fs-sm, 13px);
+  outline: none;
+}
+.neox-branch-popover__search::placeholder {
+  color: var(--neox-fg-hint);
+}
+
+.neox-branch-popover__list {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 0 6px 4px;
+}
+
+.neox-branch-popover__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--neox-fg-primary);
+  font: inherit;
+  font-size: var(--neox-fs-sm, 13px);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neox-branch-popover__item:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);
+}
+/* 顶部快捷操作 */
+.neox-branch-popover__actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.neox-branch-popover__action {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+}
+.neox-branch-popover__action:hover {
+  background: var(--neox-bg-hover, rgba(0,0,0,0.06));
+  color: var(--neox-fg-primary);
+}
+/* 分组标签 */
+.neox-branch-popover__group { padding: 2px 0; }
+.neox-branch-popover__group-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--neox-fg-hint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 12px 2px;
+}
+.neox-branch-popover__ahead {
+  font-size: 10px;
+  color: #16a34a;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.neox-branch-popover__behind {
+  font-size: 10px;
+  color: var(--neox-primary-600, #6e56ff);
+  flex-shrink: 0;
+  margin-left: 2px;
+}
+.neox-branch-popover__item--remote .neox-branch-popover__name {
+  color: var(--neox-fg-muted, #8a8e95);
+}
+.neox-branch-popover__bicon {
+  flex-shrink: 0;
+  color: var(--neox-fg-hint);
+}
+.neox-branch-popover__item.is-current .neox-branch-popover__bicon {
+  color: var(--neox-fg-primary);
+}
+.neox-branch-popover__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.neox-branch-popover__sub {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+}
+.neox-branch-popover__check {
+  color: var(--neox-fg-primary);
+  font-size: var(--neox-fs-md, 14px);
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.neox-branch-popover__delete {
+  margin-left: auto;
+  opacity: 0;
+  font-size: var(--neox-fs-md, 14px);
+  color: var(--neox-fg-hint);
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 3px;
+  transition: opacity var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neox-branch-popover__item:hover .neox-branch-popover__delete { opacity: 1; }
+.neox-branch-popover__delete:hover { color: var(--neox-err-ink, #dc2626); }
+
+.neox-branch-popover__item.is-current {
+  cursor: default;
+  color: var(--neox-fg-primary);
+  font-weight: var(--neox-fw-semibold, 600);
+}
+.neox-branch-popover__item:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.neox-branch-popover__check {
+  width: 12px;
+  text-align: center;
+  color: var(--neox-fg-muted);
+  font-size: var(--neox-fs-xxs, 11px);
+}
+.neox-branch-popover__item.is-current .neox-branch-popover__check {
+  color: var(--neox-fg-primary);
+}
+
+.neox-branch-popover__name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.neox-branch-popover__empty {
+  padding: 10px;
+  color: var(--neox-fg-hint);
+  text-align: center;
+}
+
+.neox-branch-popover__foot {
+  padding: 4px 6px 6px;
+  border-top: 0;
+}
+
+.neox-branch-popover__create-btn {
+  width: 100%;
+  padding: 6px 8px;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--neox-fg-muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.neox-branch-popover__create-btn:hover:not(:disabled) {
+  background: var(--neox-bg-secondary);
+  color: var(--neox-fg-primary);
+}
+
+.neox-branch-popover__create {
+  padding: 2px;
+}
+
+/* 分支右键菜单 */
+.neox-branch-ctx {
+  min-width: 160px;
+  background: var(--neox-bg-card, #fff);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.06);
+  padding: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  animation: neox-branch-popover-slide-down .15s var(--neox-ease-out);
+}
+.neox-branch-ctx__item {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  text-align: left;
+  font: inherit;
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.neox-branch-ctx__item:hover { background: rgba(0,0,0,0.05); }
+.neox-branch-ctx__item--danger { color: #e55765; }
+.neox-branch-ctx__item--danger:hover { background: rgba(229,87,101,0.08); }
+.neox-branch-ctx__sep { height: 1px; background: var(--neox-line, rgba(0,0,0,0.06)); margin: 3px 6px; }

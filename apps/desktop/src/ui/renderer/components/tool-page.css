@@ -1,0 +1,67 @@
+/* 工具页统一的头 + 数字条 + 按钮 (ToolPage.tsx) —— 设计稿 E8jf「工具页」 */
+.tp-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  margin: 0 0 10px -8px;
+  padding: 0 10px 0 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-secondary);
+  cursor: pointer;
+}
+.tp-back:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.06)); color: var(--neox-fg-primary); }
+/* 宿主给没有自带返回的工具页补的一条「‹ 工具」 */
+.tp-backwrap { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.tp-backwrap__bar { flex: none; padding: 18px 56px 0; }
+.tp-backwrap__bar .tp-back { margin-bottom: 0; }
+.tp-backwrap.is-settings .tp-backwrap__bar { width: 100%; max-width: 900px; margin: 0 auto; padding: 18px 48px 0; box-sizing: border-box; }
+.tp-backwrap__page { flex: 1; min-height: 0; }
+/* 窄了动作按钮换到下一行、数字条折行, 不挤标题 */
+.tp-head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.tp-head__text { flex: 1 1 260px; }
+.tp-stats { flex-wrap: wrap; row-gap: 14px; }
+.tp-head__icon { width: 60px; height: 60px; object-fit: contain; flex: none; }
+.tp-head__text { min-width: 0; }
+.tp-head__title { margin: 0; font-size: 28px; line-height: 1.2; font-weight: 600; color: var(--neox-fg-primary); }
+.tp-head__desc { margin: 6px 0 0; font-size: 14px; line-height: 1.5; color: var(--neox-fg-muted); }
+.tp-head__actions { margin-left: auto; display: flex; gap: 8px; flex: none; }
+.tp-stats {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  margin-top: 22px;
+  padding: 16px 22px;
+  border-radius: 16px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.1)), 0 2px 8px rgba(60, 45, 25, 0.04);
+}
+.tp-stats__value { font-size: 24px; font-weight: 600; color: var(--neox-fg-primary); font-variant-numeric: tabular-nums; }
+.tp-stats__label { margin-top: 2px; font-size: 12.5px; color: var(--neox-fg-muted); }
+.tp-stats__item.is-warn .tp-stats__value { color: #c27a0e; }
+.tp-stats__item.is-accent .tp-stats__value { color: var(--clay-blue, #2f6bff); }
+.tp-stats__right { margin-left: auto; display: flex; gap: 8px; }
+.tp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--neox-bg-card);
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(60, 45, 25, 0.12));
+  font: inherit;
+  font-size: 13px;
+  color: var(--neox-fg-primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tp-btn:hover { background: var(--neox-bg-hover, rgba(60, 45, 25, 0.05)); }
+.tp-btn.is-primary { background: var(--clay-blue, #2f6bff); box-shadow: none; color: #fff; }
+.tp-btn.is-primary:hover { filter: brightness(1.05); }
+.tp-btn:disabled { opacity: 0.5; cursor: default; }

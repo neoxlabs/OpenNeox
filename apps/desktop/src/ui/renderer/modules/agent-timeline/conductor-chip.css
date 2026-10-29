@@ -1,0 +1,305 @@
+/* 指挥模式: 输入框里的小标签 (开了才有) + 弹出面板 —— 陶土暖白, 一颗蓝; 不用原生 select */
+:root {
+  --cdr-ink: var(--neox-fg-primary, #1f1d1a);
+  --cdr-muted: var(--neox-fg-secondary, #77716a);
+  --cdr-line: color-mix(in srgb, var(--cdr-ink) 9%, transparent);
+  --cdr-well: color-mix(in srgb, #8a6f4e 7%, transparent);
+  --cdr-raised: #ffffff;
+  --cdr-blue: #2f6bff;
+  --cdr-warn: #c98a1a;
+  --cdr-over: #d04b3b;
+  --cdr-pop-bg: #fbf9f5;
+}
+:root[data-theme="dark"] {
+  --cdr-ink: #ece8e2;
+  --cdr-muted: #a39d95;
+  --cdr-pop-bg: #262422;
+  --cdr-raised: #34312e;
+  --cdr-well: color-mix(in srgb, #ffffff 5%, transparent);
+  --cdr-blue: #6b97ff;
+}
+
+/* 标签: 一颗蓝底小胶囊, 右侧 × 直接关; 超预算变红, 接近上限变琥珀 —— 不画进度条 */
+.atl-conductor-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--cdr-blue) 9%, transparent);
+  color: var(--cdr-blue);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.atl-conductor-chip.is-warn { background: color-mix(in srgb, var(--cdr-warn) 13%, transparent); color: var(--cdr-warn); }
+.atl-conductor-chip.is-over { background: color-mix(in srgb, var(--cdr-over) 13%, transparent); color: var(--cdr-over); }
+.atl-conductor-chip > button {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.atl-conductor-chip__main { gap: 5px; padding: 0 4px 0 9px; border-radius: 13px 0 0 13px; font-weight: 500; }
+.atl-conductor-chip__money { font-weight: 400; color: var(--cdr-ink); }
+.atl-conductor-chip__money em { font-style: normal; color: var(--cdr-muted); }
+.atl-conductor-chip__x { width: 22px; justify-content: center; padding-right: 3px; border-radius: 0 13px 13px 0; opacity: 0.6; }
+.atl-conductor-chip__x:hover { opacity: 1; }
+.atl-conductor-chip__main:hover,
+.atl-conductor-chip__x:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+
+.atl-conductor-scrim { position: fixed; inset: 0; z-index: 9998; }
+.atl-conductor-pop {
+  position: fixed;
+  z-index: 9999;
+  width: 306px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  padding: 14px 13px 12px;
+  border-radius: 14px;
+  background: var(--cdr-pop-bg);
+  color: var(--cdr-ink);
+  box-shadow:
+    0 0 0 1px var(--cdr-line),
+    0 2px 6px rgba(60, 45, 25, 0.06),
+    0 18px 40px rgba(60, 45, 25, 0.16);
+  font-size: 11px;
+  animation: atl-conductor-pop-in 140ms ease-out;
+  /* 高度不够时只让模型列表变矮滚动, 面板本身不滚 —— 整块滚会把底下「花费上限」切掉一半 */
+  display: flex;
+  flex-direction: column;
+}
+.atl-conductor-pop > * { flex-shrink: 0; }
+.atl-conductor-pop > .atl-conductor-pop__models { flex-shrink: 1; min-height: 96px; }
+@keyframes atl-conductor-pop-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+.atl-conductor-pop__head { display: flex; align-items: baseline; justify-content: space-between; gap: 7px; }
+.atl-conductor-pop__title { font-size: 12.5px; font-weight: 600; letter-spacing: 0.01em; }
+.atl-conductor-pop__meter { font-variant-numeric: tabular-nums; color: var(--cdr-muted); }
+.atl-conductor-pop__meter b { font-size: 13px; font-weight: 600; color: var(--cdr-ink); }
+.atl-conductor-pop__meter.is-warn b { color: var(--cdr-warn); }
+.atl-conductor-pop__meter.is-over b { color: var(--cdr-over); }
+
+/* 指挥 → 干活 两张小卡 */
+.atl-conductor-pop__roles {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+}
+/* 两张卡都能点: 正在挑的那张浮起 + 蓝边; 左上写角色, 右边小标签写它用哪种付费方式 */
+.atl-conductor-pop__role {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--cdr-well);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+.atl-conductor-pop__role:hover { background: color-mix(in srgb, var(--cdr-raised) 55%, var(--cdr-well)); }
+.atl-conductor-pop__role.is-on {
+  background: var(--cdr-raised);
+  box-shadow: 0 1px 2px rgba(60, 45, 25, 0.1), 0 0 0 1.5px var(--cdr-blue);
+}
+.atl-conductor-pop__role > span { display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+.atl-conductor-pop__role em {
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  background: color-mix(in srgb, var(--cdr-ink) 7%, transparent);
+  color: var(--cdr-muted);
+}
+.atl-conductor-pop__role em.is-payg { background: color-mix(in srgb, var(--cdr-warn) 14%, transparent); color: var(--cdr-warn); }
+.atl-conductor-pop__role em.is-sub { background: color-mix(in srgb, var(--cdr-blue) 11%, transparent); color: var(--cdr-blue); }
+.atl-conductor-pop__src { margin-bottom: 5px; }
+.atl-conductor-pop__empty { padding: 10px; text-align: center; color: var(--cdr-muted); }
+.atl-conductor-pop__roles span { font-size: 9.5px; color: var(--cdr-muted); }
+.atl-conductor-pop__roles b { font-size: 11px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.atl-conductor-pop__roles small { font-size: 9.5px; color: var(--cdr-muted); }
+.atl-conductor-pop__roles > i { font-style: normal; color: var(--cdr-blue); }
+
+.atl-conductor-pop__label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 12px 0 6px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--cdr-muted);
+}
+.atl-conductor-pop__label > span { font-weight: 400; font-size: 9.5px; opacity: 0.8; }
+
+/* 上限: 一条凹槽里的分段按钮, 选中的那格浮起来 */
+.atl-conductor-pop__seg {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--cdr-well);
+}
+.atl-conductor-pop__seg > button,
+.atl-conductor-pop__custom {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 24px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--cdr-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+.atl-conductor-pop__seg > button:hover,
+.atl-conductor-pop__custom:hover { color: var(--cdr-ink); }
+.atl-conductor-pop__seg > .is-on {
+  background: var(--cdr-raised);
+  color: var(--cdr-ink);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(60, 45, 25, 0.12), 0 0 0 1px var(--cdr-line);
+}
+.atl-conductor-pop__custom {
+  flex: 1.3 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 0 7px;
+  cursor: text;
+}
+.atl-conductor-pop__custom input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.atl-conductor-pop__custom input::placeholder { color: var(--cdr-muted); font-weight: 400; }
+.atl-conductor-pop__custom:focus-within { box-shadow: 0 0 0 1.5px var(--cdr-blue); color: var(--cdr-ink); }
+
+/* 干活模型: 单选列表 */
+.atl-conductor-pop__models {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 160px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--cdr-well);
+  overflow-y: auto;
+}
+.atl-conductor-pop__model {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 29px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cdr-ink);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+.atl-conductor-pop__model:hover { background: color-mix(in srgb, var(--cdr-raised) 60%, transparent); }
+.atl-conductor-pop__model.is-on {
+  background: var(--cdr-raised);
+  box-shadow: 0 1px 2px rgba(60, 45, 25, 0.1), 0 0 0 1px var(--cdr-line);
+}
+.atl-conductor-pop__radio {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--cdr-ink) 25%, transparent);
+  transition: box-shadow 120ms ease;
+}
+.atl-conductor-pop__model.is-on .atl-conductor-pop__radio { box-shadow: inset 0 0 0 4px var(--cdr-blue); }
+.atl-conductor-pop__model-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.atl-conductor-pop__model-name em {
+  flex: none;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--cdr-blue) 12%, transparent);
+  color: var(--cdr-blue);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 500;
+}
+.atl-conductor-pop__model-price { flex: none; color: var(--cdr-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+
+.atl-conductor-pop__bill {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--cdr-line);
+  font-variant-numeric: tabular-nums;
+}
+.atl-conductor-pop__row { display: grid; grid-template-columns: 1fr auto 56px; gap: 6px; padding: 2px 0; }
+.atl-conductor-pop__row > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.atl-conductor-pop__row em { font-style: normal; color: var(--cdr-blue); }
+.atl-conductor-pop__row > span:nth-child(2) { color: var(--cdr-muted); }
+.atl-conductor-pop__row > b { text-align: right; font-weight: 500; }
+.atl-conductor-pop__row.is-total { margin-top: 2px; font-weight: 600; }
+.atl-conductor-pop__row.is-total > b { font-weight: 600; }
+.atl-conductor-pop__note { margin-top: 5px; font-size: 9.5px; line-height: 1.5; color: var(--cdr-muted); }
+
+/* 面板矮到要滚时, 开启 / 关闭按钮贴底常驻 */
+.atl-conductor-pop__actions {
+  position: sticky;
+  bottom: -12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin: 14px -13px -12px;
+  padding: 9px 13px 12px;
+  background: var(--cdr-pop-bg);
+}
+.atl-conductor-pop__actions > button {
+  height: 26px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, filter 120ms ease;
+}
+.atl-conductor-pop__actions .is-ghost { background: transparent; color: var(--cdr-muted); }
+.atl-conductor-pop__actions .is-ghost:hover { background: var(--cdr-well); color: var(--cdr-ink); }
+.atl-conductor-pop__actions .is-primary { background: var(--cdr-blue); color: #fff; box-shadow: 0 1px 2px rgba(47, 107, 255, 0.3); }
+.atl-conductor-pop__actions .is-primary:hover { filter: brightness(1.06); }
+.atl-conductor-pop__actions .is-primary:disabled { opacity: 0.5; cursor: default; }

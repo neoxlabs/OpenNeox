@@ -1,0 +1,1765 @@
+/* IDEA New UI 用 Inter 作为 UI 字体。本地 woff2 (rsms.me v4.1, SIL OFL 1.1)
+ * 离线 bundle,避免 Electron CSP 拦 Google Fonts CDN。
+ * Vite 会把 url() 解析成 build 后的 hash 路径。 */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../../assets/fonts/inter/Inter-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../../../assets/fonts/inter/Inter-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../../../assets/fonts/inter/Inter-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../../../assets/fonts/inter/Inter-Bold.woff2') format('woff2');
+}
+
+/* ==================== Terminal Panel 样式 ==================== */
+.terminal-panel {
+  background: #1e1f22;
+  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: var(--bg-secondary, #252526);
+  border-bottom: 1px solid var(--border-subtle, #333);
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.terminal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 500;
+  color: var(--text-secondary, #cccccc);
+}
+
+.terminal-title svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-accent);
+}
+
+.terminal-status {
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.terminal-status.connected {
+  color: #4ade80;
+}
+
+.terminal-status.disconnected {
+  color: #f87171;
+}
+
+.terminal-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.terminal-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted, #888888);
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.terminal-action-btn:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.1));
+  color: var(--text-secondary, #cccccc);
+}
+
+.terminal-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.terminal-container {
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+  background: #1e1f22;
+}
+
+.terminal-container .xterm {
+  padding: 8px 12px;
+  background: var(--neox-bg-canvas) !important;
+}
+.terminal-container .xterm-viewport,
+.terminal-container .xterm-screen {
+  background: var(--neox-bg-canvas) !important;
+}
+
+.terminal-container .xterm-viewport {
+  overflow-y: auto !important;
+}
+
+/* xterm scrollbar — 走全局 thin scrollbar token, 不再 hardcoded 白色 thumb */
+.terminal-container .xterm-viewport::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+.terminal-container .xterm-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+.terminal-container .xterm-viewport::-webkit-scrollbar-thumb {
+  background: var(--neox-scrollbar-thumb, rgba(0, 0, 0, 0.15));
+  border-radius: 3px;
+}
+.terminal-container .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--neox-scrollbar-thumb-hover, rgba(0, 0, 0, 0.28));
+}
+
+/* 浅色主题 Terminal 适配 — 走 canvas 而不是纯白 #fff (用户报"右侧白条" 真因) */
+:root[data-theme="light"] .terminal-panel {
+  background: var(--neox-bg-canvas);
+  border: 1px solid var(--border-default);
+}
+
+:root[data-theme="light"] .terminal-header {
+  background: color-mix(in srgb, var(--neox-bg-card, #f3f3f3) 70%, #f3f3f3);
+  border-bottom-color: var(--border-default);
+}
+
+:root[data-theme="light"] .terminal-title {
+  color: var(--neox-fg-primary, #333);
+}
+
+:root[data-theme="light"] .terminal-action-btn {
+  color: #666666;
+}
+
+:root[data-theme="light"] .terminal-action-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--neox-fg-primary, #333);
+}
+
+/* ==================== 工作区侧边栏容器 — JetBrains tool window ==================== */
+.workspace-sidebar {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 180px;
+  max-width: 720px;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .workspace-sidebar {
+  padding-top: var(--editor-header-height);
+  background: #fdfdfd;
+  backdrop-filter: none;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .workspace-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--editor-header-height);
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+  z-index: 0;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .workspace-sidebar .sidebar-content,
+:root[data-theme="light"] .workspace-shell.editor-mode .workspace-sidebar .sidebar-mode-switch {
+  position: relative;
+  z-index: 1;
+}
+
+/* 侧边栏拖拽手柄 — JB 极简：只在 hover 显示蓝色细线 */
+.sidebar-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 100;
+}
+
+.sidebar-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 1px;
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.sidebar-resize-handle:hover::after,
+.sidebar-resize-handle.active::after {
+  background: var(--neox-primary-600, #3574f0);
+}
+
+/* 侧边栏内容区域 */
+.sidebar-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 让 SessionSidebar 和 FileExplorer 在容器内正确显示 */
+.sidebar-content>.session-sidebar,
+.sidebar-content>.file-explorer {
+  flex: 1;
+  min-height: 0;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  border-right: none !important;
+  height: auto !important;
+  padding-top: 0 !important;
+}
+
+.sidebar-content .sidebar-header,
+.file-explorer > .sidebar-header {
+  height: 32px;
+  min-height: 32px;
+  padding: 0 4px 0 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+  width: 100%;
+  gap: 4px;
+}
+
+/* IDEA explorer 标题下拉按钮 — "项目 ⌄"
+ * 高度对齐右侧 action 按钮 (26x26)，避免 header 视觉垂直错位
+ * padding-left:0 让 "项目" 文字贴紧 header 左 padding (8px)，跟 IDEA 一致 */
+.explorer-title-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 6px 0 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #f0f1f2;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  line-height: 26px;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+  flex-shrink: 0;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+.explorer-title-btn > span {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.explorer-title-btn:hover {
+  background: #393b40;
+}
+
+.explorer-title-btn svg {
+  width: 11px;
+  height: 11px;
+  color: #6c707e;
+}
+
+/* 右侧 5 工具按钮组 — IDEA Project tool window header 常显
+ * IDEA New UI: 按钮之间留 4px gap,跟 stripe 上的呼吸感一致 */
+.explorer-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.explorer-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* IDEA New UI: tool window header 动作按钮 26x26, icon 18x18 */
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #b4b8bf;
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+  padding: 0;
+}
+
+.explorer-action-btn svg {
+  width: 18px;
+  height: 18px;
+  /* 跟 activity-bar 一致,提亮让肉眼更清晰 */
+  filter: brightness(1.15);
+}
+
+.explorer-action-btn:hover svg {
+  filter: brightness(1.4);
+}
+
+.explorer-action-btn:hover {
+  background: #393b40;
+  color: #dfe1e5;
+}
+
+.explorer-action-divider {
+  width: 1px;
+  height: 12px;
+  background: #393b40;
+  margin: 0 2px;
+}
+
+/* 编辑器模式下 traffic-lights 在最顶部 title bar，sidebar-header 无需额外 padding-left
+ * 保持跟非 darwin 同样的 8px，让 "项目" 真正贴左 */
+:root[data-platform="darwin"] .workspace-shell.editor-mode .sidebar-header {
+  padding-left: 8px;
+}
+
+.sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* IDEA New UI tool window title: 13px, weight 400, color Gray12 */
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #dfe1e5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.sidebar-title svg {
+  width: 13px;
+  height: 13px;
+  color: #b4b8bf;
+  flex-shrink: 0;
+}
+
+.sidebar-title > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==================== 侧边栏底部切换滑块 ==================== */
+.sidebar-mode-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid rgba(59, 130, 246, 0.08);
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.sidebar-mode-slider {
+  display: none;
+}
+
+.sidebar-mode-slider.right {
+  transform: translateX(100%);
+}
+
+.sidebar-mode-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.sidebar-mode-btn:hover {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: var(--text-primary);
+}
+
+.sidebar-mode-btn.active {
+  background: var(--text-accent);
+  border-color: var(--text-accent);
+  color: #ffffff;
+}
+
+.sidebar-mode-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .sidebar-mode-switch {
+  margin: 12px;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  background: rgba(241, 245, 249, 0.8);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
+  gap: 6px;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .sidebar-mode-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748b;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .sidebar-mode-btn.active {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .sidebar-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: #e2e8f0;
+  color: #1f2937;
+}
+
+/* ==================== 编辑器视图布局 ==================== */
+.editor-view-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ==================== 文件资源管理器 ==================== */
+.file-explorer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-explorer {
+  background: #fdfdfd;
+  backdrop-filter: none;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-explorer .sidebar-header {
+  padding: 0 6px 0 8px;
+  height: 32px;
+  border-bottom: 1px solid #ebecf0;
+  background: #f7f8fa;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-explorer .sidebar-title {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #1f2329;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-header {
+  padding: 0;
+  gap: 6px;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0ea5e9;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-name {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 600;
+  color: #334155;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-pattern {
+  font-size: var(--neox-fs-xxs);
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #2563eb;
+  font-family: var(--font-mono);
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-meta {
+  gap: 6px;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .editor-timeline-content .grep-file-collapse-btn {
+  width: 16px;
+  height: 16px;
+}
+
+.explorer-tree {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #43454a transparent;
+}
+
+.explorer-tree::-webkit-scrollbar {
+  width: 6px;
+}
+
+.explorer-tree::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.explorer-tree::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.explorer-tree:hover::-webkit-scrollbar-thumb {
+  background: #43454a;
+}
+
+:root[data-theme="light"] .explorer-tree:hover::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+}
+:root[data-theme="light"] .explorer-tree:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.32);
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .explorer-tree {
+  padding: 4px 0;
+}
+
+.tree-loading,
+.tree-error {
+  padding: 10px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree-loading-spinner {
+  display: inline-flex;
+  /* 旋转已收进 Icons.Loader 自己 (.neox-spin), 这里再转一次会叠成两倍速 */
+}
+.tree-loading-spinner svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* @keyframes neox-spin 已收敛到 styles/skeleton.css (曾经全仓两份、函数体还不一样) */
+
+.tree-error {
+  color: #f87171;
+}
+
+/* ==================== 文件树节点 ==================== */
+.file-tree-node {
+  user-select: none;
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px 0 8px;
+  height: 22px;
+  line-height: 22px;
+  overflow: visible;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  color: #bcbec4;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+  border-radius: 0;
+  margin: 0;
+  letter-spacing: 0;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* step 6B: VFS 文件变更高亮 — 当 FILES_TOPIC 通知某文件刚被改过，
+   行末加一个 6px 圆点 + 文件名变金色 + 微弱背景脉动。3 秒后消失。
+   颜色取自 JetBrains New UI 的 "modified" indicator (#c19a6b 暖金)。 */
+.file-tree-item.recently-changed {
+  position: relative;
+  animation: fileExplorerPulse var(--neox-dur-fast) var(--neox-ease-out);
+}
+.file-tree-item.recently-changed .file-name {
+  color: #c19a6b;
+}
+.file-tree-item.recently-changed::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c19a6b;
+  box-shadow: 0 0 6px #c19a6b80;
+  animation: fileExplorerDotFade var(--neox-dur-fast) var(--neox-ease-out) forwards;
+}
+@keyframes fileExplorerPulse {
+  0%   { background: #c19a6b30; }
+  60%  { background: #c19a6b18; }
+  100% { background: transparent; }
+}
+@keyframes fileExplorerDotFade {
+  0%   { opacity: 1; transform: translateY(-50%) scale(1); }
+  85%  { opacity: 1; transform: translateY(-50%) scale(1); }
+  100% { opacity: 0; transform: translateY(-50%) scale(0.5); }
+}
+
+/* JB excluded 文件夹 (build/dist/node_modules/release/...): 棕字 (无底色,符合 IDEA 实际) */
+.file-tree-item.excluded,
+.file-tree-item.excluded .file-name {
+  color: #b4744a;
+}
+
+.file-tree-item.excluded:hover {
+  background: #393b40;
+}
+
+/* 选中态时才显示棕色行底,与 IDEA 一致 */
+.file-tree-item.excluded.selected {
+  background: #5a3a20;
+}
+
+.file-tree-item.excluded.selected .file-name {
+  color: #ffb47e;
+}
+
+/* 灰色 ignored 文件 (.gitignore / .dockerignore) */
+.file-tree-item.ignored {
+  color: #6c707e;
+}
+
+.file-tree-item.ignored .file-icon svg {
+  color: #6c707e;
+}
+
+/* "library root" / 其它 tag */
+.file-tag {
+  margin-left: 6px;
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #6c707e;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.file-tree-item.excluded .file-tag {
+  color: #8a6849;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-tree-item {
+  font-size: var(--neox-fs-sm, 13px);
+  color: #1f2329;
+}
+
+/* IDEA New UI: tree row hover 用 Gray3 #393b40 (theme.json *.hoverBackground) */
+.file-tree-item:hover {
+  background: #393b40;
+  color: #ffffff;
+}
+
+/* JB selected: 整行通栏 #2e436e 蓝灰
+ * 要 !important 是因为 .file-tree-item.root-node 等同样 specificity 的规则在后面会覆盖 */
+.file-tree-item.selected {
+  background: #2e436e !important;
+  color: #ffffff !important;
+}
+
+/* root-node 选中态(显式规则,防 .root-node 的 transparent 覆盖) */
+.file-tree-item.root-node.selected {
+  background: #2e436e !important;
+  color: #ffffff !important;
+}
+.file-tree-item.root-node.selected .root-name,
+.file-tree-item.root-node.selected .root-bracket,
+.file-tree-item.root-node.selected .root-path {
+  color: #ffffff !important;
+}
+
+/* IDEA Speed Search overlay */
+.explorer-speed-search {
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 12px;
+  background: rgba(53, 116, 240, 0.2);
+  border: 1px solid var(--neox-primary-600, #3574f0);
+  border-radius: 12px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: #ffffff;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  animation: neox-speed-search-fade-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+@keyframes neox-speed-search-fade-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.explorer-speed-search .speed-search-icon {
+  font-size: var(--neox-fs-xxs, 11px);
+  opacity: 0.8;
+}
+
+.explorer-speed-search .speed-search-buffer {
+  font-family: 'SF Mono', 'Menlo', 'JetBrains Mono', Consolas, monospace;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* IDEA drop target: 拖拽目标目录高亮 */
+.file-tree-item.drag-over {
+  background: rgba(53, 116, 240, 0.25) !important;
+  outline: 1px solid var(--neox-primary-600, #3574f0);
+  outline-offset: -1px;
+}
+
+/* IDEA cut state: 文件被剪切到剪贴板,显示半透明,等待 paste */
+.file-tree-item.cut-marked {
+  opacity: 0.5;
+}
+.file-tree-item.cut-marked .file-icon,
+.file-tree-item.cut-marked .file-name {
+  opacity: 0.85;
+}
+
+.file-tree-item.selected .file-name {
+  color: #ffffff;
+}
+
+/* 基础 selected 规则带 !important —— light 覆盖也必须 !important 才能压过去 */
+:root[data-theme="light"] .file-tree-item.selected,
+:root[data-theme="light"] .file-tree-item.root-node.selected,
+:root[data-theme="light"] .workspace-shell.editor-mode .file-tree-item.selected {
+  background: #dbeafe !important;
+  color: #1e3a8a !important;
+  border-radius: 0;
+}
+
+:root[data-theme="light"] .file-tree-item.selected .file-name,
+:root[data-theme="light"] .file-tree-item.root-node.selected .root-name,
+:root[data-theme="light"] .file-tree-item.root-node.selected .root-bracket,
+:root[data-theme="light"] .file-tree-item.root-node.selected .root-path {
+  color: #1e3a8a !important;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-tree-item.selected .file-icon svg {
+  color: #2563eb;
+}
+
+/* Hover 行 light 覆盖 —— 不加 !important 的规则, 用高特异性压 */
+:root[data-theme="light"] .workspace-shell .file-tree-item:hover {
+  background: rgba(15, 23, 42, 0.05);
+  color: #0f172a;
+}
+:root[data-theme="light"] .workspace-shell .file-tree-item.root-node:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+:root[data-theme="light"] .workspace-shell .file-tree-item.excluded:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+/* 文件复制按钮 */
+.file-copy-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.file-tree-item:hover .file-copy-btn {
+  display: flex;
+}
+
+.file-copy-btn:hover {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--text-accent);
+}
+
+.file-copy-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.file-tree-item.directory {
+  font-weight: 400;
+  color: #dfe1e5;
+}
+
+/* 顶层模块文件夹（如 order-admin-api / order-common）加粗 — 仿 IDEA */
+.file-tree-item.directory.module-bold {
+  font-weight: 700;
+  color: #dfe1e5;
+}
+
+/* active editor 文件 — 蓝字（区分于 selected 行背景） */
+.file-tree-item.file.editor-active .file-name {
+  color: var(--neox-fg-primary, #e6e6e6);
+  font-weight: 400;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-tree-item.file.editor-active .file-name {
+  color: #1e6fdb;
+}
+
+/* 根节点样式 — JB project root (粗体名 + 灰色路径)
+ * 跟随滚动,不 sticky —— 否则 transparent 背景下子节点会从 Neox 后面穿过去 */
+.file-tree-item.root-node {
+  padding: 0 6px;
+  height: 22px;
+  line-height: 22px;
+  font-weight: 700;
+  color: #dfe1e5;
+  background: transparent;
+  border-bottom: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .file-tree-item.root-node {
+  background: transparent;
+  border-bottom: none;
+  font-size: var(--neox-fs-sm, 13px);
+  color: #1f2329;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .root-name {
+  color: #1f2329;
+}
+
+:root[data-theme="light"] .workspace-shell.editor-mode .root-bracket,
+:root[data-theme="light"] .workspace-shell.editor-mode .root-path {
+  color: #6f737a;
+}
+
+.file-tree-item.root-node:hover {
+  background: #393b40;
+}
+
+.file-tree-item.root-node .root-icon svg {
+  color: currentColor;
+}
+
+/* Root row 三段文字 — 显式 font-family,避免继承断链导致字体回退 */
+.root-name {
+  font-weight: 700;
+  color: var(--neox-fg-primary, #dfe1e5);
+  font-size: var(--neox-fs-sm, 13px);
+  letter-spacing: 0;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.root-bracket {
+  font-weight: 400;
+  color: #6c707e;
+  font-size: var(--neox-fs-sm, 13px);
+  margin-left: 6px;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.root-path {
+  font-size: var(--neox-fs-sm, 13px);
+  color: #6c707e;
+  margin-left: 10px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 子节点的文件名也显式 font-family,跟 root 完全统一 */
+.file-name {
+  font-family: 'Inter', 'JetBrains Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.file-name.has-git-status[data-git-status="D"] { text-decoration: line-through; opacity: 0.62; }
+.file-git-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding-left: 6px;
+}
+.file-git-badge[data-git-status="M"] { color: var(--neox-git-modified, #6cb6ff); }
+.file-git-badge[data-git-status="A"] { color: var(--neox-git-added, #7bc488); }
+.file-git-badge[data-git-status="D"] { color: var(--neox-git-deleted, #ff6b7a); }
+.file-git-badge[data-git-status="U"] { color: var(--neox-git-untracked, #d9a441); }
+.file-git-badge[data-git-status="C"] { color: var(--neox-git-conflict, #e5984d); }
+.file-git-badge[data-git-status="R"] { color: var(--neox-git-added, #6cb6ff); }
+:root[data-theme="light"] .file-git-badge[data-git-status="M"] { color: #2f6aa8; }
+:root[data-theme="light"] .file-git-badge[data-git-status="A"] { color: #1f7a33; }
+:root[data-theme="light"] .file-git-badge[data-git-status="U"] { color: #9a6a14; }
+:root[data-theme="light"] .file-git-badge[data-git-status="C"] { color: #b0651a; }
+:root[data-theme="light"] .file-git-badge[data-git-status="D"] { color: #c4283a; }
+
+.tree-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 细线 chevron: 16 盒装 14 图 —— 折叠箭头是结构指示, 颜色要比文件名**低**一档,
+   * 否则一列箭头比内容还抢眼 (原来 #d4d7dc/0.92 跟文件名 #d4d4d4 几乎同亮)。 */
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #8a8f98;
+  opacity: 1;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out), opacity var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.tree-arrow svg {
+  width: 14px !important;
+  height: 14px !important;
+  display: block;
+}
+
+/* hover 时 chevron 更亮 */
+.file-tree-item:hover .tree-arrow {
+  color: #c9ced6;
+  opacity: 1;
+}
+
+/* 展开态只转 90°, **不加亮** —— 加亮会让每个展开的目录都多一个高对比笔画,
+ * 一棵展开的树看上去就是一列亮箭头。展开/收起的信息已经由方向表达了。 */
+.tree-arrow.expanded {
+  transform: rotate(90deg);
+}
+
+:root[data-theme="light"] .tree-arrow {
+  color: #5b616a;
+  opacity: 0.95;
+}
+:root[data-theme="light"] .file-tree-item:hover .tree-arrow {
+  color: #3a4048;
+  opacity: 1;
+}
+
+.file-tree-children-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--neox-dur-base, 240ms) var(--neox-ease-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.file-tree-children-wrap.is-open {
+  grid-template-rows: 1fr;
+}
+.file-tree-children-wrap > .file-tree-children {
+  overflow: hidden;
+  min-height: 0;
+}
+.file-tree-children-wrap.is-open > .file-tree-children {
+  min-height: min-content;
+  overflow: visible;
+}
+
+.file-tree-item.file::before {
+  content: none;
+}
+
+.file-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-left: 0;
+  margin-right: 0;
+  opacity: 1;
+}
+
+.file-icon svg,
+.file-icon .ft-icon,
+.file-icon .ft-icon svg,
+.file-icon span > svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.file-tree-item:hover .file-icon,
+.file-tree-item.selected .file-icon {
+  opacity: 1;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 子节点缩进由 paddingLeft 控制 */
+
+/* ==================== 编辑器标签页 ==================== */
+.editor-tabs-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg-void);
+}
+
+.editor-tabs-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+}
+
+.empty-editor-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #6c707e;
+  user-select: none;
+}
+
+.empty-editor-brand {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c707e;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.empty-editor-brand svg {
+  display: block;
+}
+
+.empty-editor-tagline {
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6c707e;
+  margin-top: -2px;
+  margin-bottom: 4px;
+}
+
+:root[data-theme="light"] .empty-editor-brand {
+  color: rgba(37, 99, 235, 0.55);
+}
+
+:root[data-theme="light"] .empty-editor-tagline {
+  color: rgba(100, 116, 139, 0.7);
+}
+
+.empty-editor-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.empty-shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 16px;
+  border-radius: 10px;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.empty-shortcut-item:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.empty-shortcut-item kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-weight: 500;
+  color: rgba(203, 213, 225, 0.78);
+  letter-spacing: 0.04em;
+}
+
+.empty-shortcut-item span {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  color: rgba(148, 163, 184, 0.68);
+  letter-spacing: 0.01em;
+}
+
+:root[data-theme="light"] .empty-shortcut-item kbd {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+:root[data-theme="light"] .empty-shortcut-item span {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .empty-shortcut-item:hover {
+  background: #f8fafc;
+}
+
+:root[data-theme="light"] .editor-tabs-container,
+:root[data-theme="light"] .editor-tabs-empty {
+  background: #ffffff;
+}
+
+:root[data-theme="light"] .empty-editor-message {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .empty-shortcut-item:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+/* ---- Tab 栏 ---- */
+.editor-tabs-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  /* JB: tab bar 比 panel 更深 / 接近编辑器底色，灰黑感 */
+  background: var(--bg-void);
+  border-bottom: 1px solid var(--border-subtle);
+  min-height: 34px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.editor-tabs-scroll {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.editor-tabs-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* "更多文件" 下拉按钮 + 它自带的 wrapper (用来放菜单的定位) */
+.editor-tabs-overflow-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 2px;
+  border-left: 1px solid #2b2d30;
+}
+.editor-tabs-overflow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 0 4px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #868a91;
+  cursor: pointer;
+}
+.editor-tabs-overflow-btn:hover,
+.editor-tabs-overflow-btn.active {
+  background: rgba(255, 255, 255, 0.06);
+  color: #dfe1e5;
+}
+:root[data-theme="light"] .editor-tabs-overflow-wrap {
+  border-left-color: #d8dee4;
+}
+:root[data-theme="light"] .editor-tabs-overflow-btn {
+  color: #5a5d63;
+}
+:root[data-theme="light"] .editor-tabs-overflow-btn:hover,
+:root[data-theme="light"] .editor-tabs-overflow-btn.active {
+  background: rgba(0, 0, 0, 0.05);
+  color: #2b2d30;
+}
+
+.editor-tabs-overflow-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 3px;
+  background: #2b2d30;
+  border: 1px solid #393b40;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  min-width: 260px;
+  max-width: 480px;
+  max-height: 420px;
+  overflow-y: auto;
+  z-index: 100;
+}
+.editor-tabs-overflow-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #bcbec4;
+  font-size: var(--neox-fs-xs, 12px);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.editor-tabs-overflow-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.editor-tabs-overflow-item.active {
+  background: #214283;
+  color: #ffffff;
+}
+.editor-tabs-overflow-item .overflow-item-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+}
+.editor-tabs-overflow-item .overflow-item-name {
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.editor-tabs-overflow-item .overflow-item-dirty {
+  color: #c9a84b;
+  flex-shrink: 0;
+}
+.editor-tabs-overflow-item .overflow-item-path {
+  margin-left: auto;
+  padding-left: 12px;
+  color: #6b6f76;
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+  text-align: left;
+  min-width: 0;
+}
+.editor-tabs-overflow-item.active .overflow-item-path {
+  color: rgba(255, 255, 255, 0.6);
+}
+:root[data-theme="light"] .editor-tabs-overflow-menu {
+  background: #ffffff;
+  border-color: #d0d4d9;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+:root[data-theme="light"] .editor-tabs-overflow-item {
+  color: #2b2d30;
+}
+:root[data-theme="light"] .editor-tabs-overflow-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+:root[data-theme="light"] .editor-tabs-overflow-item.active {
+  background: var(--neox-primary-600, #3574f0);
+  color: #ffffff;
+}
+:root[data-theme="light"] .editor-tabs-overflow-item .overflow-item-path {
+  color: #7a7e85;
+}
+
+.editor-tabs-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+  flex-shrink: 0;
+  border-left: 1px solid #2b2d30;
+}
+
+.tab-action-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tab-action-group + .tab-action-group {
+  margin-left: 4px;
+  padding-left: 6px;
+  border-left: 1px solid #2b2d30;
+}
+
+.tab-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #6b6f76;
+  cursor: pointer;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.tab-action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #c7c7c7;
+}
+
+.tab-action-btn.active {
+  color: #78a9ff;
+}
+
+.editor-tabs-bar::-webkit-scrollbar {
+  height: 0;
+}
+
+.editor-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px 0 12px;
+  height: 34px;
+  background: transparent;
+  color: #868a91;
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 400;
+  cursor: pointer;
+  border-right: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+  max-width: 240px;
+  position: relative;
+  /* 新 tab 出现动画:从左侧展开 + 淡入.只在首次挂载播一次,不影响切换. */
+  animation: editor-tab-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+  transform-origin: left center;
+}
+
+@keyframes editor-tab-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-6px) scaleX(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+  }
+}
+
+.editor-tab:hover {
+  background: #2b2d30;
+  color: #dfe1e5;
+}
+
+/* IDEA New UI: 激活 tab 用比 bar 略浅的灰 (Gray2),底部 2px IDEA blue (#3574F0) */
+.editor-tab.active {
+  background: #2b2d30;
+  color: #ffffff;
+  border-bottom-color: var(--neox-primary-600, #3574f0);
+  font-weight: 400;
+}
+
+.editor-tab.active::after {
+  display: none;
+}
+
+/* 第一个 tab 不要左 border，最后一个保留分隔感 */
+.editor-tab:first-child {
+  border-left: none;
+}
+
+.editor-tab.dirty .tab-name {
+  font-style: italic;
+}
+
+.tab-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.editor-tab.active .tab-icon {
+  opacity: 1;
+}
+
+.tab-icon svg,
+.tab-icon .ft-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tab-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+
+.tab-dirty-indicator {
+  color: #fbbf24;
+  font-size: 8px;
+  margin-left: -2px;
+}
+
+.tab-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(148, 163, 184, 0.4);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--neox-dur-fast) var(--neox-ease-out);
+}
+
+.editor-tab:hover .tab-close-btn {
+  opacity: 1;
+}
+
+.tab-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.tab-close-btn svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* 标签页右键菜单 — 面/边由 context-menu.css --nx-menu-* 接管 */
+.tab-context-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 168px;
+  padding: var(--nx-menu-pad, 5px) 0;
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  height: var(--nx-menu-item-h, 28px);
+  padding: 0 12px;
+  margin: 1px 5px;
+  border-radius: var(--nx-menu-item-radius, 6px);
+  font-size: var(--nx-menu-font, 13px);
+  color: var(--nx-menu-fg, var(--text-primary));
+  cursor: pointer;
+  transition: background 90ms ease;
+}
+
+.context-menu-item:hover {
+  background: var(--nx-menu-item-hover, var(--bg-hover));
+}
+
+.context-menu-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--border-subtle);
+}
+
+/* ==================== Plugin Sidebar Panel ==================== */
+
+.plugin-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #2b2d30;
+  overflow: hidden;
+}
+
+.plugin-panel-header {
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.plugin-panel-title {
+  font-size: var(--neox-fs-sm, 13px);
+  font-weight: 600;
+  color: #f0f1f2;
+  padding: 0 2px;
+}
+
+/* 搜索框 */
+.plugin-panel-search-form {
+  position: relative;
+  padding: 6px 8px;
+  flex-shrink: 0;
+}
+
+.plugin-panel-search {
+  width: 100%;
+  height: 26px;
+  padding: 0 26px 0 8px;
+  box-sizing: border-box;
+  background: #1e1f22;
+  border: 1px solid #3c3f41;
+  border-radius: 4px;
+  color: #dfe1e5;
+  font-size: var(--neox-fs-xs, 12px);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.plugin-panel-search:focus {
+  border-color: #2f65ca;
+}
+.plugin-panel-search::placeholder {
+  color: #6c707e;
+}
+
+.plugin-panel-search-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c707e;
+  cursor: pointer;
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 2px;
+  line-height: 1;
+}
+.plugin-panel-search-clear:hover { color: #dfe1e5; }
+
+/* Tabs: 全部 / 已安装 */
+.plugin-panel-tabs {
+  display: flex;
+  border-bottom: 1px solid #1e1f22;
+  flex-shrink: 0;
+}
+
+.plugin-panel-tab {
+  flex: 1;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #6c707e;
+  font-size: var(--neox-fs-xs, 12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: color 0.12s, border-color 0.12s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.plugin-panel-tab:hover { color: #dfe1e5; }
+.plugin-panel-tab.active {
+  color: #dfe1e5;
+  border-bottom-color: #2f65ca;
+}
+
+.plugin-panel-count {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #6c707e;
+  background: #393b40;
+  border-radius: 8px;
+  padding: 0 5px;
+  line-height: 16px;
+}
+
+/* 插件列表 */
+.plugin-panel-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.plugin-panel-list::-webkit-scrollbar { width: 6px; }
+.plugin-panel-list::-webkit-scrollbar-track { background: transparent; }
+.plugin-panel-list::-webkit-scrollbar-thumb { background: #393b40; border-radius: 3px; }
+
+.plugin-panel-loading,
+.plugin-panel-empty {
+  padding: 16px 12px;
+  color: #6c707e;
+  font-size: var(--neox-fs-xs, 12px);
+  text-align: center;
+}
+
+.plugin-panel-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 4px 1px;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.plugin-panel-item:hover { background: #393b40; }
+.plugin-panel-item.selected { background: #2e436e; }
+
+.plugin-panel-item-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--neox-fs-xl, 18px);
+  margin-top: 1px;
+}
+.plugin-panel-icon-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.plugin-panel-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.plugin-panel-item-name {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: 600;
+  color: #dfe1e5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.plugin-panel-installed-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #62b543;
+  flex-shrink: 0;
+}
+
+.plugin-panel-item-desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: #7a7e89;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.plugin-panel-type-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.85;
+}

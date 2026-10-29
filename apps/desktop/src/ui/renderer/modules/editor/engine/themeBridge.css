@@ -1,0 +1,83 @@
+/* ============================================================
+ * Neox Editor Engine theme bridge
+ * ------------------------------------------------------------
+ * The embedded code editor is only the low-level engine. Neox owns the product
+ * surface, theme pack, acrylic tint and editor background semantics here.
+ *
+ * Rules for future changes:
+ * - Do NOT patch IDE outer containers to fix editor colors.
+ * - Do NOT hard-code per-theme low-level editor backgrounds in ide-workspace.css.
+ * - Feed theme variables into the Neox Editor Engine bridge instead.
+ *
+ * Neox theme CSS exposes:
+ *   --neox-editor-engine-background
+ *   --neox-editor-engine-gutter-background
+ * ============================================================ */
+
+.monaco-editor,
+.monaco-editor-background,
+.monaco-editor .inputarea.ime-input {
+  /* VS Code 实色底; transparent / color-mix 壳层变量会让语法色「漂」在玻璃上 */
+  background-color: var(--neox-editor-engine-background, var(--vscode-editor-background, #1e1e1e)) !important;
+}
+
+.monaco-editor .margin {
+  background-color: var(--neox-editor-engine-gutter-background, var(--vscode-editorGutter-background, #1e1e1e)) !important;
+}
+
+.monaco-editor .sticky-widget,
+.monaco-editor .sticky-widget-line-numbers,
+.monaco-editor .minimap,
+.monaco-diff-editor,
+.monaco-component.diff-review.monaco-editor-background {
+  background-color: var(--neox-editor-engine-background, var(--vscode-editor-background)) !important;
+}
+
+.monaco-editor .minimap-shadow-visible {
+  box-shadow: none !important;
+}
+
+.monaco-editor .view-overlays .current-line,
+.monaco-editor .view-overlays .current-line-exact,
+.monaco-editor .margin-view-overlays .current-line,
+.monaco-editor .margin-view-overlays .current-line-margin,
+.monaco-editor .margin-view-overlays .current-line-exact-margin {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+}
+
+
+
+
+/* NeoX Editor Engine token bridge
+ * The concrete diff DOM/CSS lives in the NeoX editor source (vendor/monaco-editor-fork).
+ * This bridge only supplies product theme variables to that source-level CSS. Do not
+ * re-style Monaco internals here; change the engine source instead. */
+:root {
+  --neox-diff-add: var(--neox-ok, #22c55e);
+  --neox-diff-add-ink: var(--neox-ok-ink, #15803d);
+  --neox-diff-del: var(--neox-danger-500, #ef4444);
+  --neox-diff-mod: var(--neox-info-500, var(--neox-accent, #60a5fa));
+  --neox-engine-diff-add: var(--neox-diff-add);
+  --neox-engine-diff-del: var(--neox-diff-del);
+  /* Monaco 的 line-insert 有时会覆盖整个 changed block（尤其窄 surface / 大块 JSX）。
+   * 这里全局行底只保留极淡提示，真正明确的绿色行由业务层按 editHunks
+   * 精确加 decoration，避免“未改上下文整片发绿”。 */
+  --neox-engine-diff-add-line: color-mix(in srgb, var(--neox-diff-add) 2.5%, transparent);
+  --neox-engine-diff-del-line: color-mix(in srgb, var(--neox-diff-del) 3%, transparent);
+  --neox-engine-diff-add-char: color-mix(in srgb, var(--neox-diff-add) 18%, transparent);
+  --neox-engine-diff-del-char: color-mix(in srgb, var(--neox-diff-del) 18%, transparent);
+  --neox-engine-diff-add-rail: color-mix(in srgb, var(--neox-diff-add) 88%, transparent);
+  --neox-engine-diff-del-rail: color-mix(in srgb, var(--neox-diff-del) 86%, transparent);
+}
+/* 原生 Monaco diff 对 replacement block 的 .line-insert/.char-insert 过宽，
+ * 会把未变上下文整片染绿。默认压掉，具体 changed rows 由 Neox decoration 控制。 */
+.monaco-diff-editor .line-insert:not(.sfc-code__line--add),
+.monaco-diff-editor .line-insert.modified:not(.sfc-code__line--add),
+.monaco-diff-editor .line-delete:not(.sfc-code__line--delmark),
+.monaco-diff-editor .line-delete.modified:not(.sfc-code__line--delmark),
+.monaco-diff-editor .view-line:not(.sfc-code__line--add) .char-insert,
+.monaco-diff-editor .view-line:not(.sfc-code__line--delmark) .char-delete {
+  background-color: transparent !important;
+}

@@ -1,0 +1,572 @@
+/* ────────────────────────────────────────────────────────────────
+ * CommitPanel —— Neox 主题对齐版 Commit 面板
+ *
+ *   设计原则:
+ *     · 全 token (var(--neox-bg-card) / --neox-line / --neox-fg-*) —
+ *       由 theme-presets 自动切晨光/墨夜/暖阳/琉璃, 不再写 data-theme 分支
+ *     · 中性灰 surface — 不发蓝
+ *     · 行高 28px (从 24 抬到 28 给 hit area + 呼吸感)
+ *     · IDEA New UI 结构但 Neox 视觉
+ * ──────────────────────────────────────────────────────────────── */
+
+/* 文件状态色 —— 暗色默认(对比度 ≥ 4.5:1), light 主题下加深; 取代写死 hex */
+.commit-panel {
+  --cp-status-untracked: #d9a441;
+  --cp-status-added: #7bc488;
+  --cp-status-deleted: #ff6b7a;
+  --cp-status-renamed: #6cb6ff;
+  --cp-status-modified: #9cc2e8;
+}
+/* 合并冲突分组 — 警告色置顶, 提示需先解决 */
+.cp-group--conflict .cp-group-label,
+.cp-group--conflict .cp-group-count { color: var(--neox-warn-ink, #e5984d); }
+.cp-conflict-icon { color: var(--neox-warn-ink, #e5984d); font-size: var(--neox-fs-xs, 12px); margin-right: 2px; display: inline-flex; align-items: center; }
+
+:root[data-theme="light"] .commit-panel {
+  --cp-status-untracked: #9a6a14;
+  --cp-status-added: #1f7a33;
+  --cp-status-deleted: #c4283a;
+  --cp-status-renamed: #1666c7;
+  --cp-status-modified: #2f6aa8;
+}
+
+.commit-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--neox-bg-canvas);
+  color: var(--neox-fg-primary);
+  font-family: var(--neox-font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+/* ═══════════════ 1. Header (高度对齐右侧 .atl-header = 32px) ═══════════════ */
+
+.cp-header {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: var(--neox-bg-canvas);
+  border-bottom: 1px solid var(--neox-line);
+  flex-shrink: 0;
+  height: 32px;
+}
+.cp-header-title {
+  font-size: var(--neox-fs-xs, 12px);
+  font-weight: var(--neox-fw-semibold, 600);
+  color: var(--neox-fg-primary);
+  letter-spacing: -0.005em;
+}
+.cp-header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+.cp-icon-btn {
+  background: transparent;
+  border: 0;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out), color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.cp-icon-btn:hover {
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+}
+.cp-icon-btn svg { width: 13px; height: 13px; }
+
+/* ═══════════════ 2. File Tree ═══════════════ */
+
+.cp-file-tree {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;          /* 文件名/路径过长 → 横向滚动看全 (不再截断) */
+  padding: 4px 0;
+}
+
+/* ── Group header (更改 / 未进行版本管理) ── */
+.cp-group {
+  margin-bottom: 2px;
+}
+.cp-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-primary);
+  background: var(--neox-bg-canvas);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 26px;       /* 固定高度强制所有子元素垂直居中, 不靠 min-height 估算 */
+  line-height: 1;
+}
+.cp-group-header:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+
+/* chevron 必须跟 checkbox 等宽 (13px) — 这样不管哪一行 chevron 还是 checkbox,
+ *   只要 padding-left 一致, 视觉上就在同一竖列, 不会错位. */
+.cp-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  transition: transform var(--neox-dur-fast) var(--neox-ease-out);
+  color: var(--neox-fg-hint);
+  flex-shrink: 0;
+  align-self: center;
+}
+.cp-chevron svg { width: 11px; height: 11px; display: block; }
+.cp-chevron.collapsed { transform: rotate(-90deg); }
+
+.cp-group-label {
+  font-weight: var(--neox-fw-semibold, 600);
+  white-space: nowrap;
+  line-height: 1;
+}
+.cp-group-count {
+  color: var(--neox-fg-hint);
+  font-size: var(--neox-fs-xxs, 11px);
+  margin-left: 2px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* ── Checkbox (Neox style, 中性灰 + accent 通过 token) ── */
+.cp-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid var(--neox-line);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  margin: 0;
+  display: inline-block;
+  vertical-align: middle;
+  align-self: center;
+  transition: border-color var(--neox-dur-fast) var(--neox-ease-out),
+              background var(--neox-dur-fast) var(--neox-ease-out);
+}
+.cp-checkbox:hover {
+  border-color: var(--neox-fg-muted);
+}
+.cp-checkbox:checked {
+  background: var(--neox-fg-primary);
+  border-color: var(--neox-fg-primary);
+}
+.cp-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.5px;
+  width: 4px;
+  height: 7.5px;
+  border: solid var(--neox-bg-canvas);
+  border-width: 0 1.6px 1.6px 0;
+  transform: rotate(45deg);
+}
+.cp-checkbox:indeterminate {
+  background: var(--neox-fg-primary);
+  border-color: var(--neox-fg-primary);
+}
+.cp-checkbox:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 4.5px;
+  width: 7px;
+  height: 0;
+  border-bottom: 1.6px solid var(--neox-bg-canvas);
+}
+
+.cp-file-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px 0 29px;
+  cursor: pointer;
+  user-select: none;
+  height: 24px;
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1;
+  position: relative;
+  width: max-content;        /* 内容多宽就多宽 → 配合 tree overflow-x 横向滚动 */
+  min-width: 100%;           /* 短行仍铺满 (hover 整行高亮) */
+}
+.cp-file-row:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+}
+
+/* file type icon — FileTypeIcon 组件渲染 simple-icons SVG (mask + brand color).
+ *   固定 14x14, 不变形, 不缩放. 跟 checkbox/chevron 视觉权重平衡. */
+.cp-file-type-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.cp-file-name {
+  white-space: nowrap;
+  flex-shrink: 0;            /* 不压缩 → 全名显示, 由 tree 横向滚动 */
+  font-size: var(--neox-fs-xs, 12px);
+  line-height: 1;
+  align-self: center;
+}
+.cp-file-dir {
+  color: var(--neox-fg-hint);
+  font-size: var(--neox-fs-xxs, 11px);
+  white-space: nowrap;
+  flex-shrink: 0;            /* 路径全显, 不截断, 由 tree 横向滚动 */
+  margin-left: 6px;
+  line-height: 1;
+  align-self: center;
+}
+
+/* ── 智能分组 buckets (untracked) ── */
+.cp-untracked-buckets {
+  padding-left: 0;        /* 不再加额外 padding, 缩进全靠 bucket header / file row 自身 */
+}
+.cp-bucket {
+  margin-bottom: 1px;
+}
+.cp-bucket__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px 0 29px;         /* chevron X 起 29 = group checkbox X 起 29 = 同一竖线 */
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-muted);
+  height: 22px;
+  line-height: 1;
+}
+.cp-bucket__header:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 5%, transparent);
+}
+.cp-bucket__label {
+  font-weight: var(--neox-fw-medium, 500);
+  color: var(--neox-fg-primary);
+  white-space: nowrap;
+  line-height: 1;
+}
+.cp-bucket__count {
+  color: var(--neox-fg-hint);
+  font-size: var(--neox-fs-xxs, 11px);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cp-bucket__desc {
+  font-size: var(--neox-fs-xxs, 11px);
+  color: var(--neox-fg-hint);
+  margin-left: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  line-height: 1;
+}
+.cp-bucket__ignore-btn {
+  appearance: none;
+  border: 1px solid var(--neox-line);
+  background: transparent;
+  color: var(--neox-fg-muted);
+  font-size: 10px;
+  font-family: var(--neox-font-mono, 'JetBrains Mono', monospace);
+  padding: 1px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out),
+              border-color var(--neox-dur-fast) var(--neox-ease-out);
+}
+.cp-bucket__ignore-btn:hover {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+  border-color: var(--neox-fg-muted);
+}
+.cp-bucket__files {
+  padding-left: 0;
+}
+/* bucket 内 file row 不再额外缩进 — 继承 .cp-file-row 默认 padding-left: 29,
+ *   跟所有顶级 file / group checkbox / bucket chevron 共享同一条 X=29 竖线. */
+
+/* ═══════════════ 3. Bottom ═══════════════ */
+
+.cp-bottom {
+  flex-shrink: 0;
+  border-top: 1px solid var(--neox-line);
+  display: flex;
+  flex-direction: column;
+  background: var(--neox-bg-canvas);
+}
+
+.cp-amend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 3px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 10px;
+  color: var(--neox-fg-muted);
+}
+.cp-amend-label {
+  font-size: 10px;
+}
+
+.cp-message-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  margin-bottom: 3px;
+}
+.cp-message-label {
+  font-size: 10px;
+  color: var(--neox-fg-hint);
+}
+
+/* AI generate button */
+.cp-ai-gen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--neox-line);
+  background: transparent;
+  color: var(--neox-fg-muted);
+  cursor: pointer;
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out),
+              border-color var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+}
+.cp-ai-gen-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 8%, transparent);
+  color: var(--neox-fg-primary);
+  border-color: var(--neox-fg-muted);
+}
+.cp-ai-gen-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.cp-ai-gen-btn.generating {
+  color: var(--neox-fg-primary);
+  border-color: var(--neox-fg-muted);
+}
+.cp-ai-sparkle { font-size: 10px; line-height: 1; }
+.cp-ai-spin {
+  display: inline-flex;
+  width: 11px;
+  height: 11px;
+  /* 旋转已收进 Icons.Loader 自己 (.neox-spin) */
+}
+.cp-ai-spin svg { width: 11px; height: 11px; }
+/* cp-spin 已无人使用: 旋转收进 Icons.Loader 自己 (.neox-spin) */
+
+/* Commit message textarea */
+.cp-message-input {
+  margin: 0 12px;
+  background: color-mix(in srgb, var(--neox-fg-primary) 4%, transparent);
+  border: 1px solid var(--neox-line);
+  border-radius: 4px;
+  color: var(--neox-fg-primary);
+  font-family: inherit;
+  font-size: var(--neox-fs-xxs, 11px);
+  padding: 6px 8px;
+  resize: vertical;
+  min-height: 52px;
+  max-height: 140px;
+  outline: none;
+  box-sizing: border-box;
+}
+.cp-message-input:focus {
+  border-color: var(--neox-fg-muted);
+}
+.cp-message-input.generating {
+  border-color: var(--neox-fg-muted);
+  animation: cp-border-pulse var(--neox-loop-breathe) var(--neox-ease-out) infinite;
+}
+@keyframes cp-border-pulse {
+  0%, 100% { border-color: var(--neox-line); }
+  50%      { border-color: var(--neox-fg-muted); }
+}
+.cp-message-input::placeholder {
+  color: var(--neox-fg-hint);
+}
+
+/* Button row */
+.cp-button-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+}
+.cp-commit-btn {
+  padding: 4px 12px;
+  border: 1px solid var(--neox-line);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: var(--neox-fw-medium, 500);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--neox-fg-primary);
+  background: color-mix(in srgb, var(--neox-fg-primary) 6%, transparent);
+  transition: background var(--neox-dur-fast) var(--neox-ease-out),
+              border-color var(--neox-dur-fast) var(--neox-ease-out),
+              color var(--neox-dur-fast) var(--neox-ease-out);
+  white-space: nowrap;
+}
+.cp-commit-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--neox-fg-primary) 12%, transparent);
+  border-color: var(--neox-fg-muted);
+}
+.cp-commit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.cp-commit-btn.primary {
+  background: var(--neox-fg-primary);
+  color: var(--neox-bg-canvas);
+  border-color: var(--neox-fg-primary);
+}
+.cp-commit-btn.primary:hover:not(:disabled) {
+  background: var(--neox-fg-muted);
+  border-color: var(--neox-fg-muted);
+}
+
+/* ═══════════════ Loading / Empty ═══════════════ */
+
+.commit-panel-loading,
+.commit-panel-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 20px;
+  color: var(--neox-fg-hint);
+  font-size: var(--neox-fs-xs, 12px);
+  text-align: center;
+  flex: 1;
+}
+.commit-panel-loading svg,
+.commit-panel-empty svg {
+  width: 24px;
+  height: 24px;
+  color: var(--neox-fg-muted);
+  opacity: 0.6;
+}
+
+/* ═══════════════ Scrollbar (跟会话列表同款: 默认透明, hover panel 才显) ═══════════════ */
+
+.cp-file-tree { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.cp-file-tree::-webkit-scrollbar {
+  width: 10px;       /* 实际 thumb 通过 border 留 padding 看起来 4-6px, 但占位 10 给鼠标更好抓 */
+  height: 10px;
+}
+.cp-file-tree::-webkit-scrollbar-track { background: transparent; }
+.cp-file-tree::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  transition: background var(--neox-dur-fast, .15s) var(--neox-ease-out, ease-out);
+}
+/* hover panel 才显 thumb — 用户实际滚动时才被看到, 静止时彻底隐藏 */
+.commit-panel:hover .cp-file-tree::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--neox-fg-hint) 50%, transparent);
+  background-clip: padding-box;
+}
+.commit-panel:hover .cp-file-tree {
+  scrollbar-color: color-mix(in srgb, var(--neox-fg-hint) 50%, transparent) transparent;
+}
+.cp-file-tree::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--neox-fg-hint) 80%, transparent) !important;
+  background-clip: padding-box !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+ * FileRowContextMenu — portal 渲染的右键菜单
+ * ════════════════════════════════════════════════════════════════ */
+.neox-filerow-cm {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  background: var(--neox-bg-card);
+  border: 1px solid var(--neox-line);
+  border-radius: var(--neox-radius-md, 6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  font-size: var(--neox-fs-xs, 12px);
+  color: var(--neox-fg-primary);
+  animation: neox-filerow-cm-in var(--neox-dur-fast) var(--neox-ease-out);
+}
+@keyframes neox-filerow-cm-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.neox-filerow-cm__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 5px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.neox-filerow-cm__item:hover {
+  background: var(--neox-bg-secondary);
+}
+.neox-filerow-cm__item.is-danger {
+  color: var(--neox-err, #f75464);
+}
+.neox-filerow-cm__item.is-danger:hover {
+  background: var(--neox-err-25, rgba(247, 84, 100, 0.10));
+}
+
+.neox-filerow-cm__label {
+  white-space: nowrap;
+}
+.neox-filerow-cm__hint {
+  font-size: 10px;
+  color: var(--neox-fg-hint);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.neox-filerow-cm__divider {
+  height: 1px;
+  background: var(--neox-line);
+  margin: 4px 0;
+}

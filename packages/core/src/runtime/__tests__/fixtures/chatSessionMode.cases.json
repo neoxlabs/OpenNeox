@@ -1,0 +1,20 @@
+{
+  "_comment": "chat:C1-02 —— 两端 (packages/core + apps/mobile) 共用的判据真值表。两边测试都读这一份, 结果必须相同。",
+  "cases": [
+    { "name": "chat 标记 + work 模式", "agentMode": "work", "chatMode": true, "expected": true },
+    { "name": "chat 标记 + code 模式", "agentMode": "code", "chatMode": true, "expected": true },
+    { "name": "chat 标记 + 未记模式", "agentMode": null, "chatMode": true, "expected": true },
+
+    { "name": "work 模式, 没设聊天", "agentMode": "work", "chatMode": null, "expected": false },
+    { "name": "code 模式, 没设聊天", "agentMode": "code", "chatMode": null, "expected": false },
+    { "name": "pilot 模式, 没设聊天", "agentMode": "pilot", "chatMode": null, "expected": false },
+    { "name": "未记模式, 没设聊天", "agentMode": null, "chatMode": null, "expected": false },
+    { "name": "存量 assistant 归工作", "agentMode": "assistant", "chatMode": null, "expected": false },
+
+    { "name": "手机本机 chat 模式", "agentMode": "chat", "chatMode": null, "expected": true },
+    { "name": "手机本机 chat 模式 + 显式关掉", "agentMode": "chat", "chatMode": false, "expected": true },
+
+    { "name": "明确关掉聊天 (work)", "agentMode": "work", "chatMode": false, "expected": false },
+    { "name": "明确关掉聊天 (code)", "agentMode": "code", "chatMode": false, "expected": false }
+  ]
+}

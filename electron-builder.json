@@ -1,0 +1,370 @@
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "dev.neoxlabs.openneox",
+  "productName": "OpenNeox",
+  "directories": {
+    "buildResources": "build",
+    "output": "release"
+  },
+  "electronDist": "node_modules/electron/dist",
+  "beforePack": "scripts/electron-builder-before-pack.cjs",
+  "afterPack": "scripts/electron-builder-after-pack.cjs",
+  "files": [
+    "apps/cli/dist/ui-electron/**/*",
+    "!**/*.map",
+    "!**/*.ts",
+    "!**/*.md",
+    "!**/node_modules/@neoxlabs/cli/**/*",
+    "!**/node_modules/@neoxlabs/sdk/**/*",
+    "!**/node_modules/@neoxlabs/core/**/*",
+    "!**/node_modules/@neoxlabs/kernel/**/*",
+    "!**/node_modules/@neoxlabs/platform/**/*",
+    "!**/node_modules/@neoxlabs/devtools/**/*",
+    "!**/@neoxlabs/evals/**/*",
+    "!**/@neoxlabs/test-harness/**/*",
+    "!**/test-account.json",
+    "!**/neox-release-tests/**/*",
+    "!**/.env",
+    "!**/.env.*",
+    "!**/.neox-secrets/**/*",
+    "!**/build/Release/obj/**",
+    "!**/build/Release/obj.target/**",
+    "!**/build/Release/.deps/**",
+    "!**/build/deps/**",
+    "!**/build/gyp-mac-tool",
+    "!**/build/*.mk",
+    "!**/build/Makefile",
+    "!**/build/binding.Makefile",
+    "!**/build/config.gypi",
+    "!**/*.lib",
+    "!**/*.pdb",
+    "!**/node_modules/@neoxlabs/native/target/**",
+    "!**/node_modules/@neoxlabs/native/src/**",
+    "!**/node_modules/@neoxlabs/native/scripts/**",
+    "!**/node_modules/@neoxlabs/native/tests/**",
+    "!**/node_modules/@neoxlabs/native/Cargo.toml",
+    "!**/node_modules/@neoxlabs/native/Cargo.lock",
+    "!**/node_modules/@neoxlabs/native/build.rs",
+    "!**/node_modules/@neoxlabs/pptx-renderer/src/**",
+    "!**/node_modules/@neoxlabs/pptx-compose/scripts/**",
+    "!**/node_modules/@neoxlabs/pptx-*/tsconfig*",
+    "!**/*.c",
+    "!**/*.cc",
+    "!**/*.cpp",
+    "!**/*.cxx",
+    "!**/*.h",
+    "!**/*.hpp",
+    "!**/prebuilds/android-*/**",
+    "!**/docs/**",
+    "!**/__tests__/**",
+    "!**/prebuilds/linux-*/**",
+    "!**/node_modules/onnxruntime-node/**",
+    "!**/node_modules/sherpa-onnx-node/**",
+    "!**/node_modules/sherpa-onnx-darwin-*/**",
+    "!**/node_modules/sherpa-onnx-win-*/**",
+    "!**/node_modules/sherpa-onnx-linux-*/**",
+    "!**/node_modules/pinyin-pro/**",
+    "!**/dist/ui-electron/renderer/wallpapers-v1-archive-*/**",
+    "!**/node_modules/@iconify-json/**",
+    "!**/node_modules/koffi/build/koffi/win32_*/**",
+    "!**/node_modules/koffi/build/koffi/linux_*/**",
+    "!**/node_modules/koffi/build/koffi/musl_*/**",
+    "!**/node_modules/koffi/build/koffi/freebsd_*/**",
+    "!**/node_modules/koffi/build/koffi/openbsd_*/**",
+    "!**/node_modules/onnxruntime-node/bin/napi-v6/win32/**"
+  ],
+  "asarUnpack": [
+    "node_modules/better-sqlite3/**/*",
+    "node_modules/node-pty/**/*",
+    "node_modules/@vscode/ripgrep/**/*",
+    "node_modules/@parcel/watcher/**/*",
+    "node_modules/@parcel/watcher-*/**/*",
+    "node_modules/@neoxlabs/native/**/*",
+    "node_modules/@neoxlabs/pptx-renderer/**/*",
+    "node_modules/@neoxlabs/pptx-compose/**/*",
+    "node_modules/jszip/**/*",
+    "node_modules/@xmldom/xmldom/**/*"
+  ],
+  "electronFuses": {
+    "runAsNode": false,
+    "enableCookieEncryption": true,
+    "enableNodeOptionsEnvironmentVariable": false,
+    "enableNodeCliInspectArguments": false,
+    "enableEmbeddedAsarIntegrityValidation": true,
+    "onlyLoadAppFromAsar": true,
+    "loadBrowserProcessSpecificV8Snapshot": false,
+    "grantFileProtocolExtraPrivileges": true
+  },
+  "extraResources": [
+    {
+      "from": "resources/java-debug",
+      "to": "java-debug",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "apps/desktop/resources/os-bridge",
+      "to": "os-bridge",
+      "filter": [
+        "Neox Computer Use.app/**/*",
+        "neox-os-bridge"
+      ]
+    },
+    {
+      "from": "apps/desktop/resources/image-showcase",
+      "to": "image-showcase",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "build/icon.ico",
+      "to": "icon.ico"
+    },
+    {
+      "from": "build/icon.png",
+      "to": "icon.png"
+    },
+    {
+      "from": "build/icon-win.png",
+      "to": "icon-win.png"
+    }
+  ],
+  "extraMetadata": {
+    "main": "apps/cli/dist/ui-electron/electron/main.js"
+  },
+  "protocols": [
+    {
+      "name": "OpenNeox",
+      "schemes": [
+        "openneox"
+      ],
+      "role": "Viewer"
+    }
+  ],
+  "npmRebuild": false,
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      },
+      {
+        "target": "zip",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      }
+    ],
+    "icon": "build/icon.icns",
+    "electronLanguages": [
+      "en",
+      "en_FEMININE",
+      "en_MASCULINE",
+      "en_NEUTER",
+      "en_GB",
+      "en_GB_FEMININE",
+      "en_GB_MASCULINE",
+      "en_GB_NEUTER",
+      "zh_CN",
+      "zh_CN_FEMININE",
+      "zh_CN_MASCULINE",
+      "zh_CN_NEUTER",
+      "zh_TW",
+      "zh_TW_FEMININE",
+      "zh_TW_MASCULINE",
+      "zh_TW_NEUTER",
+      "ja",
+      "ja_FEMININE",
+      "ja_MASCULINE",
+      "ja_NEUTER",
+      "ko",
+      "ko_FEMININE",
+      "ko_MASCULINE",
+      "ko_NEUTER",
+      "de",
+      "de_FEMININE",
+      "de_MASCULINE",
+      "de_NEUTER",
+      "fr",
+      "fr_FEMININE",
+      "fr_MASCULINE",
+      "fr_NEUTER",
+      "es",
+      "es_FEMININE",
+      "es_MASCULINE",
+      "es_NEUTER",
+      "es_419",
+      "es_419_FEMININE",
+      "es_419_MASCULINE",
+      "es_419_NEUTER",
+      "it",
+      "it_FEMININE",
+      "it_MASCULINE",
+      "it_NEUTER",
+      "pt_BR",
+      "pt_BR_FEMININE",
+      "pt_BR_MASCULINE",
+      "pt_BR_NEUTER",
+      "ru",
+      "ru_FEMININE",
+      "ru_MASCULINE",
+      "ru_NEUTER",
+      "hi",
+      "hi_FEMININE",
+      "hi_MASCULINE",
+      "hi_NEUTER",
+      "bn",
+      "bn_FEMININE",
+      "bn_MASCULINE",
+      "bn_NEUTER",
+      "ta",
+      "ta_FEMININE",
+      "ta_MASCULINE",
+      "ta_NEUTER",
+      "te",
+      "te_FEMININE",
+      "te_MASCULINE",
+      "te_NEUTER",
+      "id",
+      "id_FEMININE",
+      "id_MASCULINE",
+      "id_NEUTER",
+      "ms",
+      "ms_FEMININE",
+      "ms_MASCULINE",
+      "ms_NEUTER",
+      "vi",
+      "vi_FEMININE",
+      "vi_MASCULINE",
+      "vi_NEUTER",
+      "th",
+      "th_FEMININE",
+      "th_MASCULINE",
+      "th_NEUTER",
+      "fil",
+      "fil_FEMININE",
+      "fil_MASCULINE",
+      "fil_NEUTER"
+    ],
+    "category": "public.app-category.developer-tools",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "identity": "-",
+    "hardenedRuntime": true,
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist",
+    "signIgnore": [],
+    "gatekeeperAssess": false,
+    "extendInfo": {
+      "NSMicrophoneUsageDescription": "Neox 需要使用麦克风来做语音输入和语音对话",
+      "NSCameraUsageDescription": "跟 Pilot 通话时打开摄像头, 它才看得见你给它看的东西。只在你点「开摄像头」时使用。",
+      "NSSpeechRecognitionUsageDescription": "Neox 使用系统语音识别在本地转写你的语音, 完全离线, 数据不出机器",
+      "NSAppleEventsUsageDescription": "Neox 需要控制「日历」「提醒事项」「通讯录」「信息」等 App, 才能帮你查日程、加提醒、找联系人、发 iMessage。只在你明确要求时才会执行, 不会后台自动操作。",
+      "NSCalendarsUsageDescription": "Neox 需要访问「日历」, 才能帮你查看接下来的日程安排和创建新的日历事件。",
+      "NSCalendarsFullAccessUsageDescription": "Neox 需要访问「日历」, 才能帮你查看接下来的日程安排和创建新的日历事件。",
+      "NSRemindersUsageDescription": "Neox 需要访问「提醒事项」, 才能帮你查看、新建和完成待办 —— 这些待办会通过 iCloud 同步到你的 iPhone 和 Apple Watch。",
+      "NSRemindersFullAccessUsageDescription": "Neox 需要访问「提醒事项」, 才能帮你查看、新建和完成待办 —— 这些待办会通过 iCloud 同步到你的 iPhone 和 Apple Watch。",
+      "NSContactsUsageDescription": "Neox 需要访问「通讯录」, 才能在你说「发消息给张三」时找到对应的联系人和电话号码。联系人数据只在你本机使用, 不会上传。",
+      "NSLocationUsageDescription": "Pilot 用电脑的位置在「足迹」里标出你在哪、帮你把这里设成家、看本地天气。只在打开足迹页或你点「这里是家」时读取。",
+      "NSLocationWhenInUseUsageDescription": "Pilot 用电脑的位置在「足迹」里标出你在哪、帮你把这里设成家、看本地天气。只在打开足迹页或你点「这里是家」时读取。",
+      "NSAccessibilityUsageDescription": "Neox 需要「辅助功能」权限才能读取其他 App 的界面元素并代你操作 (computer use)。默认不开启 —— 只有你安装了 computer-use 插件并明确要求时才会用到, 而且每次操作都会先弹审批卡把要做的步骤逐条列给你看。"
+    }
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
+      {
+        "target": "portable",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "icon": "build/icon.ico",
+    "electronLanguages": [
+      "en-US",
+      "en-GB",
+      "zh-CN",
+      "zh-TW",
+      "ja",
+      "ko",
+      "de",
+      "fr",
+      "es",
+      "es-419",
+      "it",
+      "pt-BR",
+      "ru",
+      "hi",
+      "bn",
+      "ta",
+      "te",
+      "id",
+      "ms",
+      "vi",
+      "th",
+      "fil"
+    ],
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "signAndEditExecutable": true,
+    "extraFiles": [
+      {
+        "from": "node_modules/@vscode/ripgrep/bin/rg.exe",
+        "to": "rg.exe"
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "apps/desktop/resources/win-os-bridge/neox-os-bridge.exe",
+        "to": "os-bridge/neox-os-bridge.exe"
+      }
+    ]
+  },
+  "nsis": {
+    "include": "build/installer-process-check.nsh",
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": "always",
+    "createStartMenuShortcut": true,
+    "shortcutName": "OpenNeox",
+    "installerIcon": "build/icon.ico",
+    "uninstallerIcon": "build/icon.ico",
+    "installerHeaderIcon": "build/icon.ico"
+  },
+  "portable": {
+    "artifactName": "${productName}-${version}-portable.${ext}"
+  },
+  "dmg": {
+    "writeUpdateInfo": false,
+    "background": "build/dmg-background.tiff",
+    "window": {
+      "width": 768,
+      "height": 512
+    },
+    "iconSize": 110,
+    "contents": [
+      {
+        "x": 208,
+        "y": 298
+      },
+      {
+        "x": 557,
+        "y": 299,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ]
+  }
+}

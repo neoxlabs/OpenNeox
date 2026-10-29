@@ -1,0 +1,263 @@
+
+.neox-peek,
+.neox-tooltip {
+  --peek-face: #fdfcfa;
+  --peek-edge: rgba(120, 104, 88, 0.14);
+  --peek-ink: #1d1c1a;
+  --peek-soft: color-mix(in srgb, var(--peek-ink) 52%, transparent);
+  --peek-faint: color-mix(in srgb, var(--peek-ink) 38%, transparent);
+  --peek-hover: color-mix(in srgb, var(--peek-ink) 5%, transparent);
+  --peek-blue: #2f6bff;
+  --peek-shadow: 0 0 0 0.5px rgba(60, 45, 30, 0.06), 0 2px 4px rgba(60, 45, 30, 0.05), 0 14px 32px -10px rgba(60, 45, 30, 0.24);
+}
+:root[data-theme="dark"] .neox-peek,
+:root[data-theme="dark"] .neox-tooltip {
+  --peek-face: #262420;
+  --peek-edge: rgba(255, 255, 255, 0.08);
+  --peek-ink: #f2efea;
+  --peek-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4), 0 14px 32px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* ── 小面板 ── */
+.neox-peek {
+  position: fixed;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  max-height: min(360px, 60vh);
+  padding: 4px;
+  border: 1px solid var(--peek-edge);
+  border-radius: 12px;
+  background: var(--peek-face);
+  box-shadow: var(--peek-shadow);
+  color: var(--peek-ink);
+  font-size: 12px;
+  line-height: 1.3;
+  transform-origin: 50% 100%;
+  animation: neox-peek-in 150ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes neox-peek-in { from { opacity: 0; transform: translateY(4px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .neox-peek, .neox-tooltip { animation: none; } }
+
+.neox-peek__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 28px;
+  padding: 0 8px;
+}
+.neox-peek__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--peek-soft);
+}
+.neox-peek__title em {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: var(--peek-hover);
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  color: var(--peek-soft);
+  font-variant-numeric: tabular-nums;
+}
+.neox-peek__body { overflow-y: auto; min-height: 0; padding: 0 0 2px; }
+
+.neox-peek__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+.neox-peek__row.is-action { cursor: pointer; padding-top: 4px; padding-bottom: 4px; align-items: flex-start; }
+/* 知识卡片前的线标: 跟「/」同一种淡底小方块, 灰色; 始终带上的卡是钴蓝图钉 */
+.neox-peek__glyph {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 0;
+  border-radius: 4px;
+  background: var(--peek-hover);
+  color: var(--peek-soft);
+}
+.neox-peek__glyph svg { width: 11px; height: 11px; }
+.neox-peek__glyph.is-pin { background: color-mix(in srgb, var(--peek-blue) 10%, transparent); color: var(--peek-blue); }
+.neox-peek__row.is-action:hover .neox-peek__glyph:not(.is-pin) { color: var(--peek-ink); }
+.neox-peek__tag {
+  margin-left: 6px;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: color-mix(in srgb, #d97706 12%, transparent);
+  color: #b45309;
+  font-style: normal;
+  font-size: 9.5px;
+  font-weight: 500;
+  vertical-align: 1px;
+}
+.neox-peek__row.is-action:hover { background: var(--peek-hover); }
+.neox-peek__row.is-off .neox-peek__name { color: var(--peek-faint); }
+
+.neox-peek__stack { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; gap: 1px; }
+.neox-peek__name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+.neox-peek__desc,
+.neox-peek__meta {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10.5px;
+  color: var(--peek-soft);
+}
+.neox-peek__meta { flex: 1 1 auto; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* 技能前面的「/」: 一枚钴蓝淡底小方块, 跟名字首行对齐 */
+.neox-peek__slash {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--peek-blue) 10%, transparent);
+  color: var(--peek-blue);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.neox-peek__dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--peek-ink) 20%, transparent);
+}
+.neox-peek__dot.is-ok { background: #30a46c; box-shadow: 0 0 0 3px color-mix(in srgb, #30a46c 16%, transparent); }
+.neox-peek__dot.is-bad { background: #e5484d; box-shadow: 0 0 0 3px color-mix(in srgb, #e5484d 16%, transparent); }
+
+.neox-peek__empty {
+  padding: 10px 8px 12px;
+  font-size: 12px;
+  color: var(--peek-soft);
+  text-align: center;
+}
+.neox-peek__tip {
+  margin: 4px 8px 0;
+  padding: 7px 0 2px;
+  border-top: 1px solid var(--peek-edge);
+  font-size: 11px;
+  color: var(--peek-faint);
+}
+
+.neox-peek__switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 15px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--peek-ink) 14%, transparent);
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+.neox-peek__switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.neox-peek__switch.is-on { background: var(--peek-blue); }
+.neox-peek__switch.is-on::after { transform: translateX(11px); }
+
+/* 「管理全部」: 底部一行小字, 靠右, 跟上面隔一条细线 */
+.neox-peek__manage {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  height: 28px;
+  margin: 2px 4px 0;
+  padding: 0 4px;
+  border: 0;
+  border-top: 1px solid var(--peek-edge);
+  border-radius: 0;
+  background: transparent;
+  color: var(--peek-soft);
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+.neox-peek__manage:hover { color: var(--peek-blue); }
+.neox-peek__manage svg { transition: transform 140ms ease; }
+.neox-peek__manage:hover svg { transform: translateX(2px); }
+
+/* ── 名字提示 ── */
+.neox-tooltip {
+  position: fixed;
+  z-index: 9001;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--peek-edge);
+  border-radius: 8px;
+  background: var(--peek-face);
+  box-shadow: var(--peek-shadow);
+  color: var(--peek-ink);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: neox-tooltip-in 110ms ease-out;
+}
+@keyframes neox-tooltip-in { from { opacity: 0; transform: translate(-50%, 3px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.neox-tooltip__sub { color: var(--peek-soft); font-weight: 400; }
+.neox-tooltip__kbd {
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--peek-hover);
+  box-shadow: inset 0 -1px 0 var(--peek-edge);
+  color: var(--peek-soft);
+  font-size: 10.5px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.neox-tooltip__alert { color: #e5484d; font-weight: 400; }
