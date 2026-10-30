@@ -129,7 +129,7 @@ const UpdateMark: React.FC<{ state: UpdateState; percent?: number }> = ({ state,
  */
 export const UpdateCenter: React.FC<{
   state: UpdateState;
-  info: { currentVersion: string; latestVersion: string; error?: string; ready: boolean; releaseNotes?: string;
+  info: { currentVersion: string; latestVersion: string; error?: string; ready: boolean; releaseNotes?: string; manualDownload?: boolean;
           progress?: { percent: number; transferred: number; total: number; speed: number } };
   appVersion?: string;
   language: string;
@@ -241,7 +241,7 @@ export const UpdateCenter: React.FC<{
         )}
         {(state === 'has-update' || state === 'ready') && (
           <button type="button" className="nx-upd__cta" onClick={onInstall}>
-            {info.ready ? (zh ? '重启安装' : 'Restart to install') : (zh ? '立即升级' : 'Update now')}
+            {info.ready ? (zh ? '重启安装' : 'Restart to install') : info.manualDownload ? (zh ? '前往下载' : 'Download') : (zh ? '立即升级' : 'Update now')}
           </button>
         )}
         {(state === 'idle' || state === 'up-to-date' || state === 'error') && (
@@ -297,6 +297,8 @@ const AboutTab: React.FC = () => {
     error?: string;
     progress?: { percent: number; transferred: number; total: number; speed: number };
     downloadUrl?: string;
+    /** 开源版: 新版不能在应用里下载安装, downloadUrl 是 GitHub Release 页, 按钮在浏览器里打开它 */
+    manualDownload?: boolean;
     /** 官网更新日志里这个版本的正文 (双语, `<!--zh-->` 分段) —— 主进程检查更新时顺手取的 */
     releaseNotes?: string;
   }>({ checking: false, installing: false, currentVersion: '', latestVersion: '', hasUpdate: false, ready: false, message: '' });
@@ -371,6 +373,19 @@ const AboutTab: React.FC = () => {
   const handleCheckUpdate = useCallback(async () => {
     setUpdateInfo(prev => ({ ...prev, checking: true, message: '', error: undefined, progress: undefined }));
     try {
+      /* 开源版: 比对 GitHub 最新 Release (商业版回 null, 走下面的官方源) */
+      const rel = await window.neox.updateCheckRelease?.();
+      if (rel) {
+        setUpdateInfo(prev => ({
+          ...prev, checking: false, currentVersion: rel.currentVersion, latestVersion: rel.latestVersion,
+          hasUpdate: rel.hasUpdate, ready: false, downloadUrl: rel.downloadUrl || undefined, manualDownload: true,
+          message: rel.hasUpdate
+            ? (language === 'zh' ? `发现新版本: ${rel.latestVersion}` : `New version available: ${rel.latestVersion}`)
+            : (language === 'zh' ? '已是最新版本' : 'Already up to date'),
+          error: rel.error,
+        }));
+        return;
+      }
       const result = await window.neox.updateCheck?.();
       if (result) {
         /* 手动检测也要认后台预下载的包 — 就绪且版本对得上, 直接给「重启安装」而不是再下一遍 */
@@ -397,6 +412,15 @@ const AboutTab: React.FC = () => {
   const handleInstallUpdate = useCallback(async () => {
     /* 已预下载就绪 → 一步重启安装, 不再走下载。update:install 不带 filePath 时
      * 主进程自己解析暂存包 (mac getStagedMacUpdate / win electronUpdaterReadyToInstall)。 */
+    if (updateInfo.manualDownload && updateInfo.downloadUrl) {
+      /* 开源版: 去 GitHub Release 页自己下 */
+      try {
+        await window.neox?.openExternal?.(updateInfo.downloadUrl);
+      } catch (err: any) {
+        dispatchOpFailed({ op: 'open-release-page', message: err?.message || String(err) });
+      }
+      return;
+    }
     if (updateInfo.ready) {
       setUpdateInfo(prev => ({ ...prev, installing: true, progress: undefined, message: language === 'zh' ? '正在重启安装...' : 'Restarting to install...', error: undefined }));
       try {
@@ -439,7 +463,7 @@ const AboutTab: React.FC = () => {
     } catch (e) {
       setUpdateInfo(prev => ({ ...prev, installing: false, progress: undefined, message: language === 'zh' ? '安装失败' : 'Install failed', error: String(e) }));
     }
-  }, [language, updateInfo.downloadUrl, updateInfo.ready]);
+  }, [language, updateInfo.downloadUrl, updateInfo.ready, updateInfo.manualDownload]);
 
   const [pauseSupported, setPauseSupported] = useState(false);
   useEffect(() => {

@@ -1487,6 +1487,7 @@ const api = {
 
   // ==================== 版本更新 (Desktop Auto-Update) ====================
   updateCheck: () => ipcRenderer.invoke('update:check'),
+  updateCheckRelease: () => ipcRenderer.invoke('update:check-release'),
   /* 就绪态: 后台已预下载完成的更新 ({ready, version}) — 关于页开页即查, 直接呈现「重启安装」 */
   updateStagedStatus: () => ipcRenderer.invoke('update:staged-status'),
   updateDownload: (url) => ipcRenderer.invoke('update:download', url),

@@ -331,6 +331,16 @@ export interface RendererAPIOptionalFeatures {
     source?: string;
     error?: string;
   }>;
+  /** 开源版关于页手动检查: 比对 GitHub 最新 Release, downloadUrl 是 Release 页。商业版回 null */
+  updateCheckRelease?: () => Promise<{
+    currentVersion: string;
+    latestVersion: string;
+    hasUpdate: boolean;
+    downloadUrl?: string;
+    publishedAt?: string;
+    source?: string;
+    error?: string;
+  } | null>;
   updateDownload?: (url?: string) => Promise<{
     success: boolean;
     filePath?: string;

@@ -717,3 +717,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT
 before opening a change, and [docs/status.md](docs/status.md) for what is in
 progress. Report vulnerabilities through [SECURITY.md](SECURITY.md), not a public
 issue.
+
+## Community
+
+This project actively participates in and supports the [linux.do](https://linux.do)
+community. Stars, trials, issues and pull requests are all welcome.

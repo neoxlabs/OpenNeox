@@ -602,3 +602,7 @@ Agent 的 harness 是自研的，但应用本身站在很多开源项目上，�
 提交修改前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 和 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)，
 进行中的工作见 [docs/status.md](docs/status.md)。安全问题请按 [SECURITY.md](SECURITY.md)
 私下报告，不要开公开 issue。
+
+## 社区
+
+本项目参与并支持 [linux.do](https://linux.do) 社区，欢迎 Star、试用、提 issue 和 PR。

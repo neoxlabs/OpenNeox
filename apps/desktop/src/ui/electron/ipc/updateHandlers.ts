@@ -253,6 +253,34 @@ async function checkForUpdate(): Promise<UpdateInfo> {
   }
 }
 
+async function checkGithubRelease(): Promise<UpdateInfo | null> {
+  if (DISTRIBUTION.autoUpdate || !DISTRIBUTION.releasesRepo) return null;
+  const currentVersion = currentAppVersion();
+  try {
+    const rel = await fetchJson(`https://api.github.com/repos/${DISTRIBUTION.releasesRepo}/releases/latest`);
+    const latestVersion = String(rel?.tag_name ?? '').replace(/^v/i, '');
+    if (!latestVersion) throw new Error('no tag_name');
+    return {
+      currentVersion,
+      latestVersion,
+      hasUpdate: isNewer(latestVersion, currentVersion),
+      downloadUrl: typeof rel.html_url === 'string' ? rel.html_url : `https://github.com/${DISTRIBUTION.releasesRepo}/releases/latest`,
+      publishedAt: rel.published_at,
+      source: 'github',
+    };
+  } catch (err: any) {
+    const detail = err?.message ? String(err.message) : '';
+    return {
+      currentVersion,
+      latestVersion: '',
+      hasUpdate: false,
+      error: isZhUi()
+        ? `无法连接 GitHub${detail ? ` (${detail})` : ''}，请检查网络后重试`
+        : `Could not reach GitHub${detail ? ` (${detail})` : ''}. Check your network and try again.`,
+    };
+  }
+}
+
 // ==================== Download ====================
 
 let electronUpdaterReadyToInstall = false;
@@ -545,6 +573,11 @@ export function registerUpdateIpcHandlers(
   // Check for updates (multi-source fallback)
   ipcMain.handle('update:check', async () => {
     return await checkForUpdate();
+  });
+
+  /* 开源版关于页的手动检查 (见 checkGithubRelease), 商业版回 null */
+  ipcMain.handle('update:check-release', async () => {
+    return await checkGithubRelease();
   });
 
   /* 就绪态查询 — 后台预下载已完成时, 关于页开页直接呈现「重启安装」, 不再让用户点检测 */

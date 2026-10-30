@@ -11,6 +11,10 @@
  * It has no update feed: builds update through your own release process.
  * It never contacts Neox Labs servers on its own: no crash reports, no network
  * probes, no version checks.
+ *
+ * releasesRepo: GitHub repo whose latest Release the About page compares
+ * against — only when the user clicks "Check for updates", never in the
+ * background. The user downloads the new build from the Release page.
  */
 export interface Distribution {
   id: string;
@@ -22,6 +26,7 @@ export interface Distribution {
   serverPort: number;
   autoUpdate: boolean;
   officialServices: boolean;
+  releasesRepo: string | null;
 }
 
 export const DISTRIBUTION: Distribution = {
@@ -34,4 +39,5 @@ export const DISTRIBUTION: Distribution = {
   serverPort: 4419,
   autoUpdate: false,
   officialServices: false,
+  releasesRepo: 'neoxlabs/OpenNeox',
 };
