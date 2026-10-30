@@ -1,6 +1,6 @@
 {
   "name": "openneox",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Neox — open-source agent engine and CLI. Local-first, bring your own model.",
   "type": "module",
   "private": true,

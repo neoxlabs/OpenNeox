@@ -2,7 +2,7 @@ name: neox_app
 description: "Neox mobile client (iOS + Android) — Desktop + Cloud 三模协同"
 publish_to: 'none'
 
-version: 4.1.1+40101
+version: 4.1.2+40102
 
 environment:
   sdk: ^3.8.1
