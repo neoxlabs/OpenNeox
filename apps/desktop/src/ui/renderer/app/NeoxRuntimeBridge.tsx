@@ -2058,13 +2058,20 @@ const BridgeInner: React.FC<NeoxRuntimeBridgeProps> = ({ workspace, children }) 
        * IPC 未返回或流仍在运行时保留守卫; 正常完成或用户停止时释放。
        * 看门狗只收回 IPC 已返回但没有流的遗留守卫, 不打断慢请求。 */
       if (sendGuardsRef.current.get(targetSessionId)) {
-        const waitUntil = Date.now() + 3000;
+        const engineRunning = !!targetSessionId && streamingBySessionRef.current.get(targetSessionId) === true;
+        const waitUntil = Date.now() + (engineRunning ? 0 : 3000);
         while (sendGuardsRef.current.get(targetSessionId) && Date.now() < waitUntil) {
           await new Promise<void>((res) => window.setTimeout(res, 60));
         }
         if (sendGuardsRef.current.get(targetSessionId)) {
           if (isRetry) return;
-          console.warn('[NeoxRuntimeBridge] 发送守卫 3s 未释放, 放弃本次发送 —— 把消息还回输入框');
+          console.warn('[NeoxRuntimeBridge] 发送守卫未释放, 放弃本次发送 —— 把消息还回输入框', { engineRunning });
+          dispatchOpFailed({
+            op: '发送消息',
+            message: engineRunning
+              ? bi('Agent 还在运行这一轮，这条消息没有发出，已退回输入框。再按一次回车会排到本轮结束后发送。', 'The agent is still running this turn, so the message was not sent and is back in the input. Press Enter again to queue it after this turn.')
+              : bi('上一轮还没收尾，这条消息没有发出，已退回输入框，请稍后再发。', 'The previous turn has not finished wrapping up. The message was not sent and is back in the input — try again in a moment.'),
+          });
           /* 既有的"消息还回去"通道 (composer 监听它回填文字 + 附件)。绝不静默丢。 */
           try {
             window.dispatchEvent(new CustomEvent('neox:queued-message-rejected', {
@@ -2416,7 +2423,10 @@ const BridgeInner: React.FC<NeoxRuntimeBridgeProps> = ({ workspace, children }) 
           setContextUsed(response.contextUsed);
         }
         if (!(response as any).accepted) setStatus('Ready');
-        if (streamingBySessionRef.current.get(session.id) !== true) sendGuardsRef.current.release(owner);
+        if (streamingBySessionRef.current.get(session.id) !== true && ownsSend()) {
+          markSendGuard('release', 'sendMessage-resolved');
+          sendGuardsRef.current.release(owner);
+        }
         scheduleSilentTurnAudit({
           sessionId: session.id,
           userEntryId,

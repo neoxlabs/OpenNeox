@@ -1,0 +1,23 @@
+id: prov_deepseek
+slug: deepseek-direct
+display_name: DeepSeek Direct
+status: active
+
+# 登记 DeepSeek 官方接口的模型名 (deepseek-flash 等), BYOK 直连时据此认出模型和思考档位
+base_url: https://api.deepseek.com
+protocol: openai-chat
+
+auth:
+  env: DEEPSEEK_API_KEY
+  format: bearer
+
+features:
+  cache_control_native: false
+  reasoning_effort_passthrough: true
+  verbosity_passthrough: false
+  prompt_cache_key_supported: false
+
+client_obligations:
+  sanitize_system_order_for_families: []
+  inject_cache_control_for_families: []
+  inject_prompt_cache_key_for_families: []

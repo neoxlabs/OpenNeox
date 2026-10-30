@@ -2413,16 +2413,16 @@ body .neox-file-dialog-backdrop { background: rgba(35, 28, 20, 0.22); -webkit-ba
 .neox-shell .agent-timeline--code .atl-turnfold__body .atl-msg.is-assistant,
 .neox-shell .agent-timeline--code .atl-turnfold__body .atl-msg.is-assistant .atl-msg__body { margin: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; }
 /* 话里面: 段落之间 8、列表项之间 4、行高 24 —— 中间的话和最后的回答同一套 */
-.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p, ul, ol, .md-table-scroller, pre, blockquote, h1, h2, h3, h4) { margin: 8px 0 0 !important; }
-.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content li { margin: 0 !important; line-height: 24px; }
+.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p, ul, ol, .md-table-scroller, pre, blockquote, h1, h2, h3, h4):not(.md-mermaid *) { margin: 8px 0 0 !important; }
+.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content li:not(.md-mermaid *) { margin: 0 !important; line-height: 24px; }
 .neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content li + li { margin-top: 4px !important; }
-.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p) { line-height: 24px; }
+.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p):not(.md-mermaid *) { line-height: 24px; }
 .neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content > :first-child { margin-top: 0 !important; }
 .neox-shell .agent-timeline--code .atl-msg.is-assistant .atl-msg__body { padding-top: 0 !important; padding-bottom: 0 !important; }
 .neox-shell .agent-timeline--code .atl-msg.is-assistant .atl-msg__footer { margin-top: 8px; }
-.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p),
-.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content li { line-height: 28px !important; }
-.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p, ul, ol, .md-table-scroller, pre, blockquote, h1, h2, h3, h4) { margin-top: 6px !important; }
+.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p):not(.md-mermaid *),
+.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content li:not(.md-mermaid *) { line-height: 28px !important; }
+.neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content :is(.md-paragraph, p, ul, ol, .md-table-scroller, pre, blockquote, h1, h2, h3, h4):not(.md-mermaid *) { margin-top: 6px !important; }
 .neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content li + li { margin-top: 0 !important; }
 .neox-shell .agent-timeline--code .atl-msg.is-assistant .markdown-content > :first-child { margin-top: 0 !important; }
 /* 卡片 (框) 收尾的那一块, 后面: 12 —— 单独一行的工具 (直接挂在 child 下) 也算 */

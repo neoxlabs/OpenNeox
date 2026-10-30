@@ -14,6 +14,8 @@ max_output_tokens: 384000
 
 upstream_slugs:
   prov_openrouter: deepseek/deepseek-v4.1-flash
+  # DeepSeek 官方接口 (BYOK 直连) 里的名字, 不登记的话认不出来, 思考档位按钮不出
+  prov_deepseek: deepseek-flash
 
 capabilities:
   # 2026-09-22 实测吃图: DeepSeek 官方 anthropic 端点 (model=deepseek-flash) 与 OpenRouter

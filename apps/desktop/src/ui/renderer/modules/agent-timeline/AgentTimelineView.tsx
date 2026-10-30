@@ -575,7 +575,12 @@ const AgentTimelineViewImpl: React.FC<Props> = ({
               return;
             }
             if (r?.queued === false) {
-              /* 本轮正在被停 / 已中断: 不自动续发, 退回输入框由用户决定 */
+              dispatchOpFailed({
+                op: '排队消息',
+                message: r.reason === 'cloud_key_failed' || r.reason === 'cloud_rejected'
+                  ? (isZh ? '云端会话没有接收这条消息，已退回输入框。' : 'The cloud session did not accept this message; it is back in the input.')
+                  : (isZh ? '这一轮正在停止，消息没有排进去，已退回输入框。' : 'This turn is stopping, so the message was not queued; it is back in the input.'),
+              });
               window.dispatchEvent(new CustomEvent('neox:queued-message-rejected', {
                 detail: { sessionId: sid, text: prompt, images },
               }));

@@ -7242,7 +7242,14 @@ label.sfc-scan__filter > input[type="checkbox"] {
   margin: 0 auto;
   justify-content: center;
   overflow-y: auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
   color: var(--neox-fg-primary);
+}
+.sfc-ext-chrome > * {
+  min-width: 0;
 }
 .sfc-ext-chrome__head {
   display: flex;
@@ -7297,6 +7304,8 @@ label.sfc-scan__filter > input[type="checkbox"] {
 .sfc-ext-chrome__title {
   font: 600 14px/1.4 var(--neox-font-body, system-ui);
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .sfc-ext-chrome__meta {
   font: 400 11px/1 var(--neox-font-mono, monospace);
@@ -7306,6 +7315,7 @@ label.sfc-scan__filter > input[type="checkbox"] {
 .sfc-ext-chrome__desc {
   font: 400 13px/1.6 var(--neox-font-body, system-ui);
   color: var(--neox-fg-secondary, var(--neox-fg-muted));
+  overflow-wrap: anywhere;
 }
 .sfc-ext-chrome__tabs {
   border: 1px solid var(--neox-line);
@@ -7329,6 +7339,7 @@ label.sfc-scan__filter > input[type="checkbox"] {
   gap: 6px;
 }
 .sfc-ext-chrome__tab {
+  min-width: 0;
   padding: 6px 0;
   border-bottom: 1px solid var(--neox-line);
 }
