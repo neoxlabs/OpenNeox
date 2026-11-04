@@ -369,6 +369,7 @@ export const StepContentRenderer: React.FC<{ content: StepContent | undefined; s
           case 'delegation':
             return (
               <DelegationView
+                agentId={content.agentId}
                 role={content.role}
                 roleName={content.roleName}
                 model={content.model}

@@ -125,7 +125,8 @@ export function browserCardContent(
     };
   });
 
-  const screenshot = typeof md.screenshot === 'string' ? md.screenshot : undefined;
+  const screenshot = typeof md.screenshot === 'string' && /\.(png|jpe?g|webp|gif)$/i.test(md.screenshot.trim())
+    ? md.screenshot.trim() : undefined;
   if (steps.length === 0 && !screenshot) return undefined;
 
   const site = typeof md.site === 'string' ? md.site : '';

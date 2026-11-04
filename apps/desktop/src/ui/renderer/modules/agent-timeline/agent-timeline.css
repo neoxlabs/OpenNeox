@@ -21864,6 +21864,9 @@ html[data-motion='off'] .atl-plan__row.is-running .atl-plan__box::after {
   margin: 0; padding: 8px 12px 12px; list-style: none;
   overflow-y: auto; font-family: var(--neox-font-mono, ui-monospace, monospace); font-size: calc(12px * var(--nx-fs-scale, 1));
 }
+/* 子 agent 的时间线 (TeamPlanBoard 的 AgentTimeline): 弹窗里给它足够的高度, 滚动交给它自己 */
+.atl-trace-popup__timeline { padding: 8px 14px 14px; min-height: 0; display: flex; flex-direction: column; }
+.atl-trace-popup__timeline .tpb-atl { max-height: min(62vh, 640px); }
 
 .atl-feed__virtual-space {
   position: relative;

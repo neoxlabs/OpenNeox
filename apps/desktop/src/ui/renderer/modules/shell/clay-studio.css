@@ -2242,7 +2242,14 @@ body .neox-file-dialog-backdrop { background: rgba(35, 28, 20, 0.22); -webkit-ba
 .neox-shell .agent-timeline .atl-computer__step-note,
 .neox-shell .agent-timeline .atl-computer__step-err { grid-column: 2 / 4; font-size: 12px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .neox-shell .agent-timeline .atl-computer__step-note { color: var(--neox-fg-hint); }
-.neox-shell .agent-timeline .atl-computer__step-err { color: #c2492f; }
+.neox-shell .agent-timeline .atl-computer__step-err {
+  color: #c2492f;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
 /* 其余结构化卡 (计划 / 搜代码命中 / 读文件 / 读文档 / 数据 / 网络 / 技能 / 文件列表 / 依赖图 / 出错):
  * 同一张卡 —— 暖白底 · 1px 细边 · 圆角 12 · 内边距 10/14; 不缩进, 左右贴列边 */
 .neox-shell .agent-timeline .nx-tool__body :is(.atl-plan, .atl-search, .atl-readfile, .atl-readdoc, .atl-data, .atl-net, .atl-skill-card, .atl-filelist, .atl-dag, .atl-error) {

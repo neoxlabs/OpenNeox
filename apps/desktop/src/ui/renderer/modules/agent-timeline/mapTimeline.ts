@@ -2183,6 +2183,7 @@ function buildDelegationContent(entry: TimelineEntry): StepContent | undefined {
   if (entry.type !== 'agent_delegation') return undefined;
   return {
     type: 'delegation',
+    agentId: entry.delegationAgentId,
     role: entry.delegationRole,
     roleName: entry.delegationRoleName,
     model: entry.delegationModel,

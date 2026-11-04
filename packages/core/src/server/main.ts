@@ -80,6 +80,7 @@ import { dispatchChatByMode } from './services/chatModeDispatcher.js';
 import { createChatEventPublisher } from './services/chatEventPublisher.js';
 import { prepareChatRequest } from './services/chatRequestPreparation.js';
 import { abortSession } from './services/sessionAborter.js';
+import { UserStopGate } from './services/userStopGate.js';
 import { toModelId } from './services/modelIdNormalize.js';
 import { resolveSessionMemory } from './services/sessionMemoryResolver.js';
 import { setApprovalMode as setApprovalModeHandler } from './services/approvalModeSetter.js';
@@ -799,8 +800,7 @@ const memory: ShortTermMemory = buildMemory();
   const activeSessions = new Set<string>();
   const activeSessionModes = new Map<string, AgentRunMode>();
   const abortControllers = new Map<string, AbortController>();
-  const recentlyAbortedAt = new Map<string, number>();
-  const ABORT_SUPPRESS_RESUME_MS = 4000;
+  const stopGate = new UserStopGate();   /* 按了停止就停到用户再开口, 见 services/userStopGate.ts */
   const approvalSessionStore = new AsyncLocalStorage<string>();
 
   const lastServiceSurvivorSig = new Map<string, string>();
@@ -1138,6 +1138,12 @@ const memory: ShortTermMemory = buildMemory();
         const isResumeRun = request?.isResume === true;
         const isContinueRun = (request as { isContinue?: boolean })?.isContinue === true;
         const isRetryRun = (request as { isRetry?: boolean })?.isRetry === true || isContinueRun;
+        /* 用户亲自开口 → 停止解除; 停着时攒下的 + 只入队不起轮的 (中断幸存进程) 作为前缀交给模型, 不落库 */
+        let heldPrefix = '';
+        if (!(request as { __autoTurn?: boolean })?.__autoTurn && !isResumeRun && userPrompt.trim().length > 0) {
+          const pending = [...stopGate.takeHeld(sessionId), ...getBackgroundTaskNotifier().drainForSession(sessionId).map(n => n.xml).filter(Boolean)];
+          if (!isRetryRun && pending.length > 0) heldPrefix = pending.join('\n') + '\n\n';
+        }
         if (isRetryRun) {
           (request as any).metadata = {
             ...((request as any).metadata ?? {}),
@@ -1259,7 +1265,7 @@ const memory: ShortTermMemory = buildMemory();
           await dispatchChatByMode({
             currentMode: mode,
             sessionId,
-            prompt: request.prompt,
+            prompt: heldPrefix ? heldPrefix + request.prompt : request.prompt,
             isRetry: request.isRetry,
             isContinue: request.isContinue,
             isResume: request.isResume,
@@ -1314,15 +1320,18 @@ const memory: ShortTermMemory = buildMemory();
               const notifier = getBackgroundTaskNotifier();
               if (notifier.hasNotificationsFor(sessionId)) {
                 if (ac.signal.aborted) {
+                  /* 不起轮也不丢: 停止那一刻的幸存进程 / 被停掉的任务攒着, 跟用户下一条消息一起给模型 */
                   const dropped = notifier.drainForSession(sessionId);
-                  cliLogger.info('BG_NOTIFIER', `Turn aborted by user → dropped ${dropped.length} stranded notif(s) for ${sessionId}, NOT resuming`);
+                  const xml = dropped.map(n => n.xml).filter(Boolean).join('\n');
+                  if (xml) stopGate.hold(sessionId, xml, 'aborted-turn');
                 } else {
                   const drained = notifier.drainForSession(sessionId);
                   const xml = drained.map(n => n.xml).filter(Boolean).join('\n');
                   const meta = lastChatMetaBySession.get(sessionId);
-                  if (xml && meta) {
+                  if (xml && meta && !stopGate.hold(sessionId, xml, 'post-turn')) {
                     cliLogger.info('BG_NOTIFIER', `Post-turn drain: ${drained.length} stranded notif(s) for ${sessionId} → resuming`);
                     void bridge.chat(sessionId, {
+                      __autoTurn: true,
                       prompt: xml,
                       providerId: meta.providerId,
                       modelName: meta.modelName,
@@ -1345,7 +1354,7 @@ const memory: ShortTermMemory = buildMemory();
     },
 
     abort(sessionId) {
-      recentlyAbortedAt.set(sessionId, Date.now());
+      stopGate.onAbort(sessionId);
       const cancelled = cancelPendingPermissionsForSession(sessionId, 'session_aborted');
       if (cancelled > 0) {
         cliLogger.info('SERVER_AUDIT', `cancelled ${cancelled} pending approval(s) due to abort: session=${sessionId}`);
@@ -2275,7 +2284,9 @@ const memory: ShortTermMemory = buildMemory();
       'WAKEUP',
       `Auto-resuming session ${sessionId} for wakeup — provider=${meta.providerId} model=${meta.modelName} reason="${reason.slice(0, 60)}"`,
     );
+    if (stopGate.hold(sessionId, xml, 'wakeup')) return;
     void bridge.chat(sessionId, {
+      __autoTurn: true,
       prompt: xml,
       providerId: meta.providerId,
       modelName: meta.modelName,
@@ -2316,8 +2327,8 @@ const memory: ShortTermMemory = buildMemory();
       cliLogger.warn('TURN_STALL',
         `session ${sessionId} 停滞 ${Math.round(silentMs / 1000)}s (最后: ${lastSignal}) → abort 当前 turn 并注入恢复信息`);
       try {
-        /* 先掐断卡死的那一轮 —— 它正卡在一个永远不会 settle 的 await 上 */
-        bridge.abort?.(sessionId);
+        /* 先掐断卡死的那一轮 —— 它正卡在一个永远不会 settle 的 await 上 (运行时自己的中断, 不算用户停止) */
+        stopGate.runInternalAbort(sessionId, () => bridge.abort?.(sessionId));
       } catch (err) {
         cliLogger.warn('TURN_STALL', `abort 失败(继续尝试唤醒): ${(err as Error)?.message}`);
       }
@@ -2325,6 +2336,7 @@ const memory: ShortTermMemory = buildMemory();
       await new Promise((r) => setTimeout(r, 400));
       try {
         void bridge.chat(sessionId, {
+          __autoTurn: true,
           prompt: message,
           providerId: meta.providerId,
           modelName: meta.modelName,
@@ -2342,7 +2354,7 @@ const memory: ShortTermMemory = buildMemory();
       cliLogger.error('TURN_STALL',
         `session ${sessionId} 停滞 ${Math.round(silentMs / 1000)}s 且自动恢复无效 → 终止本轮。${reason}`);
       /* abort 让这一轮真正结束 —— UI 侧的运行态随之收敛, 不再留一个假装在跑的 turn */
-      try { bridge.abort?.(sessionId); } catch { /* 已经没在跑就算了 */ }
+      try { stopGate.runInternalAbort(sessionId, () => bridge.abort?.(sessionId)); } catch { /* 已经没在跑就算了 */ }
     },
   });
 
@@ -2386,14 +2398,8 @@ const memory: ShortTermMemory = buildMemory();
       diag('BG_AUTO_RESUME/skip', { reason: 'session_still_active', sessionId });
       return;
     }
-    const abortedAt = recentlyAbortedAt.get(sessionId);
-    if (abortedAt && Date.now() - abortedAt < ABORT_SUPPRESS_RESUME_MS) {
-      getBackgroundTaskNotifier().drainForSession(sessionId);
-      cliLogger.info('BG_NOTIFIER',
-        `session ${sessionId} just aborted by user (${Date.now() - abortedAt}ms ago) → drop bg-task notif, skip auto-resume`);
-      diag('BG_AUTO_RESUME/skip', { reason: 'recently_aborted', sessionId, agoMs: Date.now() - abortedAt });
-      return;
-    }
+    /* 用户按过停止 (还没再开口): 不代他起轮, 事件攒着等他下一条消息 —— 取代原来的 4 秒短窗 (见 userStopGate.ts) */
+    if (stopGate.hold(sessionId, xml, 'bg-task')) { diag('BG_AUTO_RESUME/skip', { reason: 'user_stopped', sessionId }); return; }
     const meta = lastChatMetaBySession.get(sessionId);
     if (!meta) {
       cliLogger.warn('BG_NOTIFIER',
@@ -2407,6 +2413,7 @@ const memory: ShortTermMemory = buildMemory();
     );
     diag('BG_AUTO_RESUME/dispatch', { sessionId, providerId: meta.providerId, modelName: meta.modelName });
     void bridge.chat(sessionId, {
+      __autoTurn: true,
       prompt: xml,
       providerId: meta.providerId,
       modelName: meta.modelName,

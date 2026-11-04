@@ -89,5 +89,8 @@ function renderSystemHit(systemHit: SystemHit, timestamp: string | undefined, re
   if (systemHit.kind === 'session_message') {
     return <SystemNoticeCell subtype="session_message" message={systemHit.data} timestamp={timestamp} repeat={repeat} />;
   }
+  if (systemHit.kind === 'interrupt_survivors') {
+    return <SystemNoticeCell subtype="interrupt_survivors" survivors={systemHit.data} timestamp={timestamp} repeat={repeat} />;
+  }
   return null;
 }

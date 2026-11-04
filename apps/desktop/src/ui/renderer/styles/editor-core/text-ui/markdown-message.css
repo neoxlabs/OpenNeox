@@ -1906,7 +1906,10 @@
   right: 6px;
   z-index: 2;
   opacity: 0;
+  background: var(--neox-bg-elevated, var(--neox-bg-panel, #2a2826));
+  box-shadow: 0 0 0 1px var(--neox-line, rgba(255, 255, 255, 0.08));
 }
+.markdown-content .md-table-copy .nx-copy-btn__label { display: none; }
 .markdown-content .md-table-scroller:hover .md-table-copy,
 .markdown-content .md-table-copy:focus-visible,
 .markdown-content .md-table-copy.is-done { opacity: 1; }

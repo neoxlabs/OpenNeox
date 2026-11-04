@@ -1314,8 +1314,8 @@ type DigestCategory = "think" | "shell" | "read" | "edit" | "search" | "mcp" | "
 
 /* MCP 折叠头解析 —— displayToolName 已经把 `mcp__` 前缀剥掉, 剩下 `<服务器>__<工具>`;
  * 少数路径可能还带着原始前缀, 两种都认。 */
-function isAgentDigestHead(head: string): boolean {
-  return /^(explore|explore_status|sub-?agent|agent|delegation|探索|深入研究|子代理|任务派发)$/i.test(head.trim());
+function isAgentDigestHead(head: string): boolean {   /* 「Shell Agent」这类角色名也算 (11-03: 曾被吞成「运行 3 条命令」) */
+  return /^(explore|explore_status|sub-?agent|agent|delegation|探索|深入研究|子代理|任务派发|[\w-]+ agent)$/i.test(head.trim());
 }
 
 function isMcpDigestHead(head: string): boolean {
@@ -1452,7 +1452,7 @@ function formatDigestPhrase(l: ActivityDigestLine, zh: boolean): DigestPhrase {
     case "agent": {
       /* 「子 Agent · <类型>」+ 它接到的任务 —— 跟 MCP 那条同一个思路: 折叠头要说出**是谁在干活** */
       const kind = l.head.trim();
-      const label = zh ? `子 Agent · ${kind}` : `Sub-agent · ${kind}`;
+      const label = /\bagent$/i.test(kind) ? kind : (zh ? `子 Agent · ${kind}` : `Sub-agent · ${kind}`);
       const q = shortDigestQuery(l.detail);
       const suffix = n > 1 ? ` ×${n}` : "";
       return q ? phrase(label, ` “${q}”${suffix}`) : phrase(label, suffix);

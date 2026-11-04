@@ -190,6 +190,7 @@ export const HistoryCellRenderer: React.FC<HistoryCellRendererProps> = ({
       if (cell.variant === 'delegation') {
         return (
           <DelegationView
+            agentId={cell.agentId}
             role={cell.role}
             roleName={cell.roleName}
             model={cell.model}

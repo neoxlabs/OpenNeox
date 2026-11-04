@@ -706,7 +706,8 @@ const ATL_LABEL: Record<string, [string, string]> = {
   think: ['思考', 'thinking'], text: ['发言', 'says'], tool: ['工具', 'tool'], user: ['指令', 'prompt'],
 };
 
-const AgentTimeline: React.FC<{ agentId: string; isZh: boolean; live?: boolean; compact?: boolean }> = ({ agentId, isZh, live, compact }) => {
+/* 子 agent 卡的「完整过程」弹窗也用它 (cells/AgentDelegationViews.tsx) */
+export const AgentTimeline: React.FC<{ agentId: string; isZh: boolean; live?: boolean; compact?: boolean }> = ({ agentId, isZh, live, compact }) => {
   const [rows, setRows] = React.useState<any[] | null>(null);
   const load = React.useCallback(async () => {
     try {
@@ -748,7 +749,15 @@ const AgentTimeline: React.FC<{ agentId: string; isZh: boolean; live?: boolean; 
         stickRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
       }}
     >
-      {(compact ? rows.slice(-60) : rows).map((e: any, i: number) => {
+      {(compact ? rows.slice(-60) : rows).filter((e: any, i: number, all: any[]) => {
+        if (e.type === 'tool_call' && e.toolCallId && all.some((x: any) => x.type === 'tool_result' && x.toolCallId === e.toolCallId)) return false;
+        /* 子会话里一次调用常落成两条: 先一条参数 JSON, 紧跟一条「$ 命令 → 输出」的完成态 —— 留后者 */
+        const next = all[i + 1];
+        if (e.type === 'tool_call' && /^\s*\{/.test(String(e.detail ?? '')) && next
+          && (next.type === 'tool_call' || next.type === 'tool_result') && (next.toolName || next.title) === (e.toolName || e.title)) return false;
+        const prev = all[i - 1];
+        return !(prev && e.type === prev.type && e.type !== 'tool_result' && (e.detail || e.title) === (prev.detail || prev.title));
+      }).map((e: any, i: number) => {
         const type = String(e.type ?? '');
         const title = String(e.title ?? '').trim();
         const detail = String(e.detail ?? '').trim();

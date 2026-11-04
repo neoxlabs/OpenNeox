@@ -108,6 +108,7 @@ import {
 } from './runtimeBridgePrefs';
 import { isSubscriptionModel, pickFallbackModel, pickReconsideredForMode, pickStartupModel, shouldReconsiderAutoPick } from './modelDefaultPick';
 import { isChatModelInfo } from '../utils/modelKind';
+import { useLoggedOutModelFallback } from './useLoggedOutModelFallback';
 import { assignTaskToProject, getWorkProjectFilter } from '../modules/shell/workProjects';
 import { setStreamingTokensHud } from '../state/streamingHudStore';
 import { applyApprovalModeDefaultToSession, preloadApprovalModeDefault } from '../modules/agent-timeline/approvalModeStore';
@@ -1354,23 +1355,12 @@ const BridgeInner: React.FC<NeoxRuntimeBridgeProps> = ({ workspace, children }) 
     }
   }, [user?.id, reloadSessionsAfterAuthChange]);
 
+  /* 没登录时选中的订阅模型用不了 → 临时切 BYOK, 登录态回来再切回 (启动那一瞬的假"未登录"不算), 见 useLoggedOutModelFallback.ts */
   const membership = useEditionMembership();
-  useEffect(() => {
-    if (!selectedModel) return;
-    const isCloud = isNeoxCloudProviderId(selectedModel.providerId);
-    if (isCloud && !isAuthenticated) {
-      const fallback = availableModels.find(m => !isNeoxCloudProviderId(m.providerId)) ?? null;
-      if (fallback && fallback.id !== selectedModel.id) {
-        setSelectedModelPersisted(fallback);
-      }
-    }
-  }, [
-    isAuthenticated,
-    membership?.plan?.id,
-    availableModels,
-    selectedModel,
-    setSelectedModelPersisted,
-  ]);
+  useLoggedOutModelFallback({
+    isAuthenticated, planId: membership?.plan?.id, availableModels, selectedModel, setSelectedModel, autoPickedRef: autoPickedModelRef,
+    onRestored: (m) => { const sid = activeSessionIdRef.current; if (sid) modelBySessionRef.current.set(sid, m.id); },
+  });
 
   const activeSessionRef = useRef(activeSession);
   activeSessionRef.current = activeSession;

@@ -100,7 +100,12 @@
 }
 .neox-shell.has-surface .atl-shell .atl-scroll-bottom {
   right: 28px;
+  width: 30px;
+  padding: 0;
+  justify-content: center;
+  background: var(--neox-bg-surface);
 }
+.neox-shell.has-surface .atl-shell .atl-scroll-bottom > span { display: none; }
 .neox-shell.has-surface .atl-shell .nx-dock__menu {
   right: 20px;
 }

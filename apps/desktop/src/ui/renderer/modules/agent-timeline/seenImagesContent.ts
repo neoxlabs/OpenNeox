@@ -27,8 +27,23 @@ export function parseSeenImages(out: string | undefined): SeenImage[] | undefine
       .map((img: any) => ({ path: img.path as string, ...(typeof img.label === 'string' && img.label ? { label: img.label as string } : {}) }));
     return images.length > 0 ? images : undefined;
   } catch {
-    return undefined;
+    return salvageImages(text.slice(idx + SEEN_IMAGES_PREFIX.length));
   }
+}
+
+function salvageImages(tail: string): SeenImage[] | undefined {
+  /* 信封本身也被截断时外层 parse 失败, 拿到的还是信封里转义过一层的字符串 —— 先剥掉这一层 */
+  const t = /^\s*\{\\"/.test(tail) ? tail.replace(/\\(["\\])/g, '$1') : tail;
+  const head = /^\s*\{\s*"images"\s*:\s*\[([\s\S]*?)\]/.exec(t)?.[1];
+  if (!head) return undefined;
+  const images: SeenImage[] = [];
+  for (const m of head.matchAll(/\{[^{}]*\}/g)) {
+    try {
+      const img = JSON.parse(m[0]);
+      if (typeof img?.path === 'string' && img.path) images.push({ path: img.path, ...(typeof img.label === 'string' && img.label ? { label: img.label } : {}) });
+    } catch { /* 被截在半张上的那条不要 */ }
+  }
+  return images.length > 0 ? images : undefined;
 }
 
 export function buildSeenImagesContent(entry: TimelineEntry): StepContent | undefined {

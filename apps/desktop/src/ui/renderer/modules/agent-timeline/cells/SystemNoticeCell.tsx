@@ -1,6 +1,6 @@
 
 import React from 'react';
-import type { ScheduledWakeup, MonitorEvent, ScheduledTaskFired, ReminderFired, SessionMessage } from './systemMessageParsers';
+import type { ScheduledWakeup, MonitorEvent, ScheduledTaskFired, ReminderFired, SessionMessage, InterruptSurvivors } from './systemMessageParsers';
 import { IconBell, IconClock, IconEye, IconMessage, IconSun } from '../../shell/shellIcons';
 import { useI18n } from '../../../hooks/useI18n';
 
@@ -10,6 +10,7 @@ type SystemNoticeProps = { timestamp?: string; /** 同一条消息里连着到�
   | { subtype: 'scheduled_task'; task: ScheduledTaskFired }
   | { subtype: 'reminder'; reminder: ReminderFired }
   | { subtype: 'session_message'; message: SessionMessage }
+  | { subtype: 'interrupt_survivors'; survivors: InterruptSurvivors }
 );
 
 export const SystemNoticeCell: React.FC<SystemNoticeProps> = (props) => {
@@ -90,6 +91,19 @@ export const SystemNoticeCell: React.FC<SystemNoticeProps> = (props) => {
             ? () => window.dispatchEvent(new CustomEvent('neox:select-session', { detail: { sessionId: m.fromSessionId } }))
             : undefined}
           titleHint={zh ? '打开这个会话' : 'Open this session'}
+        />
+      );
+    }
+    case 'interrupt_survivors': {
+      /* 按停止后没跟着停的后台进程 / 服务: 一行说明, 下面列命令 (只取头 120 字, Windows 的 cd /d … && java -D… 能很长) */
+      const s = props.survivors;
+      const n = s.items.length;
+      return (
+        <EventCard
+          {...common} kind="interrupt_survivors" tone="muted" icon={<IconEye size={13} />}
+          title={zh ? '中断后仍在运行' : 'Still running after stop'}
+          meta={zh ? `${n} 个${s.kind === 'services' ? '服务' : '后台进程'}` : `${n} ${s.kind === 'services' ? 'service' : 'background process'}${n === 1 ? '' : 'es'}`}
+          lines={s.items.slice(0, 8).map((p) => `pid ${p.pid}  ${p.command.length > 120 ? `${p.command.slice(0, 120)}…` : p.command}`)}
         />
       );
     }

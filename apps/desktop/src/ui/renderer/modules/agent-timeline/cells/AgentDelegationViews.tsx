@@ -6,6 +6,7 @@ import { ProviderBrandIcon, inferProviderBrand } from '../ProviderBrandIcon';
 import { SubAgentMark } from './SubAgentMark';
 import { AgentBrandLogo } from '../components/AgentBrandLogo';
 import { DotSpinner } from '../../../components/DotSpinner';
+import { AgentTimeline } from '../../surface/viewers/TeamPlanBoard';
 
 
 
@@ -108,7 +109,10 @@ const DelegationTracePopup: React.FC<{
   title: string;
   records: Array<{ name: string; args?: string; status: 'running' | 'done' | 'error'; duration?: number }>;
   onClose: () => void;
-}> = ({ title, records, onClose }) => {
+  /** 有 id 就读子会话自己的时间线 (想了什么、说了什么、每步的输出), 不再只是一串工具名 */
+  agentId?: string;
+  live?: boolean;
+}> = ({ title, records, onClose, agentId, live }) => {
   const { isZh } = useI18n();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -129,6 +133,11 @@ const DelegationTracePopup: React.FC<{
           <button type="button" className="atl-trace-popup__close" onClick={onClose}
             aria-label={isZh ? '关闭' : 'Close'}>×</button>
         </header>
+        {agentId ? (
+          <div className="atl-trace-popup__timeline">
+            <AgentTimeline agentId={agentId} isZh={isZh} live={live} />
+          </div>
+        ) : (
         <ul className="atl-trace-popup__list">
           {omitted > 0 && (
             <li className="atl-delegation__tools-more">
@@ -152,6 +161,7 @@ const DelegationTracePopup: React.FC<{
             </li>
           ))}
         </ul>
+        )}
       </div>
     </div>,
     document.body,
@@ -159,6 +169,7 @@ const DelegationTracePopup: React.FC<{
 };
 
 export const DelegationView: React.FC<{
+  agentId?: string;
   role?: string;
   roleName?: string;
   model?: string;
@@ -175,7 +186,7 @@ export const DelegationView: React.FC<{
     status: 'running' | 'done' | 'error';
     duration?: number;
   }>;
-}> = ({ role, roleName, model, task, status, summary, error, toolCount, currentStatus, isBackground, toolRecords }) => {
+}> = ({ agentId, role, roleName, model, task, status, summary, error, toolCount, currentStatus, isBackground, toolRecords }) => {
   const { isZh } = useI18n();
   const isRunning = status === 'running';
   const cls = AGENT_STATUS_CLS[status ?? (isRunning ? 'running' : 'completed')] ?? 'is-done';
@@ -224,6 +235,12 @@ export const DelegationView: React.FC<{
           {statusLabel}
           {stepCount > 0 && <em>{isZh ? `${stepCount} 步` : `${stepCount} steps`}</em>}
         </span>
+        {/* 没有「最后一步」那一行 (后台 agent 刚起步 / 工具记录没回传) 时也得有地方点开看它的过程 */}
+        {agentId && !(records.length > 0) && (
+          <button type="button" className="atl-acard__more" onClick={(e) => { e.stopPropagation(); setDetailOpen(true); }}>
+            {isZh ? '查看过程 ›' : 'Timeline ›'}
+          </button>
+        )}
       </div>
 
       <div className="atl-acard__body">
@@ -271,6 +288,8 @@ export const DelegationView: React.FC<{
         <DelegationTracePopup
           title={roleName || role || 'Agent'}
           records={records}
+          agentId={agentId}
+          live={isRunning}
           onClose={() => setDetailOpen(false)}
         />
       )}

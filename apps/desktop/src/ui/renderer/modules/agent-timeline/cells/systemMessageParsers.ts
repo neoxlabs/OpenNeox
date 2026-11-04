@@ -1,5 +1,5 @@
 
-const BUS_EVENT_XML = /^\s*<(background-task-notification|agent-completion|scheduled-wakeup|scheduled-task-fired|life-reminder-fired|monitor-event|session-message)\b/i;
+const BUS_EVENT_XML = /^\s*<(background-task-notification|agent-completion|scheduled-wakeup|scheduled-task-fired|life-reminder-fired|monitor-event|session-message|background-processes-survived-interrupt|services-still-running-after-interrupt)\b/i;
 
 export function isBusEventMessage(text: string | undefined | null): boolean {
   return !!text && BUS_EVENT_XML.test(text);
@@ -173,6 +173,7 @@ export type SystemMessageHit =
   | { kind: 'scheduled_task'; data: ScheduledTaskFired }
   | { kind: 'reminder'; data: ReminderFired }
   | { kind: 'session_message'; data: SessionMessage }
+  | { kind: 'interrupt_survivors'; data: InterruptSurvivors }
   | null;
 
 export function detectSystemMessage(text: string): SystemMessageHit {
@@ -207,10 +208,28 @@ export function detectSystemMessage(text: string): SystemMessageHit {
     const data = parseSessionMessage(text);
     return data ? { kind: 'session_message', data } : null;
   }
+  if (trimmed.startsWith('<background-processes-survived-interrupt>') || trimmed.startsWith('<services-still-running-after-interrupt>')) {
+    const data = parseInterruptSurvivors(text);
+    return data ? { kind: 'interrupt_survivors', data } : null;
+  }
   return null;
 }
 
-const BUS_EVENT_BLOCK = /<(background-task-notification|agent-completion|scheduled-wakeup|scheduled-task-fired|life-reminder-fired|monitor-event|session-message)>[\s\S]*?<\/\1>/g;
+export interface InterruptSurvivors {
+  kind: 'processes' | 'services';
+  items: Array<{ pid: number; command: string }>;
+}
+
+export function parseInterruptSurvivors(text: string): InterruptSurvivors | null {
+  const trimmed = text.trim();
+  const kind = trimmed.startsWith('<services-still-running-after-interrupt>') ? 'services'
+    : trimmed.startsWith('<background-processes-survived-interrupt>') ? 'processes' : null;
+  if (!kind) return null;
+  const items = [...trimmed.matchAll(/^\s*-\s*pid\s+(\d+):\s*(.*)$/gm)].map((m) => ({ pid: Number(m[1]), command: m[2]!.trim() }));
+  return { kind, items };
+}
+
+const BUS_EVENT_BLOCK = /<(background-task-notification|agent-completion|scheduled-wakeup|scheduled-task-fired|life-reminder-fired|monitor-event|session-message|background-processes-survived-interrupt|services-still-running-after-interrupt)>[\s\S]*?<\/\1>/g;
 
 export function detectSystemMessages(text: string): Exclude<SystemMessageHit, null>[] {
   if (!isBusEventMessage(text)) return [];

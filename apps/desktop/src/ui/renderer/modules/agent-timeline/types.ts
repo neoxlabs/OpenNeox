@@ -326,6 +326,8 @@ export type StepContent =
     }
   | {
       type: 'delegation';
+      /** 子 agent id = 它自己那条子会话的 id —— 弹窗按它读子会话的时间线 */
+      agentId?: string;
       role?: string;
       roleName?: string;
       model?: string;

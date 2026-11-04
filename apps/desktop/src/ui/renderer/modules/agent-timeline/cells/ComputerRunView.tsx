@@ -78,7 +78,7 @@ export const ComputerRunView: React.FC<{
                   <span className="atl-computer__step-ms">{formatComputerDuration(s.ms, isZh)}</span>
                 )}
                 {s.note && <span className="atl-computer__step-note">{s.note}</span>}
-                {s.error && <span className="atl-computer__step-err">{s.error}</span>}
+                {s.error && <span className="atl-computer__step-err" title={s.error}>{s.error}</span>}
               </li>
             ))}
           </ol>
